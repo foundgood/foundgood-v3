@@ -6,19 +6,25 @@ import t from 'prop-types';
 import Link from 'next/link';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
+import Button from 'components/button';
 
 const HomeComponent = ({ pageProps }) => {
-    const { label, valueSet, log } = useMetadata();
-
-    log();
+    const { label } = useMetadata();
+    const { login, logout } = useAuth();
 
     return (
         <div className="t-h1">
             <Link href="/wizard">Foundgood,</Link>{' '}
             {label('objects.initiative.Approach_Thinking__c')}
+            <div className="flex px-32 mt-32 space-x-32">
+                <Button action={() => login()}>Login</Button>
+                <Button theme="amber" action={() => logout()}>
+                    Logout
+                </Button>
+            </div>
         </div>
     );
 };

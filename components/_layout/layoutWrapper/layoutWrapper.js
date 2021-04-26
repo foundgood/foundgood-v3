@@ -14,7 +14,9 @@ import WizardLayout from 'components/_layout/wizardLayout';
 
 // Layouts and their settings
 const allLayouts = {
-    default: DefaultLayout,
+    default: {
+        layout: DefaultLayout,
+    },
     wizard: {
         layout: WizardLayout,
         headerUserControls: false,
