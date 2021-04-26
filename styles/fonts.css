@@ -1,0 +1,31 @@
+@layer base {
+    /* Regular */
+    @font-face {
+        font-family: 'tt-commons';
+        src: url('assets/fonts/TT-Commons-Regular.woff') format('woff'),
+            url('assets/fonts/TT-Commons-Regular.ttf') format('truetype');
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    /* Medium */
+    @font-face {
+        font-family: 'tt-commons';
+        src: url('assets/fonts/TT-Commons-Medium.woff') format('woff'),
+            url('assets/fonts/TT-Commons-Medium.ttf') format('truetype');
+        font-weight: 500;
+        font-style: normal;
+        font-display: swap;
+    }
+
+    /* Bold */
+    @font-face {
+        font-family: 'tt-commons';
+        src: url('assets/fonts/TT-Commons-DemiBold.woff') format('woff'),
+            url('assets/fonts/TT-Commons-DemiBold.ttf') format('truetype');
+        font-weight: 600;
+        font-style: normal;
+        font-display: swap;
+    }
+}

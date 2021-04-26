@@ -1,0 +1,61 @@
+@layer utilities {
+    @responsive {
+        /* Headings */
+        .t-h1 {
+            @apply font-heading font-bold leading-normal text-36 xl:text-42 3xl:text-48;
+        }
+        .t-h2 {
+            @apply font-heading font-bold leading-normal text-32 xl:text-36 3xl:text-40;
+        }
+        .t-h3 {
+            @apply font-heading font-bold leading-normal text-28 xl:text-30 3xl:text-32;
+        }
+        .t-h4 {
+            @apply font-heading font-bold leading-normal text-24;
+        }
+        .t-h5 {
+            @apply font-heading font-bold leading-normal text-20;
+        }
+        .t-h6 {
+            @apply font-heading font-bold leading-normal text-18;
+        }
+
+        /* Sub headings */
+        .t-sh2 {
+            @apply font-heading font-normal leading-normal text-32 xl:text-36 3xl:text-40;
+        }
+        .t-sh3 {
+            @apply font-heading font-normal leading-normal text-28 xl:text-30 3xl:text-32;
+        }
+        .t-sh4 {
+            @apply font-heading font-normal leading-normal text-24;
+        }
+        .t-sh5 {
+            @apply font-heading font-normal leading-normal text-20;
+        }
+        .t-sh6 {
+            @apply font-heading font-normal leading-normal text-18;
+        }
+        .t-sh6 {
+            @apply font-heading font-normal leading-normal text-16;
+        }
+
+        /* Other */
+        .t-preamble {
+            @apply font-heading font-normal leading-normal text-24;
+        }
+
+        .t-body {
+            @apply font-heading font-normal leading-normal text-20;
+        }
+        .t-small {
+            @apply font-heading font-normal leading-normal text-18;
+        }
+        .t-caption {
+            @apply font-heading font-normal leading-normal text-16;
+        }
+        .t-footnote {
+            @apply font-heading font-normal leading-normal text-14;
+        }
+    }
+}

@@ -1,0 +1,70 @@
+// React
+import React, { useEffect, useState } from "react";
+
+// Packages
+import cc from "classcat";
+import t from "prop-types";
+import Link from 'next/link';
+import Image from 'next/image'
+{{#if details.swr}}
+import useSWR from 'swr';
+{{/if}}
+
+// Utilities
+{{#if details.getStaticProps}}
+{{/if}}
+
+// Components
+
+const {{pascalCase name}}Component = ({ data }) => {
+{{#if details.swr}}
+// Data
+const { data } = useSWR('/api/posts', fetcher, { initialData: props.posts });
+
+{{/if}}
+return (
+<div className="">{{sentenceCase name}}</div>
+);
+};
+
+{{#if details.getStaticProps}}
+
+const {{constantCase name}}_QUERY = `query {{pascalCase name}}Component {
+// Query
+}`;
+
+export async function getStaticProps() {
+const data = await datoCmsRequest({
+query: {{constantCase name}}_QUERY
+});
+
+return {
+props: { data }
+};
+}
+{{/if}}
+{{#if details.getStaticPaths}}
+
+const {{constantCase name}}_PATHS_QUERY = `query {{pascalCase name}}Component {
+// Query
+}`;
+
+export async function getStaticPaths() {
+const data = await datoCmsRequest({
+query: {{constantCase name}}_PATHS_QUERY
+});
+
+// Get the paths we want to pre-render based on posts
+const paths = data.xxx.map((post) => ({
+params: { id: xxx.id },
+}));
+
+return { paths, fallback: false }
+}
+{{/if}}
+
+{{pascalCase name}}Component.propTypes = {};
+
+{{pascalCase name}}Component.defaultProps = {};
+
+export default {{pascalCase name}}Component;

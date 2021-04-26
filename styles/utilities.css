@@ -1,0 +1,18 @@
+@layer utilities {
+    /* Transitions */
+    .transition-default {
+        @apply transition-all duration-200 ease-smooth-out;
+    }
+
+    .transition-medium {
+        @apply transition-all duration-300 ease-smooth-out;
+    }
+
+    .transition-slow {
+        @apply transition-all duration-700 ease-smooth-out;
+    }
+
+    .transition-current-color {
+        @apply transition-colors duration-300 ease-smooth-out;
+    }
+}
