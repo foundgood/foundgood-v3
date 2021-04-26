@@ -10,7 +10,7 @@ import { useMetadata } from 'utilities/hooks';
 // Components
 
 const WizardComponent = ({ pageProps }) => {
-    const { label, valueSet } = useMetadata();
+    const { label, valueSet, log } = useMetadata();
 
     return (
         <div className="t-h1">

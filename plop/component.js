@@ -12,7 +12,7 @@ const component = {
             type: 'directory',
             name: 'directory',
             message: 'Where should the component be placed?',
-            basePath: './components',
+            basePath: './',
         },
         {
             type: 'checkbox',

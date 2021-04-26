@@ -43,7 +43,7 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
         <>
             <div
                 className={cc([
-                    'fixed top-48 lg:top-64 sm:top-56 w-1/5 flex xl:w-1/5 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-aside border-r border-gray-10 px-16 sm:px-24 lg:px-32',
+                    'fixed top-48 lg:top-64 sm:top-56 w-1/5 flex 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-aside border-r border-gray-10 px-16 sm:px-24 lg:px-32',
                     {
                         'pointer-events-auto': leftMenuActive,
                         ' -translate-x-full pointer-events-none': !leftMenuActive,

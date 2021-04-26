@@ -42,20 +42,20 @@
 
         /* Other */
         .t-preamble {
-            @apply font-heading font-normal leading-normal text-24;
+            @apply font-body font-normal leading-normal text-24;
         }
 
         .t-body {
-            @apply font-heading font-normal leading-normal text-20;
+            @apply font-body font-normal leading-normal text-20;
         }
         .t-small {
-            @apply font-heading font-normal leading-normal text-18;
+            @apply font-body font-normal leading-normal text-18;
         }
         .t-caption {
-            @apply font-heading font-normal leading-normal text-16;
+            @apply font-body font-normal leading-normal text-16;
         }
         .t-footnote {
-            @apply font-heading font-normal leading-normal text-14;
+            @apply font-body font-normal leading-normal text-14;
         }
     }
 }
