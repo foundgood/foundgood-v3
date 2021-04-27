@@ -56,7 +56,7 @@ const useAuth = () => {
         console.log('Auth: Logging in');
 
         const user =
-            process.env.NODE_ENV === 'development'
+            process.env.NEXT_PUBLIC_USER_ENVIRONMENT === 'development'
                 ? await salesForce.user.login({
                       username: 'allen.dziedzic@example.com',
                       password: 's^7Vy_MFY1fsad_$23xCp_1',
