@@ -1,3 +1,3 @@
-import salesForce from './salesForce';
+import salesForce from './salesorce';
 
 export { salesForce };
