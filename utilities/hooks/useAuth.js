@@ -2,12 +2,16 @@ import { useEffect } from 'react';
 
 // Packages
 import { createLocalStorageStateHook } from 'use-local-storage-state';
+import { useRouter } from 'next/router';
 
 // Utilities
-import { salesforce } from 'utilities/api';
+import { salesForce } from 'utilities/api';
 import { useAuthStore } from 'utilities/store';
 
-const useAuth = (initialize = false) => {
+const useAuth = () => {
+    // Hook: Router
+    const router = useRouter();
+
     // Store: Auth
     const {
         setInitialized,
@@ -23,8 +27,8 @@ const useAuth = (initialize = false) => {
     const [lsUser, setLsUser] = useLsUser();
 
     // Initialize
-    useEffect(() => {
-        if (initialize) {
+    function initialize() {
+        return useEffect(() => {
             console.log('Auth: Init');
 
             // Check for lsUser and timestamp
@@ -44,8 +48,8 @@ const useAuth = (initialize = false) => {
 
             // Init complete
             setInitialized(true);
-        }
-    }, []);
+        }, []);
+    }
 
     // Log in
     async function login(username, password) {
@@ -53,11 +57,11 @@ const useAuth = (initialize = false) => {
 
         const user =
             process.env.NODE_ENV === 'development'
-                ? await salesforce.user.login({
+                ? await salesForce.user.login({
                       username: 'allen.dziedzic@example.com',
                       password: 's^7Vy_MFY1fsad_$23xCp_1',
                   })
-                : await salesforce.user.login({ username, password });
+                : await salesForce.user.login({ username, password });
 
         // Update store
         setUser(user);
@@ -77,7 +81,7 @@ const useAuth = (initialize = false) => {
         console.log('Auth: Logging out');
 
         if (loggedIn) {
-            await salesforce.user.logout({
+            await salesForce.user.logout({
                 accessToken: user.accessToken,
             });
         }
@@ -90,7 +94,24 @@ const useAuth = (initialize = false) => {
         setLsUser(null);
     }
 
-    return { login, logout, initialized, loggedIn, user };
+    // Method to push user to login if no longer logged in
+    function verifyLoggedIn(redirect = '/login') {
+        return useEffect(() => {
+            if (initialized && !loggedIn) {
+                router.push(redirect);
+            }
+        }, [loggedIn, initialized]);
+    }
+
+    return {
+        initialize,
+        login,
+        logout,
+        initialized,
+        loggedIn,
+        user,
+        verifyLoggedIn,
+    };
 };
 
 export default useAuth;

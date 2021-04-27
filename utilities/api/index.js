@@ -1,3 +1,3 @@
-import salesforce from './salesforce';
+import salesForce from './salesForce';
 
-export { salesforce };
+export { salesForce };

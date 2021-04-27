@@ -44,7 +44,6 @@
         .t-preamble {
             @apply font-body font-normal leading-normal text-24;
         }
-
         .t-body {
             @apply font-body font-normal leading-normal text-20;
         }

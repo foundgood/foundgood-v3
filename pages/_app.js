@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 
 // Packages and polyfills
-import { useRouter } from 'next/router';
 
 // Style
 import 'styles/foundgood.css';
@@ -16,18 +15,9 @@ import { useAuth } from 'utilities/hooks';
 import LayoutWrapper from 'components/_layout/layoutWrapper';
 
 function MyApp({ Component, pageProps }) {
-    // Hook: Authentication (true initializes the user using localstorage if preset)
-    const { loggedIn, initialized } = useAuth(true);
-
-    // Hook: Router
-    const router = useRouter();
-
-    // Effect: Handle routes if logged in or not
-    useEffect(() => {
-        if (initialized && !loggedIn) {
-            router.push('/');
-        }
-    }, [loggedIn, initialized]);
+    // Hook: Initialize authentication
+    const { initialize } = useAuth();
+    initialize();
 
     return (
         <>
