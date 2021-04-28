@@ -161,7 +161,7 @@ ButtonComponent.defaultProps = {
     disabled: false,
     icon: null,
     iconPosition: 'left',
-    size: 'medium',
+    size: 'small',
     variant: 'primary',
     theme: 'blue',
     className: '',
