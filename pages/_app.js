@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Next
 import Head from 'next/head';
@@ -9,11 +9,16 @@ import Head from 'next/head';
 import 'styles/foundgood.css';
 
 // Utilities
+import { useAuth } from 'utilities/hooks';
 
 // Components
 import LayoutWrapper from 'components/_layout/layoutWrapper';
 
 function MyApp({ Component, pageProps }) {
+    // Hook: Initialize authentication
+    const { initialize } = useAuth();
+    initialize();
+
     return (
         <>
             <Head>
