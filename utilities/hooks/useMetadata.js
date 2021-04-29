@@ -48,11 +48,15 @@ const useMetadata = () => {
         return [];
     }
 
+    function labelTodo(label) {
+        return label;
+    }
+
     function log() {
         console.log(metadata);
     }
 
-    return { label, type, valueSet, helpText, log };
+    return { label, labelTodo, type, valueSet, helpText, log };
 };
 
 export default useMetadata;
