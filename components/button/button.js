@@ -26,6 +26,7 @@ const ButtonComponent = ({
     // Icon position
     const isIconLeft = Icon && iconPosition === 'left';
     const isIconRight = Icon && iconPosition === 'right';
+    const isIconOnly = Icon && iconPosition === 'center';
 
     const styles = {
         size: {
@@ -146,7 +147,7 @@ ButtonComponent.propTypes = {
     /* Icon - should be component */
     icon: t.elementType,
     /* Placement of the icon */
-    iconPosition: t.oneOf(['right', 'left']),
+    iconPosition: t.oneOf(['right', 'left', 'center']),
     /* Button size */
     size: t.oneOf(['small', 'medium']),
     /* Button variant */
