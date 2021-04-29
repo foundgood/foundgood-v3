@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
 
@@ -20,14 +20,15 @@ const HeaderComponent = ({ showUserControls }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
-    const userName = 'Jenny Lindh';
+    // Hook: Auth
+    const { user } = useAuth();
 
     const onToggleUserNaviagtion = () => {
         console.log('toggle user nav');
     };
 
     return (
-        <div className="fixed flex items-center justify-between w-screen text-blue-300 z-header header-h page-px">
+        <div className="fixed flex items-center justify-between w-screen text-blue-300 bg-white z-header header-h page-px">
             <Link href="/">
                 <a>
                     <FGLogo className="fill-current" />
@@ -35,12 +36,12 @@ const HeaderComponent = ({ showUserControls }) => {
             </Link>
 
             {showUserControls && (
-                <ul className="flex">
+                <ul className="flex t-footnote">
                     <li className="mx-20 lg:cursor-pointer hover:text-coral-300">
                         <Link href="/#">
                             <a>
                                 <FiBook className="w-24 h-24 mx-auto stroke-current" />
-                                <span className="hidden lg:block">
+                                <span className="hidden mt-4 lg:block">
                                     {labelTodo('Initiatives')}
                                 </span>
                             </a>
@@ -50,7 +51,7 @@ const HeaderComponent = ({ showUserControls }) => {
                         <Link href="/#">
                             <a>
                                 <FiInbox className="w-24 h-24 mx-auto stroke-current" />
-                                <span className="hidden lg:block">
+                                <span className="hidden mt-4 lg:block">
                                     {labelTodo('Reports')}
                                 </span>
                             </a>
@@ -60,8 +61,8 @@ const HeaderComponent = ({ showUserControls }) => {
                         className="mx-20 lg:cursor-pointer hover:text-coral-300 hover:border-coral-300"
                         onClick={onToggleUserNaviagtion}>
                         <FiUser className="w-24 h-24 mx-auto stroke-current" />
-                        <div className="items-center hidden lg:flex">
-                            {userName}
+                        <div className="items-center hidden mt-4 lg:flex">
+                            {user.name}
                             <FiChevronDown className="w-18 h-18" />
                         </div>
                     </li>
