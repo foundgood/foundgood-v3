@@ -15,6 +15,7 @@ const ButtonComponent = ({
     disabled,
     icon: Icon,
     iconPosition,
+    iconType,
     size,
     variant,
     className,
@@ -26,7 +27,6 @@ const ButtonComponent = ({
     // Icon position
     const isIconLeft = Icon && iconPosition === 'left';
     const isIconRight = Icon && iconPosition === 'right';
-    const isIconOnly = Icon && iconPosition === 'center';
 
     const styles = {
         size: {
@@ -89,8 +89,10 @@ const ButtonComponent = ({
             {Icon && (
                 <Icon
                     className={cc([
-                        'fill-current -mt-6',
+                        '-mt-6',
                         {
+                            'fill-current': iconType === 'fill',
+                            'stroke-current': iconType === 'stroke',
                             'mr-8 -ml-4': isIconLeft,
                             'ml-8 -mr-4 order-2': isIconRight,
                         },
@@ -148,6 +150,8 @@ ButtonComponent.propTypes = {
     icon: t.elementType,
     /* Placement of the icon */
     iconPosition: t.oneOf(['right', 'left', 'center']),
+    /* Icon stroke or fill */
+    iconType: t.oneOf(['stroke', 'fill']),
     /* Button size */
     size: t.oneOf(['small', 'medium']),
     /* Button variant */
@@ -162,6 +166,7 @@ ButtonComponent.defaultProps = {
     disabled: false,
     icon: null,
     iconPosition: 'left',
+    iconType: 'fill',
     size: 'small',
     variant: 'primary',
     theme: 'blue',
