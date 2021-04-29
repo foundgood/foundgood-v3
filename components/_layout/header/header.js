@@ -32,7 +32,7 @@ const HeaderComponent = ({ showUserControls }) => {
 
             {showUserControls && (
                 <ul className="flex">
-                    <li className="mx-20 lg:cursor-pointer hover:text-coral-300">
+                    <li className="mx-20 lg:cursor-pointer transition-default hover:text-blue-100">
                         <Link href="/#">
                             <a>
                                 <FiBook className="mx-auto stroke-current w-24 h-24" />
@@ -42,7 +42,7 @@ const HeaderComponent = ({ showUserControls }) => {
                             </a>
                         </Link>
                     </li>
-                    <li className="mx-20 lg:cursor-pointer hover:text-coral-300">
+                    <li className="mx-20 lg:cursor-pointer transition-default hover:text-blue-100">
                         <Link href="/#">
                             <a>
                                 <FiInbox className="mx-auto stroke-current w-24 h-24" />
@@ -51,7 +51,7 @@ const HeaderComponent = ({ showUserControls }) => {
                         </Link>
                     </li>
                     <li
-                        className="mx-20 lg:cursor-pointer hover:text-coral-300 hover:border-coral-300"
+                        className="mx-20 lg:cursor-pointer transition-default hover:text-blue-100 hover:border-blue-100"
                         onClick={onToggleUserNaviagtion}>
                         <FiUser className="mx-auto stroke-current w-24 h-24" />
                         <div className="hidden items-center lg:flex">
