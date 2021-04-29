@@ -179,6 +179,7 @@ module.exports = {
                 above: '1',
                 content: '30',
                 header: '80',
+                'below-aside': '85',
                 aside: '90',
             },
             borderRadius: {

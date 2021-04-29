@@ -5,11 +5,16 @@ import React from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
 
 const WizardComponent = ({ pageProps }) => {
+    // Hook: Verify logged in
+    const { verifyLoggedIn, logout } = useAuth();
+    verifyLoggedIn();
+
+    // Hook: Metadata
     const { label, valueSet, log } = useMetadata();
 
     return (
