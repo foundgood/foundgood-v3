@@ -8,9 +8,12 @@ import Link from 'next/link';
 // Utilities
 import { useSalesForce, useAuth } from 'utilities/hooks';
 
+// Components
+import Button from 'components/button';
+
 const HomeComponent = ({ pageProps }) => {
     // Hook: Verify logged in
-    const { verifyLoggedIn } = useAuth();
+    const { verifyLoggedIn, logout } = useAuth();
     verifyLoggedIn();
 
     const { sfQuery, queries } = useSalesForce();
@@ -19,7 +22,10 @@ const HomeComponent = ({ pageProps }) => {
     return (
         <div className="t-h1">
             <Link href="/wizard">Foundgood,</Link>
-            <div className="flex flex-col w-full px-32 mt-32 ">
+            <Button theme="amber" action={() => logout()}>
+                Logout
+            </Button>
+            <div className="flex flex-col w-full px-32 mt-32">
                 <h1 className="t-h3">
                     Data from the server (only after login)
                 </h1>

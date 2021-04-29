@@ -4,13 +4,16 @@ import axios from 'axios';
 // Utilities
 import { useAuthStore } from 'utilities/store';
 
-// Retrieve access token from user in auth store
-const accessToken = () => useAuthStore.getState().user?.accessToken ?? null;
+// Retrieve access token and instance url from auth store
+const accessToken = () => useAuthStore.getState().accessToken ?? null;
+const instanceUrl = () => useAuthStore.getState().instanceUrl ?? null;
 
 async function query(query) {
     try {
         const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_SF_ENDPOINT}/services/data/v${process.env.NEXT_PUBLIC_SF_VERSION}/query/?q=${query}`,
+            `${instanceUrl()}/services/data/v${
+                process.env.NEXT_PUBLIC_SF_VERSION
+            }/query/?q=${query}`,
             {
                 headers: {
                     'Content-Type': 'application/json',

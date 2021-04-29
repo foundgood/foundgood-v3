@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 // Utilities
 import { salesForce } from 'utilities/api';
 import { useAuthStore } from 'utilities/store';
+import { hasWindow } from 'utilities';
 
 const useAuth = () => {
     // Hook: Router
@@ -14,100 +15,140 @@ const useAuth = () => {
 
     // Store: Auth
     const {
-        setInitialized,
+        setAccessToken,
+        setInstanceUrl,
         setUser,
         setLoggedIn,
-        initialized,
         loggedIn,
         user,
+        reset,
     } = useAuthStore();
 
     // Hook: Persist login with localstorage
-    const useLsUser = createLocalStorageStateHook('fg_lsUser', null);
-    const [lsUser, setLsUser] = useLsUser();
+    const useLsUserData = createLocalStorageStateHook('fg_lsUserData', null);
+    const [lsUserData, setLsUserData] = useLsUserData();
 
-    // Initialize
-    function initialize() {
+    // Helper: Extracts login url
+    function _getLoginUrl() {
+        const authUrl = process.env.NEXT_PUBLIC_LOGIN_AUTH_URL;
+        const clientId = process.env.NEXT_PUBLIC_LOGIN_CLIENT_ID;
+        const redirectUrl = encodeURIComponent(
+            `${process.env.NEXT_PUBLIC_LOGIN_REDIRECT_URL_PREFIX}/login_callback`
+        );
+        const state = encodeURIComponent(`${router.route}`);
+        return `${authUrl}/services/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}`;
+    }
+
+    // Method to push user to login if no longer logged in
+    function verifyLoggedIn() {
         return useEffect(() => {
-            console.log('Auth: Init');
+            console.log('Auth: Verify user');
 
             // Check for lsUser and timestamp
-            if (lsUser?.sessionInvalidTimestamp > Date.now() ?? false) {
-                console.log('Auth: Returning user');
-                setUser(lsUser);
-                setLoggedIn(true);
-
+            if (lsUserData?.sessionTimeout > Date.now() ?? false) {
                 // Log
-                console.log('Auth: User', lsUser);
+                console.log('Auth: Returning user', lsUserData.user);
             } else {
                 console.log('Auth: Session has timed out or does not exist');
                 setUser(null);
                 setLoggedIn(false);
-                setLsUser.reset();
-            }
+                setLsUserData(null);
 
-            // Init complete
-            setInitialized(true);
+                // Restart login
+                window.location.href = _getLoginUrl();
+            }
         }, []);
     }
 
-    // Log in
-    async function login(username, password) {
-        console.log('Auth: Logging in');
+    // Handle login callback
+    function handleLoginCallback() {
+        // username: 'allen.dziedzic@example.com',
+        // password: 's^7Vy_MFY1fsad_$23xCp_1',
+        return useEffect(() => {
+            if (hasWindow()) {
+                console.log('Auth: Handling Login Callback');
 
-        const user =
-            process.env.NEXT_PUBLIC_USER_ENVIRONMENT === 'development'
-                ? await salesForce.user.login({
-                      username: 'allen.dziedzic@example.com',
-                      password: 's^7Vy_MFY1fsad_$23xCp_1',
-                  })
-                : await salesForce.user.login({ username, password });
+                // Get hash params
+                const hashParams = window.location.hash
+                    .replace('#', '')
+                    .split('&');
 
-        // Update store
-        setUser(user);
-        setLoggedIn(true);
+                // Check for any params
+                if (hashParams.length > 0) {
+                    // Reduce into usable object
+                    const params = hashParams.reduce((acc, hash) => {
+                        // Split by key/value =
+                        const hashSplit = hash.split('=');
+                        return {
+                            ...acc,
+                            [hashSplit[0]]: decodeURIComponent(hashSplit[1]),
+                        };
+                    }, {});
 
-        // Update localstorage
-        setLsUser(user);
+                    // Get from params
+                    const { access_token, instance_url } = params;
 
-        // Log
-        console.log('Auth: User', user);
+                    // Get user info from sf api
+                    salesForce.user
+                        .getInfo({ token: access_token, url: instance_url })
+                        .then(user => {
+                            // Update localstorage object
+                            setLsUserData({
+                                user,
+                                accessToken: access_token,
+                                instanceUrl: instance_url,
+                                sessionTimeout:
+                                    parseInt(params.issued_at, 10) +
+                                    1800 * 1000,
+                            });
 
-        return user;
+                            // Log
+                            console.log('Auth: User', user);
+
+                            // Replace history to hide params
+                            router.replace(params.state);
+                        })
+                        .catch(() => {
+                            // Reset store
+                            reset();
+
+                            // Update localstorage
+                            setLsUserData(null);
+                        });
+                }
+            }
+        }, []);
     }
 
     // Log out
-    async function logout() {
+    function logout() {
         console.log('Auth: Logging out');
 
-        if (loggedIn) {
-            await salesForce.user.logout({
-                accessToken: user.accessToken,
-            });
+        salesForce.user.logout().then(() => {
+            // Update localstorage
+            setLsUserData(null);
+
+            // Redirect
+            window.location.href = 'https://foundgood.org/';
+        });
+    }
+
+    // Effect: Update data in store based on localstorage object
+    useEffect(() => {
+        if (lsUserData) {
+            const { user, accessToken, instanceUrl } = lsUserData;
+            setUser(user);
+            setLoggedIn(true);
+            setAccessToken(accessToken);
+            setInstanceUrl(instanceUrl);
+        } else {
+            reset();
         }
-
-        // Update store
-        setUser(null);
-        setLoggedIn(false);
-
-        // Update localstorage
-        setLsUser(null);
-    }
-
-    // Method to push user to login if no longer logged in
-    function verifyLoggedIn(redirect = '/login') {
-        return useEffect(() => {
-            if (initialized && !loggedIn) {
-                router.push(redirect);
-            }
-        }, [loggedIn, initialized]);
-    }
+    }, [lsUserData]);
 
     return {
-        initialize,
-        login,
+        handleLoginCallback,
         logout,
-        initialized,
         loggedIn,
         user,
         verifyLoggedIn,

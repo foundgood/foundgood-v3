@@ -2,20 +2,37 @@
 import create from 'zustand';
 
 const useAuthStore = create(set => ({
+    accessToken: null,
+    setAccessToken: accessToken =>
+        set(() => ({
+            accessToken,
+        })),
+
+    instanceUrl: null,
+    setInstanceUrl: instanceUrl =>
+        set(() => ({
+            instanceUrl,
+        })),
+
     user: null,
     setUser: user =>
         set(() => ({
-            user: user,
+            user,
         })),
+
     loggedIn: false,
     setLoggedIn: loggedIn =>
         set(() => ({
             loggedIn,
         })),
-    initialized: false,
-    setInitialized: () =>
+
+    reset: () =>
         set(() => ({
-            initialized: true,
+            accessToken: null,
+            instanceUrl: null,
+            user: null,
+            loggedIn: false,
+            initialized: false,
         })),
 }));
 

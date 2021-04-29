@@ -4,15 +4,18 @@ import axios from 'axios';
 // Utilities
 import { useAuthStore } from 'utilities/store';
 
-// Retrieve access token from user in auth store
-const accessToken = () => useAuthStore.getState().user?.accessToken ?? null;
+// Retrieve access token and instance url from auth store
+const accessToken = () => useAuthStore.getState().accessToken ?? null;
+const instanceUrl = () => useAuthStore.getState().instanceUrl ?? null;
 
 // Remember to add parent id in data if this is in someway is a reference to this.
 // E.g. {..., "Initiative__c": "a0p1x0000008CbtAAE"}
 async function create({ object, data }) {
     try {
         const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_SF_ENDPOINT}/services/data/v${process.env.NEXT_PUBLIC_SF_VERSION}/sobjects/${object}`,
+            `${instanceUrl()}/services/data/v${
+                process.env.NEXT_PUBLIC_SF_VERSION
+            }/sobjects/${object}`,
             data,
             {
                 headers: {
@@ -40,7 +43,7 @@ async function create({ object, data }) {
 async function update({ object, id, data }) {
     try {
         const response = await axios.patch(
-            `${process.env.NEXT_PUBLIC_SF_ENDPOINT}/services/data/v{{version}}/sobjects/${object}/${id}`,
+            `${instanceUrl()}/services/data/v{{version}}/sobjects/${object}/${id}`,
             data,
             {
                 headers: {
