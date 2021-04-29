@@ -7,13 +7,14 @@ import { salesForce } from 'utilities/api';
 
 const useSalesForce = () => {
     // Hook: Auth
-    const { loggedIn } = useAuth();
+    const { loggedIn, updateUserTimeout } = useAuth();
 
     // Method for consuming the "query" part of the SalesForce API
     // Returns normal swr object ({ data, error, isValidating, mutate })
     function sfQuery(query) {
         return useSWR(loggedIn ? query : null, salesForce.fetchers.query, {
             revalidateOnFocus: false,
+            onSuccess: updateUserTimeout,
         });
     }
 
@@ -25,6 +26,10 @@ const useSalesForce = () => {
     // Returns id of created object
     async function sfCreate({ object, data }) {
         const { id } = await salesForce.crud.create({ object, data });
+
+        // Update user timeout
+        updateUserTimeout();
+
         return id;
     }
 
@@ -35,12 +40,18 @@ const useSalesForce = () => {
     // Returns nothing
     async function sfUpdate({ object, id, data }) {
         await salesForce.crud.update({ object, id, data });
+
+        // Update user timeout
+        updateUserTimeout();
     }
 
     // Method for setting the user language in the SalesForce API
     // Language is either 'da' or 'en_US'
     async function sfSetUserLanguage(language) {
         await salesForce.custom.setUserLanguage({ language });
+
+        // Update user timeout
+        updateUserTimeout();
     }
 
     // Method for getting current user initiative rights of the SalesForce API
@@ -51,6 +62,7 @@ const useSalesForce = () => {
             salesForce.custom.getUserInitiativeRights({ initiativeId }),
             {
                 revalidateOnFocus: false,
+                onSuccess: updateUserTimeout,
             }
         );
     }
@@ -63,6 +75,7 @@ const useSalesForce = () => {
             salesForce.custom.getInitiativeList({ offset }),
             {
                 revalidateOnFocus: false,
+                onSuccess: updateUserTimeout,
             }
         );
     }
