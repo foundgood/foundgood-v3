@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // Utilities
+import { useMetadata } from 'utilities/hooks';
 
 // Components
 
@@ -16,6 +17,9 @@ import { FiBook, FiInbox, FiUser, FiChevronDown } from 'react-icons/fi';
 import FGLogo from 'assets/images/fg-logo.svg';
 
 const HeaderComponent = ({ showUserControls }) => {
+    // Hook: Metadata
+    const { labelTodo } = useMetadata();
+
     const userName = 'Jenny Lindh';
 
     const onToggleUserNaviagtion = () => {
@@ -23,7 +27,7 @@ const HeaderComponent = ({ showUserControls }) => {
     };
 
     return (
-        <div className="bg-fixed flex items-center justify-between w-screen h-48 px-16 text-blue-300 z-header sm:px-24 lg:px-32 lg:h-64 sm:h-56">
+        <div className="fixed flex items-center justify-between w-screen text-blue-300 z-header header-h page-px">
             <Link href="/">
                 <a>
                     <FGLogo className="fill-current" />
@@ -35,9 +39,9 @@ const HeaderComponent = ({ showUserControls }) => {
                     <li className="mx-20 lg:cursor-pointer hover:text-coral-300">
                         <Link href="/#">
                             <a>
-                                <FiBook className="mx-auto stroke-current w-24 h-24" />
+                                <FiBook className="w-24 h-24 mx-auto stroke-current" />
                                 <span className="hidden lg:block">
-                                    Initiatives
+                                    {labelTodo('Initiatives')}
                                 </span>
                             </a>
                         </Link>
@@ -45,16 +49,18 @@ const HeaderComponent = ({ showUserControls }) => {
                     <li className="mx-20 lg:cursor-pointer hover:text-coral-300">
                         <Link href="/#">
                             <a>
-                                <FiInbox className="mx-auto stroke-current w-24 h-24" />
-                                <span className="hidden lg:block">Reports</span>
+                                <FiInbox className="w-24 h-24 mx-auto stroke-current" />
+                                <span className="hidden lg:block">
+                                    {labelTodo('Reports')}
+                                </span>
                             </a>
                         </Link>
                     </li>
                     <li
                         className="mx-20 lg:cursor-pointer hover:text-coral-300 hover:border-coral-300"
                         onClick={onToggleUserNaviagtion}>
-                        <FiUser className="mx-auto stroke-current w-24 h-24" />
-                        <div className="hidden items-center lg:flex">
+                        <FiUser className="w-24 h-24 mx-auto stroke-current" />
+                        <div className="items-center hidden lg:flex">
                             {userName}
                             <FiChevronDown className="w-18 h-18" />
                         </div>
