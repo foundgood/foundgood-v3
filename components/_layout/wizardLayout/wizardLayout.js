@@ -11,6 +11,7 @@ import { useResponsive } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
+import AsideNavigation from 'components/_asideNavigation/asideNavigation';
 
 // Icons
 import { FiHeart } from 'react-icons/fi';
@@ -43,13 +44,13 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
         <>
             <div
                 className={cc([
-                    'fixed top-48 lg:top-64 sm:top-56 w-1/5 flex 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-aside border-r border-teal-10 px-16 sm:px-24 lg:px-32',
+                    'fixed top-48 lg:top-64 sm:top-56 w-1/5 3xl:w-[288px] bg-white transition-slow transform bottom-0 z-aside border-r border-teal-10 px-16 sm:px-24 lg:px-32',
                     {
                         'pointer-events-auto': leftMenuActive,
                         ' -translate-x-full pointer-events-none': !leftMenuActive,
                     },
                 ])}>
-                Aside TBD
+                <AsideNavigation />
             </div>
 
             <div
