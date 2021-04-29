@@ -127,7 +127,7 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
             <div
                 style={{ willChange: 'left, right' }}
                 className={cc([
-                    'absolute flex justify-center transition-slow left-0 right-0 mb-24 top-48 lg:top-0 sm:top-56;',
+                    'absolute flex justify-center transition-slow left-0 right-0 mb-24 top-48 xl:top-0 sm:top-56',
                     {
                         'xl:left-[20%] 3xl:left-[300px]': leftMenuActive,
                         'xl:right-[25%] 3xl:right-[400px]': rightMenuActive,
