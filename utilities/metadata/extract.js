@@ -6,8 +6,27 @@ const _uniq = require('lodash.uniq');
 const _get = require('lodash.get');
 
 const config = {
-    zipUrl: 'http://angry-swartz-8a0a7f.netlify.app/metadata.zip',
+    zipUrl: 'https://www.dropbox.com/s/liqnievb8llw255/metadata.zip?dl=1',
     locales: ['da'],
+    files: {
+        account: 'Account',
+        initiative: 'Initiative__c',
+        initiativeActivity: 'Initiative_Activity__c',
+        initiativeActivityGoal: 'Initiative_Activity_Goal__c',
+        initiativeActivitySuccessMetric:
+            'Initiative_Activity_Success_Metric__c',
+        initiativeCollaborator: 'Initiative_Collaborator__c',
+        initiativeEmployeeFunded: 'Initiative_Employee_Funded__c',
+        initiativeFunder: 'Initiative_Funder__c',
+        initiativeGoal: 'Initiative_Goal__c',
+        initiativeReport: 'Initiative_Report__c',
+        initiativeReportDetail: 'Initiative_Report_Detail__c',
+        initiativeReportDetailEntry: 'Initiative_Report_Detail_Entry__c',
+        initiativeReportDetailGoal: 'Initiative_Report_Detail_Goal__c',
+        initiativeTeamMember: 'Initiative_Team_Member__c',
+        initiativeUpdate: 'Initiative_Update__c',
+        initiativeUpdateContent: 'Initiative_Update_Content__c',
+    },
 };
 
 class zipExtractor {
@@ -56,6 +75,16 @@ class zipExtractor {
         }, []);
     }
 
+    _runThroughFiles(method) {
+        return Object.keys(config.files).reduce(
+            (acc, key) => ({
+                ...acc,
+                [key]: method(config.files[key]),
+            }),
+            {}
+        );
+    }
+
     customLabelsDefault() {
         return this._asJson(
             'labels/CustomLabels.labels'
@@ -81,8 +110,8 @@ class zipExtractor {
     }
 
     objectLabelsDefault() {
-        const _reduceObject = fileName =>
-            this._asJson(
+        const _reduceObject = fileName => {
+            return this._asJson(
                 `objects/${fileName}.object`
             ).CustomObject.fields.reduce(
                 (acc, label) => ({
@@ -94,34 +123,9 @@ class zipExtractor {
                 }),
                 {}
             );
-
-        return {
-            account: _reduceObject('Account'),
-            initiative: _reduceObject('Initiative__c'),
-            initiativeActivity: _reduceObject('Initiative_Activity__c'),
-            initiativeActivityGoal: _reduceObject(
-                'Initiative_Activity_Goal__c'
-            ),
-            initiativeActivitySuccessMetric: _reduceObject(
-                'Initiative_Activity_Success_Metric__c'
-            ),
-            initiativeGoal: _reduceObject('Initiative_Goal__c'),
-            initiativeReport: _reduceObject('Initiative_Report__c'),
-            initiativeReportDetail: _reduceObject(
-                'Initiative_Report_Detail__c'
-            ),
-            initiativeReportDetailEntry: _reduceObject(
-                'Initiative_Report_Detail_Entry__c'
-            ),
-            initiativeReportDetailGoal: _reduceObject(
-                'Initiative_Report_Detail_Goal__c'
-            ),
-            initiativeTeamMember: _reduceObject('Initiative_Team_Member__c'),
-            initiativeUpdate: _reduceObject('Initiative_Update__c'),
-            initiativeUpdateContent: _reduceObject(
-                'Initiative_Update_Content__c'
-            ),
         };
+
+        return this._runThroughFiles(_reduceObject.bind());
     }
 
     objectLabelsLocale(locale) {
@@ -139,33 +143,7 @@ class zipExtractor {
                 {}
             );
 
-        return {
-            account: _reduceObject(`Account`),
-            initiative: _reduceObject(`Initiative__c`),
-            initiativeActivity: _reduceObject(`Initiative_Activity__c`),
-            initiativeActivityGoal: _reduceObject(
-                `Initiative_Activity_Goal__c`
-            ),
-            initiativeActivitySuccessMetric: _reduceObject(
-                `Initiative_Activity_Success_Metric__c`
-            ),
-            initiativeGoal: _reduceObject(`Initiative_Goal__c`),
-            initiativeReport: _reduceObject(`Initiative_Report__c`),
-            initiativeReportDetail: _reduceObject(
-                `Initiative_Report_Detail__c`
-            ),
-            initiativeReportDetailEntry: _reduceObject(
-                `Initiative_Report_Detail_Entry__c`
-            ),
-            initiativeReportDetailGoal: _reduceObject(
-                `Initiative_Report_Detail_Goal__c`
-            ),
-            initiativeTeamMember: _reduceObject(`Initiative_Team_Member__c`),
-            initiativeUpdate: _reduceObject(`Initiative_Update__c`),
-            initiativeUpdateContent: _reduceObject(
-                `Initiative_Update_Content__c`
-            ),
-        };
+        return this._runThroughFiles(_reduceObject.bind());
     }
 
     valueSetsDefault() {
@@ -274,33 +252,7 @@ class zipExtractor {
                 return acc;
             }, {});
 
-        return {
-            account: _reduceValueSet('Account'),
-            initiative: _reduceValueSet('Initiative__c'),
-            initiativeActivity: _reduceValueSet('Initiative_Activity__c'),
-            initiativeActivityGoal: _reduceValueSet(
-                'Initiative_Activity_Goal__c'
-            ),
-            initiativeActivitySuccessMetric: _reduceValueSet(
-                'Initiative_Activity_Success_Metric__c'
-            ),
-            initiativeGoal: _reduceValueSet('Initiative_Goal__c'),
-            initiativeReport: _reduceValueSet('Initiative_Report__c'),
-            initiativeReportDetail: _reduceValueSet(
-                'Initiative_Report_Detail__c'
-            ),
-            initiativeReportDetailEntry: _reduceValueSet(
-                'Initiative_Report_Detail_Entry__c'
-            ),
-            initiativeReportDetailGoal: _reduceValueSet(
-                'Initiative_Report_Detail_Goal__c'
-            ),
-            initiativeTeamMember: _reduceValueSet('Initiative_Team_Member__c'),
-            initiativeUpdate: _reduceValueSet('Initiative_Update__c'),
-            initiativeUpdateContent: _reduceValueSet(
-                'Initiative_Update_Content__c'
-            ),
-        };
+        return this._runThroughFiles(_reduceValueSet.bind());
     }
 
     valueSetsLocale(locale) {
@@ -469,33 +421,7 @@ class zipExtractor {
                 return acc;
             }, {});
 
-        return {
-            account: _reduceValueSet('Account'),
-            initiative: _reduceValueSet('Initiative__c'),
-            initiativeActivity: _reduceValueSet('Initiative_Activity__c'),
-            initiativeActivityGoal: _reduceValueSet(
-                'Initiative_Activity_Goal__c'
-            ),
-            initiativeActivitySuccessMetric: _reduceValueSet(
-                'Initiative_Activity_Success_Metric__c'
-            ),
-            initiativeGoal: _reduceValueSet('Initiative_Goal__c'),
-            initiativeReport: _reduceValueSet('Initiative_Report__c'),
-            initiativeReportDetail: _reduceValueSet(
-                'Initiative_Report_Detail__c'
-            ),
-            initiativeReportDetailEntry: _reduceValueSet(
-                'Initiative_Report_Detail_Entry__c'
-            ),
-            initiativeReportDetailGoal: _reduceValueSet(
-                'Initiative_Report_Detail_Goal__c'
-            ),
-            initiativeTeamMember: _reduceValueSet('Initiative_Team_Member__c'),
-            initiativeUpdate: _reduceValueSet('Initiative_Update__c'),
-            initiativeUpdateContent: _reduceValueSet(
-                'Initiative_Update_Content__c'
-            ),
-        };
+        return this._runThroughFiles(_reduceValueSet.bind());
     }
 
     objectTypes() {
@@ -510,33 +436,7 @@ class zipExtractor {
                 {}
             );
 
-        return {
-            account: _reduceObject('Account'),
-            initiative: _reduceObject('Initiative__c'),
-            initiativeActivity: _reduceObject('Initiative_Activity__c'),
-            initiativeActivityGoal: _reduceObject(
-                'Initiative_Activity_Goal__c'
-            ),
-            initiativeActivitySuccessMetric: _reduceObject(
-                'Initiative_Activity_Success_Metric__c'
-            ),
-            initiativeGoal: _reduceObject('Initiative_Goal__c'),
-            initiativeReport: _reduceObject('Initiative_Report__c'),
-            initiativeReportDetail: _reduceObject(
-                'Initiative_Report_Detail__c'
-            ),
-            initiativeReportDetailEntry: _reduceObject(
-                'Initiative_Report_Detail_Entry__c'
-            ),
-            initiativeReportDetailGoal: _reduceObject(
-                'Initiative_Report_Detail_Goal__c'
-            ),
-            initiativeTeamMember: _reduceObject('Initiative_Team_Member__c'),
-            initiativeUpdate: _reduceObject('Initiative_Update__c'),
-            initiativeUpdateContent: _reduceObject(
-                'Initiative_Update_Content__c'
-            ),
-        };
+        return this._runThroughFiles(_reduceObject.bind());
     }
 }
 
