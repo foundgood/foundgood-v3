@@ -53,10 +53,7 @@ const useAuth = () => {
             console.log('Auth: Verify user');
 
             // Check for lsUser and timestamp
-            if (lsUserData && lsUserSessionTimeout > Date.now()) {
-                // Log
-                console.log('Auth: Returning user', lsUserData.user);
-            } else {
+            if (!lsUserData || !lsUserSessionTimeout > Date.now()) {
                 console.log('Auth: Session has timed out or does not exist');
                 setUser(null);
                 setLoggedIn(false);
