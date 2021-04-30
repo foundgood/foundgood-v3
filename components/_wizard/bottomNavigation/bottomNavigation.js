@@ -48,7 +48,9 @@ const BottomNavigationComponent = () => {
                         action={onHandleBack}>
                         {labelTodo('Back')}
                     </Button>
-                    <Button theme="coral">{labelTodo('Continue')}</Button>
+                    <Button theme="coral" action={onHandleContinue}>
+                        {labelTodo('Continue')}
+                    </Button>
                 </div>
             </div>
         </div>
