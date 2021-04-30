@@ -75,7 +75,7 @@ const ButtonComponent = ({
 
     // Styling
     const elementClassNames = cc([
-        'transition-default flex items-center focus:outline-none outline-none whitespace-no-wrap',
+        'transition-default flex items-center focus:outline-none outline-none whitespace-no-wrap flex-shrink-0',
         className,
         styles.size[size],
         styles.theme[theme].shared,
@@ -100,7 +100,7 @@ const ButtonComponent = ({
                 />
             )}
             <span
-                className={cc([
+                className={cc('flex-shrink-0', [
                     {
                         'order-1': isIconRight,
                     },
