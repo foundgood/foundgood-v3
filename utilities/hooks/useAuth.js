@@ -24,9 +24,17 @@ const useAuth = () => {
         reset,
     } = useAuthStore();
 
-    // Hook: Persist login with localstorage
+    // Hook: Persist user and user session timeout with localstorage
     const useLsUserData = createLocalStorageStateHook('fg_lsUserData', null);
+    const useLsUserSessionTimeout = createLocalStorageStateHook(
+        'fg_lsUserSessionTimeout',
+        null
+    );
     const [lsUserData, setLsUserData] = useLsUserData();
+    const [
+        lsUserSessionTimeout,
+        setLsUserSessionTimeout,
+    ] = useLsUserSessionTimeout();
 
     // Helper: Extracts login url
     function _getLoginUrl() {
@@ -45,10 +53,7 @@ const useAuth = () => {
             console.log('Auth: Verify user');
 
             // Check for lsUser and timestamp
-            if (lsUserData?.sessionTimeout > Date.now() ?? false) {
-                // Log
-                console.log('Auth: Returning user', lsUserData.user);
-            } else {
+            if (!lsUserData || !lsUserSessionTimeout > Date.now()) {
                 console.log('Auth: Session has timed out or does not exist');
                 setUser(null);
                 setLoggedIn(false);
@@ -88,18 +93,21 @@ const useAuth = () => {
                     // Get from params
                     const { access_token, instance_url } = params;
 
+                    // Update localstorage timeout
+                    setLsUserSessionTimeout(
+                        parseInt(params.issued_at, 10) +
+                            process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS
+                    );
+
                     // Get user info from sf api
                     salesForce.user
                         .getInfo({ token: access_token, url: instance_url })
                         .then(user => {
-                            // Update localstorage object
+                            // Update localstorage user
                             setLsUserData({
                                 user,
                                 accessToken: access_token,
                                 instanceUrl: instance_url,
-                                sessionTimeout:
-                                    parseInt(params.issued_at, 10) +
-                                    1800 * 1000,
                             });
 
                             // Log
@@ -114,6 +122,7 @@ const useAuth = () => {
 
                             // Update localstorage
                             setLsUserData(null);
+                            setLsUserSessionTimeout(null);
                         });
                 }
             }
@@ -131,6 +140,13 @@ const useAuth = () => {
             // Redirect
             window.location.href = 'https://foundgood.org/';
         });
+    }
+
+    // Update user timeout
+    function updateUserTimeout() {
+        setLsUserSessionTimeout(
+            Date.now() + process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS
+        );
     }
 
     // Effect: Update data in store based on localstorage object
@@ -152,6 +168,7 @@ const useAuth = () => {
         loggedIn,
         user,
         verifyLoggedIn,
+        updateUserTimeout,
     };
 };
 

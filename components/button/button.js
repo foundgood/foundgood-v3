@@ -15,6 +15,7 @@ const ButtonComponent = ({
     disabled,
     icon: Icon,
     iconPosition,
+    iconType,
     size,
     variant,
     className,
@@ -26,11 +27,12 @@ const ButtonComponent = ({
     // Icon position
     const isIconLeft = Icon && iconPosition === 'left';
     const isIconRight = Icon && iconPosition === 'right';
+    const isIconOnly = Icon && iconPosition === 'center';
 
     const styles = {
         size: {
             medium: 't-h4 pt-11 px-16 py-6 rounded-4 focus:ring-3',
-            small: 't-h6 pt-11 px-16 py-6 rounded-4 focus:ring-2',
+            small: 't-h6 pt-11 px-16 py-6 rounded-4 focus:ring-2 h-40',
         },
         theme: {
             blue: {
@@ -74,7 +76,7 @@ const ButtonComponent = ({
 
     // Styling
     const elementClassNames = cc([
-        'transition-default flex items-center focus:outline-none outline-none whitespace-no-wrap',
+        'transition-default flex items-center focus:outline-none outline-none whitespace-no-wrap flex-shrink-0',
         className,
         styles.size[size],
         styles.theme[theme].shared,
@@ -88,16 +90,19 @@ const ButtonComponent = ({
             {Icon && (
                 <Icon
                     className={cc([
-                        'fill-current -mt-6',
+                        '-mt-6',
                         {
+                            'fill-current': iconType === 'fill',
+                            'stroke-current': iconType === 'stroke',
                             'mr-8 -ml-4': isIconLeft,
                             'ml-8 -mr-4 order-2': isIconRight,
+                            'w-24 h-24': isIconOnly,
                         },
                     ])}
                 />
             )}
             <span
-                className={cc([
+                className={cc('flex-shrink-0', [
                     {
                         'order-1': isIconRight,
                     },
@@ -146,7 +151,9 @@ ButtonComponent.propTypes = {
     /* Icon - should be component */
     icon: t.elementType,
     /* Placement of the icon */
-    iconPosition: t.oneOf(['right', 'left']),
+    iconPosition: t.oneOf(['right', 'left', 'center']),
+    /* Icon stroke or fill */
+    iconType: t.oneOf(['stroke', 'fill']),
     /* Button size */
     size: t.oneOf(['small', 'medium']),
     /* Button variant */
@@ -161,6 +168,7 @@ ButtonComponent.defaultProps = {
     disabled: false,
     icon: null,
     iconPosition: 'left',
+    iconType: 'fill',
     size: 'small',
     variant: 'primary',
     theme: 'blue',

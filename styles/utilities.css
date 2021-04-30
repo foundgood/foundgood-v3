@@ -15,4 +15,40 @@
     .transition-current-color {
         @apply transition-colors duration-300 ease-smooth-out;
     }
+
+    /* Header */
+    .header-mt {
+        @apply mt-48 lg:mt-64 sm:mt-56;
+    }
+    .header-t {
+        @apply top-48 lg:top-64 sm:top-56;
+    }
+    .header-h {
+        @apply h-48 lg:h-64 sm:h-56;
+    }
+
+    /* Page */
+    .page-mx {
+        @apply mx-16 sm:mx-24 lg:mx-32;
+    }
+
+    .page-ml {
+        @apply ml-16 sm:ml-24 lg:ml-32;
+    }
+
+    .page-mr {
+        @apply mr-16 sm:mr-24 lg:mr-32;
+    }
+
+    .page-px {
+        @apply px-16 sm:px-24 lg:px-32;
+    }
+
+    .page-pl {
+        @apply pl-16 sm:pl-24 lg:pl-32;
+    }
+
+    .page-pr {
+        @apply pr-16 sm:pr-24 lg:pr-32;
+    }
 }

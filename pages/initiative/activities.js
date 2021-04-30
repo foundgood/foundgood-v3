@@ -9,19 +9,15 @@ import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
 
-const WizardComponent = ({ pageProps }) => {
+const ActivitiesComponent = ({ pageProps }) => {
     // Hook: Verify logged in
-    const { verifyLoggedIn, logout } = useAuth();
+    const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Hook: Metadata
     const { label, valueSet, log } = useMetadata();
 
-    return (
-        <div className="t-h1">
-            Foundgood, {label('objects.initiative.Approach_Thinking__c')}
-        </div>
-    );
+    return <div className="t-h1">Activities details</div>;
 };
 
 export async function getStaticProps(context) {
@@ -30,14 +26,14 @@ export async function getStaticProps(context) {
     };
 }
 
-WizardComponent.propTypes = {
+ActivitiesComponent.propTypes = {
     pageProps: t.object,
 };
 
-WizardComponent.defaultProps = {
+ActivitiesComponent.defaultProps = {
     pageProps: {},
 };
 
-WizardComponent.layout = 'wizard';
+ActivitiesComponent.layout = 'initiative';
 
-export default WizardComponent;
+export default ActivitiesComponent;

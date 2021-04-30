@@ -43,13 +43,13 @@ const component = {
         const actions = [
             {
                 type: 'add',
-                path: './components/{{directory}}/{{camelCase name}}/index.js',
+                path: './{{directory}}/{{camelCase name}}/index.js',
                 templateFile: './plop/templates/component/index.hbs',
             },
             {
                 type: 'add',
                 path:
-                    './components/{{directory}}/{{camelCase name}}/{{camelCase name}}.js',
+                    './{{directory}}/{{camelCase name}}/{{camelCase name}}.js',
                 templateFile: './plop/templates/component/component.hbs',
             },
         ];

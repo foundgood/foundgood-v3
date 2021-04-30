@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // Utilities
+import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
 
@@ -16,14 +17,18 @@ import { FiBook, FiInbox, FiUser, FiChevronDown } from 'react-icons/fi';
 import FGLogo from 'assets/images/fg-logo.svg';
 
 const HeaderComponent = ({ showUserControls }) => {
-    const userName = 'Jenny Lindh';
+    // Hook: Metadata
+    const { labelTodo } = useMetadata();
+
+    // Hook: Auth
+    const { user } = useAuth();
 
     const onToggleUserNaviagtion = () => {
         console.log('toggle user nav');
     };
 
     return (
-        <div className="flex items-center justify-between w-screen h-48 px-16 text-blue-300 bg-fixed z-header sm:px-24 lg:px-32 lg:h-64 sm:h-56">
+        <div className="fixed flex items-center justify-between w-full text-blue-300 bg-white z-header header-h page-px">
             <Link href="/">
                 <a>
                     <FGLogo className="fill-current" />
@@ -31,33 +36,37 @@ const HeaderComponent = ({ showUserControls }) => {
             </Link>
 
             {showUserControls && (
-                <ul className="flex">
-                    <li className="mx-20 lg:cursor-pointer transition-default hover:text-blue-100">
+                <ul className="flex space-x-20 t-footnote">
+                    <li className="lg:cursor-pointer hover:text-coral-300">
                         <Link href="/#">
                             <a>
                                 <FiBook className="w-24 h-24 mx-auto stroke-current" />
-                                <span className="hidden lg:block">
-                                    Initiatives
+                                <span className="hidden mt-4 lg:block">
+                                    {labelTodo('Initiatives')}
                                 </span>
                             </a>
                         </Link>
                     </li>
-                    <li className="mx-20 lg:cursor-pointer transition-default hover:text-blue-100">
+                    <li className="lg:cursor-pointer hover:text-coral-300">
                         <Link href="/#">
                             <a>
                                 <FiInbox className="w-24 h-24 mx-auto stroke-current" />
-                                <span className="hidden lg:block">Reports</span>
+                                <span className="hidden mt-4 lg:block">
+                                    {labelTodo('Reports')}
+                                </span>
                             </a>
                         </Link>
                     </li>
                     <li
-                        className="mx-20 lg:cursor-pointer transition-default hover:text-blue-100 hover:border-blue-100"
+                        className="lg:cursor-pointer hover:text-coral-300 hover:border-coral-300"
                         onClick={onToggleUserNaviagtion}>
                         <FiUser className="w-24 h-24 mx-auto stroke-current" />
-                        <div className="items-center hidden lg:flex">
-                            {userName}
-                            <FiChevronDown className="w-18 h-18" />
-                        </div>
+                        {user && (
+                            <div className="items-center hidden mt-4 lg:flex">
+                                {user.name}
+                                <FiChevronDown className="w-18 h-18" />
+                            </div>
+                        )}
                     </li>
                 </ul>
             )}
