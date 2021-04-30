@@ -21,19 +21,19 @@
         }
 
         /* Sub headings */
-        .t-sh2 {
+        .t-sh1 {
             @apply font-heading font-normal leading-normal text-32 xl:text-36 3xl:text-40;
         }
-        .t-sh3 {
+        .t-sh2 {
             @apply font-heading font-normal leading-normal text-28 xl:text-30 3xl:text-32;
         }
-        .t-sh4 {
+        .t-sh3 {
             @apply font-heading font-normal leading-normal text-24;
         }
-        .t-sh5 {
+        .t-sh4 {
             @apply font-heading font-normal leading-normal text-20;
         }
-        .t-sh6 {
+        .t-sh5 {
             @apply font-heading font-normal leading-normal text-18;
         }
         .t-sh6 {

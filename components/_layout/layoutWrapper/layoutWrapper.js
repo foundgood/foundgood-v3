@@ -11,6 +11,8 @@ import t from 'prop-types';
 import Header from 'components/_layout/header';
 import DefaultLayout from 'components/_layout/defaultLayout';
 import WizardLayout from 'components/_layout/wizardLayout';
+import ReportLayout from 'components/_layout/reportLayout';
+import InitiativeLayout from 'components/_layout/initiativeLayout';
 
 // Layouts and their settings
 const allLayouts = {
@@ -21,8 +23,12 @@ const allLayouts = {
         layout: WizardLayout,
         headerUserControls: false,
     },
-    content: 'ContentLayout',
-    report: 'ReportLayout',
+    initiative: {
+        layout: InitiativeLayout,
+    },
+    report: {
+        layout: ReportLayout,
+    },
 };
 
 const LayoutWrapperComponent = ({

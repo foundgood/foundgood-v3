@@ -152,6 +152,8 @@ module.exports = {
             ...remInPx(144),
             ...remInPx(160),
             ...remInPx(192),
+            ...remInPx(208),
+            ...remInPx(232),
             '1/12': '8.333333%',
             '2/12': '16.666667%',
             '3/12': '25%',
@@ -184,11 +186,15 @@ module.exports = {
             },
             borderRadius: {
                 ...remInPx(4),
+                ...remInPx(8),
             },
         },
     },
     variants: {
         extend: {},
     },
-    plugins: [require('tailwindcss-debug-screens')],
+    plugins: [
+        require('@tailwindcss/line-clamp'),
+        require('tailwindcss-debug-screens'),
+    ],
 };
