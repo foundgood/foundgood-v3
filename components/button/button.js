@@ -27,11 +27,12 @@ const ButtonComponent = ({
     // Icon position
     const isIconLeft = Icon && iconPosition === 'left';
     const isIconRight = Icon && iconPosition === 'right';
+    const isIconOnly = Icon && iconPosition === 'center';
 
     const styles = {
         size: {
             medium: 't-h4 pt-11 px-16 py-6 rounded-4 focus:ring-3',
-            small: 't-h6 pt-11 px-16 py-6 rounded-4 focus:ring-2',
+            small: 't-h6 pt-11 px-16 py-6 rounded-4 focus:ring-2 h-40',
         },
         theme: {
             blue: {
@@ -95,6 +96,7 @@ const ButtonComponent = ({
                             'stroke-current': iconType === 'stroke',
                             'mr-8 -ml-4': isIconLeft,
                             'ml-8 -mr-4 order-2': isIconRight,
+                            'w-24 h-24': isIconOnly,
                         },
                     ])}
                 />
