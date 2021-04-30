@@ -37,7 +37,7 @@ const HeaderComponent = ({ showUserControls }) => {
 
             {showUserControls && (
                 <ul className="flex space-x-20 t-footnote">
-                    <li className="lg:cursor-pointer hover:text-coral-300">
+                    <li className="lg:cursor-pointer hover:text-blue-100">
                         <Link href="/#">
                             <a>
                                 <FiBook className="w-24 h-24 mx-auto stroke-current" />
@@ -47,7 +47,7 @@ const HeaderComponent = ({ showUserControls }) => {
                             </a>
                         </Link>
                     </li>
-                    <li className="lg:cursor-pointer hover:text-coral-300">
+                    <li className="lg:cursor-pointer hover:text-blue-100">
                         <Link href="/#">
                             <a>
                                 <FiInbox className="w-24 h-24 mx-auto stroke-current" />
@@ -58,7 +58,7 @@ const HeaderComponent = ({ showUserControls }) => {
                         </Link>
                     </li>
                     <li
-                        className="lg:cursor-pointer hover:text-coral-300 hover:border-coral-300"
+                        className="lg:cursor-pointer hover:text-blue-300 hover:border-blue-300"
                         onClick={onToggleUserNaviagtion}>
                         <FiUser className="w-24 h-24 mx-auto stroke-current" />
                         {user && (
