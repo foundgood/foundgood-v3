@@ -10,6 +10,7 @@ import { useWizardLayoutStore } from 'utilities/store';
 import { useResponsive, useMetadata } from 'utilities/hooks';
 
 // Components
+import IconButton from 'components/iconButton';
 import Button from 'components/button';
 import BottomNavigation from 'components/_wizard/bottomNavigation';
 
@@ -57,11 +58,15 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
                         ' -translate-x-full pointer-events-none': !leftMenuActive,
                     },
                 ])}>
-                <button
-                    onClick={() => toggleLeftMenu(false)}
-                    className="self-start h-40 mt-8 text-blue-300 outline-none xl:hidden focus:outline-none focus:ring-blue-100 focus:ring-2 rounded-4">
-                    <FiChevronsLeft className="w-24 h-24 stroke-current" />
-                </button>
+                {/* Aside navigation wrapper */}
+                <div className="flex py-8">
+                    <IconButton
+                        className="self-start my-8 xl:hidden"
+                        icon={FiChevronsLeft}
+                        iconType="stroke"
+                        action={() => toggleLeftMenu(false)}
+                    />
+                </div>
 
                 {/* Aside content */}
                 <div className="flex-grow mt-32 overflow-y-auto scrolling-touch">
@@ -94,9 +99,11 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
             </div>
 
             {/* Button navigation */}
-            <div className="fixed left-0 right-0 flex justify-between pt-8 xl:justify-end header-t page-px z-below-aside">
-                <button
-                    onClick={() => {
+            <div className="fixed left-0 right-0 flex justify-between py-8 bg-white transition-default xl:bg-transparent xl:justify-end header-t page-px z-below-aside">
+                <IconButton
+                    icon={FiAlignLeft}
+                    className="self-start my-8 xl:hidden"
+                    action={() => {
                         if (smallBps.includes(bp)) {
                             toggleLeftMenu(true);
                             toggleRightMenu(false);
@@ -105,9 +112,8 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
                             toggleLeftMenu(true);
                         }
                     }}
-                    className="self-start h-40 text-blue-300 outline-none xl:hidden focus:outline-none focus:ring-blue-100 focus:ring-2 rounded-4">
-                    <FiAlignLeft className="w-24 h-24 fill-current" />
-                </button>
+                />
+
                 <Button
                     variant="secondary"
                     action={() => {
