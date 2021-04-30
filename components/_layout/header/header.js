@@ -28,7 +28,7 @@ const HeaderComponent = ({ showUserControls }) => {
     };
 
     return (
-        <div className="fixed flex items-center justify-between w-screen text-blue-300 bg-white z-header header-h page-px">
+        <div className="fixed flex items-center justify-between w-full text-blue-300 bg-white z-header header-h page-px">
             <Link href="/">
                 <a>
                     <FGLogo className="fill-current" />
@@ -36,8 +36,8 @@ const HeaderComponent = ({ showUserControls }) => {
             </Link>
 
             {showUserControls && (
-                <ul className="flex t-footnote">
-                    <li className="mx-20 lg:cursor-pointer hover:text-coral-300">
+                <ul className="flex space-x-20 t-footnote">
+                    <li className="lg:cursor-pointer hover:text-coral-300">
                         <Link href="/#">
                             <a>
                                 <FiBook className="w-24 h-24 mx-auto stroke-current" />
@@ -47,7 +47,7 @@ const HeaderComponent = ({ showUserControls }) => {
                             </a>
                         </Link>
                     </li>
-                    <li className="mx-20 lg:cursor-pointer hover:text-coral-300">
+                    <li className="lg:cursor-pointer hover:text-coral-300">
                         <Link href="/#">
                             <a>
                                 <FiInbox className="w-24 h-24 mx-auto stroke-current" />
@@ -58,13 +58,15 @@ const HeaderComponent = ({ showUserControls }) => {
                         </Link>
                     </li>
                     <li
-                        className="mx-20 lg:cursor-pointer hover:text-coral-300 hover:border-coral-300"
+                        className="lg:cursor-pointer hover:text-coral-300 hover:border-coral-300"
                         onClick={onToggleUserNaviagtion}>
                         <FiUser className="w-24 h-24 mx-auto stroke-current" />
-                        <div className="items-center hidden mt-4 lg:flex">
-                            {user.name}
-                            <FiChevronDown className="w-18 h-18" />
-                        </div>
+                        {user && (
+                            <div className="items-center hidden mt-4 lg:flex">
+                                {user.name}
+                                <FiChevronDown className="w-18 h-18" />
+                            </div>
+                        )}
                     </li>
                 </ul>
             )}
