@@ -9,28 +9,40 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 // Utilities
+import { useWizardNavigationStore } from 'utilities/store';
 
 // Components
 
 // Icons
 import { FiCircle, FiCheckCircle, FiMinusCircle } from 'react-icons/fi';
 
-const SubLevelItemComponent = ({ title, inProgress, completed }) => {
+const SubLevelItemComponent = ({
+    parentIndex,
+    index,
+    title,
+    inProgress,
+    completed,
+}) => {
     const router = useRouter();
+    const { onSetInProgess, onSetCompleted } = useWizardNavigationStore();
+    const [loop, setLoop] = useState(0);
 
-    // // TODO - Connect state with Store
-    // const [isInProgress, setIsInProgress] = useState(false);
-    // const [isComplete, setIsComplete] = useState(false);
-
-    useEffect(() => {
-        console.log('Get new form data');
-    }, []);
+    // useEffect(() => {
+    //     console.log('Get new form data');
+    // }, []);
 
     const onHandleRoute = () => {
-        const urlPart = getSlug(title);
-        router.push(`/wizard/?section=${urlPart}`, undefined, {
-            shallow: true,
-        });
+        const i = loop > 1 ? 0 : loop + 1;
+        setLoop(i);
+
+        if (i == 0) {
+            onSetInProgess(parentIndex, index, false);
+            onSetCompleted(parentIndex, index, false);
+        } else if (i == 1) {
+            onSetInProgess(parentIndex, index, true);
+        } else if (i == 2) {
+            onSetCompleted(parentIndex, index, true);
+        }
     };
 
     // useEffect(() => {
@@ -58,20 +70,13 @@ const SubLevelItemComponent = ({ title, inProgress, completed }) => {
                 // { 'bg-teal-20': inProgress },
                 // { 'bg-teal-40': completed },
             ])}>
-            {/* 
-            TODO - Routing?
-            <Link href='#jump-to-section'>
-                <a>Title</a>
-            </Link>
-            */}
-
             <span className="flex t-caption">
                 <i className="mr-16">
                     {/* ICONS:
                     default - FiCircle
-                    progress - FiMinusCircle
-                    complete - FiCheckCircle */}
-                    {!completed && !inProgress && <FiCircle />}
+                    inProgress - FiMinusCircle
+                    completed - FiCheckCircle */}
+                    {!inProgress && <FiCircle />}
                     {!completed && inProgress && <FiMinusCircle />}
                     {completed && inProgress && <FiCheckCircle />}
                 </i>

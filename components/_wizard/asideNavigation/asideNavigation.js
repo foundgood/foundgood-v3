@@ -2,50 +2,24 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import cc from 'classcat';
-import t from 'prop-types';
-import Link from 'next/link';
-import Image from 'next/image';
 
 // Utilities
+import { useWizardNavigationStore } from 'utilities/store';
 
 // Components
-import TopLevelItem from 'components/_asideNavigation/topLevelItem';
+import TopLevelItem from 'components/_wizard/topLevelItem';
 
 const AsideNavigationComponent = () => {
-    const data = [
-        {
-            title: 'Initiative information',
-            items: [{ title: 'Overview', inProgress: true, completed: true }],
-        },
-        {
-            title: 'Summary',
-            items: [
-                {
-                    title: 'Overall performance',
-                    inProgress: true,
-                    completed: false,
-                },
-                {
-                    title: 'Challenges and learnings',
-                    inProgress: false,
-                    completed: false,
-                },
-            ],
-        },
-        {
-            title: 'Key changes',
-            items: [
-                { title: 'Funding', inProgress: false, completed: false },
-                {
-                    title: 'Project members',
-                    inProgress: false,
-                    completed: false,
-                },
-                { title: 'Collaborators', inProgress: false, completed: false },
-            ],
-        },
-    ];
+    // Store: wizardNavigation
+    const {
+        navItems,
+        currentSectionId,
+        currentSubSectionId,
+    } = useWizardNavigationStore();
+
+    useEffect(() => {
+        console.log(currentSectionId, currentSubSectionId);
+    }, []);
 
     return (
         <>
@@ -59,10 +33,12 @@ const AsideNavigationComponent = () => {
             </header>
 
             <ul className="mt-48">
-                {data.map((item, index) => (
+                {navItems.map((item, index) => (
                     <TopLevelItem
                         key={`nav-${index}`}
+                        index={index}
                         title={item.title}
+                        collapsed={item.collapsed}
                         items={item.items}
                     />
                 ))}

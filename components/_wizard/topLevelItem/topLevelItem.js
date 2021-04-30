@@ -6,32 +6,36 @@ import cc from 'classcat';
 import AnimateHeight from 'react-animate-height';
 
 // Utilities
+import { useWizardNavigationStore } from 'utilities/store';
 
 // Components
-import SubLevelItem from 'components/_asideNavigation/subLevelItem';
+import SubLevelItem from 'components/_wizard/subLevelItem';
 
 // Icons
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 
-const TopLevelItemComponent = ({ title, items }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
+const TopLevelItemComponent = ({ index, title, collapsed, items }) => {
+    // Store: wizardNavigation
+    const { onSetCollapsed } = useWizardNavigationStore();
 
     const onToggleItem = () => {
-        setIsExpanded(!isExpanded);
+        // TODO - Only one open item, at a time?
+        const bool = !collapsed;
+        onSetCollapsed(index, bool);
     };
 
     return (
         <li
             className={cc([
                 'mt-32',
-                // { 'bg-blue-10': isExpanded }
+                // { 'bg-blue-10': collapsed }
             ])}>
             <span
                 className="flex t-caption-bold md:cursor-pointer"
                 onClick={onToggleItem}>
                 <i className="mr-16">
-                    {isExpanded && <FiChevronUp />}
-                    {!isExpanded && <FiChevronDown />}
+                    {!collapsed && <FiChevronUp />}
+                    {collapsed && <FiChevronDown />}
                 </i>
                 {title}
             </span>
@@ -40,11 +44,13 @@ const TopLevelItemComponent = ({ title, items }) => {
             <AnimateHeight
                 duration={300}
                 animateOpacity={true}
-                height={isExpanded ? 'auto' : 0}>
+                height={collapsed ? 0 : 'auto'}>
                 <ul className="block">
-                    {items.map((item, index) => (
+                    {items.map((item, i) => (
                         <SubLevelItem
-                            key={`nav-${index}`}
+                            key={`nav-${i}`}
+                            parentIndex={index}
+                            index={i}
                             title={item.title}
                             inProgress={item.inProgress}
                             completed={item.completed}
