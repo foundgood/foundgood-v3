@@ -11,15 +11,7 @@ import TopLevelItem from 'components/_wizard/topLevelItem';
 
 const AsideNavigationComponent = () => {
     // Store: wizardNavigation
-    const {
-        navItems,
-        currentSectionId,
-        currentSubSectionId,
-    } = useWizardNavigationStore();
-
-    useEffect(() => {
-        console.log(currentSectionId, currentSubSectionId);
-    }, []);
+    const { navItems } = useWizardNavigationStore();
 
     return (
         <>

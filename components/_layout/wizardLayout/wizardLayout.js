@@ -13,6 +13,7 @@ import { useResponsive, useMetadata } from 'utilities/hooks';
 import IconButton from 'components/iconButton';
 import Button from 'components/button';
 import BottomNavigation from 'components/_wizard/bottomNavigation';
+import AsideNavigation from 'components/_wizard/asideNavigation';
 
 // Icons
 import { FiAlignLeft, FiChevronsLeft } from 'react-icons/fi';
@@ -70,7 +71,7 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
 
                 {/* Aside content */}
                 <div className="flex-grow mt-32 overflow-y-auto scrolling-touch">
-                    Aside content
+                    <AsideNavigation />
                 </div>
             </div>
 

@@ -21,47 +21,51 @@ const useWizardNavigationStore = create(set => ({
                 subLevelIndex
             ].completed = value;
         }),
-
-    onGotoNext: () => {
+    onGotoNext: () =>
         set(state => {
-            // Go to next sub-section
+            state.onGoto(1);
+        }),
+    onGotoPrevious: () => {},
+    onGoto: num => {
+        set(state => {
             const currSubId = state.currentSubSectionId;
-            const nextSubId = state.currentSubSectionId + 1;
-            const subLength = state.navItems[state.currentSectionId].items.length - 1
-            // console.log('subId ', state.currentSubSectionId, nextSubId, '    length ', subLength);
-            
+            const nextSubId = state.currentSubSectionId + num;
+            const subLength =
+                state.navItems[state.currentSectionId].items.length - num;
+
+            // Go to next sub-section
             if (nextSubId <= subLength) {
                 state.currentSubSectionId = nextSubId;
 
                 // Maybe not?
-                state.onSetCompleted(state.currentSectionId, currSubId, true) // Previous completed
-                state.onSetInProgess(state.currentSectionId, nextSubId, true) // Current in progress
+                state.onSetCompleted(state.currentSectionId, currSubId, true); // Previous completed
+                state.onSetInProgess(state.currentSectionId, nextSubId, true); // Current in progress
             }
-            
+
             // Go to next section
             if (nextSubId > subLength) {
                 const currId = state.currentSectionId;
-                const nextId = state.currentSectionId + 1;
-                const length = state.navItems.length - 1
+                const nextId = state.currentSectionId + num;
+                const length = state.navItems.length - num;
 
                 // Reached the end
                 if (nextId > length) {
-                    state.onSetCompleted(currId, currSubId, true) // Last completed
-                    return; 
+                    // Maybe not?
+                    state.onSetCompleted(currId, currSubId, true); // Last completed
+                    return;
                 }
-                
+
                 state.currentSubSectionId = 0;
                 state.currentSectionId = nextId;
-                
+
                 // Maybe not?
-                state.onSetCompleted(currId, currSubId, true) // Previous completed
-                state.onSetInProgess(nextId, 0, true) // Set first child nav to inProgress
-                state.onSetCollapsed(currId, true) // Fold previous nav
-                state.onSetCollapsed(nextId, false) // Open next nav
+                state.onSetCompleted(currId, currSubId, true); // Previous item completed?
+                state.onSetInProgess(nextId, 0, true); // Set first item to 'inProgress'
+                state.onSetCollapsed(currId, true); // Collapse previous nav
+                state.onSetCollapsed(nextId, false); // Expand next nav
             }
         });
     },
-    onGotoPrevious: () => set(state => {}),
     currentSectionId: 0,
     currentSubSectionId: 0,
 
@@ -69,15 +73,7 @@ const useWizardNavigationStore = create(set => ({
         {
             title: 'Initiative information',
             collapsed: false,
-            items: [
-                { title: 'Overview 0', inProgress: true, completed: false },
-                { title: 'Overview 1', inProgress: false, completed: false },
-                { title: 'Overview 2', inProgress: false, completed: false },
-                { title: 'Overview 3', inProgress: false, completed: false },
-                { title: 'Overview 4', inProgress: false, completed: false },
-                { title: 'Overview 5', inProgress: false, completed: false },
-                { title: 'Overview 6', inProgress: false, completed: false },
-            ],
+            items: [{ title: 'Overview', inProgress: true, completed: false }],
         },
         {
             title: 'Summary',

@@ -9,6 +9,7 @@ import Image from 'next/image';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
+import { useWizardNavigationStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
@@ -16,11 +17,19 @@ import Button from 'components/button';
 const BottomNavigationComponent = () => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
+    const { onGotoNext } = useWizardNavigationStore();
+
+    const onHandleContinue = () => {
+        onGotoNext();
+    };
+    const onHandleBack = () => {
+        // onGotoPrevious();
+    };
 
     return (
         <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
             <div className="flex items-center justify-between w-full">
-                <Button theme="coral" variant="secondary">
+                <Button theme="coral" variant="secondary" action="/">
                     {labelTodo('Exit')}
                 </Button>
                 <p
@@ -33,7 +42,10 @@ const BottomNavigationComponent = () => {
                     {labelTodo('Your updates have been saved')}
                 </p>
                 <div className="flex space-x-12">
-                    <Button theme="coral" variant="secondary">
+                    <Button
+                        theme="coral"
+                        variant="secondary"
+                        action={onHandleBack}>
                         {labelTodo('Back')}
                     </Button>
                     <Button theme="coral">{labelTodo('Continue')}</Button>
