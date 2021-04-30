@@ -5,22 +5,28 @@ const useWizardNavigationStore = create(set => ({
     // Update nested state values
     // https://morioh.com/p/a687e3129a67
     set: fn => set(produce(fn)),
+
+    // Collapse navigation group
     onSetCollapsed: (topLevelIndex, value) =>
         set(state => {
             state.navItems[topLevelIndex].collapsed = value;
         }),
+    // Set progress icon - nav item
     onSetInProgess: (topLevelIndex, subLevelIndex, value) =>
         set(state => {
             state.navItems[topLevelIndex].items[
                 subLevelIndex
             ].inProgress = value;
         }),
+    // Set complete icon - nav item
     onSetCompleted: (topLevelIndex, subLevelIndex, value) =>
         set(state => {
             state.navItems[topLevelIndex].items[
                 subLevelIndex
             ].completed = value;
         }),
+
+    // Update active section in naviagtion
     onGotoNext: () =>
         set(state => {
             state.onGoto(1);
@@ -28,6 +34,9 @@ const useWizardNavigationStore = create(set => ({
     onGotoPrevious: () => {},
     onGoto: num => {
         set(state => {
+            // Keep reference to state variables -
+            // Note: using the state direclty can cause unwanted effects (depending on the order, the state will be different)
+            const currId = state.currentSectionId;
             const currSubId = state.currentSubSectionId;
             const nextSubId = state.currentSubSectionId + num;
             const subLength =
@@ -38,13 +47,12 @@ const useWizardNavigationStore = create(set => ({
                 state.currentSubSectionId = nextSubId;
 
                 // Maybe not?
-                state.onSetCompleted(state.currentSectionId, currSubId, true); // Previous completed
-                state.onSetInProgess(state.currentSectionId, nextSubId, true); // Current in progress
+                state.onSetCompleted(currId, currSubId, true); // Previous completed
+                state.onSetInProgess(currId, nextSubId, true); // Current in progress
             }
 
             // Go to next section
             if (nextSubId > subLength) {
-                const currId = state.currentSectionId;
                 const nextId = state.currentSectionId + num;
                 const length = state.navItems.length - num;
 
@@ -66,9 +74,11 @@ const useWizardNavigationStore = create(set => ({
             }
         });
     },
+    // Keep track of current form section
     currentSectionId: 0,
     currentSubSectionId: 0,
 
+    // TODO - Get nav data from SalesForce
     navItems: [
         {
             title: 'Initiative information',
