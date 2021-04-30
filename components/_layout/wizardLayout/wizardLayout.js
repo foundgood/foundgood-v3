@@ -134,7 +134,7 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
                     },
                 ])}>
                 {/* Content */}
-                <div className="w-full transition-slow max-w-[600px] page-mx mt-80 mb-64 lg:mb-96">
+                <div className="w-full transition-slow max-w-[600px] page-mx mt-80 pb-64 lg:pb-96">
                     {children}
                 </div>
 
@@ -148,9 +148,7 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
                             'xl:right-[25%] 3xl:right-[400px]': rightMenuActive,
                         },
                     ])}>
-                    <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
-                        <BottomNavigation />
-                    </div>
+                    <BottomNavigation />
                 </div>
             </div>
         </>

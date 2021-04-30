@@ -18,24 +18,26 @@ const BottomNavigationComponent = () => {
     const { labelTodo } = useMetadata();
 
     return (
-        <div className="flex items-center justify-between w-full">
-            <Button theme="coral" variant="secondary">
-                {labelTodo('Exit')}
-            </Button>
-            <p
-                className={cc([
-                    'hidden t-footnote text-coral-60 md:flex transition-default opacity-0',
-                    {
-                        'opacity-100': true, // TODO Connect to store when stuff is updated
-                    },
-                ])}>
-                {labelTodo('Your updates have been saved')}
-            </p>
-            <div className="flex space-x-12">
+        <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
+            <div className="flex items-center justify-between w-full">
                 <Button theme="coral" variant="secondary">
-                    {labelTodo('Back')}
+                    {labelTodo('Exit')}
                 </Button>
-                <Button theme="coral">{labelTodo('Continue')}</Button>
+                <p
+                    className={cc([
+                        'hidden t-footnote text-coral-60 md:flex transition-default opacity-0',
+                        {
+                            'opacity-100': true, // TODO Connect to store when stuff is updated
+                        },
+                    ])}>
+                    {labelTodo('Your updates have been saved')}
+                </p>
+                <div className="flex space-x-12">
+                    <Button theme="coral" variant="secondary">
+                        {labelTodo('Back')}
+                    </Button>
+                    <Button theme="coral">{labelTodo('Continue')}</Button>
+                </div>
             </div>
         </div>
     );
