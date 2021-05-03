@@ -9,29 +9,23 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useWizardNavigationStore } from 'utilities/store';
+import { useReportNavigationStore } from 'utilities/store';
 
 // Components
 
 // Icons
 import { FiCircle, FiCheckCircle, FiMinusCircle } from 'react-icons/fi';
 
-const SubLevelItemComponent = ({
-    parentIndex,
-    index,
-    title,
-    inProgress,
-    completed,
-}) => {
+const SubLevelItemComponent = ({ index, title, inProgress, completed }) => {
     const router = useRouter();
-    const { onSetInProgess, onSetCompleted } = useWizardNavigationStore();
+    const { onSetInProgess, onSetCompleted } = useReportNavigationStore();
 
     const onHandleRoute = () => {
         const urlPart = getSlug(title);
-        router.push(`/wizard?section=${urlPart}`, undefined, { shallow: true });
+        router.push(`/report?section=${urlPart}`, undefined, { shallow: true });
 
-        onSetCompleted(parentIndex, index, false);
-        onSetInProgess(parentIndex, index, true);
+        // onSetCompleted(parentIndex, index, false);
+        onSetInProgess(index, true);
     };
 
     const getSlug = slug => {

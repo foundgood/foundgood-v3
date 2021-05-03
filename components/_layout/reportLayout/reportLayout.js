@@ -11,6 +11,7 @@ import { useResponsive, useMetadata } from 'utilities/hooks';
 
 // Components
 import WizardStatus from 'components/_report/wizardStatus';
+import { AsideNavigation } from 'components/_report/asideNavigation';
 import IconButton from 'components/iconButton';
 import Button from 'components/button';
 
@@ -69,7 +70,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
 
                 {/* Aside content */}
                 <div className="flex-grow mt-32 overflow-y-auto scrolling-touch">
-                    Aside content
+                    <AsideNavigation />
                 </div>
             </div>
 
