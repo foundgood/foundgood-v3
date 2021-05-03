@@ -60,8 +60,6 @@ const HeaderComponent = ({ showUserControls }) => {
                             </Link>
                         </li>
                         <li
-                            // flex
-                            // lg:display
                             className="flex lg:block lg:cursor-pointer hover:text-blue-100 hover:border-blue-100"
                             onClick={onToggleUserNaviagtion}>
                             <FiUser className="w-24 h-24 mx-auto stroke-current" />
