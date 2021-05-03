@@ -21,11 +21,14 @@ const WizardStatusComponent = () => {
     const { labelTodo } = useMetadata();
 
     return (
-        <div className="flex flex-col py-12 md:items-center md:justify-end md:flex-row bg-teal-20 page-px">
-            <p className="mb-12 mr-12 lg:mr-24 t-small text-teal-60 md:flex md:mb-0 line-clamp-2">
-                {labelTodo('6 more sections needed before you can submit')}
+        <div className="flex flex-row flex-wrap items-center justify-end bg-teal-20 page-px">
+            <p className="pt-12 pb-0 mr-auto lg:mr-24 t-small text-teal-60 line-clamp-2 sm:pb-12">
+                <span className="mr-4 font-bold">
+                    {labelTodo('6 more sections') + ''}
+                </span>
+                <span>{labelTodo('needed before you can submit')}</span>
             </p>
-            <div className="flex items-center self-end space-x-12">
+            <div className="flex items-center self-end py-12 pl-24 ml-auto space-x-12">
                 <Button
                     theme="teal"
                     variant="secondary"
@@ -40,13 +43,7 @@ const WizardStatusComponent = () => {
                     iconPosition="center"
                     iconType="stroke"
                 />
-                <Button
-                    theme="teal"
-                    icon={FiChevronRight}
-                    iconPosition="right"
-                    iconType="stroke">
-                    {labelTodo('Wizard')}
-                </Button>
+                <Button theme="teal">{labelTodo('Run wizard')}</Button>
             </div>
         </div>
     );
