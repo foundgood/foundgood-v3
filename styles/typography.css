@@ -59,5 +59,8 @@
         .t-footnote {
             @apply leading-normal font-body text-14;
         }
+        .t-aside-nav {
+            @apply font-medium leading-normal font-heading text-14;
+        }
     }
 }

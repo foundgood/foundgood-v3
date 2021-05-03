@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 
 // Utilities
 import { useWizardNavigationStore } from 'utilities/store';
+import { useMetadata } from 'utilities/hooks';
 
 // Components
 import TopLevelItem from 'components/_wizard/topLevelItem';
@@ -13,15 +14,21 @@ const AsideNavigationComponent = () => {
     // Store: wizardNavigation
     const { navItems } = useWizardNavigationStore();
 
+    // Hook: Metadata
+    const { labelTodo } = useMetadata();
+
     return (
         <>
             <header>
                 <p className="mt-8 t-footnote">
-                    Coastal Hazard Wheel: Global coastal disaster prevention &
-                    recovery project
+                    {labelTodo(
+                        'Coastal Hazard Wheel: Global coastal disaster prevention & recovery project'
+                    )}
                 </p>
-                <h2 className="mt-16 t-h5">[Foundation Name]</h2>
-                <h3 className="mt-16 t-sh6">[Report type]: [Year]</h3>
+                <h2 className="mt-16 t-h5">{labelTodo('Foundation Name')}</h2>
+                <h3 className="mt-16 t-sh6">
+                    {labelTodo('Annual Report: 2021')}
+                </h3>
             </header>
 
             <ul className="mt-48">

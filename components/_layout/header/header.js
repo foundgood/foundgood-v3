@@ -13,7 +13,7 @@ import { useMetadata, useAuth } from 'utilities/hooks';
 // Components
 
 // Images
-import { FiBook, FiInbox, FiUser, FiChevronDown } from 'react-icons/fi';
+import { FiHeart, FiInbox, FiUser, FiChevronDown } from 'react-icons/fi';
 import FGLogo from 'assets/images/fg-logo.svg';
 
 const HeaderComponent = ({ showUserControls }) => {
@@ -38,18 +38,18 @@ const HeaderComponent = ({ showUserControls }) => {
             </div>
             <div className="fixed left-0 flex items-center justify-end w-full text-blue-300 bg-white z-header header-h page-px">
                 {showUserControls && (
-                    <ul className="flex space-x-20 t-footnote">
-                        <li className="lg:cursor-pointer hover:text-coral-300">
+                    <ul className="flex space-x-20 t-aside-nav">
+                        <li className="lg:cursor-pointer hover:text-blue-100">
                             <Link href="/#">
                                 <a>
-                                    <FiBook className="w-24 h-24 mx-auto stroke-current" />
+                                    <FiHeart className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 lg:block">
                                         {labelTodo('Initiatives')}
                                     </span>
                                 </a>
                             </Link>
                         </li>
-                        <li className="lg:cursor-pointer hover:text-coral-300">
+                        <li className="lg:cursor-pointer hover:text-blue-100">
                             <Link href="/#">
                                 <a>
                                     <FiInbox className="w-24 h-24 mx-auto stroke-current" />
@@ -60,12 +60,16 @@ const HeaderComponent = ({ showUserControls }) => {
                             </Link>
                         </li>
                         <li
-                            className="lg:cursor-pointer hover:text-coral-300 hover:border-coral-300"
+                            // flex
+                            // lg:display
+                            className="flex lg:block lg:cursor-pointer hover:text-blue-100 hover:border-blue-100"
                             onClick={onToggleUserNaviagtion}>
                             <FiUser className="w-24 h-24 mx-auto stroke-current" />
                             {user && (
-                                <div className="items-center hidden mt-4 lg:flex">
-                                    {user.name}
+                                <div className="flex mt-4 lg:items-center">
+                                    <span className="hidden lg:inline">
+                                        {user.name}
+                                    </span>
                                     <FiChevronDown className="w-18 h-18" />
                                 </div>
                             )}
