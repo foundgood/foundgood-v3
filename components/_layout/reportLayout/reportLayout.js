@@ -46,7 +46,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
             <div
                 style={{ willChange: 'transform' }}
                 className={cc([
-                    'fixed flex-col header-t w-[300px] max-w-full xl:w-1/5 flex 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-aside border-r border-teal-10 page-px',
+                    'fixed flex-col h-screen header-pt w-[300px] max-w-full xl:w-1/5 flex 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-aside border-r border-teal-10 page-px',
                     {
                         'pointer-events-auto': leftMenuActive,
                         ' -translate-x-full pointer-events-none': !leftMenuActive,

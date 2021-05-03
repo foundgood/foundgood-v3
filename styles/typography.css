@@ -42,7 +42,7 @@
 
         /* Other */
         .t-preamble {
-            @apply font-body font-normal leading-normal text-24;
+            @apply font-body leading-normal text-24;
         }
         .t-body {
             @apply font-body font-normal leading-normal text-20;
@@ -51,10 +51,10 @@
             @apply font-body font-normal leading-normal text-18;
         }
         .t-caption {
-            @apply font-body font-normal leading-normal text-16;
+            @apply font-body leading-normal text-16;
         }
         .t-footnote {
-            @apply font-body font-normal leading-normal text-14;
+            @apply font-body leading-normal text-14;
         }
     }
 }

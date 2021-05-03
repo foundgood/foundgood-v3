@@ -26,6 +26,9 @@
     .header-h {
         @apply h-48 lg:h-64 sm:h-56;
     }
+    .header-pt {
+        @apply pt-48 lg:pt-64 sm:pt-56;
+    }
 
     /* Page */
     .page-mx {
