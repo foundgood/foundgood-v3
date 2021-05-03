@@ -100,10 +100,10 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
             </div>
 
             {/* Button navigation */}
-            <div className="fixed left-0 right-0 flex justify-between py-8 bg-white transition-default xl:bg-transparent xl:justify-end header-t page-px z-below-aside">
+            <div className="fixed left-0 right-0 flex justify-between py-8 bg-white pointer-events-none transition-default xl:bg-transparent xl:justify-end header-t page-px z-below-aside">
                 <IconButton
                     icon={FiAlignLeft}
-                    className="self-start my-8 xl:hidden"
+                    className="self-start my-8 pointer-events-auto xl:hidden"
                     action={() => {
                         if (smallBps.includes(bp)) {
                             toggleLeftMenu(true);
@@ -116,6 +116,7 @@ const WizardLayoutComponent = ({ children, pageProps }) => {
                 />
 
                 <Button
+                    className="pointer-events-auto"
                     variant="secondary"
                     action={() => {
                         if (smallBps.includes(bp)) {
