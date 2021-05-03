@@ -11,13 +11,27 @@ const useWizardNavigationStore = create(set => ({
         set(state => {
             state.navItems[topLevelIndex].collapsed = value;
         }),
-    // Set progress icon - nav item
+    // Set progress icon - nav item (only one Item can be inProgress)
     onSetInProgess: (topLevelIndex, subLevelIndex, value) =>
         set(state => {
+            // Deselect previous "inProgress" item
+            state.navItems.find(parentItem => {
+                parentItem.items.find(item => {
+                    if (item.inProgress) {
+                        item.inProgress = false;
+                    }
+                });
+            });
+
+            // Select current "inProgress" item
             state.navItems[topLevelIndex].items[
                 subLevelIndex
             ].inProgress = value;
+
+            state.currentSectionId = topLevelIndex;
+            state.currentSubSectionId = subLevelIndex;
         }),
+
     // Set complete icon - nav item
     onSetCompleted: (topLevelIndex, subLevelIndex, value) =>
         set(state => {
@@ -31,46 +45,51 @@ const useWizardNavigationStore = create(set => ({
         set(state => {
             state.onGoto(1);
         }),
-    onGotoPrevious: () => {},
+    onGotoPrevious: () =>
+        set(state => {
+            state.onGoto(-1);
+        }),
+
     onGoto: num => {
         set(state => {
             // Keep reference to state variables -
             // Note: using the state direclty can cause unwanted effects (depending on the order, the state will be different)
             const currId = state.currentSectionId;
-            const currSubId = state.currentSubSectionId;
             const nextSubId = state.currentSubSectionId + num;
             const subLength =
                 state.navItems[state.currentSectionId].items.length - num;
+            // const currSubId = state.currentSubSectionId;
 
-            // Go to next sub-section
-            if (nextSubId <= subLength) {
-                state.currentSubSectionId = nextSubId;
-
-                // Maybe not?
-                state.onSetCompleted(currId, currSubId, true); // Previous completed
-                state.onSetInProgess(currId, nextSubId, true); // Current in progress
-            }
-
-            // Go to next section
-            if (nextSubId > subLength) {
+            // Go to next/previous section
+            if (nextSubId > subLength || nextSubId < 0) {
                 const nextId = state.currentSectionId + num;
                 const length = state.navItems.length - num;
 
+                // Reached the beginning
+                if (nextId < 0) {
+                    return;
+                }
                 // Reached the end
                 if (nextId > length) {
-                    // Maybe not?
-                    state.onSetCompleted(currId, currSubId, true); // Last completed
                     return;
                 }
 
-                state.currentSubSectionId = 0;
+                const subId =
+                    nextSubId < 0 ? state.navItems[nextId].items.length - 1 : 0;
+                state.currentSubSectionId = subId;
                 state.currentSectionId = nextId;
 
-                // Maybe not?
-                state.onSetCompleted(currId, currSubId, true); // Previous item completed?
-                state.onSetInProgess(nextId, 0, true); // Set first item to 'inProgress'
-                state.onSetCollapsed(currId, true); // Collapse previous nav
+                state.onSetInProgess(nextId, subId, true); // Set first item to 'inProgress'
                 state.onSetCollapsed(nextId, false); // Expand next nav
+                // state.onSetCompleted(currId, currSubId, true); // Previous item completed
+                // state.onSetCollapsed(currId, true); // Collapse previous nav ???
+            }
+
+            // Go to next/previous sub-section
+            if (nextSubId <= subLength && nextSubId > -1) {
+                state.currentSubSectionId = nextSubId;
+                state.onSetInProgess(currId, nextSubId, true); // Current in progress
+                // state.onSetCompleted(currId, currSubId, true); // Previous completed
             }
         });
     },

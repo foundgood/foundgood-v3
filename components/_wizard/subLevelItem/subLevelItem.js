@@ -25,29 +25,14 @@ const SubLevelItemComponent = ({
 }) => {
     const router = useRouter();
     const { onSetInProgess, onSetCompleted } = useWizardNavigationStore();
-    const [loop, setLoop] = useState(0);
-
-    // useEffect(() => {
-    //     console.log('Get new form data');
-    // }, []);
 
     const onHandleRoute = () => {
-        const i = loop > 1 ? 0 : loop + 1;
-        setLoop(i);
+        const urlPart = getSlug(title);
+        router.push(`wizard?section=${urlPart}`, undefined, { shallow: true });
 
-        if (i == 0) {
-            onSetInProgess(parentIndex, index, false);
-            onSetCompleted(parentIndex, index, false);
-        } else if (i == 1) {
-            onSetInProgess(parentIndex, index, true);
-        } else if (i == 2) {
-            onSetCompleted(parentIndex, index, true);
-        }
+        onSetCompleted(parentIndex, index, false);
+        onSetInProgess(parentIndex, index, true);
     };
-
-    // useEffect(() => {
-    //     console.log('Get new form data');
-    // }, [router.query.counter]);
 
     const getSlug = slug => {
         // https://gist.github.com/codeguy/6684588
@@ -63,14 +48,15 @@ const SubLevelItemComponent = ({
     };
 
     return (
-        <li
-            onClick={onHandleRoute}
-            className={cc([
-                'mt-24 md:cursor-pointer',
-                // { 'bg-teal-20': inProgress },
-                // { 'bg-teal-40': completed },
-            ])}>
-            <span className="flex t-caption">
+        <li onClick={onHandleRoute} className="mt-24 md:cursor-pointer">
+            <span
+                className={cc([
+                    'flex t-caption',
+                    {
+                        't-caption-bold text-teal-300':
+                            !completed && inProgress,
+                    },
+                ])}>
                 <i className="mr-16">
                     {/* ICONS:
                     default - FiCircle

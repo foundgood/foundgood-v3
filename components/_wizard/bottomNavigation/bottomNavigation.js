@@ -17,13 +17,13 @@ import Button from 'components/button';
 const BottomNavigationComponent = () => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
-    const { onGotoNext } = useWizardNavigationStore();
+    const { onGotoNext, onGotoPrevious } = useWizardNavigationStore();
 
     const onHandleContinue = () => {
         onGotoNext();
     };
     const onHandleBack = () => {
-        // onGotoPrevious();
+        onGotoPrevious();
     };
 
     return (
