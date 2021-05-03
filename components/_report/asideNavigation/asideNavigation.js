@@ -4,15 +4,16 @@ import React, { useEffect, useState } from 'react';
 // Packages
 
 // Utilities
-import { useWizardNavigationStore } from 'utilities/store';
+import { useReportNavigationStore } from 'utilities/store';
+
 import { useMetadata } from 'utilities/hooks';
 
 // Components
-import TopLevelItem from 'components/_wizard/topLevelItem';
+import { SubLevelItem } from 'components/_report/asideNavigation';
 
 const AsideNavigationComponent = () => {
-    // Store: wizardNavigation
-    const { navItems } = useWizardNavigationStore();
+    // Store: reportNavigation
+    const { navItems } = useReportNavigationStore();
 
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -22,7 +23,7 @@ const AsideNavigationComponent = () => {
             <header>
                 <p className="mt-8 t-footnote">
                     {labelTodo(
-                        'Wizard: Global coastal disaster prevention & recovery project'
+                        'Report: Global coastal disaster prevention & recovery project'
                     )}
                 </p>
                 <h2 className="mt-16 t-h5">{labelTodo('Foundation Name')}</h2>
@@ -33,13 +34,21 @@ const AsideNavigationComponent = () => {
 
             <ul className="mt-48">
                 {navItems.map((item, index) => (
-                    <TopLevelItem
+                    <SubLevelItem
                         key={`nav-${index}`}
+                        // parentIndex={index}
                         index={index}
                         title={item.title}
-                        collapsed={item.collapsed}
-                        items={item.items}
+                        inProgress={item.inProgress}
+                        completed={item.completed}
                     />
+                    // <TopLevelItem
+                    //     key={`nav-${index}`}
+                    //     index={index}
+                    //     title={item.title}
+                    //     collapsed={item.collapsed}
+                    //     items={item.items}
+                    // />
                 ))}
             </ul>
         </>
