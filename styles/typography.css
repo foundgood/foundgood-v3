@@ -22,19 +22,19 @@
 
         /* Sub headings */
         .t-sh1 {
-            @apply font-heading font-normal leading-normal text-32 xl:text-36 3xl:text-40;
+            @apply font-normal leading-normal font-heading text-32 xl:text-36 3xl:text-40;
         }
         .t-sh2 {
-            @apply font-heading font-normal leading-normal text-28 xl:text-30 3xl:text-32;
+            @apply font-normal leading-normal font-heading text-28 xl:text-30 3xl:text-32;
         }
         .t-sh3 {
-            @apply font-heading font-normal leading-normal text-24;
+            @apply font-normal leading-normal font-heading text-24;
         }
         .t-sh4 {
-            @apply font-heading font-normal leading-normal text-20;
+            @apply font-normal leading-normal font-heading text-20;
         }
         .t-sh5 {
-            @apply font-heading font-normal leading-normal text-18;
+            @apply font-normal leading-normal font-heading text-18;
         }
         .t-sh6 {
             @apply font-normal leading-normal font-heading text-16;
@@ -42,7 +42,7 @@
 
         /* Other */
         .t-preamble {
-            @apply font-normal leading-normal font-body text-24;
+            @apply leading-normal font-body text-24;
         }
         .t-body {
             @apply font-normal leading-normal font-body text-20;
@@ -51,13 +51,13 @@
             @apply font-normal leading-normal font-body text-18;
         }
         .t-caption {
-            @apply font-normal leading-normal font-body text-16;
+            @apply leading-normal font-body text-16;
         }
         .t-caption-bold {
             @apply font-bold leading-normal font-body text-16;
         }
         .t-footnote {
-            @apply font-normal leading-normal font-body text-14;
+            @apply leading-normal font-body text-14;
         }
     }
 }

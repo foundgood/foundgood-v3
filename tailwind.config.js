@@ -184,6 +184,7 @@ module.exports = {
                 header: '80',
                 'below-aside': '85',
                 aside: '90',
+                logo: '100',
             },
             borderRadius: {
                 ...remInPx(4),
