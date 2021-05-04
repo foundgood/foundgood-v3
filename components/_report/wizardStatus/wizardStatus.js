@@ -2,10 +2,6 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import cc from 'classcat';
-import t from 'prop-types';
-import Link from 'next/link';
-import Image from 'next/image';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';

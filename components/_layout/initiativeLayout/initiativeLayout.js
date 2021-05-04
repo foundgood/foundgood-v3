@@ -59,7 +59,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                     'absolute flex h-full justify-center left-0 right-0',
                 ])}>
                 {/* Content */}
-                <div className="w-full max-w-[900px] page-mx mt-160 md:mt-232 pb-64 lg:pb-96 rounded-8">
+                <div className="w-full max-w-[1440px] page-mx mt-160 md:mt-232 pb-64 lg:pb-96 rounded-8">
                     {children}
                 </div>
             </div>
