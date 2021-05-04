@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@headlessui/react": "^1.1.1",
     "@svgr/webpack": "^5.5.0",
     "@tailwindcss/line-clamp": "^0.2.0",
     "adm-zip": "^0.5.5",

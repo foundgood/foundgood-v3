@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useState } from 'react';
 
 // Packages
 import { useForm, useFormState } from 'react-hook-form';
@@ -19,12 +19,16 @@ import {
     SelectionCards,
     InputWrapper,
 } from 'components/_inputs';
+import Modal from 'components/modal';
 import Button from 'components/button';
 
 const InputsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
+
+    // Modal
+    const [isOpen, setIsOpen] = useState(true);
 
     // Hook: useForm setup
     const { register, handleSubmit, control } = useForm();
@@ -131,6 +135,41 @@ const InputsComponent = ({ pageProps }) => {
                 })}>
                 Submit
             </Button>
+            <Modal
+                isOpen={isOpen}
+                title="Add new funder"
+                close={() => setIsOpen(false)}
+                save={() => console.log('do stuff')}>
+                <InputWrapper>
+                    <Text
+                        label="What is the name of your initiative?"
+                        subLabel="Additional text that explains the question if needed"
+                        placeholder="Initiative name"
+                        maxLength={20}
+                        {...register('initiative_name', { maxLength: 20 })}
+                    />
+                    <Select
+                        label="What is the select of your initiative?"
+                        subLabel="Additional text that explains the question if needed"
+                        placeholder="Initiative name"
+                        options={[
+                            { label: 'Test value 1', value: 'value1' },
+                            { label: 'Test value 2', value: 'value2' },
+                            { label: 'Test value 3', value: 'value3' },
+                        ]}
+                        {...register('initiative_name_select')}
+                    />
+                    <LongText
+                        label="What is the longest explanation of your initiative?"
+                        subLabel="Additional text that explains the question if needed"
+                        placeholder="Initiative name"
+                        maxLength={400}
+                        {...register('initiative_name_long', {
+                            maxLength: 400,
+                        })}
+                    />
+                </InputWrapper>
+            </Modal>
         </form>
     );
 };

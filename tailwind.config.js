@@ -185,10 +185,12 @@ module.exports = {
                 'below-aside': '85',
                 aside: '90',
                 logo: '100',
+                modal: '200',
             },
             borderRadius: {
                 ...remInPx(4),
                 ...remInPx(8),
+                ...remInPx(16),
             },
         },
     },
