@@ -54,4 +54,35 @@
     .page-pr {
         @apply pr-16 sm:pr-24 lg:pr-32;
     }
+
+    /* Input elements */
+    .input-label {
+        @apply t-h5 text-teal-100;
+    }
+
+    .input-sublabel {
+        @apply t-small text-teal-100;
+    }
+
+    .input-utility-text {
+        @apply text-teal-80 t-caption;
+    }
+
+    .input-defaults,
+    .input-defaults-date input {
+        @apply text-20 leading-normal font-medium placeholder-teal-60 transition-default focus:outline-none outline-none bg-teal-10 text-teal-100 focus:ring-teal-100 focus:ring-2 rounded-4 h-40 px-12 pt-[9px] pb-[5px];
+    }
+
+    .input-defaults-date input {
+        @apply flex-grow w-full;
+    }
+
+    .input-defaults-date-error input {
+        @apply ring-2 ring-coral-300 bg-coral-10 text-coral-300;
+    }
+
+    .input-defaults::placeholder,
+    .input-defaults::-moz-placeholder {
+        font-weight: 400;
+    }
 }

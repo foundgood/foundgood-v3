@@ -106,7 +106,7 @@ module.exports = {
             bold: 600,
         },
         lineHeight: {
-            1: 1,
+            tight: 1,
             normal: 1.3,
         },
         screens: {
