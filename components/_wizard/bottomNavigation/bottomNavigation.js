@@ -6,6 +6,7 @@ import cc from 'classcat';
 import t from 'prop-types';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
@@ -15,15 +16,28 @@ import { useWizardNavigationStore } from 'utilities/store';
 import Button from 'components/button';
 
 const BottomNavigationComponent = () => {
+    const router = useRouter();
+
     // Hook: Metadata
     const { labelTodo } = useMetadata();
-    const { onGotoNext, onGotoPrevious } = useWizardNavigationStore();
+    const {
+        onGotoNext,
+        onGotoPrevious,
+        onUrlChanged,
+    } = useWizardNavigationStore();
+
+    useEffect(() => {
+        // Router changed
+        onUrlChanged(router.pathname);
+    }, [router.pathname]);
 
     const onHandleContinue = () => {
         onGotoNext();
+        // const url = getUrl();
     };
     const onHandleBack = () => {
         onGotoPrevious();
+        // const url = getUrl();
     };
 
     return (

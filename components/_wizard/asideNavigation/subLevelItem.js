@@ -19,13 +19,14 @@ const SubLevelItemComponent = ({
     title,
     inProgress,
     completed,
+    url,
 }) => {
     const router = useRouter();
     const { onSetInProgess, onSetCompleted } = useWizardNavigationStore();
 
     const onHandleRoute = () => {
-        const urlPart = getSlug(title);
-        router.push(`/wizard?section=${urlPart}`, undefined, { shallow: true });
+        // const urlPart = getSlug(title);
+        router.push(url);
 
         onSetCompleted(parentIndex, index, false);
         onSetInProgess(parentIndex, index, true);

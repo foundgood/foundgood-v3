@@ -32,15 +32,19 @@ const AsideNavigationComponent = () => {
             </header>
 
             <ul className="mt-48">
-                {navItems.map((item, index) => (
-                    <TopLevelItem
-                        key={`nav-${index}`}
-                        index={index}
-                        title={item.title}
-                        collapsed={item.collapsed}
-                        items={item.items}
-                    />
-                ))}
+                {navItems.map((item, index) => {
+                    if (item.visible) {
+                        return (
+                            <TopLevelItem
+                                key={`nav-${index}`}
+                                index={index}
+                                title={item.title}
+                                collapsed={item.collapsed}
+                                items={item.items}
+                            />
+                        );
+                    }
+                })}
             </ul>
         </>
     );

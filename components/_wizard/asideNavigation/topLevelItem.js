@@ -54,6 +54,7 @@ const TopLevelItemComponent = ({ index, title, collapsed, items }) => {
                             title={item.title}
                             inProgress={item.inProgress}
                             completed={item.completed}
+                            url={item.url}
                         />
                     ))}
                 </ul>
