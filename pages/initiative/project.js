@@ -42,7 +42,7 @@ const ProjectComponent = ({ pageProps }) => {
                 <div className="mt-24 lg:flex">
                     {largeBps.includes(bp) && (
                         <div className="w-1/2 h-full overflow-hidden rounded-8 lg:mr-24">
-                            <img src="/images/fg-img-1.jpg" />
+                            <img src="/images/fg-project-1.jpg" />
                         </div>
                     )}
                     <div className="flex flex-col lg:w-1/2 lg:ml-24">

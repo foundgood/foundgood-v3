@@ -41,7 +41,7 @@ const CardsComponent = ({ pageProps }) => {
                 headline="Collaborator #1"
                 label="Co-applicant"
                 body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
-                image="/images/fg-card-1.png"
+                image="/images/fg-card-square-1.png"
             />
             <br></br>
             <p>Result card</p>
@@ -57,7 +57,7 @@ const CardsComponent = ({ pageProps }) => {
                 label="Co-funder"
                 subHeadline="Reporting"
                 footnote="May 1st 2021 – April 30th 2022"
-                image="/images/fg-card-1.png"
+                image="/images/fg-card-square-1.png"
             />
             <br></br>
             <p>Project member card</p>
