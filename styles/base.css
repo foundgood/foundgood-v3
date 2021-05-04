@@ -5,7 +5,7 @@
 
     html {
         @apply overflow-x-hidden antialiased;
-        height: 100.04vh;
+        height: 100vh;
         scroll-behavior: smooth;
     }
 
