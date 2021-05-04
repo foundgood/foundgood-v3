@@ -24,6 +24,14 @@ const InformationCaptureComponent = ({ pageProps }) => {
     // Hook: useForm setup
     const { register, handleSubmit, control } = useForm();
 
+    const { extendWizard } = useWizardNavigationStore();
+
+    // TODO - onSubmit extend the wizard with additional sections
+    const extendWizard = () => {
+        // Todo? Split into two methods - addPlanning, addDetailing?
+        extendWizard(true, false);
+    };
+
     return (
         <>
             <TitlePreamble

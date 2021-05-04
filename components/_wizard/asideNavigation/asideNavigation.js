@@ -12,7 +12,7 @@ import { TopLevelItem } from 'components/_wizard/asideNavigation';
 
 const AsideNavigationComponent = () => {
     // Store: wizardNavigation
-    const { navItems } = useWizardNavigationStore();
+    const { items } = useWizardNavigationStore();
 
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -32,7 +32,7 @@ const AsideNavigationComponent = () => {
             </header>
 
             <ul className="mt-48">
-                {navItems.map((item, index) => {
+                {items.map((item, index) => {
                     if (item.visible) {
                         return (
                             <TopLevelItem

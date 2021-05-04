@@ -10,13 +10,13 @@ const useWizardNavigationStore = create(set => ({
     // Collapse navigation group
     onSetCollapsed: (topLevelIndex, value) =>
         set(state => {
-            state.navItems[topLevelIndex].collapsed = value;
+            state.items[topLevelIndex].collapsed = value;
         }),
     // Set progress icon - nav item (only one Item can be inProgress)
     onSetInProgess: (topLevelIndex, subLevelIndex, value) =>
         set(state => {
             // Deselect previous "inProgress" item
-            state.navItems.find(parentItem => {
+            state.items.find(parentItem => {
                 if (parentItem.items) {
                     parentItem.items.find(item => {
                         if (item.inProgress) {
@@ -27,9 +27,7 @@ const useWizardNavigationStore = create(set => ({
             });
 
             // Select current "inProgress" item
-            state.navItems[topLevelIndex].items[
-                subLevelIndex
-            ].inProgress = value;
+            state.items[topLevelIndex].items[subLevelIndex].inProgress = value;
 
             state.currentSectionId = topLevelIndex;
             state.currentSubSectionId = subLevelIndex;
@@ -38,9 +36,7 @@ const useWizardNavigationStore = create(set => ({
     // Set complete icon - nav item
     onSetCompleted: (topLevelIndex, subLevelIndex, value) =>
         set(state => {
-            state.navItems[topLevelIndex].items[
-                subLevelIndex
-            ].completed = value;
+            state.items[topLevelIndex].items[subLevelIndex].completed = value;
         }),
 
     // Update active section in navigation
@@ -65,40 +61,40 @@ const useWizardNavigationStore = create(set => ({
 
             // "Introduction" pages are not visible in Navigation
             // Simply to to next step, without "setCollpase" or "setProgress" etc
-            if (!state.navItems[currId].visible) {
+            if (!state.items[currId].visible) {
                 // Make sure we are within bounds
                 if (nextId >= 0) {
                     state.currentSubSectionId = nextId;
                     state.currentSectionId = 0;
 
                     // Update to new URL
-                    const url = state.navItems[nextId].url
-                        ? state.navItems[nextId].url
-                        : state.navItems[nextId].items[0].url;
+                    const url = state.items[nextId].url
+                        ? state.items[nextId].url
+                        : state.items[nextId].items[0].url;
                     Router.push(url);
                 }
                 return;
             }
 
             const subLength =
-                state.navItems[state.currentSectionId].items.length - num;
+                state.items[state.currentSectionId].items.length - num;
 
             // Go to next/previous topLevel section
             if (nextSubId > subLength || nextSubId < 0) {
                 // const nextId = state.currentSectionId + num;
-                const length = state.navItems.length - num;
+                const length = state.items.length - num;
 
                 // Reached the end
                 if (nextId > length) {
                     return;
                 }
                 // Reached the beginning
-                if (!state.navItems[nextId].visible) {
+                if (!state.items[nextId].visible) {
                     return;
                 }
 
                 const subId =
-                    nextSubId < 0 ? state.navItems[nextId].items.length - 1 : 0;
+                    nextSubId < 0 ? state.items[nextId].items.length - 1 : 0;
                 state.currentSubSectionId = subId;
                 state.currentSectionId = nextId;
 
@@ -108,7 +104,7 @@ const useWizardNavigationStore = create(set => ({
                 // state.onSetCollapsed(currId, true); // Collapse previous nav ???
 
                 // Update to new URL
-                const url = state.navItems[nextId].items[subId].url;
+                const url = state.items[nextId].items[subId].url;
                 Router.push(url);
             }
 
@@ -119,20 +115,16 @@ const useWizardNavigationStore = create(set => ({
                 // state.onSetCompleted(currId, currSubId, true); // Previous completed
 
                 // Update to new URL!
-                const url = state.navItems[currId].items[nextSubId].url;
+                const url = state.items[currId].items[nextSubId].url;
                 Router.push(url);
             }
         });
     },
 
-    // Keep track of current form section
-    currentSectionId: 0,
-    currentSubSectionId: 0,
-
     // Set current section id
     onUrlChanged: path => {
         set(state => {
-            state.navItems.find((parentItem, parentIndex) => {
+            state.items.find((parentItem, parentIndex) => {
                 if (parentItem.url == path) {
                     state.currentSectionId = parentIndex;
                     state.currentSubSectionId = 0;
@@ -153,8 +145,26 @@ const useWizardNavigationStore = create(set => ({
         });
     },
 
+    // Add "Planning" or "Detailing" sections
+    extendWizard: (addPlanning = true, addDetailing = true) => {
+        set(state => {
+            if (addPlanning) {
+                state.items = state.items.concat(state.planningItems);
+            }
+            if (addDetailing) {
+                state.items = state.items.concat(state.detailingItems);
+            }
+
+            // console.log('items: ', state.items);
+        });
+    },
+
+    // Keep track of current form section
+    currentSectionId: 0,
+    currentSubSectionId: 0,
+
     // TODO - Get nav data from SalesForce
-    navItems: [
+    items: [
         {
             title: 'introduction',
             url: '/wizard/initiative/introduction',
@@ -250,6 +260,37 @@ const useWizardNavigationStore = create(set => ({
                 {
                     title: 'Influence on policy',
                     url: '/wizard/initiative/influence-on-policy',
+                    inProgress: false,
+                    completed: false,
+                },
+            ],
+        },
+    ],
+
+    planningItems: [
+        {
+            title: 'Planning',
+            collapsed: true,
+            visible: true,
+            items: [
+                {
+                    title: 'Planning',
+                    url: '/wizard/initiative/planning',
+                    inProgress: false,
+                    completed: false,
+                },
+            ],
+        },
+    ],
+    detailingItems: [
+        {
+            title: 'Detailing',
+            collapsed: true,
+            visible: true,
+            items: [
+                {
+                    title: 'Detailing',
+                    url: '/wizard/initiative/detailing',
                     inProgress: false,
                     completed: false,
                 },

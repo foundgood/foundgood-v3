@@ -33,11 +33,9 @@ const BottomNavigationComponent = () => {
 
     const onHandleContinue = () => {
         onGotoNext();
-        // const url = getUrl();
     };
     const onHandleBack = () => {
         onGotoPrevious();
-        // const url = getUrl();
     };
 
     return (
