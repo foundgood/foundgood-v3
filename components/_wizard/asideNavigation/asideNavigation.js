@@ -8,7 +8,7 @@ import { useWizardNavigationStore } from 'utilities/store';
 import { useMetadata } from 'utilities/hooks';
 
 // Components
-import TopLevelItem from 'components/_wizard/topLevelItem';
+import { TopLevelItem } from 'components/_wizard/asideNavigation';
 
 const AsideNavigationComponent = () => {
     // Store: wizardNavigation

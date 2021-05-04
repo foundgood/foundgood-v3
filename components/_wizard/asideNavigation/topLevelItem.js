@@ -9,7 +9,7 @@ import AnimateHeight from 'react-animate-height';
 import { useWizardNavigationStore } from 'utilities/store';
 
 // Components
-import SubLevelItem from 'components/_wizard/subLevelItem';
+import { SubLevelItem } from 'components/_wizard/asideNavigation';
 
 // Icons
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';

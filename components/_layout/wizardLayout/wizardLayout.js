@@ -13,7 +13,7 @@ import { useResponsive, useMetadata } from 'utilities/hooks';
 import IconButton from 'components/iconButton';
 import Button from 'components/button';
 import BottomNavigation from 'components/_wizard/bottomNavigation';
-import AsideNavigation from 'components/_wizard/asideNavigation';
+import { AsideNavigation } from 'components/_wizard/asideNavigation';
 
 // Icons
 import { FiAlignLeft, FiChevronsLeft } from 'react-icons/fi';
