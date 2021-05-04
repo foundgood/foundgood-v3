@@ -236,13 +236,15 @@ const SelectListComponent = ({
                         </div>
                     )}
                 />
-                <Button
-                    variant="secondary"
-                    className="self-start mt-16"
-                    disabled={list.length >= listMaxLength}
-                    action={addToList}>
-                    {labelTodo('Add another')}
-                </Button>
+                {listMaxLength > 1 && (
+                    <Button
+                        variant="secondary"
+                        className="self-start mt-16"
+                        disabled={list.length >= listMaxLength}
+                        action={addToList}>
+                        {labelTodo('Add another')}
+                    </Button>
+                )}
             </div>
         </label>
     );

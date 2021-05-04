@@ -50,6 +50,7 @@ const SelectComponent = ({
                                     'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
                                 },
                             ])}
+                            onChange={event => onChange(event)}
                             {...rest}>
                             <option default value="" className="hidden">
                                 {placeholder}
