@@ -13,6 +13,7 @@ import DefaultLayout from 'components/_layout/defaultLayout';
 import WizardLayout from 'components/_layout/wizardLayout';
 import ReportLayout from 'components/_layout/reportLayout';
 import InitiativeLayout from 'components/_layout/initiativeLayout';
+import BlankLayout from 'components/_layout/blankLayout';
 
 // Layouts and their settings
 const allLayouts = {
@@ -22,12 +23,25 @@ const allLayouts = {
     wizard: {
         layout: WizardLayout,
         headerUserControls: false,
+        layoutSettings: { aside: true, help: true },
+    },
+    wizardBlank: {
+        layout: WizardLayout,
+        headerUserControls: false,
+        layoutSettings: { aside: false, help: false },
     },
     initiative: {
         layout: InitiativeLayout,
+        layoutSettings: null,
     },
     report: {
         layout: ReportLayout,
+        layoutSettings: null,
+    },
+    blank: {
+        layout: BlankLayout,
+        headerUserControls: false,
+        layoutSettings: null,
     },
 };
 
@@ -42,7 +56,10 @@ const LayoutWrapperComponent = ({
     return (
         <>
             <Header showUserControls={Layout.headerUserControls} />
-            <Layout.layout {...{ pageProps }}>{children}</Layout.layout>
+            <Layout.layout
+                {...{ pageProps, layoutSettings: Layout.layoutSettings }}>
+                {children}
+            </Layout.layout>
         </>
     );
 };
