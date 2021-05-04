@@ -2,11 +2,7 @@
 import React from 'react';
 
 // Packages
-<<<<<<< HEAD
-import { useForm, useFormState } from 'react-hook-form';
-=======
 import { useForm } from 'react-hook-form';
->>>>>>> b830305 (Add overview)
 import t from 'prop-types';
 
 // Utilities
@@ -14,8 +10,6 @@ import { useAuth, useMetadata } from 'utilities/hooks';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-<<<<<<< HEAD
-=======
 import {
     InputWrapper,
     Select,
@@ -23,7 +17,6 @@ import {
     LongText,
     SelectList,
 } from 'components/_inputs';
->>>>>>> b830305 (Add overview)
 
 const OverviewComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -31,25 +24,17 @@ const OverviewComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-<<<<<<< HEAD
-    const { labelTodo } = useMetadata();
-=======
     const { labelTodo, log, valueSet } = useMetadata();
 
     log();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
->>>>>>> b830305 (Add overview)
 
     return (
         <>
             <TitlePreamble
                 title={labelTodo('Overview')}
-<<<<<<< HEAD
-                preamble={labelTodo('')}
-            />
-=======
                 preamble={labelTodo(
                     'Preamble of what you need to do, should be clear and easy to understand'
                 )}
@@ -96,7 +81,6 @@ const OverviewComponent = ({ pageProps }) => {
                     controller={control}
                 />
             </InputWrapper>
->>>>>>> b830305 (Add overview)
         </>
     );
 };
