@@ -13,7 +13,7 @@ import { useMetadata } from 'utilities/hooks';
 // Components
 import Button from 'components/button';
 
-const ModalComponent = ({ isOpen, children, close, save, title }) => {
+const ModalComponent = ({ isOpen, children, onCancel, onSave, title }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
@@ -61,10 +61,13 @@ const ModalComponent = ({ isOpen, children, close, save, title }) => {
                     {/* Modal actions */}
 
                     <div className="flex justify-end mt-32 space-x-16">
-                        <Button variant="tertiary" theme="coral" action={close}>
+                        <Button
+                            variant="tertiary"
+                            theme="coral"
+                            action={onCancel}>
                             {labelTodo('Cancel')}
                         </Button>
-                        <Button theme="coral" action={save}>
+                        <Button theme="coral" action={onSave}>
                             {labelTodo('Save')}
                         </Button>
                     </div>
