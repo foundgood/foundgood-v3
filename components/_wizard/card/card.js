@@ -55,8 +55,10 @@ const CardComponent = ({
                     )}
                     {tags && (
                         <div className="flex mt-8">
-                            {tags.map(tag => (
-                                <p className="px-8 pt-3 pb-1 mr-8 t-sh7 bg-teal-20 rounded-4">
+                            {tags.map((tag, index) => (
+                                <p
+                                    key={`t-${index}`}
+                                    className="px-8 pt-3 pb-1 mr-8 t-sh7 bg-teal-20 rounded-4">
                                     {labelTodo(tag)}
                                 </p>
                             ))}

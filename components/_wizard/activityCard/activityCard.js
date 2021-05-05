@@ -25,8 +25,10 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                     )}
                     {tags && (
                         <div className="flex flex-col items-start mt-8">
-                            {tags.map(tag => (
-                                <p className="px-8 pt-3 pb-1 mb-8 mr-8 t-sh7 bg-teal-20 rounded-4">
+                            {tags.map((tag, index) => (
+                                <p
+                                    key={`t-${index}`}
+                                    className="px-8 pt-3 pb-1 mb-8 mr-8 t-sh7 bg-teal-20 rounded-4">
                                     {labelTodo(tag)}
                                 </p>
                             ))}
@@ -38,8 +40,10 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                                 {labelTodo('Locations')}
                             </div>
                             <ul>
-                                {locations.map(location => (
-                                    <li className="mr-8 t-caption text-teal-60">
+                                {locations.map((location, index) => (
+                                    <li
+                                        key={`l-${index}`}
+                                        className="mr-8 t-caption text-teal-60">
                                         {labelTodo(location)}
                                     </li>
                                 ))}
@@ -52,8 +56,10 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                                 {labelTodo('Related goals')}
                             </div>
                             <ul>
-                                {goals.map(goal => (
-                                    <li className="mr-8 t-caption text-teal-60">
+                                {goals.map((goal, index) => (
+                                    <li
+                                        key={`g-${index}`}
+                                        className="mr-8 t-caption text-teal-60">
                                         {labelTodo(goal)}
                                     </li>
                                 ))}
