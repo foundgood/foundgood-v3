@@ -43,6 +43,8 @@ const ButtonComponent = ({
                     'bg-blue-10 text-blue-300 hover:bg-blue-20 hover:text-blue-200 active:bg-blue-40 active:text-blue-80 focus:bg-blue-20 focus:text-blue-200 disabled:bg-blue-40 disabled:text-blue-60',
                 tertiary:
                     'bg-transparent text-blue-300 hover:text-blue-200 active:text-blue-80 focus:text-blue-200 disabled:text-blue-60',
+                quaternary:
+                    'ring-2 ring-blue-100 bg-transparent text-blue-100 hover:ring-blue-300 hover:text-blue-300 active:text-blue-80 focus:text-blue-300 disabled:ring-blue-60 disabled:text-blue-60',
             },
             teal: {
                 shared: 'focus:ring-teal-120',
@@ -52,6 +54,8 @@ const ButtonComponent = ({
                     'bg-teal-10 text-teal-100 hover:bg-teal-20 hover:text-teal-300 active:bg-teal-40 active:text-teal-80 focus:bg-teal-20 focus:text-teal-300 disabled:bg-teal-40 disabled:text-teal-60',
                 tertiary:
                     'bg-transparent text-teal-100 hover:text-teal-300 active:text-teal-80 focus:text-teal-300 disabled:text-teal-60',
+                quaternary:
+                    'ring-2 ring-teal-100 bg-transparent text-teal-100 hover:ring-teal-300 hover:text-teal-300 active:text-teal-80 focus:text-teal-300 disabled:ring-teal-60 disabled:text-teal-60',
             },
             coral: {
                 shared: 'focus:ring-coral-100',
@@ -61,6 +65,8 @@ const ButtonComponent = ({
                     'bg-coral-20 text-coral-100 hover:text-coral-300 active:bg-coral-40 active:text-coral-80 focus:bg-coral-20 focus:text-coral-300 disabled:bg-coral-20 disabled:text-coral-40',
                 tertiary:
                     'bg-transparent text-coral-100 hover:text-coral-300 active:text-coral-80 focus:text-coral-300 disabled:text-coral-40',
+                quaternary:
+                    'ring-2 ring-coral-100 bg-transparent text-coral-100 hover:ring-coral-300 hover:text-coral-300 active:text-coral-80 focus:text-coral-300 disabled:ring-coral-60 disabled:text-coral-60',
             },
             amber: {
                 shared: 'focus:ring-amber-100',
@@ -70,6 +76,8 @@ const ButtonComponent = ({
                     'bg-amber-20 text-amber-100 hover:text-amber-300 active:bg-amber-40 active:text-amber-80 focus:bg-amber-20 focus:text-amber-300 disabled:bg-amber-20 disabled:text-amber-40',
                 tertiary:
                     'bg-transparent text-amber-100 hover:text-amber-300 active:text-amber-80 focus:text-amber-300 disabled:text-amber-40',
+                quaternary:
+                    'ring-2 ring-amber-100 bg-transparent text-amber-100 hover:ring-amber-300 hover:text-amber-300 active:text-amber-80 focus:text-amber-300 disabled:ring-amber-60 disabled:text-amber-60',
             },
         },
     };
@@ -157,7 +165,7 @@ ButtonComponent.propTypes = {
     /* Button size */
     size: t.oneOf(['small', 'medium']),
     /* Button variant */
-    variant: t.oneOf(['primary', 'secondary', 'tertiary']),
+    variant: t.oneOf(['primary', 'secondary', 'tertiary', 'quaternary']),
     /* Theme */
     theme: t.oneOf(['blue', 'teal', 'coral', 'amber']),
 };
