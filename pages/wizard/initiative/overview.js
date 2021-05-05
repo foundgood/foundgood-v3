@@ -21,7 +21,7 @@ import {
     SelectList,
 } from 'components/_inputs';
 
-const OverviewComponent = ({ pageProps }) => {
+const OverviewComponent = () => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
