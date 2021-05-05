@@ -18,7 +18,7 @@ import FounderCard from 'components/_wizard/founderCard';
 import ProjectMemberCard from 'components/_wizard/projectMemberCard';
 import GoalCard from 'components/_wizard/goalCard';
 import EvaluationCard from 'components/_wizard/evaluationCard';
-// import Outcome from 'components/_wizard/outcome';
+import OutcomeCard from 'components/_wizard/outcomeCard';
 
 import ActivityCard from 'components/_wizard/activityCard';
 import AlertMessage from 'components/_wizard/alertMessage';
@@ -38,6 +38,13 @@ const CardsComponent = ({ pageProps }) => {
             <p>Alert message</p>
             <AlertMessage description="Check that these details are up to date" />
             <br></br>
+
+            <br></br>
+            <p>Outcome card</p>
+            <OutcomeCard
+                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
+                relatedGoals={['Related goals #1', 'Related goals #2']}
+            />
 
             <br></br>
             <p>Report Cards</p>

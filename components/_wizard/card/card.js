@@ -19,6 +19,7 @@ const CardComponent = ({
     footnote,
     tags,
     evaluator,
+    relatedGoals,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -66,6 +67,23 @@ const CardComponent = ({
                     )}
                     {evaluator && (
                         <p className="mt-8 t-sh4">{labelTodo(evaluator)}</p>
+                    )}
+
+                    {relatedGoals && (
+                        <>
+                            <div className="mt-8 t-caption-bold">
+                                Related goals
+                            </div>
+                            <div className="flex flex-col items-start">
+                                {relatedGoals.map((goal, index) => (
+                                    <p
+                                        key={`t-${index}`}
+                                        className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
+                                        {labelTodo(goal)}
+                                    </p>
+                                ))}
+                            </div>
+                        </>
                     )}
                 </div>
 
