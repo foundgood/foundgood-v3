@@ -133,6 +133,7 @@ const useWizardNavigationStore = create(set => ({
                 if (parentItem.url == path) {
                     state.currentSectionId = parentIndex;
                     state.currentSubSectionId = 0;
+                    state.hideBackButton = state.items[parentIndex].hideBack;
                     return;
                 }
 
@@ -141,6 +142,8 @@ const useWizardNavigationStore = create(set => ({
                         if (item.url == path) {
                             state.currentSectionId = parentIndex;
                             state.currentSubSectionId = index;
+                            state.hideBackButton =
+                                state.items[parentIndex].hideBack;
                             state.onSetInProgess(parentIndex, index, true); // Set first item to 'inProgress'
                             state.onSetCollapsed(parentIndex, false); // Expand group
                         }
@@ -165,6 +168,7 @@ const useWizardNavigationStore = create(set => ({
     // Keep track of current form section
     currentSectionId: 0,
     currentSubSectionId: 0,
+    hideBackButton: false,
 
     // TODO - Get nav data from SalesForce
     items: [
@@ -173,17 +177,20 @@ const useWizardNavigationStore = create(set => ({
             url: '/wizard/initiative/introduction',
             collapsed: true,
             visible: false,
+            hideBack: true,
         },
         {
             title: 'information-capture',
             url: '/wizard/initiative/information-capture',
             collapsed: true,
             visible: false,
+            hideBack: true,
         },
         {
             title: 'Initiative information',
             collapsed: true,
             visible: true,
+            hideBack: false,
             items: [
                 {
                     title: 'Overview',
@@ -197,6 +204,7 @@ const useWizardNavigationStore = create(set => ({
             title: 'Summary',
             collapsed: true,
             visible: true,
+            hideBack: false,
             items: [
                 {
                     title: 'Overall performance',
@@ -216,6 +224,7 @@ const useWizardNavigationStore = create(set => ({
             title: 'Key changes',
             collapsed: true,
             visible: true,
+            hideBack: false,
             items: [
                 {
                     title: 'Funding',
@@ -241,6 +250,7 @@ const useWizardNavigationStore = create(set => ({
             title: 'Key results',
             collapsed: true,
             visible: true,
+            hideBack: false,
             items: [
                 {
                     title: 'Activities',
@@ -275,6 +285,7 @@ const useWizardNavigationStore = create(set => ({
             title: 'Planning',
             collapsed: true,
             visible: true,
+            hideBack: false,
             items: [
                 {
                     title: 'Planning',
@@ -290,6 +301,7 @@ const useWizardNavigationStore = create(set => ({
             title: 'Detailing',
             collapsed: true,
             visible: true,
+            hideBack: false,
             items: [
                 {
                     title: 'Detailing',

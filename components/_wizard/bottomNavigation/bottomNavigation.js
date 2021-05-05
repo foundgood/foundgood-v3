@@ -17,6 +17,7 @@ import Button from 'components/button';
 
 const BottomNavigationComponent = () => {
     const router = useRouter();
+    const [hideBack, setHideBack] = useState(false);
 
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -24,12 +25,15 @@ const BottomNavigationComponent = () => {
         onGotoNext,
         onGotoPrevious,
         onUrlChanged,
+        hideBackButton,
     } = useWizardNavigationStore();
 
     useEffect(() => {
         // Router changed
         onUrlChanged(router.pathname);
     }, [router.pathname]);
+
+    console.log('hide back: ');
 
     const onHandleContinue = () => {
         onGotoNext();
@@ -54,12 +58,14 @@ const BottomNavigationComponent = () => {
                     {labelTodo('Your updates have been saved')}
                 </p>
                 <div className="flex space-x-12">
-                    <Button
-                        theme="coral"
-                        variant="secondary"
-                        action={onHandleBack}>
-                        {labelTodo('Back')}
-                    </Button>
+                    {!hideBackButton && (
+                        <Button
+                            theme="coral"
+                            variant="secondary"
+                            action={onHandleBack}>
+                            {labelTodo('Back')}
+                        </Button>
+                    )}
                     <Button theme="coral" action={onHandleContinue}>
                         {labelTodo('Continue')}
                     </Button>
