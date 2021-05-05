@@ -7,6 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useAuth, useMetadata } from 'utilities/hooks';
+import { useWizardNavigationStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -23,6 +24,16 @@ const InformationCaptureComponent = ({ pageProps }) => {
 
     // Hook: useForm setup
     const { register, handleSubmit, control } = useForm();
+
+    const { extendWizard } = useWizardNavigationStore();
+
+    // Extend the wizard with additional sections
+    const onHandleSubmit = () => {
+        // Todo? Split into two seperate methods...
+        const addPlanning = true; // myInput.value
+        const addDetailing = false; // myInput.value
+        extendWizard(addPlanning, addDetailing);
+    };
 
     return (
         <>
