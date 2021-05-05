@@ -40,33 +40,85 @@ const CardsComponent = ({ pageProps }) => {
             <br></br>
 
             <br></br>
-            <p>Outcome card</p>
-            <OutcomeCard
+            <p>List card</p>
+            <ListCard
+                headline="Reporting"
                 body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
-                relatedGoals={['Related goals #1', 'Related goals #2']}
+            />
+            <br></br>
+            <p>Collaborator card</p>
+            <CollaboratorCard
+                headline="Collaborator #1"
+                label="Co-applicant"
+                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
+                image="/images/fg-card-square-1.png"
+            />
+            <br></br>
+            <p>Result card</p>
+            <ResultCard
+                headline="Result name"
+                footnote="Sharing method • Type of sharing"
+                tags={['Children (5-15 years)', 'Adults (over 24 years)']}
+            />
+            <br></br>
+            <p>Founder card</p>
+            <FounderCard
+                headline="Funder #1"
+                label="Co-funder"
+                subHeadline="Reporting"
+                footnote="May 1st 2021 – April 30th 2022"
+                image="/images/fg-card-square-1.png"
+            />
+            <br></br>
+            <p>Project member card</p>
+            <ProjectMemberCard
+                headline="Job title"
+                subHeadline="Role"
+                footnote="Gender • 100%"
+            />
+            <br></br>
+            <p>Goal card</p>
+            <GoalCard
+                headline="Improving life prospects through healthy weight"
+                footnote="Predefined"
+            />
+            <br></br>
+            <p>Influence card (Same as ListCard!?)</p>
+            <ListCard
+                headline="Influence on policy name"
+                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
+            />
+            <br></br>
+            <p>Evaluation card</p>
+            <EvaluationCard
+                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
+                evaluator="Evaluator name"
             />
 
             <br></br>
-            <p>Report Cards</p>
-            <ReportCard
-                headline="Reports for Novo Nordisk Foundation"
+            <p>Outcome card</p>
+            <OutcomeCard
+                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
+                goals={['Related goals #1', 'Related goals #2']}
+            />
+
+            <br></br>
+            <p>Activity card</p>
+            <ActivityCard
+                headline="Activity #1 name"
+                tags={['Success indicator #1', 'Success indicator #2']}
+                locations={['Uganda', 'Copenhagen, Denmark']}
+                goals={['Goal name 1', 'Goal name 2']}
+            />
+            <br></br>
+
+            <br></br>
+            <p>KPI Cards</p>
+            <KpiCard
+                headline="Activity #1 name"
                 items={[
-                    {
-                        headline: 'Status report',
-                        dueDate: 'April 28th 2021',
-                    },
-                    {
-                        headline: 'Well build wells',
-                        dueDate: 'April 28th 2021',
-                    },
-                    {
-                        headline: 'Does it work',
-                        dueDate: 'April 28th 2021',
-                    },
-                    {
-                        headline: 'Status report',
-                        dueDate: 'April 28th 2021',
-                    },
+                    { label: 'People', headline: 'Made adults (24+)' },
+                    { label: 'Custom', headline: 'Well build wells' },
                 ]}
             />
 
@@ -94,83 +146,29 @@ const CardsComponent = ({ pageProps }) => {
             />
 
             <br></br>
-            <p>KPI Cards</p>
-            <KpiCard
-                headline="Activity #1 name"
+            <p>Report Cards</p>
+            <ReportCard
+                headline="Reports for Novo Nordisk Foundation"
                 items={[
-                    { label: 'People', headline: 'Made adults (24+)' },
-                    { label: 'Custom', headline: 'Well build wells' },
+                    {
+                        headline: 'Status report',
+                        dueDate: 'April 28th 2021',
+                    },
+                    {
+                        headline: 'Well build wells',
+                        dueDate: 'April 28th 2021',
+                    },
+                    {
+                        headline: 'Does it work',
+                        dueDate: 'April 28th 2021',
+                    },
+                    {
+                        headline: 'Status report',
+                        dueDate: 'April 28th 2021',
+                    },
                 ]}
             />
 
-            <br></br>
-            <p>Activity card</p>
-            <ActivityCard
-                headline="Activity #1 name"
-                tags={['Success indicator #1', 'Success indicator #2']}
-                locations={['Uganda', 'Copenhagen, Denmark']}
-                goals={['Goal name 1', 'Goal name 2']}
-            />
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <p>List card</p>
-            <ListCard
-                headline="Reporting"
-                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
-            />
-            <br></br>
-            <p>Collaborator card (implement Card)</p>
-            <CollaboratorCard
-                headline="Collaborator #1"
-                label="Co-applicant"
-                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
-                image="/images/fg-card-square-1.png"
-            />
-            <br></br>
-            <p>Result card (implement Card)</p>
-            <ResultCard
-                headline="Result name"
-                footnote="Sharing method • Type of sharing"
-                tags={['Children (5-15 years)', 'Adults (over 24 years)']}
-            />
-            <br></br>
-            <p>Founder card (implement Card)</p>
-            <FounderCard
-                headline="Funder #1"
-                label="Co-funder"
-                subHeadline="Reporting"
-                footnote="May 1st 2021 – April 30th 2022"
-                image="/images/fg-card-square-1.png"
-            />
-            <br></br>
-            <p>Project member card (implement Card)</p>
-            <ProjectMemberCard
-                headline="Job title"
-                subHeadline="Role"
-                footnote="Gender • 100%"
-            />
-            <br></br>
-            <p>Goal card (implement Card)</p>
-            <GoalCard
-                headline="Improving life prospects through healthy weight"
-                footnote="Predefined"
-            />
-            <br></br>
-            <p>Influence card (Same as ListCard!?)</p>
-            <ListCard
-                headline="Influence on policy name"
-                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
-            />
-            <br></br>
-            <p>Evaluation card (implement Card)</p>
-            <EvaluationCard
-                body="Desription Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus scelerisque elit eros, sed sodales quam pellentesque sit amet."
-                evaluator="Evaluator name"
-            />
             <br></br>
             <br></br>
             <br></br>

@@ -23,7 +23,7 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                             <h4 className="t-sh4">{labelTodo(headline)}</h4>
                         </div>
                     )}
-                    {tags && (
+                    {/* {tags && (
                         <div className="flex flex-col items-start mt-8">
                             {tags.map((tag, index) => (
                                 <p
@@ -33,38 +33,55 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                                 </p>
                             ))}
                         </div>
+                    )} */}
+                    {tags && (
+                        <>
+                            <div className="mt-8 t-caption-bold">
+                                {labelTodo('Success indicators')}
+                            </div>
+                            <div className="flex flex-col items-start">
+                                {tags.map((tag, index) => (
+                                    <p
+                                        key={`t-${index}`}
+                                        className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
+                                        {labelTodo(tag)}
+                                    </p>
+                                ))}
+                            </div>
+                        </>
                     )}
+
                     {locations && (
-                        <div className="flex flex-col mt-8">
-                            <div className="t-caption-bold">
+                        <>
+                            <div className="mt-16 t-caption-bold">
                                 {labelTodo('Locations')}
                             </div>
                             <ul>
                                 {locations.map((location, index) => (
                                     <li
                                         key={`l-${index}`}
-                                        className="mr-8 t-caption text-teal-60">
+                                        className="mt-4 mr-8 t-caption text-teal-60">
                                         {labelTodo(location)}
                                     </li>
                                 ))}
                             </ul>
-                        </div>
+                        </>
                     )}
                     {goals && (
-                        <div className="flex flex-col mt-8">
-                            <div className="t-caption-bold">
+                        <>
+                            <div className="mt-16 t-caption-bold">
                                 {labelTodo('Related goals')}
                             </div>
-                            <ul>
+                            <div className="flex flex-col items-start">
                                 {goals.map((goal, index) => (
-                                    <li
-                                        key={`g-${index}`}
-                                        className="mr-8 t-caption text-teal-60">
+                                    <p
+                                        key={`t-${index}`}
+                                        className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
                                         {labelTodo(goal)}
-                                    </li>
+                                    </p>
                                 ))}
-                            </ul>
-                        </div>
+                            </div>
+                        </>
                     )}
                 </div>
 
