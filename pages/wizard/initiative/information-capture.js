@@ -7,6 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useAuth, useMetadata } from 'utilities/hooks';
+import { useWizardNavigationStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -26,10 +27,12 @@ const InformationCaptureComponent = ({ pageProps }) => {
 
     const { extendWizard } = useWizardNavigationStore();
 
-    // TODO - onSubmit extend the wizard with additional sections
-    const extendWizard = () => {
-        // Todo? Split into two methods - addPlanning, addDetailing?
-        extendWizard(true, false);
+    // Extend the wizard with additional sections
+    const onHandleSubmit = () => {
+        // Todo? Split into two seperate methods...
+        const addPlanning = true; // myInput.value
+        const addDetailing = false; // myInput.value
+        extendWizard(addPlanning, addDetailing);
     };
 
     return (
