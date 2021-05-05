@@ -60,7 +60,7 @@ const useWizardNavigationStore = create(set => ({
             const nextSubId = state.currentSubSectionId + num;
 
             // "Introduction" pages are not visible in Navigation
-            // Simply to to next step, without "setCollpase" or "setProgress" etc
+            // Go to next step, without "setCollpase" or "setProgress" etc
             if (!state.items[currId].visible) {
                 // Make sure we are within bounds
                 if (nextId >= 0) {
@@ -81,31 +81,36 @@ const useWizardNavigationStore = create(set => ({
 
             // Go to next/previous topLevel section
             if (nextSubId > subLength || nextSubId < 0) {
-                // const nextId = state.currentSectionId + num;
                 const length = state.items.length - num;
 
                 // Reached the end
                 if (nextId > length) {
                     return;
                 }
-                // Reached the beginning
-                if (!state.items[nextId].visible) {
-                    return;
+
+                // If nav have subSections
+                if (state.items[nextId].items) {
+                    const subId =
+                        nextSubId < 0
+                            ? state.items[nextId].items.length - 1
+                            : 0;
+                    state.currentSubSectionId = subId;
+                    state.currentSectionId = nextId;
+
+                    state.onSetInProgess(nextId, subId, true); // Set first item to 'inProgress'
+                    state.onSetCollapsed(nextId, false); // Expand next nav
+                    // state.onSetCompleted(currId, currSubId, true); // Previous item completed
+                    // state.onSetCollapsed(currId, true); // Collapse previous nav ???
+
+                    // Update to new URL
+                    const url = state.items[nextId].items[subId].url;
+                    Router.push(url);
                 }
-
-                const subId =
-                    nextSubId < 0 ? state.items[nextId].items.length - 1 : 0;
-                state.currentSubSectionId = subId;
-                state.currentSectionId = nextId;
-
-                state.onSetInProgess(nextId, subId, true); // Set first item to 'inProgress'
-                state.onSetCollapsed(nextId, false); // Expand next nav
-                // state.onSetCompleted(currId, currSubId, true); // Previous item completed
-                // state.onSetCollapsed(currId, true); // Collapse previous nav ???
-
-                // Update to new URL
-                const url = state.items[nextId].items[subId].url;
-                Router.push(url);
+                // No subSections
+                else {
+                    const url = state.items[nextId].url;
+                    Router.push(url);
+                }
             }
 
             // Go to next/previous sub-section
@@ -114,7 +119,7 @@ const useWizardNavigationStore = create(set => ({
                 state.onSetInProgess(currId, nextSubId, true); // Current in progress
                 // state.onSetCompleted(currId, currSubId, true); // Previous completed
 
-                // Update to new URL!
+                // Update to new URL
                 const url = state.items[currId].items[nextSubId].url;
                 Router.push(url);
             }
@@ -146,7 +151,7 @@ const useWizardNavigationStore = create(set => ({
     },
 
     // Add "Planning" or "Detailing" sections
-    extendWizard: (addPlanning = true, addDetailing = true) => {
+    extendWizard: (addPlanning = false, addDetailing = false) => {
         set(state => {
             if (addPlanning) {
                 state.items = state.items.concat(state.planningItems);
@@ -154,8 +159,6 @@ const useWizardNavigationStore = create(set => ({
             if (addDetailing) {
                 state.items = state.items.concat(state.detailingItems);
             }
-
-            // console.log('items: ', state.items);
         });
     },
 
