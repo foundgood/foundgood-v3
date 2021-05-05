@@ -94,7 +94,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
             <div
                 style={{ willChange: 'left' }}
                 className={cc([
-                    'absolute flex h-full justify-center transition-slow left-0 right-0 mb-24',
+                    'absolute flex justify-center transition-slow left-0 right-0 mb-24',
                     {
                         'xl:left-[20%] 3xl:left-[300px]': leftMenuActive,
                     },
