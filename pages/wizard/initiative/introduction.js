@@ -1,17 +1,19 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import t from 'prop-types';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 
 // Utilities
-import { useAuth, useMetadata } from 'utilities/hooks';
+import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Button from 'components/button';
 
 const IntroductionComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -21,8 +23,36 @@ const IntroductionComponent = ({ pageProps }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
-    // Hook: Router
-    const router = useRouter();
+    // Hook: Salesforce setup
+    const { sfCreate } = useSalesForce();
+
+    // Store: Wizard navigation
+    const { addSubmitHandler } = useWizardNavigationStore();
+
+    // Store: Initiative data
+    const { updateInitiative } = useInitiativeDataStore();
+
+    // Method: Submit page content
+    async function submit() {
+        const initiativeId = await sfCreate({
+            object: 'Initiative__c',
+            data: {
+                Configuration_Type__c: 'Reporting',
+            },
+        });
+
+        updateInitiative({
+            id: initiativeId,
+            configurationType: ['Reporting'],
+        });
+    }
+
+    // Add submit handler to wizard navigation store
+    useEffect(() => {
+        setTimeout(() => {
+            addSubmitHandler(submit);
+        }, 10);
+    }, []);
 
     return (
         <>
@@ -48,19 +78,6 @@ const IntroductionComponent = ({ pageProps }) => {
                 analogous to sound propagating in air, and ripples propagating
                 on the surface of a pond
             </p>
-            <div className="flex justify-end w-full mt-32 space-x-12">
-                <Button
-                    theme="coral"
-                    variant="secondary"
-                    action={() => router.back()}>
-                    {labelTodo('Back')}
-                </Button>
-                <Button
-                    theme="coral"
-                    action={'/wizard/initiative/information-capture'}>
-                    {labelTodo('Continue')}
-                </Button>
-            </div>
         </>
     );
 };

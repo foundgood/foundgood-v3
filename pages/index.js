@@ -29,8 +29,8 @@ const HomeComponent = ({ pageProps }) => {
                 <h1 className="t-h3">
                     Data from the server (only after login)
                 </h1>
-                {data?.data?.records.length > 0 &&
-                    data.data.records.map(item => (
+                {data?.records?.length > 0 &&
+                    data?.records?.map(item => (
                         <p
                             key={item.Id}
                             className="flex justify-between t-body">

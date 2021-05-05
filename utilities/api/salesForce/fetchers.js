@@ -30,7 +30,7 @@ async function query(query) {
             };
         }
 
-        return response;
+        return response.data;
     } catch (error) {
         console.warn(error);
         return error;

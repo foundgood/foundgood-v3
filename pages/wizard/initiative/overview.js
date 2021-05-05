@@ -1,12 +1,15 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import { useForm } from 'react-hook-form';
-import t from 'prop-types';
 
 // Utilities
-import { useAuth, useMetadata } from 'utilities/hooks';
+import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -24,12 +27,71 @@ const OverviewComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, log, valueSet } = useMetadata();
-
-    log();
+    const { labelTodo, valueSet } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
+
+    // Hook: Salesforce setup
+    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+
+    // Store: Wizard navigation
+    const { addSubmitHandler } = useWizardNavigationStore();
+
+    // Store: Initiative data
+    const { initiative, updateInitiative } = useInitiativeDataStore();
+
+    // Get data for form
+    const { data: accountGrantees } = sfQuery(
+        queries.getObjectList.accountGrantees()
+    );
+
+    // Method: Submit page content
+    async function submit(data) {
+        const {
+            responsibleOrganisation,
+            initiativeName,
+            initiativeAbout,
+            initiativeLocation,
+        } = data;
+
+        await sfUpdate({
+            object: 'Initiative__c',
+            id: initiative.id,
+            data: {
+                Name: initiativeName,
+                Summary__c: initiativeAbout,
+                Where_Is_Problem__c: initiativeLocation
+                    .map(item => item.selectValue)
+                    .join(';'),
+            },
+        });
+
+        const initiativeCollaborator = await sfCreate({
+            object: 'Initiative_Collaborator__c',
+            data: {
+                Initiative__c: initiative.id,
+                Account__c: responsibleOrganisation,
+            },
+        });
+
+        updateInitiative({
+            initiativeName,
+            initiativeAbout,
+            initiativeLocation: initiativeLocation.map(
+                item => item.selectValue
+            ),
+            responsibleOrganisation,
+            initiativeCollaborator,
+        });
+    }
+
+    // Add submit handler to wizard navigation store
+    useEffect(() => {
+        setTimeout(() => {
+            addSubmitHandler(handleSubmit(submit));
+        }, 10);
+    }, []);
 
     return (
         <>
@@ -41,25 +103,29 @@ const OverviewComponent = ({ pageProps }) => {
             />
             <InputWrapper>
                 <Select
-                    name="overview_responsible_organisation"
+                    name="responsibleOrganisation"
+                    defaultValue={initiative?.responsibleOrganisation}
                     label={labelTodo('Responsible organisation')}
                     placeholder={labelTodo('Grantee name')}
-                    options={[
-                        { label: 'Test value 1', value: 'value1' },
-                        { label: 'Test value 2', value: 'value2' },
-                        { label: 'Test value 3', value: 'value3' },
-                    ]}
+                    options={
+                        accountGrantees?.records?.map(item => ({
+                            label: item.Name,
+                            value: item.Id,
+                        })) ?? []
+                    }
                     controller={control}
                 />
                 <Text
-                    name="overview_initiative_name"
+                    name="initiativeName"
+                    defaultValue={initiative?.initiativeName}
                     label={labelTodo('What is the name of your initiative?')}
                     placeholder={labelTodo('Title of initiative')}
-                    maxLength={30}
+                    maxLength={80}
                     controller={control}
                 />
                 <LongText
-                    name="overview_initiative_about"
+                    name="initiativeAbout"
+                    defaultValue={initiative?.initiativeAbout}
                     label={labelTodo('What are your initiative about')}
                     placeholder={labelTodo(
                         "Brief description of initiative that details why it's important"
@@ -68,8 +134,12 @@ const OverviewComponent = ({ pageProps }) => {
                     controller={control}
                 />
                 <SelectList
-                    name="overview_initiative_location"
-                    showText
+                    name="initiativeLocation"
+                    defaultValue={initiative?.initiativeLocation?.map(
+                        value => ({
+                            selectValue: value,
+                        })
+                    )}
                     label={labelTodo('Where is it located?')}
                     listMaxLength={3}
                     options={valueSet('account.Location__c').map(item => ({
@@ -85,19 +155,9 @@ const OverviewComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+OverviewComponent.propTypes = {};
 
-OverviewComponent.propTypes = {
-    pageProps: t.object,
-};
-
-OverviewComponent.defaultProps = {
-    pageProps: {},
-};
+OverviewComponent.defaultProps = {};
 
 OverviewComponent.layout = 'wizard';
 

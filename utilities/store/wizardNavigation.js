@@ -1,8 +1,13 @@
 import Router from 'next/router';
 import create from 'zustand';
 import produce from 'immer';
+import {
+    reportingItems,
+    detailingItems,
+    planningItems,
+} from 'utilities/data/wizardNavigationItems';
 
-const useWizardNavigationStore = create(set => ({
+const useWizardNavigationStore = create((set, get) => ({
     // Update nested state values
     // https://morioh.com/p/a687e3129a67
     set: fn => set(produce(fn)),
@@ -12,6 +17,7 @@ const useWizardNavigationStore = create(set => ({
         set(state => {
             state.items[topLevelIndex].collapsed = value;
         }),
+
     // Set progress icon - nav item (only one Item can be inProgress)
     onSetInProgess: (topLevelIndex, subLevelIndex, value) =>
         set(state => {
@@ -45,6 +51,7 @@ const useWizardNavigationStore = create(set => ({
             state.onGoto(1);
         });
     },
+
     onGotoPrevious: () =>
         set(state => {
             state.onGoto(-1);
@@ -150,15 +157,92 @@ const useWizardNavigationStore = create(set => ({
         });
     },
 
-    // Add "Planning" or "Detailing" sections
-    extendWizard: (addPlanning = false, addDetailing = false) => {
+    // Adds submit handler for a given item
+    addSubmitHandler: handler => {
         set(state => {
-            if (addPlanning) {
-                state.items = state.items.concat(state.planningItems);
+            const currId = state.currentSectionId;
+            const currSubId = state.currentSubSectionId;
+
+            // Does the current item have any children
+            const hasChildren = state.items[currId]?.items?.length > 0;
+
+            // Add handler to child
+            if (hasChildren && state.items[currId]) {
+                state.items[currId].items[currSubId].submitHandler = handler;
             }
-            if (addDetailing) {
-                state.items = state.items.concat(state.detailingItems);
+            // Add handler to parent
+            else if (state.items[currId]) {
+                state.items[currId].submitHandler = handler;
             }
+        });
+    },
+
+    async onSubmit() {
+        const currId = get().currentSectionId;
+        const currSubId = get().currentSubSectionId;
+        const items = get().items;
+
+        // Does the current item have any children
+        const hasChildren = items[currId]?.items?.length > 0;
+
+        // Submit for child
+        if (hasChildren) {
+            return (
+                items[currId].items[currSubId].submitHandler &&
+                items[currId].items[currSubId].submitHandler()
+            );
+        }
+        // Submit for parent
+        else {
+            return items[currId].submitHandler && items[currId].submitHandler();
+        }
+    },
+
+    shouldHideBack() {
+        const currId = get().currentSectionId;
+        const currSubId = get().currentSubSectionId;
+        const items = get().items;
+
+        // Does the current item have any children
+        const hasChildren = items[currId]?.items?.length > 0;
+
+        // Hide back?
+        return hasChildren
+            ? items[currId]?.items[currSubId].hideBack
+            : items[currId]?.hideBack;
+    },
+
+    buildWizardItems(configurationType = []) {
+        set(state => {
+            // What types
+            const planning = configurationType.includes('Planning');
+            const detailing = configurationType.includes('Explain');
+
+            // Baseline for items = reporting items
+            let items = reportingItems();
+
+            // Add planning if needed
+            if (planning) {
+                items[4] = {
+                    ...items[4],
+                    items: [
+                        planningItems()[0],
+                        ...items[4].items,
+                        planningItems()[1],
+                    ],
+                };
+            }
+
+            // Add detailing if selected
+            if (detailing) {
+                items = [
+                    ...items.slice(0, 3),
+                    ...detailingItems(),
+                    ...items.slice(3, items.length),
+                ];
+            }
+
+            state.items = items;
         });
     },
 
@@ -166,191 +250,7 @@ const useWizardNavigationStore = create(set => ({
     currentSectionId: 0,
     currentSubSectionId: 0,
 
-    // TODO - Get nav data from SalesForce
-    items: [
-        {
-            title: 'introduction',
-            url: '/wizard/initiative/introduction',
-            collapsed: true,
-            visible: false,
-        },
-        {
-            title: 'information-capture',
-            url: '/wizard/initiative/information-capture',
-            collapsed: true,
-            visible: false,
-        },
-        {
-            title: 'Initiative information',
-            collapsed: true,
-            visible: true,
-            items: [
-                {
-                    title: 'Overview',
-                    url: '/wizard/initiative/overview',
-                    inProgress: false,
-                    completed: false,
-                },
-            ],
-        },
-        {
-            title: 'Summary',
-            collapsed: true,
-            visible: true,
-            items: [
-                {
-                    title: 'Overall performance',
-                    url: '/wizard/initiative/overall-perfomance',
-                    inProgress: false,
-                    completed: false,
-                },
-                {
-                    title: 'Challenges and learnings',
-                    url: '/wizard/initiative/challenges-and-learnings',
-                    inProgress: false,
-                    completed: false,
-                },
-            ],
-        },
-        {
-            title: 'Key changes',
-            collapsed: true,
-            visible: true,
-            items: [
-                {
-                    title: 'Funding',
-                    url: '/wizard/initiative/funding',
-                    inProgress: false,
-                    completed: false,
-                },
-                {
-                    title: 'Project members',
-                    url: '/wizard/initiative/project-members',
-                    inProgress: false,
-                    completed: false,
-                },
-                {
-                    title: 'Collaborators',
-                    url: '/wizard/initiative/collaborators',
-                    inProgress: false,
-                    completed: false,
-                },
-            ],
-        },
-        {
-            title: 'Key results',
-            collapsed: true,
-            visible: true,
-            items: [
-                {
-                    title: 'Activities',
-                    url: '/wizard/initiative/activities',
-                    inProgress: false,
-                    completed: false,
-                },
-                {
-                    title: 'Sharing of results',
-                    url: '/wizard/initiative/sharing-of-results',
-                    inProgress: false,
-                    completed: false,
-                },
-                {
-                    title: 'Evaluations',
-                    url: '/wizard/initiative/evaluations',
-                    inProgress: false,
-                    completed: false,
-                },
-                {
-                    title: 'Influence on policy',
-                    url: '/wizard/initiative/influence-on-policy',
-                    inProgress: false,
-                    completed: false,
-                },
-            ],
-        },
-    ],
-
-    planningItems: [
-        {
-            title: 'Planning',
-            collapsed: true,
-            visible: true,
-            items: [
-                {
-                    title: 'Planning',
-                    url: '/wizard/initiative/planning',
-                    inProgress: false,
-                    completed: false,
-                },
-            ],
-        },
-    ],
-    detailingItems: [
-        {
-            title: 'Detailing',
-            collapsed: true,
-            visible: true,
-            items: [
-                {
-                    title: 'Detailing',
-                    url: '/wizard/initiative/detailing',
-                    inProgress: false,
-                    completed: false,
-                },
-            ],
-        },
-    ],
-
-    // items: {
-    //     introduction: {
-    //         order: 0,
-    //         visible: false,
-    //         title: 'Introduction',
-    //         url: '/wizard/initiative/introduction',
-    //     },
-    //     informationCapture: {
-    //         order: 1,
-    //         visible: false,
-    //         title: 'bajs',
-    //         url: '/wizard/initiative/information-capture',
-    //     },
-    //     initiativeInformation: {
-    //         order: 2,
-    //         visible: true,
-    //         title: 'Initiative information',
-    //         url: '/wizard/initiative/initiative-information',
-    //         overview: {
-    //             order: 2,
-    //             subOrder: 0,
-    //             visible: true,
-    //             title: 'Overview',
-    //             url: '/wizard/initiative/overview',
-    //         },
-    //     },
-    //     summary: {
-    //         order: 3,
-    //         visible: true,
-    //         title: 'Summary',
-    //         url: '/wizard/initiative/summary',
-
-    //         overallPerformance: {
-    //             order: 3,
-    //             subOrder: 0,
-    //             title: 'Overall performance',
-    //             url: '/wizard/initiative/overall-perfomance',
-    //             inProgress: false,
-    //             completed: false,
-    //         },
-    //         challengesAndLearnings: {
-    //             order: 3,
-    //             subOrder: 1,
-    //             title: 'Challenges and learnings',
-    //             url: '/wizard/initiative/challenges-and-learnings',
-    //             inProgress: false,
-    //             completed: false,
-    //         },
-    //     },
-    // },
+    items: reportingItems(),
 }));
 
 export { useWizardNavigationStore };

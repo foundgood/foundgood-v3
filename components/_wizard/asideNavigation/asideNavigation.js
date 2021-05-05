@@ -1,21 +1,31 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 
 // Utilities
-import { useWizardNavigationStore } from 'utilities/store';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 import { useMetadata } from 'utilities/hooks';
 
 // Components
 import { TopLevelItem } from 'components/_wizard/asideNavigation';
 
 const AsideNavigationComponent = () => {
-    // Store: wizardNavigation
-    const { items } = useWizardNavigationStore();
-
     // Hook: Metadata
     const { labelTodo } = useMetadata();
+
+    // Store: wizardNavigation
+    const { buildWizardItems, items } = useWizardNavigationStore();
+
+    // Store: Initiative data
+    const { initiative } = useInitiativeDataStore();
+
+    useEffect(() => {
+        buildWizardItems(initiative?.configurationType);
+    }, [initiative?.configurationType]);
 
     return (
         <>

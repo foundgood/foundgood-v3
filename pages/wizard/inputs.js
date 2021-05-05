@@ -137,39 +137,11 @@ const InputsComponent = ({ pageProps }) => {
                 Submit
             </Button>
             <Modal
-                isOpen={isOpen}
+                isOpen={false}
                 title="Add new funder"
                 close={() => setIsOpen(false)}
                 save={() => console.log('do stuff')}>
-                <InputWrapper>
-                    <Text
-                        label="What is the name of your initiative?"
-                        subLabel="Additional text that explains the question if needed"
-                        placeholder="Initiative name"
-                        maxLength={20}
-                        {...register('initiative_name', { maxLength: 20 })}
-                    />
-                    <Select
-                        label="What is the select of your initiative?"
-                        subLabel="Additional text that explains the question if needed"
-                        placeholder="Initiative name"
-                        options={[
-                            { label: 'Test value 1', value: 'value1' },
-                            { label: 'Test value 2', value: 'value2' },
-                            { label: 'Test value 3', value: 'value3' },
-                        ]}
-                        {...register('initiative_name_select')}
-                    />
-                    <LongText
-                        label="What is the longest explanation of your initiative?"
-                        subLabel="Additional text that explains the question if needed"
-                        placeholder="Initiative name"
-                        maxLength={400}
-                        {...register('initiative_name_long', {
-                            maxLength: 400,
-                        })}
-                    />
-                </InputWrapper>
+                <InputWrapper></InputWrapper>
             </Modal>
         </form>
     );

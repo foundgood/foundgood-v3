@@ -34,7 +34,13 @@ const SelectListComponent = ({
     const { labelTodo } = useMetadata();
 
     // Local state
-    const [list, setList] = useState(defaultValue);
+    const [list, setList] = useState(
+        defaultValue.map(item => ({
+            selectValue: item.selectValue,
+            textValue: item.textValue ?? '',
+            id: nanoid(),
+        }))
+    );
 
     // Method: Handles add to list
     function addToList() {
@@ -75,7 +81,6 @@ const SelectListComponent = ({
                     control={controller}
                     defaultValue={defaultValue}
                     name={name}
-                    rules={{}}
                     render={({
                         field: { onChange, onBlur, value, ref },
                         fieldState: { error },
@@ -106,7 +111,7 @@ const SelectListComponent = ({
                                                                 },
                                                             ])}
                                                             defaultValue={
-                                                                list.selectValue
+                                                                item.selectValue
                                                             }
                                                             onChange={event => {
                                                                 // Get next list
@@ -123,7 +128,13 @@ const SelectListComponent = ({
 
                                                                 // Update form
                                                                 onChange(
-                                                                    nextList
+                                                                    nextList.filter(
+                                                                        item =>
+                                                                            item
+                                                                                .selectValue
+                                                                                .length >
+                                                                            0
+                                                                    )
                                                                 );
                                                             }}>
                                                             <option
@@ -256,9 +267,8 @@ SelectListComponent.propTypes = {
     subLabel: t.string,
     defaultValue: t.arrayOf(
         t.shape({
-            selectValue: t.string,
-            textValue: t.string,
-            id: t.oneOfType([t.string, t.number]),
+            selectValue: t.oneOfType([t.string, t.number]),
+            textValue: t.oneOfType([t.string, t.number]),
         })
     ),
     options: t.arrayOf(
