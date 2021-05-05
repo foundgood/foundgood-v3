@@ -110,8 +110,6 @@ const useAuth = () => {
                                 instanceUrl: instance_url,
                             });
 
-                            console.log(user);
-
                             // Log
                             console.log('Auth: User', user);
 
@@ -144,11 +142,27 @@ const useAuth = () => {
         });
     }
 
+    // timer for timeout
+    let timeoutTimer;
+
     // Update user timeout
     function updateUserTimeout() {
-        setLsUserSessionTimeout(
-            Date.now() + process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS
+        const newTimeout =
+            Date.now() + process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS;
+        setLsUserSessionTimeout(newTimeout);
+
+        // Update logout timeout
+        console.info(
+            `You will be logged out with ${
+                process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS / 1000 / 60
+            } minutes of inactivity`
         );
+
+        clearTimeout(timeoutTimer);
+
+        timeoutTimer = setTimeout(() => {
+            logout();
+        }, process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
     }
 
     // Effect: Update data in store based on localstorage object
