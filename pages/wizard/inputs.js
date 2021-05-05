@@ -40,13 +40,15 @@ const InputsComponent = ({ pageProps }) => {
         <form>
             <InputWrapper>
                 <Text
+                    name="initiative_name"
                     label="What is the name of your initiative?"
                     subLabel="Additional text that explains the question if needed"
                     placeholder="Initiative name"
                     maxLength={20}
-                    {...register('initiative_name', { maxLength: 20 })}
+                    controller={control}
                 />
                 <Select
+                    name="initiative_name_select"
                     label="What is the select of your initiative?"
                     subLabel="Additional text that explains the question if needed"
                     placeholder="Initiative name"
@@ -55,42 +57,40 @@ const InputsComponent = ({ pageProps }) => {
                         { label: 'Test value 2', value: 'value2' },
                         { label: 'Test value 3', value: 'value3' },
                     ]}
-                    {...register('initiative_name_select')}
+                    controller={control}
                 />
                 <LongText
+                    name="initiative_name_long"
                     label="What is the longest explanation of your initiative?"
                     subLabel="Additional text that explains the question if needed"
                     placeholder="Initiative name"
                     maxLength={400}
-                    {...register('initiative_name_long', {
-                        maxLength: 400,
-                    })}
+                    controller={control}
                 />
                 <DateRange
+                    name="initiative_name_date"
                     label="When does it start and end?"
                     subLabel="Additional text that explains the question if needed"
                     controller={control}
-                    name="initiative_name_date"
                 />
                 <TextList
                     label="What is the name of your initiative?"
                     subLabel="You can add multiple if you need to"
                     placeholder="Initiative name"
                     name={'initiative_name_list'}
-                    controller={control}
                     defaultValue={[
                         { value: 'Nummer 1', id: 1 },
                         { value: 'Nummer 2', id: 2 },
                     ]}
                     maxLength={10}
                     listMaxLength={5}
+                    controller={control}
                 />
                 <SelectList
                     label="What is the name of your initiative?"
                     subLabel="You can add multiple if you need to"
                     placeholder="Initiative name"
                     name={'initiative_name_select_list'}
-                    controller={control}
                     maxLength={10}
                     listMaxLength={3}
                     showText
@@ -101,9 +101,9 @@ const InputsComponent = ({ pageProps }) => {
                     ]}
                     selectLabel="My select label"
                     textLabel="My text label"
+                    controller={control}
                 />
                 <SelectionCards
-                    controller={control}
                     name="select_way"
                     options={[
                         {
@@ -126,6 +126,7 @@ const InputsComponent = ({ pageProps }) => {
                                 'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
                         },
                     ]}
+                    controller={control}
                 />
             </InputWrapper>
             <Button
