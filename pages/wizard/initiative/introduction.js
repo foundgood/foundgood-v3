@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 
 // Packages
-import t from 'prop-types';
 import Image from 'next/image';
 
 // Utilities
@@ -30,25 +29,25 @@ const IntroductionComponent = ({ pageProps }) => {
     const { addSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const { updateInitiative } = useInitiativeDataStore();
+    const { updateInitiative, reset } = useInitiativeDataStore();
 
     // Method: Submit page content
     async function submit() {
         const initiativeId = await sfCreate({
             object: 'Initiative__c',
             data: {
+                Name: '___',
                 Configuration_Type__c: 'Reporting',
             },
         });
 
-        updateInitiative({
-            id: initiativeId,
-            configurationType: ['Reporting'],
-        });
+        await updateInitiative(initiativeId);
     }
 
     // Add submit handler to wizard navigation store
     useEffect(() => {
+        // Reset initiative
+        reset();
         setTimeout(() => {
             addSubmitHandler(submit);
         }, 10);
@@ -82,19 +81,9 @@ const IntroductionComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+IntroductionComponent.propTypes = {};
 
-IntroductionComponent.propTypes = {
-    pageProps: t.object,
-};
-
-IntroductionComponent.defaultProps = {
-    pageProps: {},
-};
+IntroductionComponent.defaultProps = {};
 
 IntroductionComponent.layout = 'wizardBlank';
 

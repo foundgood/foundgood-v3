@@ -6,7 +6,7 @@ const _uniq = require('lodash.uniq');
 const _get = require('lodash.get');
 
 const config = {
-    zipUrl: 'https://www.dropbox.com/s/liqnievb8llw255/metadata.zip?dl=1',
+    zipUrl: 'https://www.dropbox.com/s/dmxytw9trjye00g/metadata.zip?dl=1',
     locales: ['da'],
     files: {
         account: 'Account',

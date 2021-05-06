@@ -39,51 +39,52 @@ const OverviewComponent = () => {
     const { addSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const { initiative, updateInitiative } = useInitiativeDataStore();
+    const {
+        initiative,
+        updateInitiative,
+        updateCollaborator,
+    } = useInitiativeDataStore();
 
     // Get data for form
-    const { data: accountGrantees } = sfQuery(
-        queries.getObjectList.accountGrantees()
-    );
+    const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
 
     // Method: Submit page content
-    async function submit(data) {
-        const {
-            responsibleOrganisation,
-            initiativeName,
-            initiativeAbout,
-            initiativeLocation,
-        } = data;
+    async function submit(formData) {
+        try {
+            const {
+                Name,
+                Summary__c,
+                Where_Is_Problem__c,
+                Account__c,
+                Category__c,
+            } = formData;
 
-        await sfUpdate({
-            object: 'Initiative__c',
-            id: initiative.id,
-            data: {
-                Name: initiativeName,
-                Summary__c: initiativeAbout,
-                Where_Is_Problem__c: initiativeLocation
-                    .map(item => item.selectValue)
-                    .join(';'),
-            },
-        });
+            await sfUpdate({
+                object: 'Initiative__c',
+                id: initiative.Id,
+                data: {
+                    Name,
+                    Summary__c,
+                    Category__c,
+                    Where_Is_Problem__c: Where_Is_Problem__c.map(
+                        item => item.selectValue
+                    ).join(';'),
+                },
+            });
 
-        const initiativeCollaborator = await sfCreate({
-            object: 'Initiative_Collaborator__c',
-            data: {
-                Initiative__c: initiative.id,
-                Account__c: responsibleOrganisation,
-            },
-        });
+            const collaboratorId = await sfCreate({
+                object: 'Initiative_Collaborator__c',
+                data: {
+                    Initiative__c: initiative.Id,
+                    Account__c,
+                },
+            });
 
-        updateInitiative({
-            initiativeName,
-            initiativeAbout,
-            initiativeLocation: initiativeLocation.map(
-                item => item.selectValue
-            ),
-            responsibleOrganisation,
-            initiativeCollaborator,
-        });
+            await updateInitiative(initiative.Id);
+            await updateCollaborator(collaboratorId);
+        } catch (error) {
+            console.warn(error);
+        }
     }
 
     // Add submit handler to wizard navigation store
@@ -97,14 +98,12 @@ const OverviewComponent = () => {
         <>
             <TitlePreamble
                 title={labelTodo('Overview')}
-                preamble={labelTodo(
-                    'Preamble of what you need to do, should be clear and easy to understand'
-                )}
+                preamble={labelTodo('Preamble')}
             />
             <InputWrapper>
                 <Select
-                    name="responsibleOrganisation"
-                    defaultValue={initiative?.responsibleOrganisation}
+                    name="Account__c"
+                    defaultValue={initiative?.Account__c}
                     label={labelTodo('Responsible organisation')}
                     placeholder={labelTodo('Grantee name')}
                     options={
@@ -116,16 +115,16 @@ const OverviewComponent = () => {
                     controller={control}
                 />
                 <Text
-                    name="initiativeName"
-                    defaultValue={initiative?.initiativeName}
+                    name="Name"
+                    defaultValue={initiative?.Name.replace('___', '')}
                     label={labelTodo('What is the name of your initiative?')}
                     placeholder={labelTodo('Title of initiative')}
                     maxLength={80}
                     controller={control}
                 />
                 <LongText
-                    name="initiativeAbout"
-                    defaultValue={initiative?.initiativeAbout}
+                    name="Summary__c"
+                    defaultValue={initiative?.Summary__c}
                     label={labelTodo('What are your initiative about')}
                     placeholder={labelTodo(
                         "Brief description of initiative that details why it's important"
@@ -134,12 +133,12 @@ const OverviewComponent = () => {
                     controller={control}
                 />
                 <SelectList
-                    name="initiativeLocation"
-                    defaultValue={initiative?.initiativeLocation?.map(
-                        value => ({
-                            selectValue: value,
-                        })
-                    )}
+                    name="Where_Is_Problem__c"
+                    defaultValue={initiative?.Where_Is_Problem__c?.split(
+                        ';'
+                    ).map(value => ({
+                        selectValue: value,
+                    }))}
                     label={labelTodo('Where is it located?')}
                     listMaxLength={3}
                     options={valueSet('account.Location__c').map(item => ({
@@ -148,6 +147,13 @@ const OverviewComponent = () => {
                     }))}
                     selectLabel={labelTodo('Country')}
                     textLabel={labelTodo('Region')}
+                    controller={control}
+                />
+                <Select
+                    name="Category__c"
+                    label={labelTodo('Grant giving area')}
+                    placeholder={labelTodo('Please select')}
+                    options={valueSet('initiative.Category__c')}
                     controller={control}
                 />
             </InputWrapper>

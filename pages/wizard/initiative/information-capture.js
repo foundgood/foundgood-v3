@@ -40,20 +40,19 @@ const InformationCaptureComponent = () => {
     } = useInitiativeDataStore();
 
     // Method: Submit page content
-    async function submit(data) {
-        const { configurationType } = data;
+    async function submit(formData) {
+        const { Configuration_Type__c } = formData;
 
         await sfUpdate({
             object: 'Initiative__c',
-            id: initiative.id,
+            id: initiative.Id,
             data: {
-                Configuration_Type__c: configurationType.join(';'),
+                Configuration_Type__c: Configuration_Type__c.join(';'),
             },
         });
 
-        updateInitiative({ configurationType });
-
-        setConfigurationType(configurationType);
+        await updateInitiative(initiative.Id);
+        setConfigurationType(Configuration_Type__c);
     }
 
     // Add submit handler to wizard navigation store
@@ -73,12 +72,11 @@ const InformationCaptureComponent = () => {
                 <SelectionCards
                     controller={control}
                     defaultValue={
-                        initiative?.configurationType ?? [
+                        initiative?.Configuration_Type__c?.split(';') ?? [
                             'Reporting',
-                            'Planning',
                         ]
                     }
-                    name="configurationType"
+                    name="Configuration_Type__c"
                     options={[
                         {
                             label: 'Reporting',

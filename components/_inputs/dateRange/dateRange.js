@@ -1,11 +1,11 @@
 // React
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
-import { Controller } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 import dayjs from 'dayjs';
 import 'react-day-picker/lib/style.css';
 
@@ -26,6 +26,30 @@ const DateRangeComponent = ({
     const [from, setFrom] = useState(defaultValue.from);
     const [to, setTo] = useState(defaultValue.to);
 
+    // Controller from useForm
+    const {
+        field: { onChange, value },
+        fieldState: { error },
+    } = useController({
+        name,
+        control: controller,
+        defaultValue: defaultValue,
+        rules: {
+            validate: {
+                isDateFrom: v => (v.from ? dayjs(v.from).isValid() : true),
+                isDateTo: v => (v.to ? dayjs(v.to).isValid() : true),
+            },
+        },
+    });
+
+    // Update state when using setValue
+    useEffect(() => {
+        if (value) {
+            setFrom(value.from);
+            setTo(value.to);
+        }
+    }, []);
+
     return (
         <>
             <label className="flex flex-col" htmlFor={name}>
@@ -33,110 +57,80 @@ const DateRangeComponent = ({
                 {subLabel && (
                     <span className="mt-8 input-sublabel">{subLabel}</span>
                 )}
-                <Controller
-                    control={controller}
-                    defaultValue={defaultValue}
-                    name={name}
-                    rules={{
-                        validate: {
-                            isDateFrom: v =>
-                                v.from ? dayjs(v.from).isValid() : true,
-                            isDateTo: v =>
-                                v.to ? dayjs(v.to).isValid() : true,
-                        },
-                    }}
-                    render={({
-                        field: { onChange, onBlur, value, ref },
-                        fieldState: { error },
-                    }) => (
-                        <div
-                            className={cc([
-                                'space-x-12 flex',
-                                { 'mt-16': label },
-                            ])}>
-                            <div className="flex flex-col flex-grow">
-                                <span className="mb-4 input-utility-text">
-                                    {labelTodo('From')}
-                                </span>
-                                <DayPickerInput
-                                    value={from}
-                                    formatDate={date =>
-                                        dayjs(date).format('YYYY-MM-DD')
-                                    }
-                                    placeholder="yyyy-mm-dd"
-                                    onDayChange={event => {
-                                        console.log(event);
-                                        setFrom(event);
-                                        onChange({
-                                            from: event
-                                                ? dayjs(event).format(
-                                                      'YYYY-MM-DD'
-                                                  )
-                                                : 'no-date',
-                                            to: dayjs(to).format('YYYY-MM-DD'),
-                                        });
-                                    }}
-                                    classNames={{
-                                        container: cc([
-                                            'input-defaults-date ',
-                                            {
-                                                'input-defaults-date-error':
-                                                    error?.type ===
-                                                    'isDateFrom',
-                                            },
-                                        ]),
-                                        overlay: 'absolute bg-white mt-12',
-                                    }}
-                                />
-                            </div>
-                            <div className="flex flex-col flex-grow">
-                                <span className="mb-4 input-utility-text">
-                                    {labelTodo('To')}
-                                </span>
-                                <DayPickerInput
-                                    disabled={!from}
-                                    value={to}
-                                    placeholder="yyyy-mm-dd"
-                                    formatDate={date =>
-                                        dayjs(date).format('YYYY-MM-DD')
-                                    }
-                                    dayPickerProps={{
-                                        disabledDays: { before: from },
-                                    }}
-                                    onDayChange={event => {
-                                        setTo(event);
-                                        onChange({
-                                            from: dayjs(from).format(
-                                                'YYYY-MM-DD'
-                                            ),
-                                            to: event
-                                                ? dayjs(event).format(
-                                                      'YYYY-MM-DD'
-                                                  )
-                                                : 'no-date',
-                                        });
-                                    }}
-                                    classNames={{
-                                        container: cc([
-                                            'input-defaults-date transition-default',
-                                            {
-                                                'pointer-events-none opacity-50': !from,
-                                                'input-defaults-date-error':
-                                                    error?.type === 'isDateTo',
-                                            },
-                                        ]),
-                                        overlay: cc([
-                                            'absolute bg-white mt-12',
-                                            {
-                                                'pointer-events-none opacity-0': !from,
-                                            },
-                                        ]),
-                                    }}
-                                />
-                            </div>
-                        </div>
-                    )}
-                />
+                <div className={cc(['space-x-12 flex', { 'mt-16': label }])}>
+                    <div className="flex flex-col flex-grow">
+                        <span className="mb-4 input-utility-text">
+                            {labelTodo('From')}
+                        </span>
+                        <DayPickerInput
+                            value={from}
+                            formatDate={date =>
+                                dayjs(date).format('YYYY-MM-DD')
+                            }
+                            placeholder="yyyy-mm-dd"
+                            onDayChange={event => {
+                                setFrom(event);
+                                onChange({
+                                    from: event
+                                        ? dayjs(event).format('YYYY-MM-DD')
+                                        : 'no-date',
+                                    to: dayjs(to).format('YYYY-MM-DD'),
+                                });
+                            }}
+                            classNames={{
+                                container: cc([
+                                    'input-defaults-date ',
+                                    {
+                                        'input-defaults-date-error':
+                                            error?.type === 'isDateFrom',
+                                    },
+                                ]),
+                                overlay: 'absolute bg-white mt-12',
+                            }}
+                        />
+                    </div>
+                    <div className="flex flex-col flex-grow">
+                        <span className="mb-4 input-utility-text">
+                            {labelTodo('To')}
+                        </span>
+                        <DayPickerInput
+                            disabled={!from}
+                            value={to}
+                            placeholder="yyyy-mm-dd"
+                            formatDate={date =>
+                                dayjs(date).format('YYYY-MM-DD')
+                            }
+                            dayPickerProps={{
+                                disabledDays: { before: from },
+                            }}
+                            onDayChange={event => {
+                                setTo(event);
+                                onChange({
+                                    from: dayjs(from).format('YYYY-MM-DD'),
+                                    to: event
+                                        ? dayjs(event).format('YYYY-MM-DD')
+                                        : 'no-date',
+                                });
+                            }}
+                            classNames={{
+                                container: cc([
+                                    'input-defaults-date transition-default',
+                                    {
+                                        'pointer-events-none opacity-50': !from,
+                                        'input-defaults-date-error':
+                                            error?.type === 'isDateTo',
+                                    },
+                                ]),
+                                overlay: cc([
+                                    'absolute bg-white mt-12',
+                                    {
+                                        'pointer-events-none opacity-0': !from,
+                                    },
+                                ]),
+                            }}
+                        />
+                    </div>
+                </div>
             </label>
             <style global jsx>
                 {`

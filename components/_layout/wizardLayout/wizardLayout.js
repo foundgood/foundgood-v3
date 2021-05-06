@@ -6,7 +6,7 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 // Utilities
-import { useWizardLayoutStore } from 'utilities/store';
+import { useWizardLayoutStore, useInitiativeDataStore } from 'utilities/store';
 import { useResponsive, useMetadata } from 'utilities/hooks';
 
 // Components
@@ -46,6 +46,12 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
             toggleRightMenu(true);
         }
     }, [bp]);
+
+    // Logging of initiative data
+    const { initiative } = useInitiativeDataStore();
+    useEffect(() => {
+        console.log({ initiative });
+    }, [initiative]);
 
     return (
         <>

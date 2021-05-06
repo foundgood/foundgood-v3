@@ -170,7 +170,8 @@ const useAuth = () => {
                 logout();
             }, process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
         } else {
-            logout();
+            // logout();
+            alert('MAKE LOGOUT');
         }
     }
 

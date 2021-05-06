@@ -13,6 +13,7 @@ const FounderCardComponent = ({
     subHeadline,
     footnote,
     image,
+    action,
 }) => {
     return (
         <Card
@@ -21,6 +22,7 @@ const FounderCardComponent = ({
             subHeadline={subHeadline}
             footnote={footnote}
             image={image}
+            action={action}
         />
     );
 };
@@ -36,6 +38,8 @@ FounderCardComponent.propTypes = {
     image: t.string,
     // Text after body text
     footnote: t.string,
+    // Button action
+    action: t.func,
 };
 
 FounderCardComponent.defaultProps = {};

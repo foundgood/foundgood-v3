@@ -25,12 +25,16 @@ const useSalesForce = () => {
     // E.g. {..., "Initiative__c": "a0p1x0000008CbtAAE"}
     // Returns id of created object
     async function sfCreate({ object, data }) {
-        const { id } = await salesForce.crud.create({ object, data });
+        try {
+            const { id } = await salesForce.crud.create({ object, data });
 
-        // Update user timeout
-        updateUserTimeout();
+            // Update user timeout
+            updateUserTimeout();
 
-        return id;
+            return id;
+        } catch (error) {
+            console.warn(error);
+        }
     }
 
     // Method for updating any object in the SalesForce API
@@ -39,19 +43,27 @@ const useSalesForce = () => {
     // Data is the data as json object
     // Returns nothing
     async function sfUpdate({ object, id, data }) {
-        await salesForce.crud.update({ object, id, data });
+        try {
+            await salesForce.crud.update({ object, id, data });
 
-        // Update user timeout
-        updateUserTimeout();
+            // Update user timeout
+            updateUserTimeout();
+        } catch (error) {
+            console.warn(error);
+        }
     }
 
     // Method for setting the user language in the SalesForce API
     // Language is either 'da' or 'en_US'
     async function sfSetUserLanguage(language) {
-        await salesForce.custom.setUserLanguage({ language });
+        try {
+            await salesForce.custom.setUserLanguage({ language });
 
-        // Update user timeout
-        updateUserTimeout();
+            // Update user timeout
+            updateUserTimeout();
+        } catch (error) {
+            console.warn(error);
+        }
     }
 
     // Method for getting current user initiative rights of the SalesForce API

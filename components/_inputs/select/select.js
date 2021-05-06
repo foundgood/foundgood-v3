@@ -55,9 +55,9 @@ const SelectComponent = ({
                             <option default value="" className="hidden">
                                 {placeholder}
                             </option>
-                            {options.map(option => (
+                            {options.map((option, index) => (
                                 <option
-                                    key={option.value}
+                                    key={`${option.value}-${index}`}
                                     value={option.value}
                                     className="font-normal text-black">
                                     {option.label}

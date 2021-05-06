@@ -20,6 +20,7 @@ const CardComponent = ({
     tags,
     evaluator,
     goals,
+    action,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -88,7 +89,7 @@ const CardComponent = ({
                 </div>
 
                 <div className="self-center">
-                    <Button theme="teal" variant="secondary">
+                    <Button theme="teal" variant="secondary" action={action}>
                         {labelTodo('Update')}
                     </Button>
                 </div>
@@ -114,6 +115,8 @@ CardComponent.propTypes = {
     evaluator: t.string,
     // Image url
     image: t.string,
+    // Button action
+    action: t.func,
 };
 
 CardComponent.defaultProps = {};
