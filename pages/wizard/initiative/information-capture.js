@@ -51,8 +51,8 @@ const InformationCaptureComponent = () => {
             },
         });
 
+        // setConfigurationType(Configuration_Type__c);
         await updateInitiative(initiative.Id);
-        setConfigurationType(Configuration_Type__c);
     }
 
     // Add submit handler to wizard navigation store

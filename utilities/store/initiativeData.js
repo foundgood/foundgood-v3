@@ -19,10 +19,6 @@ async function sfQuery(q) {
 
 const useInitiativeDataStore = create(
     persist((set, get) => ({
-        configurationType: ['Reporting'],
-        setConfigurationType(configurationType) {
-            set(() => ({ configurationType }));
-        },
         initiative: {
             _collaborators: {},
             _funders: {},

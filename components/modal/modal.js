@@ -13,7 +13,14 @@ import { useMetadata } from 'utilities/hooks';
 // Components
 import Button from 'components/button';
 
-const ModalComponent = ({ isOpen, children, onCancel, onSave, title }) => {
+const ModalComponent = ({
+    isOpen,
+    children,
+    onCancel,
+    onSave,
+    disabledSave,
+    title,
+}) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
@@ -67,7 +74,10 @@ const ModalComponent = ({ isOpen, children, onCancel, onSave, title }) => {
                             action={onCancel}>
                             {labelTodo('Cancel')}
                         </Button>
-                        <Button theme="coral" action={onSave}>
+                        <Button
+                            theme="coral"
+                            action={onSave}
+                            disabled={disabledSave}>
                             {labelTodo('Save')}
                         </Button>
                     </div>

@@ -116,7 +116,7 @@ const OverviewComponent = () => {
                 />
                 <Text
                     name="Name"
-                    defaultValue={initiative?.Name.replace('___', '')}
+                    defaultValue={initiative?.Name?.replace('___', '')}
                     label={labelTodo('What is the name of your initiative?')}
                     placeholder={labelTodo('Title of initiative')}
                     maxLength={80}
@@ -151,6 +151,7 @@ const OverviewComponent = () => {
                 />
                 <Select
                     name="Category__c"
+                    defaultValue={initiative?.Category__c}
                     label={labelTodo('Grant giving area')}
                     placeholder={labelTodo('Please select')}
                     options={valueSet('initiative.Category__c')}

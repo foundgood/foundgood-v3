@@ -1,5 +1,5 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import _isEqual from 'lodash.isequal';
@@ -21,18 +21,11 @@ const AsideNavigationComponent = () => {
     const { buildWizardItems, items } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const { configurationType } = useInitiativeDataStore();
+    const { initiative } = useInitiativeDataStore();
 
-    // Local state for config type
-    const [currentConfigurationType, setCurrentConfigurationType] = useState([
-        'Reporting',
-    ]);
     useEffect(() => {
-        if (!_isEqual(currentConfigurationType, configurationType)) {
-            buildWizardItems(configurationType);
-            setCurrentConfigurationType(configurationType);
-        }
-    }, [configurationType]);
+        buildWizardItems(initiative.Configuration_Type__c);
+    }, []);
 
     return (
         <>

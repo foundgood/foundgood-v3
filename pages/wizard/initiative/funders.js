@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import { useForm } from 'react-hook-form';
+import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
@@ -32,7 +32,8 @@ const FundersComponent = ({ pageProps }) => {
     const { labelTodo, valueSet } = useMetadata();
 
     // Hook: useForm setup
-    const { handleSubmit, control, setValue } = useForm();
+    const { handleSubmit, control, setValue, reset } = useForm();
+    const { isDirty } = useFormState({ control });
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
@@ -94,6 +95,9 @@ const FundersComponent = ({ pageProps }) => {
 
             // Close modal
             setModalIsOpen(false);
+
+            // Clear content in form
+            reset();
         } catch (error) {
             console.warn(error);
         }
@@ -129,7 +133,7 @@ const FundersComponent = ({ pageProps }) => {
             to: Grant_End_Date__c,
         });
         setValue('Application_Id__c', Application_Id__c);
-    }, [updateId]);
+    }, [updateId, modalIsOpen]);
 
     return (
         <>
@@ -172,6 +176,7 @@ const FundersComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={labelTodo('Add new funder')}
                 onCancel={() => setModalIsOpen(false)}
+                disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <Select

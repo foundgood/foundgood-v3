@@ -17,7 +17,7 @@ const SelectionCards = ({ controller, name, options, defaultValue }) => {
     const { labelTodo } = useMetadata();
 
     // Local state
-    const [values, setValues] = useState(defaultValue);
+    const [values, setValues] = useState(defaultValue || []);
 
     return (
         <div className="flex flex-col py-16 space-y-36">
