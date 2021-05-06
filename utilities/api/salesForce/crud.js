@@ -28,12 +28,12 @@ async function create({ object, data }) {
         // Convert non-ok HTTP responses into errors:
         if (response.status !== 201) {
             throw {
-                statusText: response.errors,
+                statusText: response.statusText,
                 response,
             };
         }
 
-        return response;
+        return response.data;
     } catch (error) {
         console.warn(error);
         return error;
@@ -43,7 +43,9 @@ async function create({ object, data }) {
 async function update({ object, id, data }) {
     try {
         const response = await axios.patch(
-            `${instanceUrl()}/services/data/v{{version}}/sobjects/${object}/${id}`,
+            `${instanceUrl()}/services/data/v${
+                process.env.NEXT_PUBLIC_SF_VERSION
+            }/sobjects/${object}/${id}`,
             data,
             {
                 headers: {

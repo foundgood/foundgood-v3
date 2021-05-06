@@ -3,9 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 // Packages
 import cc from 'classcat';
-import t from 'prop-types';
-import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 // Utilities
@@ -19,13 +16,16 @@ const BottomNavigationComponent = () => {
     const router = useRouter();
     const [hideBack, setHideBack] = useState(false);
 
+    // Local state for showing status
+    const [loading, setLoading] = useState(false);
+
     // Hook: Metadata
     const { labelTodo } = useMetadata();
     const {
         onGotoNext,
-        onGotoPrevious,
+        onSubmit,
         onUrlChanged,
-        hideBackButton,
+        shouldHideBack,
     } = useWizardNavigationStore();
 
     useEffect(() => {
@@ -33,13 +33,19 @@ const BottomNavigationComponent = () => {
         onUrlChanged(router.pathname);
     }, [router.pathname]);
 
-    console.log('hide back: ');
+    async function onHandleContinue() {
+        setLoading(true);
+        try {
+            await onSubmit();
+            setLoading(false);
+            onGotoNext();
+        } catch (error) {
+            setLoading(false);
+        }
+    }
 
-    const onHandleContinue = () => {
-        onGotoNext();
-    };
     const onHandleBack = () => {
-        onGotoPrevious();
+        router.back();
     };
 
     return (
@@ -52,20 +58,26 @@ const BottomNavigationComponent = () => {
                     className={cc([
                         'hidden t-footnote text-coral-60 md:flex transition-default opacity-0',
                         {
-                            'opacity-100': true, // TODO Connect to store when stuff is updated
+                            'opacity-100': loading,
                         },
                     ])}>
-                    {labelTodo('Your updates have been saved')}
+                    {labelTodo('Saving updates...')}
                 </p>
                 <div className="flex space-x-12">
-                    {!hideBackButton && (
-                        <Button
-                            theme="coral"
-                            variant="secondary"
-                            action={onHandleBack}>
-                            {labelTodo('Back')}
-                        </Button>
-                    )}
+                    <Button
+                        className={cc([
+                            'transition-default',
+                            {
+                                'opacity-100 pointer-events-auto': !shouldHideBack(),
+                                'opacity-0 pointer-events-none': shouldHideBack(),
+                            },
+                        ])}
+                        theme="coral"
+                        variant="secondary"
+                        action={onHandleBack}>
+                        {labelTodo('Back')}
+                    </Button>
+
                     <Button theme="coral" action={onHandleContinue}>
                         {labelTodo('Continue')}
                     </Button>

@@ -1,0 +1,115 @@
+// React
+import React, { useEffect, useState } from "react";
+
+// Packages
+import { useForm } from 'react-hook-form';
+
+// Utilities
+import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import {
+useWizardNavigationStore,
+useInitiativeDataStore,
+} from 'utilities/store';
+
+// Components
+import TitlePreamble from 'components/_wizard/titlePreamble';
+import {
+InputWrapper,
+Select,
+Text,
+LongText,
+SelectList,
+} from 'components/_inputs';
+{{#if modal}}
+import Button from 'components/button';
+import Modal from 'components/modal';
+{{/if}}
+
+const {{pascalCase name}}Component = () => {
+// Hook: Verify logged in
+const { verifyLoggedIn } = useAuth();
+verifyLoggedIn();
+
+// Hook: Metadata
+const { labelTodo, label, valueSet } = useMetadata();
+
+// Hook: useForm setup
+const { handleSubmit, control } = useForm();
+
+// Hook: Salesforce setup
+const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+
+// Store: Wizard navigation
+const { addSubmitHandler } = useWizardNavigationStore();
+
+// Store: Initiative data
+const { initiative, updateInitiative } = useInitiativeDataStore();
+
+// Method: Submit page content
+async function submit(data) {
+const {
+myTextField
+} = data;
+
+await sfUpdate({
+object: 'Initiative__c',
+id: initiative.id,
+data: {
+TextField__c: myTextField
+},
+});
+
+updateInitiative({
+myTextField,
+});
+
+{{#if modal}}
+setModalIsOpen(false);
+{{/if}}
+}
+
+{{#if modal}}
+// Local state to handle modal
+const [modalIsOpen, setModalIsOpen] = useState(false);
+{{else}}
+// Add submit handler to wizard navigation store
+useEffect(() => {
+setTimeout(() => {
+addSubmitHandler(handleSubmit(submit));
+}, 10);
+}, []);
+{{/if}}
+
+return (
+<>
+    <TitlePreamble title={labelTodo('{{sentenceCase name}}')} preamble={labelTodo('Preamble text' )} />
+    {{#if modal}}
+    <InputWrapper>
+        <Button theme="teal" className="self-start" action={()=> setModalIsOpen(true)}>
+            {labelTodo('Add ...')}
+        </Button>
+    </InputWrapper>
+    <Modal isOpen={modalIsOpen} title={labelTodo('Add new ...')} onCancel={()=> setModalIsOpen(false)}
+        onSave={handleSubmit(submit)}>
+        <InputWrapper>
+            <Text name="myTextField" defaultValue={initiative?.myTextField} label={labelTodo('myTextField')}
+                placeholder={labelTodo('myTextField placeholder')} maxLength={80} controller={control} />
+        </InputWrapper>
+    </Modal>
+    {{else}}
+    <InputWrapper>
+        <Text name="myTextField" defaultValue={initiative?.myTextField} label={labelTodo('myTextField')}
+            placeholder={labelTodo('myTextField placeholder')} maxLength={80} controller={control} />
+    </InputWrapper>
+    {{/if}}
+</>
+);
+};
+
+{{pascalCase name}}Component.propTypes = {};
+
+{{pascalCase name}}Component.defaultProps = {};
+
+{{pascalCase name}}Component.layout = 'wizard';
+
+export default {{pascalCase name}}Component;

@@ -19,6 +19,7 @@
     "dayjs": "^1.10.4",
     "immer": "^9.0.2",
     "lodash.get": "^4.4.2",
+    "lodash.isequal": "^4.5.0",
     "lodash.uniq": "^4.5.0",
     "nanoid": "^3.1.22",
     "next": "10.1.3",

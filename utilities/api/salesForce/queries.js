@@ -25,6 +25,9 @@ const queries = {
         initiativeUpdate(offset = 0) {
             return `SELECT+Id,+CreatedById,+LastModifiedDate,+Description__c,+Access_Level__c,+toLabel(Access_Level__c)+Translated_Access_Level__c,+Initiative__c,+Initiative_Activity__c,+UserRecordAccess.HasReadAccess,+UserRecordAccess.HasEditAccess,+UserRecordAccess.HasDeleteAccess,+Type__c,+toLabel(Type__c)+Translated_Type__c,+Initiative_Activity_Success_Metric__c,+Initiative_Activity_Success_Metric__r.SDG__c,+Initiative_Activity_Success_Metric__r.SDG_Target__c,+Initiative_Activity_Success_Metric__r.SDG_Indicator__c,+Success_Metric_Name__c,+Success_Metric_Current_Status__c,+Success_Metric_Target__c,+Success_Metric_Progress__c,+(SELECT+Id,+URL__c,+Type__c+FROM+Initiative_Update_Content__r)+FROM+Initiative_Update__c+ORDER+BY+LastModifiedDate+DESC+LIMIT+${limit}+OFFSET+${offset}`;
         },
+        accountGrantees() {
+            return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Grantee'`;
+        },
     },
     getChildObjectListByParentId: {
         initiativeUpdate(id, offset = 0) {

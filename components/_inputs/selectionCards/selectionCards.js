@@ -12,37 +12,21 @@ import { useMetadata } from 'utilities/hooks';
 // Icons
 import { FiCheckCircle, FiCircle } from 'react-icons/fi';
 
-const SelectionCards = ({ controller, name, options }) => {
+const SelectionCards = ({ controller, name, options, defaultValue }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
     // Local state
-    const [list, setList] = useState(
-        options.map(item => ({ ...item, selected: item.required }))
-    );
-
-    // Method: Returns list with new text value based on id
-    function getUpdatedList(listIndex) {
-        // Toggle in list
-        return [
-            ...list.map((listItem, index) =>
-                index === listIndex
-                    ? {
-                          ...listItem,
-                          selected: !listItem.selected,
-                      }
-                    : listItem
-            ),
-        ];
-    }
+    const [values, setValues] = useState(defaultValue);
 
     return (
         <div className="flex flex-col py-16 space-y-36">
             <Controller
                 control={controller}
+                defaultValue={defaultValue}
                 name={name}
                 render={({ field: { onChange, onBlur, value, ref } }) =>
-                    list.map((item, index) => {
+                    options.map((item, index) => {
                         return (
                             <button
                                 key={item.value}
@@ -50,20 +34,28 @@ const SelectionCards = ({ controller, name, options }) => {
                                 onClick={event => {
                                     event.preventDefault();
                                     // Get new list
-                                    const newList = getUpdatedList(index);
+                                    const newValues = values.includes(
+                                        item.value
+                                    )
+                                        ? values.filter(
+                                              value => value !== item.value
+                                          )
+                                        : [...values, item.value];
 
                                     // Update local state
-                                    setList(newList);
+                                    setValues(newValues);
 
                                     // Update form state
-                                    onChange(newList);
+                                    onChange(newValues);
                                 }}
                                 className="flex items-center outline-none focus:outline-none group">
                                 <div
                                     className={cc([
                                         'flex flex-col text-teal-100 p-16 pr-0 group-focus:ring-2 group-focus:ring-teal-100 border-4 border-teal-20 rounded-4 transition-default',
                                         {
-                                            '!border-teal-40': item.selected,
+                                            '!border-teal-40': values.includes(
+                                                item.value
+                                            ),
                                         },
                                     ])}>
                                     <div className="flex items-center space-x-12">
@@ -81,7 +73,7 @@ const SelectionCards = ({ controller, name, options }) => {
                                     </p>
                                 </div>
                                 <div className="ml-16 text-teal-300">
-                                    {item.selected ? (
+                                    {values.includes(item.value) ? (
                                         <FiCheckCircle className="w-24 h-24 stroke-current" />
                                     ) : (
                                         <FiCircle className="w-24 h-24 stroke-current" />

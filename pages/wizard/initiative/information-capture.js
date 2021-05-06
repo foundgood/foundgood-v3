@@ -1,20 +1,21 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
-import t from 'prop-types';
+import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useMetadata } from 'utilities/hooks';
-import { useWizardNavigationStore } from 'utilities/store';
+import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, SelectionCards } from 'components/_inputs';
-import Button from 'components/button';
 
-const InformationCaptureComponent = ({ pageProps }) => {
+const InformationCaptureComponent = () => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
@@ -23,17 +24,44 @@ const InformationCaptureComponent = ({ pageProps }) => {
     const { labelTodo } = useMetadata();
 
     // Hook: useForm setup
-    const { register, handleSubmit, control } = useForm();
+    const { handleSubmit, control } = useForm();
 
-    const { extendWizard } = useWizardNavigationStore();
+    // Hook: Salesforce setup
+    const { sfUpdate } = useSalesForce();
 
-    // Extend the wizard with additional sections
-    const onHandleSubmit = () => {
-        // Todo? Split into two seperate methods...
-        const addPlanning = true; // myInput.value
-        const addDetailing = false; // myInput.value
-        extendWizard(addPlanning, addDetailing);
-    };
+    // Store: Wizard navigation
+    const { addSubmitHandler } = useWizardNavigationStore();
+
+    // Store: Initiative data
+    const {
+        initiative,
+        updateInitiative,
+        setConfigurationType,
+    } = useInitiativeDataStore();
+
+    // Method: Submit page content
+    async function submit(data) {
+        const { configurationType } = data;
+
+        await sfUpdate({
+            object: 'Initiative__c',
+            id: initiative.id,
+            data: {
+                Configuration_Type__c: configurationType.join(';'),
+            },
+        });
+
+        updateInitiative({ configurationType });
+
+        setConfigurationType(configurationType);
+    }
+
+    // Add submit handler to wizard navigation store
+    useEffect(() => {
+        setTimeout(() => {
+            addSubmitHandler(handleSubmit(submit));
+        }, 10);
+    }, []);
 
     return (
         <>
@@ -44,24 +72,30 @@ const InformationCaptureComponent = ({ pageProps }) => {
             <InputWrapper>
                 <SelectionCards
                     controller={control}
-                    name="select_way"
+                    defaultValue={
+                        initiative?.configurationType ?? [
+                            'Reporting',
+                            'Planning',
+                        ]
+                    }
+                    name="configurationType"
                     options={[
                         {
                             label: 'Reporting',
-                            value: 'reporting',
+                            value: 'Reporting',
                             details:
                                 'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
                             required: true,
                         },
                         {
                             label: 'Planning',
-                            value: 'planning',
+                            value: 'Planning',
                             details:
                                 'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
                         },
                         {
                             label: 'Detailing',
-                            value: 'detailing',
+                            value: 'Explain',
                             details:
                                 'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
                         },
@@ -72,19 +106,9 @@ const InformationCaptureComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+InformationCaptureComponent.propTypes = {};
 
-InformationCaptureComponent.propTypes = {
-    pageProps: t.object,
-};
-
-InformationCaptureComponent.defaultProps = {
-    pageProps: {},
-};
+InformationCaptureComponent.defaultProps = {};
 
 InformationCaptureComponent.layout = 'wizardBlank';
 
