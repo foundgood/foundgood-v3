@@ -96,9 +96,7 @@ const useAuth = () => {
 
                     // Update localstorage timeout
                     setLsUserSessionTimeout(
-                        Date.now() +
-                            parseInt(params.issued_at, 10) +
-                            process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS
+                        Date.now() + process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS
                     );
 
                     // Get user info from sf api
@@ -149,27 +147,31 @@ const useAuth = () => {
 
     // Update user timeout
     function updateUserTimeout() {
-        const newTimeout = dayjs().add(
-            process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS,
-            'ms'
-        );
+        if (lsUserSessionTimeout > Date.now()) {
+            const newTimeout = dayjs().add(
+                process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS,
+                'ms'
+            );
 
-        setLsUserSessionTimeout(newTimeout.valueOf());
+            setLsUserSessionTimeout(newTimeout.valueOf());
 
-        // Update logout timeout
-        console.info(
-            `You will be logged out with ${
-                process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS / 1000 / 60
-            } minutes of inactivity (${newTimeout.format('HH:mm')})`
-        );
+            // Update logout timeout
+            console.info(
+                `You will be logged out with ${
+                    process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS / 1000 / 60
+                } minutes of inactivity (${newTimeout.format('HH:mm')})`
+            );
 
-        // Clear current timeout
-        clearTimeout(timeoutTimer);
+            // Clear current timeout
+            clearTimeout(timeoutTimer);
 
-        // Set new timeout
-        timeoutTimer = setTimeout(() => {
+            // Set new timeout
+            timeoutTimer = setTimeout(() => {
+                logout();
+            }, process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
+        } else {
             logout();
-        }, process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
+        }
     }
 
     // Effect: Update data in store based on localstorage object
