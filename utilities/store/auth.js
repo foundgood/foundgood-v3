@@ -19,7 +19,11 @@ const useAuthStore = create(set => ({
         set(() => ({
             user,
         })),
-
+    userSessionTimeout: null,
+    setUserSessionTimeout: userSessionTimeout =>
+        set(() => ({
+            userSessionTimeout,
+        })),
     loggedIn: false,
     setLoggedIn: loggedIn =>
         set(() => ({

@@ -14,6 +14,7 @@ import 'styles/foundgood.css';
 
 // Components
 import LayoutWrapper from 'components/_layout/layoutWrapper';
+import LoginTimeout from 'components/loginTimeout';
 
 function MyApp({ Component, pageProps }) {
     const router = useRouter();
@@ -48,6 +49,7 @@ function MyApp({ Component, pageProps }) {
                     </animated.div>
                 )}
             </Transition>
+            <LoginTimeout />
         </>
     );
 }

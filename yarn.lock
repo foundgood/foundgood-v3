@@ -1098,6 +1098,11 @@
     "@react-spring/shared" "~9.1.2"
     "@react-spring/types" "~9.1.2"
 
+"@rooks/use-timeout@^4.11.2":
+  version "4.11.2"
+  resolved "https://registry.yarnpkg.com/@rooks/use-timeout/-/use-timeout-4.11.2.tgz#94d920cc87c3e7f70bbcfa4eca8965acbfe56a53"
+  integrity sha512-Wy/X+D6SHA1AK/4seBxanPwWk//iEnasNYpDRsxoCSXEmYYoOZVZXo3AKakjhgORInStfG7XtJJGbXEH+YVbwQ==
+
 "@svgr/babel-plugin-add-jsx-attribute@^5.4.0":
   version "5.4.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-5.4.0.tgz#81ef61947bb268eb9d50523446f9c638fb355906"

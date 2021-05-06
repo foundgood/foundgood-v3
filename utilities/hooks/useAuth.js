@@ -23,6 +23,7 @@ const useAuth = () => {
         loggedIn,
         user,
         reset,
+        setUserSessionTimeout,
     } = useAuthStore();
 
     // Hook: Persist user and user session timeout with localstorage
@@ -142,36 +143,23 @@ const useAuth = () => {
         });
     }
 
-    // timer for timeout
-    let timeoutTimer;
-
     // Update user timeout
     function updateUserTimeout() {
         if (lsUserSessionTimeout > Date.now()) {
+            // Update logout timeout
             const newTimeout = dayjs().add(
                 process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS,
                 'ms'
             );
-
             setLsUserSessionTimeout(newTimeout.valueOf());
 
-            // Update logout timeout
             console.info(
                 `You will be logged out with ${
                     process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS / 1000 / 60
-                } minutes of inactivity (${newTimeout.format('HH:mm')})`
+                } minutes of inactivity (${newTimeout.format('HH:mm:ss')})`
             );
-
-            // Clear current timeout
-            clearTimeout(timeoutTimer);
-
-            // Set new timeout
-            timeoutTimer = setTimeout(() => {
-                logout();
-            }, process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
         } else {
-            // logout();
-            alert('MAKE LOGOUT');
+            logout();
         }
     }
 
@@ -188,6 +176,11 @@ const useAuth = () => {
         }
     }, [lsUserData]);
 
+    // Effect: Update store timeout to be consumed from loginTimeoutComponent
+    useEffect(() => {
+        setUserSessionTimeout(lsUserSessionTimeout);
+    }, [lsUserSessionTimeout]);
+
     return {
         handleLoginCallback,
         logout,
@@ -195,6 +188,7 @@ const useAuth = () => {
         user,
         verifyLoggedIn,
         updateUserTimeout,
+        useLsUserSessionTimeout,
     };
 };
 

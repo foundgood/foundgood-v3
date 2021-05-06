@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.1.1",
+    "@rooks/use-timeout": "^4.11.2",
     "@svgr/webpack": "^5.5.0",
     "@tailwindcss/line-clamp": "^0.2.0",
     "adm-zip": "^0.5.5",
