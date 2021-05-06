@@ -33,7 +33,11 @@ const InformationCaptureComponent = () => {
     const { addSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const { initiative, updateInitiative } = useInitiativeDataStore();
+    const {
+        initiative,
+        updateInitiative,
+        setConfigurationType,
+    } = useInitiativeDataStore();
 
     // Method: Submit page content
     async function submit(data) {
@@ -48,6 +52,8 @@ const InformationCaptureComponent = () => {
         });
 
         updateInitiative({ configurationType });
+
+        setConfigurationType(configurationType);
     }
 
     // Add submit handler to wizard navigation store
