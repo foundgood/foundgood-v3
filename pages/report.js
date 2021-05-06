@@ -9,6 +9,13 @@ import t from 'prop-types';
 import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
+import SectionWrapper from 'components/_report/sectionWrapper';
+import ReportDetailCard from 'components/_report/reportDetailCard';
+import ReportSharingCard from 'components/_report/reportSharingCard';
+import TextCard from 'components/_report/textCard';
+import NumberCard from 'components/_report/numberCard';
+import DividerLine from 'components/_report/dividerLine';
+import ChartCard from 'components/_report/chartCard';
 
 const ReportComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -21,7 +28,7 @@ const ReportComponent = ({ pageProps }) => {
     return (
         <>
             {/* Header */}
-            <div className="p-32 md:px-64 xl:px-128">
+            <div className="p-32 md:pt-64 md:px-64 xl:px-128">
                 <div className="w-64 h-64 overflow-hidden rounded-4">
                     <Image
                         src="/images/fg-card-square-1.png"
@@ -45,15 +52,16 @@ const ReportComponent = ({ pageProps }) => {
                 </div>
             </div>
             {/* Overview */}
-            <div className="p-16 md:p-32 xl:px-64">
-                <div className="p-16 md:pb-32 md:px-32 xl:px-64">
+            <SectionWrapper>
+                {/* <div className="p-16 md:p-32 xl:px-64"> */}
+                <SectionWrapper>
                     <h2 className="t-h4">{labelTodo('Overview')}</h2>
                     <h3 className="mt-24 t-preamble">
                         {labelTodo(
                             'This initiative is here to help people. We’ve created it because we care about a and it fits very well with the foundations strategic aims. It really is great read on and you’ll find out all about it'
                         )}
                     </h3>
-                </div>
+                </SectionWrapper>
                 {/* Information cards */}
                 {/* <div className="flex flex-col items-start md:flex-row"> */}
                 <div className="inline-grid items-start w-full grid-cols-1 md:grid-cols-2 md:gap-24">
@@ -138,19 +146,12 @@ const ReportComponent = ({ pageProps }) => {
                         <h3 className="t-h5">{labelTodo('67%')}</h3>
                     </div>
                 </div>
-            </div>
-
-            {/* Key changes */}
-            {/* <div className="p-32 md:px-64 xl:px-128">
-                <h2 className="t-h3">{labelTodo('Key changes')}</h2>
-                <h3 className="mt-32 t-h4">{labelTodo('Funding breakdown')}</h3>
-            </div> */}
-
+            </SectionWrapper>
             {/* Funders */}
-            <div className="p-16 md:pb-32 md:px-32 xl:px-64">
-                <div className="p-16 md:pb-32 md:px-32 xl:px-64">
+            <SectionWrapper>
+                <SectionWrapper>
                     <h3 className="t-h4">{labelTodo('Funders')}</h3>
-                </div>
+                </SectionWrapper>
 
                 {/* Donut chart */}
                 <div className="flex items-center p-16 border-4 rounded-8 border-amber-10">
@@ -185,7 +186,7 @@ const ReportComponent = ({ pageProps }) => {
 
                 {/* List of funders */}
                 <>
-                    <div className="p-16 mt-48 md:pb-32 md:px-32 xl:px-64">
+                    <div className="p-16 mt-48 md:p-32 xl:px-64">
                         <div className="flex justify-between">
                             <div className="mr-24">
                                 <div className="flex">
@@ -224,7 +225,7 @@ const ReportComponent = ({ pageProps }) => {
                         </div>
                     </div>
 
-                    <div className="p-16 md:pb-32 md:px-32 xl:px-64 bg-blue-10 rounded-8">
+                    <div className="p-16 md:p-32 xl:p-64 bg-blue-10 rounded-8">
                         <div className="t-h5">Updates from this year</div>
                         <p className="mt-8 t-body">
                             In the eighteenth century the German philosopher
@@ -237,55 +238,339 @@ const ReportComponent = ({ pageProps }) => {
                         </p>
                     </div>
                 </>
-            </div>
-
-            {/* List of funders */}
-            <div className="p-16 md:pb-32 md:px-32 xl:px-64">
-                <h2 className="t-h3">{labelTodo('Co-funder name')}</h2>
-                <div className="flex items-center p-16 md:p-32 xl:p-64 rounded-8 bg-amber-10">
-                    <h2 className="t-h3">
-                        {labelTodo('Updates from this year')}
-                    </h2>
-                </div>
-            </div>
-
+            </SectionWrapper>
             {/* Report Summary */}
-            <div className="p-16 md:p-32 xl:px-64">
-                <div className="p-16 md:pb-32 md:px-32 xl:px-64">
+            <SectionWrapper>
+                <SectionWrapper>
                     <h2 className="t-h4">{labelTodo('Report summary')}</h2>
-                </div>
-                <div className="p-16 md:p-32 xl:p-64 bg-blue-10 rounded-8">
-                    <h2 className="t-h5">{labelTodo('Overall performance')}</h2>
-                    <p className="mt-16 t-body">
-                        {labelTodo(
-                            'Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant, and equilibrates with the gases dissolved in the pulmonary capillary blood, and thus throughout the body. Thus, in precise usage, the words breathing and ventilation are hyponyms, not synonyms, of respiration; but this prescription is not consistently followed, even by most health care providers, because the term respiratory rate (RR) is a well-established term in health care, even though it would need to be consistently replaced with ventilation rate if the precise usage were to be followed.'
-                        )}
-                    </p>
-                    <h2 className="mt-32 t-h5">
-                        {labelTodo('Challanges & learnings')}
-                    </h2>
-                    <p className="mt-16 t-body">
-                        {labelTodo(
-                            'Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant, and equilibrates with the gases dissolved in the pulmonary capillary blood, and thus throughout the body. Thus, in precise usage, the words breathing and ventilation are hyponyms, not synonyms, of respiration; but this prescription is not consistently followed, even by most health care providers, because the term respiratory rate (RR) is a well-established term in health care, even though it would need to be consistently replaced with ventilation rate if the precise usage were to be followed.'
-                        )}
-                    </p>
-                </div>
-            </div>
+                </SectionWrapper>
+                <TextCard
+                    hasBackground={true}
+                    headline="Overall perfomance"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+                <TextCard
+                    hasBackground={true}
+                    className="mt-32"
+                    headline="Challenges & Learnings"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+            </SectionWrapper>
+            {/* ------------------------------------------------------------------------------------------ */}
+            {/* Key changes */}
+            <SectionWrapper>
+                <SectionWrapper className="mt-96">
+                    <h2 className="t-h3">{labelTodo('Key changes')}</h2>
+                </SectionWrapper>
+                <SectionWrapper>
+                    <h3 className="t-h4">
+                        {labelTodo('New co-applicant relationships this year')}
+                    </h3>
+                </SectionWrapper>
 
-            {/* Containers - versions */}
-            <div className="p-16 md:pb-32 md:px-32 xl:px-64 bg-blue-40">
+                <ReportDetailCard
+                    headline="Co-funder name"
+                    image="/images/fg-card-square-1.png"
+                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                    items={[
+                        { label: 'Amount', text: 'DKK 500.000' },
+                        { label: 'Approval date', text: 'June 15th 2020' },
+                    ]}
+                />
+                <TextCard
+                    hasBackground={true}
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+                <ReportDetailCard
+                    headline="Co-funder name"
+                    image="/images/fg-card-square-1.png"
+                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                    items={[
+                        { label: 'Amount', text: 'DKK 500.000' },
+                        { label: 'Approval date', text: 'June 15th 2020' },
+                    ]}
+                />
+                <TextCard
+                    hasBackground={true}
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+            </SectionWrapper>
+            {/* ------------------------------------------------------------------------------------------ */}
+            {/* Overview of collaborations */}
+            <SectionWrapper>
+                <SectionWrapper>
+                    <h3 className="t-h4">
+                        {labelTodo('Overview of collaborations')}
+                    </h3>
+                </SectionWrapper>
+
+                <ReportDetailCard
+                    headline="Co-funder name"
+                    image="/images/fg-card-square-1.png"
+                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                    items={[
+                        { label: 'Amount', text: 'DKK 500.000' },
+                        { label: 'Approval date', text: 'June 15th 2020' },
+                    ]}
+                />
+                <TextCard
+                    hasBackground={true}
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+                <ReportDetailCard
+                    headline="Co-funder name"
+                    image="/images/fg-card-square-1.png"
+                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                    items={[
+                        { label: 'Amount', text: 'DKK 500.000' },
+                        { label: 'Approval date', text: 'June 15th 2020' },
+                    ]}
+                />
+                <TextCard
+                    hasBackground={true}
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+            </SectionWrapper>
+            {/* ------------------------------------------------------------------------------------------ */}
+            {/* Employees funded by the grant */}
+            <SectionWrapper>
+                <SectionWrapper>
+                    <h3 className="t-h4">
+                        {labelTodo('Employees funded by the grant')}
+                    </h3>
+                </SectionWrapper>
+
+                <div className="inline-grid items-start w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 2xl:grid-cols-6">
+                    <NumberCard
+                        number="6"
+                        headline="Researchers"
+                        description="4 female, 2 male"
+                    />
+                    <NumberCard
+                        number="2"
+                        headline="Project managers"
+                        description="2 male"
+                    />
+                    <NumberCard
+                        number="5"
+                        headline="Administrative staff"
+                        description="3 female, 2 male"
+                    />
+                    <NumberCard
+                        number="6"
+                        headline="Technical staff"
+                        description="4 female, 2 male"
+                    />
+                    <NumberCard
+                        number="20"
+                        headline="Other"
+                        description="10 female, 10 male"
+                    />
+                    <NumberCard
+                        number="3"
+                        headline="Scientists"
+                        description="3 female"
+                    />
+                </div>
+            </SectionWrapper>
+            {/* ------------------------------------------------------------------------------------------ */}
+            {/* Goals */}
+            <SectionWrapper>
+                <SectionWrapper>
+                    <h3 className="t-h4">{labelTodo('Goals')}</h3>
+                </SectionWrapper>
+                <TextCard
+                    hasBackground={false}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    label="Custom"
+                />
+
+                <TextCard
+                    hasBackground={true}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+                <DividerLine />
+
+                <TextCard
+                    hasBackground={false}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    label="Custom"
+                />
+
+                <TextCard
+                    hasBackground={true}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+                <DividerLine />
+
+                <TextCard
+                    hasBackground={false}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    label="Custom"
+                />
+
+                <TextCard
+                    hasBackground={true}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+            </SectionWrapper>
+            {/* ------------------------------------------------------------------------------------------ */}
+            {/* Activities */}
+            <SectionWrapper>
+                <SectionWrapper>
+                    <h3 className="t-h4">{labelTodo('Activities')}</h3>
+                </SectionWrapper>
+
+                <ReportDetailCard
+                    headline="Activity #1 name"
+                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                    items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
+                />
+                <TextCard
+                    hasBackground={false}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    label="Custom"
+                />
+                <ChartCard
+                    label="Children (age 0-5)"
+                    items={[
+                        { title: 'Schools built', value: '256' },
+                        { title: 'Adults (24+)', value: '384' },
+                    ]}
+                />
+                <DividerLine />
+
+                <ReportDetailCard
+                    headline="Activity #1 name"
+                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                    items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
+                />
+                <TextCard
+                    hasBackground={false}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    label="Custom"
+                />
+                <ChartCard
+                    label="Reached so far"
+                    items={[
+                        { title: 'Schools built', value: '12' },
+                        { title: 'Wells built', value: '24' },
+                    ]}
+                />
+            </SectionWrapper>
+            {/* ------------------------------------------------------------------------------------------ */}
+            {/* Sharing of results */}
+            <SectionWrapper>
+                <SectionWrapper>
+                    <h3 className="t-h4">{labelTodo('Sharing of results')}</h3>
+                </SectionWrapper>
+
+                <ReportSharingCard
+                    headline="Science Weekly 🔬"
+                    label="Journal publication"
+                    tags={[
+                        'Policymakers',
+                        'Politicians',
+                        'Professional practitioners',
+                    ]}
+                    items={[
+                        {
+                            label: 'Publication type',
+                            text: 'Industry magazine',
+                        },
+                        { label: 'Publication year', text: '2021' },
+                        {
+                            label: 'Publisher',
+                            text: 'Media company publishing international',
+                        },
+                        { label: 'Author', text: 'Uganda, Denmark' },
+                        { label: 'DOI', text: 'Uganda, Denmark' },
+                    ]}
+                />
+
+                <TextCard
+                    hasBackground={true}
+                    headline="Description for this report"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+
+                <DividerLine />
+
+                <ReportSharingCard
+                    headline="The Joe Rogan Podcast 💪"
+                    label="TV/radio/film/podcast"
+                    tags={[
+                        'Policymakers',
+                        'Politicians',
+                        'Professional practitioners',
+                    ]}
+                />
+
+                <TextCard
+                    hasBackground={true}
+                    headline="Description for this report"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                />
+            </SectionWrapper>
+
+            <SectionWrapper>
+                <SectionWrapper>
+                    <h3 className="t-h4">{labelTodo('Loogbook entries')}</h3>
+                </SectionWrapper>
+                entries...
+            </SectionWrapper>
+
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <SectionWrapper className="bg-coral-40">
                 <h2 className="t-h5">{labelTodo('To edge container')}</h2>
+            </SectionWrapper>
+            <SectionWrapper className="bg-teal-300">
+                <SectionWrapper>
+                    <h2 className="t-h5">{labelTodo('Indented container')}</h2>
+                </SectionWrapper>
+            </SectionWrapper>
+            <SectionWrapper className="bg-amber-300">
+                <SectionWrapper paddingY={false}>
+                    <h2 className="t-h5">{labelTodo('No padding Y')}</h2>
+                </SectionWrapper>
+            </SectionWrapper>
+            {/* 
+            <div className="p-16 md:p-32 xl:px-64 bg-blue-40">
+                <h2 className="t-h5">{labelTodo('To edge container')}</h2>
+            </div>
+            <div className="px-16 pt-16 md:px-32 xl:px-64 bg-coral-20">
+                <h2 className="t-h5">{labelTodo('TITLE container')}</h2>
             </div>
             <div className="p-32 md:px-64 xl:px-128 bg-amber-40">
                 <h2 className="t-h5">{labelTodo('Indented container')}</h2>
             </div>
-
-            <div className="p-16 md:pb-32 md:px-32 xl:px-64 bg-coral-40">
+            <div className="p-16 md:p-32 xl:px-64 bg-coral-40">
                 <h2 className="t-h5">{labelTodo('To edge content')}</h2>
-                <div className="p-16 md:pb-32 md:px-32 xl:px-64 bg-coral-20">
+                <div className="p-16 md:p-32 xl:px-64 bg-coral-20">
                     <h2 className="t-h5">{labelTodo('Indented content')}</h2>
                 </div>
             </div>
+            */}
         </>
     );
 };

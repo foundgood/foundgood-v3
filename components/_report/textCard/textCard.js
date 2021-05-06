@@ -1,0 +1,38 @@
+// React
+import React from 'react';
+
+// Packages
+import cc from 'classcat';
+import t from 'prop-types';
+
+// Components
+import SectionWrapper from 'components/_report/sectionWrapper';
+
+const CardComponent = ({ headline, body, label, hasBackground, className }) => {
+    return (
+        <SectionWrapper
+            className={cc([
+                'rounded-8',
+                className,
+                {
+                    'bg-blue-10': hasBackground,
+                    'border-4 border-blue-10': !hasBackground,
+                },
+            ])}>
+            <h4 className="t-h5">{headline}</h4>
+            {body && <p className="mt-16 t-body">{body}</p>}
+            {label && <p className="mt-16 t-caption text-blue-60">{label}</p>}
+        </SectionWrapper>
+    );
+};
+
+CardComponent.propTypes = {
+    // Card title
+    headline: t.string,
+    // Card description
+    body: t.string,
+};
+
+CardComponent.defaultProps = {};
+
+export default CardComponent;
