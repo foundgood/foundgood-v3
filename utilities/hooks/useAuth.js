@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 // Packages
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import { useRouter } from 'next/router';
+import dayjs from 'dayjs';
 
 // Utilities
 import { salesForce } from 'utilities/api';
@@ -95,7 +96,8 @@ const useAuth = () => {
 
                     // Update localstorage timeout
                     setLsUserSessionTimeout(
-                        parseInt(params.issued_at, 10) +
+                        Date.now() +
+                            parseInt(params.issued_at, 10) +
                             process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS
                     );
 
@@ -147,19 +149,24 @@ const useAuth = () => {
 
     // Update user timeout
     function updateUserTimeout() {
-        const newTimeout =
-            Date.now() + process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS;
-        setLsUserSessionTimeout(newTimeout);
+        const newTimeout = dayjs().add(
+            process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS,
+            'ms'
+        );
+
+        setLsUserSessionTimeout(newTimeout.valueOf());
 
         // Update logout timeout
         console.info(
             `You will be logged out with ${
                 process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS / 1000 / 60
-            } minutes of inactivity`
+            } minutes of inactivity (${newTimeout.format('HH:mm')})`
         );
 
+        // Clear current timeout
         clearTimeout(timeoutTimer);
 
+        // Set new timeout
         timeoutTimer = setTimeout(() => {
             logout();
         }, process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS);
