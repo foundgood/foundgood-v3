@@ -40,10 +40,9 @@ const ProgressCardComponent = ({ headline, items }) => {
                             </div>
 
                             <div>
-                                {/* {item.value.toString()} */}
                                 <InputWrapper>
                                     <Text
-                                        name="progress_card"
+                                        name={`i-${index}`}
                                         subLabel="Reached so far"
                                         placeholder="0"
                                         controller={control}
