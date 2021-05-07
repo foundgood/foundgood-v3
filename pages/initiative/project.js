@@ -30,7 +30,7 @@ const ProjectComponent = ({ pageProps }) => {
 
     return (
         <>
-            <div className="t-h1">Project details</div>
+            <h1 className="t-h1">Project details</h1>
 
             {/* Overview */}
             <div className="p-20 mt-48 bg-white rounded-8 lg:my-24 lg:p-52 3xl:p-124">

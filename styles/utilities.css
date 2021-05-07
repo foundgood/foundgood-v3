@@ -57,11 +57,11 @@
 
     /* Input elements */
     .input-label {
-        @apply t-h5 text-teal-100;
+        @apply text-teal-100 t-h5;
     }
 
     .input-sublabel {
-        @apply t-small text-teal-100;
+        @apply text-teal-100 t-small;
     }
 
     .input-utility-text {
@@ -84,5 +84,20 @@
     .input-defaults::placeholder,
     .input-defaults::-moz-placeholder {
         font-weight: 400;
+    }
+
+    /* Next Image - width: 100%, height: auto */
+    /* https://github.com/vercel/next.js/discussions/18739#discussioncomment-344932 */
+    .imageContainer {
+        width: 100%;
+    }
+    .imageContainer > div {
+        position: unset !important;
+    }
+    .imageContainer .image {
+        object-fit: contain;
+        width: 100% !important;
+        position: relative !important;
+        height: unset !important;
     }
 }
