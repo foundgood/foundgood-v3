@@ -26,10 +26,16 @@ const IntroductionComponent = ({ pageProps }) => {
     const { sfCreate } = useSalesForce();
 
     // Store: Wizard navigation
-    const { addSubmitHandler } = useWizardNavigationStore();
+    const {
+        setCurrentSubmitHandler,
+        reset: resetWizardNavigationStore,
+    } = useWizardNavigationStore();
 
-    // Store: Initiative data
-    const { updateInitiative, reset } = useInitiativeDataStore();
+    // Store: Initiative data / Wizard navigation
+    const {
+        updateInitiative,
+        reset: resetInitiativeStore,
+    } = useInitiativeDataStore();
 
     // Method: Submit page content
     async function submit() {
@@ -46,10 +52,12 @@ const IntroductionComponent = ({ pageProps }) => {
 
     // Add submit handler to wizard navigation store
     useEffect(() => {
-        // Reset initiative
-        reset();
+        // Reset stores in localstorage
+        resetWizardNavigationStore();
+        resetInitiativeStore();
+
         setTimeout(() => {
-            addSubmitHandler(submit);
+            setCurrentSubmitHandler(submit);
         }, 10);
     }, []);
 

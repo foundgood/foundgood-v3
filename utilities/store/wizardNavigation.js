@@ -183,6 +183,17 @@ const useWizardNavigationStore = create(
         currentItem: null,
         currentSubmitHandler: null,
         nextItemUrl: null,
+
+        reset() {
+            set(() => ({
+                items: reportingItems(),
+                completedItems: [],
+                openSection: null,
+                currentItem: null,
+                currentSubmitHandler: null,
+                nextItemUrl: null,
+            }));
+        },
     })),
     {
         name: 'wizardNavigation',

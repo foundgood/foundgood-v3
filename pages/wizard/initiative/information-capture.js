@@ -30,7 +30,7 @@ const InformationCaptureComponent = () => {
     const { sfUpdate } = useSalesForce();
 
     // Store: Wizard navigation
-    const { addSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -58,7 +58,7 @@ const InformationCaptureComponent = () => {
     // Add submit handler to wizard navigation store
     useEffect(() => {
         setTimeout(() => {
-            addSubmitHandler(handleSubmit(submit));
+            setCurrentSubmitHandler(handleSubmit(submit));
         }, 10);
     }, []);
 
