@@ -27,7 +27,7 @@ const OverviewComponent = () => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet } = useMetadata();
+    const { labelTodo, valueSet, log } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -40,6 +40,7 @@ const OverviewComponent = () => {
 
     // Store: Initiative data
     const {
+        CONSTANTS,
         initiative,
         updateInitiative,
         updateCollaborator,
@@ -75,6 +76,7 @@ const OverviewComponent = () => {
             const collaboratorId = await sfCreate({
                 object: 'Initiative_Collaborator__c',
                 data: {
+                    Type__c: CONSTANTS.TYPES.MAIN_COLLABORATOR,
                     Initiative__c: initiative.Id,
                     Account__c,
                 },
@@ -109,7 +111,13 @@ const OverviewComponent = () => {
             <InputWrapper>
                 <Select
                     name="Account__c"
-                    defaultValue={initiative?.Account__c}
+                    defaultValue={
+                        Object.values(initiative?._collaborators).find(
+                            item =>
+                                item.Type__c ===
+                                CONSTANTS.TYPES.MAIN_COLLABORATOR
+                        )?.Account__c
+                    }
                     label={labelTodo('Responsible organisation')}
                     placeholder={labelTodo('Grantee name')}
                     options={

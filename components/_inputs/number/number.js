@@ -44,7 +44,6 @@ const NumberComponent = ({
                             defaultValue={defaultValue}
                             onChange={event => {
                                 // Local value state
-                                setValue(event.target.value);
                                 onChange(event);
                             }}
                             className={cc([

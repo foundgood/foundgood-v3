@@ -32,10 +32,6 @@ const BottomNavigationComponent = () => {
         onUrlChange(router.pathname);
     }, [router.pathname]);
 
-    useEffect(() => {
-        // console.log(currentItem);
-    }, [currentItem]);
-
     async function onHandleContinue() {
         setLoading(true);
         try {

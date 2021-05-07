@@ -131,7 +131,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                 {Object.keys(initiative._collaborators).map(collaboratorKey => {
                     const collaborator =
                         initiative._collaborators[collaboratorKey];
-                    return CONSTANTS.TYPES.APPLICANTS.includes(
+                    return CONSTANTS.TYPES.APPLICANTS_ALL.includes(
                         collaborator.Type__c
                     ) ? (
                         <CollaboratorCard
@@ -178,29 +178,32 @@ const ApplicantsComponent = ({ pageProps }) => {
                         required
                         controller={control}
                     />
-                    <Select
-                        name="Type__c"
-                        label={labelTodo('Type of applicant')}
-                        placeholder={labelTodo('Please select')}
-                        options={valueSet('initiativeCollaborator.Type__c')
-                            .filter(item =>
-                                CONSTANTS.TYPES.APPLICANTS.includes(
-                                    item.fullName
+                    {/* Hide if main applicant */}
+                    {initiative?._collaborators[updateId]?.Type__c !==
+                        CONSTANTS.TYPES.MAIN_COLLABORATOR && (
+                        <Select
+                            name="Type__c"
+                            label={labelTodo('Type of applicant')}
+                            placeholder={labelTodo('Please select')}
+                            options={valueSet('initiativeCollaborator.Type__c')
+                                .filter(item =>
+                                    CONSTANTS.TYPES.APPLICANTS_CREATE.includes(
+                                        item.fullName
+                                    )
                                 )
-                            )
-                            .map(item => ({
-                                label: item.label,
-                                value: item.fullName,
-                            }))}
-                        required
-                        controller={control}
-                    />
+                                .map(item => ({
+                                    label: item.label,
+                                    value: item.fullName,
+                                }))}
+                            required
+                            controller={control}
+                        />
+                    )}
                     <LongText
                         name="Description__c"
                         label={labelTodo('Description of collaboration')}
                         placeholder={labelTodo('Enter your description')}
                         controller={control}
-                        required
                     />
                     <DateRange
                         name="Dates"

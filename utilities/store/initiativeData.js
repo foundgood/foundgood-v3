@@ -28,7 +28,9 @@ const useInitiativeDataStore = create(
         CONSTANTS: {
             TYPES: {
                 COLLABORATORS: ['Additional collaborator'],
-                APPLICANTS: ['Co applicant', 'Main applicant'],
+                APPLICANTS_ALL: ['Co applicant', 'Main applicant'],
+                APPLICANTS_CREATE: ['Co applicant'],
+                MAIN_COLLABORATOR: 'Main applicant',
             },
         },
 
