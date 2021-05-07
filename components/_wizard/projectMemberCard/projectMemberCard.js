@@ -7,23 +7,21 @@ import t from 'prop-types';
 // Components
 import Card from 'components/_wizard/card';
 
-const ProjectMemberCardComponent = ({ headline, subHeadline, footnote }) => {
+const ProjectMemberCardComponent = ({ headline, body, label, action }) => {
     return (
-        <Card
-            headline={headline}
-            subHeadline={subHeadline}
-            footnote={footnote}
-        />
+        <Card headline={headline} label={label} body={body} action={action} />
     );
 };
 
 ProjectMemberCardComponent.propTypes = {
     // Card title
     headline: t.string,
-    // Additonal headline
-    subHeadline: t.string,
+    // Label
+    label: t.string,
     // Text after body text
     footnote: t.string,
+    // Button action
+    action: t.func,
 };
 
 ProjectMemberCardComponent.defaultProps = {};

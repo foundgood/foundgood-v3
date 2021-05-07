@@ -203,6 +203,7 @@ const FundersComponent = ({ pageProps }) => {
                     <SelectList
                         name="Contribution"
                         showText
+                        selectPlaceholder={labelTodo('Please select')}
                         label={labelTodo('Contribution')}
                         listMaxLength={1}
                         options={[

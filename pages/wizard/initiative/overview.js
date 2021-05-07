@@ -153,6 +153,7 @@ const OverviewComponent = () => {
                         label: item.label,
                         value: item.fullName,
                     }))}
+                    selectPlaceholder={labelTodo('Please select')}
                     selectLabel={labelTodo('Country')}
                     textLabel={labelTodo('Region')}
                     controller={control}

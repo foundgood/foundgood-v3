@@ -123,8 +123,6 @@ const CollaboratorsComponent = ({ pageProps }) => {
         setValue('Description__c', Description__c);
     }, [updateId, modalIsOpen]);
 
-    log();
-
     return (
         <>
             <TitlePreamble
