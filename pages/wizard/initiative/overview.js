@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 
 // Packages
-import { useForm } from 'react-hook-form';
+import { useForm, useFormState } from 'react-hook-form';
 
 // Utilities
 import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
@@ -87,10 +87,16 @@ const OverviewComponent = () => {
         }
     }
 
+    // Method: Form error/validation handler
+    function error(error) {
+        console.warn('Form invalid', error);
+        throw error;
+    }
+
     // Add submit handler to wizard navigation store
     useEffect(() => {
         setTimeout(() => {
-            addSubmitHandler(handleSubmit(submit));
+            addSubmitHandler(handleSubmit(submit, error));
         }, 10);
     }, []);
 
@@ -112,6 +118,7 @@ const OverviewComponent = () => {
                             value: item.Id,
                         })) ?? []
                     }
+                    required
                     controller={control}
                 />
                 <Text
@@ -120,6 +127,7 @@ const OverviewComponent = () => {
                     label={labelTodo('What is the name of your initiative?')}
                     placeholder={labelTodo('Title of initiative')}
                     maxLength={80}
+                    required
                     controller={control}
                 />
                 <LongText
@@ -154,7 +162,10 @@ const OverviewComponent = () => {
                     defaultValue={initiative?.Category__c}
                     label={labelTodo('Grant giving area')}
                     placeholder={labelTodo('Please select')}
-                    options={valueSet('initiative.Category__c')}
+                    options={valueSet('initiative.Category__c').map(item => ({
+                        label: item.label,
+                        value: item.fullName,
+                    }))}
                     controller={control}
                 />
             </InputWrapper>

@@ -29,6 +29,7 @@ const SelectListComponent = ({
     showText,
     subLabel,
     textLabel,
+    required,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -78,6 +79,7 @@ const SelectListComponent = ({
         name,
         control: controller,
         defaultValue: defaultValue,
+        rules: { required },
     });
 
     // Update state when using setValue
@@ -120,7 +122,7 @@ const SelectListComponent = ({
                                                         'input-defaults flex-grow',
                                                         'appearance-none pr-20',
                                                         {
-                                                            'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
+                                                            'input-defaults-error': error,
                                                         },
                                                     ])}
                                                     defaultValue={
@@ -206,7 +208,7 @@ const SelectListComponent = ({
                                                             'flex-grow',
                                                             'input-defaults',
                                                             {
-                                                                'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
+                                                                'input-defaults-error': error,
                                                             },
                                                         ])}
                                                     />
@@ -277,6 +279,7 @@ SelectListComponent.propTypes = {
     textLabel: t.string,
     listMaxLength: t.number,
     placeholder: t.string,
+    required: t.bool,
 };
 
 SelectListComponent.defaultProps = {
@@ -286,6 +289,7 @@ SelectListComponent.defaultProps = {
     selectLabel: 'Select',
     textLabel: 'Text',
     listMaxLength: 5,
+    required: false,
 };
 
 export default SelectListComponent;

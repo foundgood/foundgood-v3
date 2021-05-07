@@ -36,9 +36,10 @@ const BottomNavigationComponent = () => {
     async function onHandleContinue() {
         setLoading(true);
         try {
+            // Submit throws if there is any validation errors
             await onSubmit();
-            setLoading(false);
             onGotoNext();
+            setLoading(false);
         } catch (error) {
             setLoading(false);
         }

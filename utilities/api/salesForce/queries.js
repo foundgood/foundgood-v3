@@ -8,6 +8,9 @@ const queries = {
         allFoundations() {
             return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Foundation'`;
         },
+        allOrganisations() {
+            return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Organization'`;
+        },
     },
     initiative: {
         get(id) {

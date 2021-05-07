@@ -7,8 +7,22 @@ import t from 'prop-types';
 // Components
 import Card from 'components/_wizard/card';
 
-const CollaboratorCardComponent = ({ headline, body, image, label }) => {
-    return <Card headline={headline} label={label} body={body} image={image} />;
+const CollaboratorCardComponent = ({
+    headline,
+    body,
+    image,
+    label,
+    action,
+}) => {
+    return (
+        <Card
+            headline={headline}
+            label={label}
+            body={body}
+            image={image}
+            action={action}
+        />
+    );
 };
 
 CollaboratorCardComponent.propTypes = {
@@ -20,6 +34,8 @@ CollaboratorCardComponent.propTypes = {
     body: t.string,
     // Image url
     image: t.string,
+    // Action for button
+    action: t.func,
 };
 
 CollaboratorCardComponent.defaultProps = {};

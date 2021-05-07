@@ -13,6 +13,7 @@ const TextComponent = ({
     defaultValue,
     maxLength,
     controller,
+    required,
     ...rest
 }) => {
     // Local state for handling char count
@@ -28,30 +29,32 @@ const TextComponent = ({
                 control={controller}
                 defaultValue={defaultValue}
                 name={name}
-                rules={{ maxLength }}
+                rules={{ maxLength, required }}
                 render={({
                     field: { onChange, onBlur, value, ref },
                     fieldState: { error },
                 }) => (
-                    <input
-                        ref={ref}
-                        type="text"
-                        defaultValue={defaultValue}
-                        maxLength={maxLength ? maxLength : 'none'}
-                        onChange={event => {
-                            // Local value state
-                            setValue(event.target.value);
-                            onChange(event);
-                        }}
-                        className={cc([
-                            'input-defaults',
-                            {
-                                'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
-                                'mt-16': label,
-                            },
-                        ])}
-                        {...rest}
-                    />
+                    <>
+                        <input
+                            ref={ref}
+                            type="text"
+                            defaultValue={defaultValue}
+                            maxLength={maxLength ? maxLength : 'none'}
+                            onChange={event => {
+                                // Local value state
+                                setValue(event.target.value);
+                                onChange(event);
+                            }}
+                            className={cc([
+                                'input-defaults',
+                                {
+                                    'input-defaults-error': error,
+                                    'mt-16': label,
+                                },
+                            ])}
+                            {...rest}
+                        />
+                    </>
                 )}
             />
             {maxLength > 0 && (
@@ -70,10 +73,12 @@ TextComponent.propTypes = {
     defaultValue: t.string,
     error: t.object,
     maxLength: t.number,
+    required: t.bool,
 };
 
 TextComponent.defaultProps = {
     maxLength: null,
+    required: false,
 };
 
 export default TextComponent;

@@ -18,6 +18,7 @@ const DateRangeComponent = ({
     label,
     name,
     subLabel,
+    required,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -35,6 +36,7 @@ const DateRangeComponent = ({
         control: controller,
         defaultValue: defaultValue,
         rules: {
+            required,
             validate: {
                 isDateFrom: v => (v.from ? dayjs(v.from).isValid() : true),
                 isDateTo: v => (v.to ? dayjs(v.to).isValid() : true),
@@ -148,15 +150,15 @@ DateRangeComponent.propTypes = {
     label: t.string,
     subLabel: t.string,
     defaultValue: t.shape({ from: t.string, to: t.string }),
-    maxLength: t.number,
+    required: t.bool,
 };
 
 DateRangeComponent.defaultProps = {
-    maxLength: 0,
     defaultValue: {
         from: null,
         to: null,
     },
+    required: false,
 };
 
 export default DateRangeComponent;

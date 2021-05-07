@@ -19,6 +19,13 @@ async function sfQuery(q) {
 
 const useInitiativeDataStore = create(
     persist((set, get) => ({
+        CONSTANTS: {
+            TYPES: {
+                COLLABORATORS: ['Additional collaborator'],
+                APPLICANTS: ['Co applicant', 'Main applicant'],
+            },
+        },
+
         initiative: {
             _collaborators: {},
             _funders: {},

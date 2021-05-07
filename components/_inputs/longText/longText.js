@@ -13,6 +13,7 @@ const LongTextComponent = ({
     defaultValue,
     maxLength,
     controller,
+    required,
     ...rest
 }) => {
     // Local state for handling char count
@@ -28,7 +29,7 @@ const LongTextComponent = ({
                 control={controller}
                 defaultValue={defaultValue}
                 name={name}
-                rules={{ maxLength }}
+                rules={{ maxLength, required }}
                 render={({
                     field: { onChange, onBlur, value, ref },
                     fieldState: { error },
@@ -46,7 +47,7 @@ const LongTextComponent = ({
                             'input-defaults',
                             '!h-[144px] resize-none',
                             {
-                                'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
+                                'input-defaults-error': error,
                                 'mt-16': label,
                             },
                         ])}
@@ -70,10 +71,12 @@ LongTextComponent.propTypes = {
     defaultValue: t.string,
     error: t.object,
     maxLength: t.number,
+    required: t.bool,
 };
 
 LongTextComponent.defaultProps = {
     maxLength: null,
+    required: false,
 };
 
 export default LongTextComponent;
