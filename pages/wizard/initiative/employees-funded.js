@@ -21,6 +21,7 @@ import {
     DateRange,
     DatePicker,
     LongText,
+    Number,
 } from 'components/_inputs';
 import ProjectMemberCard from 'components/_wizard/projectMemberCard';
 
@@ -209,10 +210,12 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         listMaxLength={1}
                         controller={control}
                     />
-                    <Text
+                    <Number
                         name="Percent_Involvement__c"
                         label={labelTodo('Involvement')}
                         placeholder={labelTodo('Enter percentage')}
+                        minValue={0}
+                        maxValue={100}
                         controller={control}
                     />
                 </InputWrapper>
