@@ -3,6 +3,7 @@ import React from 'react';
 
 // Packages
 import t from 'prop-types';
+import Image from 'next/image';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
@@ -29,10 +30,8 @@ const CardComponent = ({
         <div className="p-16 max-w-[600px] border-4 border-teal-20 rounded-8 text-teal-100">
             <div className="flex items-start justify-between">
                 {image && (
-                    // TODO - Force square format?
-                    // Use next <Image> ?
-                    <div className="flex-none mr-16 w-96">
-                        <img className="w-full" src={image} />
+                    <div className="relative flex-none mr-16 h-96 w-96">
+                        <Image src={image} layout="fill" objectFit="contain" />
                     </div>
                 )}
                 <div className="w-full flex-start">

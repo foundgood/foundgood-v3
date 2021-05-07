@@ -3,6 +3,7 @@ import React from 'react';
 
 // Packages
 import t from 'prop-types';
+import Image from 'next/image';
 
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
@@ -41,8 +42,15 @@ const ProjectComponent = ({ pageProps }) => {
 
                 <div className="mt-24 lg:flex">
                     {largeBps.includes(bp) && (
-                        <div className="w-1/2 h-full overflow-hidden rounded-8 lg:mr-24">
-                            <img src="/images/fg-landscape-1.jpg" />
+                        <div className="w-1/2 overflow-hidden rounded-8 lg:mr-24">
+                            <div className="relative w-full h-full">
+                                <Image
+                                    src="/images/fg-landscape-1.jpg"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    sizes="50vw"
+                                />
+                            </div>
                         </div>
                     )}
                     <div className="flex flex-col lg:w-1/2 lg:ml-24">
@@ -93,7 +101,7 @@ const ProjectComponent = ({ pageProps }) => {
                 </div>
             </div>
 
-            <div className="pb-48 lg:inline-grid lg:grid-cols-2 lg:gap-24 lg:items-start">
+            <div className="pb-48">
                 {/* Funding */}
                 <div className="p-20 mt-48 bg-white rounded-8 lg:my-24 lg:p-52 3xl:p-124">
                     <div className="flex justify-between">
@@ -230,11 +238,16 @@ const ProjectComponent = ({ pageProps }) => {
                     </div>
                     <div className="mt-32">
                         <h4 className="t-h5">{labelTodo('Co-applicant')}</h4>
-                        {/* Todo - what format are these icons/images? */}
                         <h3 className="flex items-center leading-none t-h4">
-                            <span className="p-4 mr-8 overflow-hidden bg-blue-300 rounded-8">
-                                <FiGithub />
-                            </span>
+                            <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
+                                <Image
+                                    src="/images/fg-landscape-1.jpg"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    sizes="64px"
+                                />
+                            </div>
+
                             {labelTodo('Unicef')}
                         </h3>
                         <p className="mt-16 t-sh5 text-blue-60">
@@ -249,11 +262,15 @@ const ProjectComponent = ({ pageProps }) => {
 
                     <div className="mt-32">
                         <h4 className="t-h5">{labelTodo('Co-applicant')}</h4>
-                        {/* Todo - what format are these icons/images? */}
                         <h3 className="flex items-center leading-none t-h4">
-                            <span className="p-4 mr-8 overflow-hidden bg-amber-300 rounded-8">
-                                <FiGithub />
-                            </span>
+                            <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
+                                <Image
+                                    src="/images/fg-portrait-1.jpg"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    sizes="64px"
+                                />
+                            </div>
                             {labelTodo('Dansk Røde Kors')}
                         </h3>
                         <p className="mt-16 t-sh5 text-blue-60">
@@ -268,11 +285,15 @@ const ProjectComponent = ({ pageProps }) => {
 
                     <div className="mt-32">
                         <h4 className="t-h5">{labelTodo('Co-applicant')}</h4>
-                        {/* Todo - what format are these icons/images? */}
                         <h3 className="flex items-center leading-none t-h4">
-                            <span className="p-4 mr-8 overflow-hidden bg-teal-300 rounded-8">
-                                <FiGithub />
-                            </span>
+                            <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
+                                <Image
+                                    src="/images/fg-landscape-1.jpg"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    sizes="64px"
+                                />
+                            </div>
                             {labelTodo('Unicef')}
                         </h3>
                         <p className="mt-16 t-sh5 text-blue-60">
