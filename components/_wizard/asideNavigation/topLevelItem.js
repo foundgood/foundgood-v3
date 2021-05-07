@@ -1,9 +1,10 @@
 // React
-import React, { useState } from 'react';
+import React from 'react';
 
 // Packages
 import cc from 'classcat';
 import AnimateHeight from 'react-animate-height';
+import t from 'prop-types';
 
 // Utilities
 import { useWizardNavigationStore } from 'utilities/store';
@@ -14,28 +15,23 @@ import { SubLevelItem } from 'components/_wizard/asideNavigation';
 // Icons
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 
-const TopLevelItemComponent = ({ index, title, collapsed, items }) => {
-    // Store: wizardNavigation
-    const { onSetCollapsed } = useWizardNavigationStore();
+const TopLevelItemComponent = ({ item }) => {
+    const { title, items } = item;
 
-    const onToggleItem = () => {
-        // TODO - Only one open item, at a time?
-        const bool = !collapsed;
-        onSetCollapsed(index, bool);
-    };
+    // Store: wizardNavigation
+    const { toggleSection, openSection } = useWizardNavigationStore();
+
+    // Checking toggled section or not
+    const sectionToggled = openSection === item.title;
 
     return (
-        <li
-            className={cc([
-                'mt-32',
-                // { 'bg-blue-10': collapsed }
-            ])}>
+        <li className={cc(['mt-32'])}>
             <span
                 className="flex t-caption-bold md:cursor-pointer"
-                onClick={onToggleItem}>
+                onClick={() => toggleSection(item)}>
                 <i className="mr-16">
-                    {!collapsed && <FiChevronUp />}
-                    {collapsed && <FiChevronDown />}
+                    {sectionToggled && <FiChevronUp />}
+                    {!sectionToggled && <FiChevronDown />}
                 </i>
                 {title}
             </span>
@@ -44,18 +40,10 @@ const TopLevelItemComponent = ({ index, title, collapsed, items }) => {
             <AnimateHeight
                 duration={300}
                 animateOpacity={true}
-                height={collapsed ? 0 : 'auto'}>
+                height={sectionToggled ? 'auto' : 0}>
                 <ul className="block">
-                    {items.map((item, i) => (
-                        <SubLevelItem
-                            key={`nav-${i}`}
-                            parentIndex={index}
-                            index={i}
-                            title={item.title}
-                            inProgress={item.inProgress}
-                            completed={item.completed}
-                            url={item.url}
-                        />
+                    {items.map((childItem, i) => (
+                        <SubLevelItem key={`nav-${i}`} item={childItem} />
                     ))}
                 </ul>
             </AnimateHeight>
@@ -63,7 +51,9 @@ const TopLevelItemComponent = ({ index, title, collapsed, items }) => {
     );
 };
 
-TopLevelItemComponent.propTypes = {};
+TopLevelItemComponent.propTypes = {
+    item: t.object,
+};
 
 TopLevelItemComponent.defaultProps = {};
 

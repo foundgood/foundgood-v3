@@ -36,7 +36,7 @@ const OverviewComponent = () => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { addSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -96,7 +96,7 @@ const OverviewComponent = () => {
     // Add submit handler to wizard navigation store
     useEffect(() => {
         setTimeout(() => {
-            addSubmitHandler(handleSubmit(submit, error));
+            setCurrentSubmitHandler(handleSubmit(submit, error));
         }, 10);
     }, []);
 

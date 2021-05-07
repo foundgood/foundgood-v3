@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 
 // Packages
-import _isEqual from 'lodash.isequal';
+
 // Utilities
 import {
     useWizardNavigationStore,
@@ -23,6 +23,7 @@ const AsideNavigationComponent = () => {
     // Store: Initiative data
     const { initiative } = useInitiativeDataStore();
 
+    // Effect: Update wizard navigation items
     useEffect(() => {
         buildWizardItems(initiative.Configuration_Type__c);
     }, []);
@@ -45,13 +46,7 @@ const AsideNavigationComponent = () => {
                 {items.map((item, index) => {
                     if (item.visible) {
                         return (
-                            <TopLevelItem
-                                key={`nav-${index}`}
-                                index={index}
-                                title={item.title}
-                                collapsed={item.collapsed}
-                                items={item.items}
-                            />
+                            <TopLevelItem key={`nav-${index}`} item={item} />
                         );
                     }
                 })}
