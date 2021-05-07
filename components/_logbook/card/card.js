@@ -9,6 +9,9 @@ import Image from 'next/image';
 // Components
 import SectionWrapper from 'components/_report/sectionWrapper';
 
+// Icons
+import { FiFileText } from 'react-icons/fi';
+
 const CardComponent = ({
     hasBackground,
     summary,
@@ -16,8 +19,14 @@ const CardComponent = ({
     date,
     image,
     video,
+    filePath,
+    fileName,
     className,
 }) => {
+    const downloadFile = () => {
+        window.location.href = filePath;
+    };
+
     return (
         <SectionWrapper
             className={cc([
@@ -31,7 +40,7 @@ const CardComponent = ({
             <p className="t-sh6 text-blue-60">{summary}</p>
             {body && <p className="mt-16 t-preamble">{body}</p>}
             {image && (
-                <div className="relative w-full mt-16 bg-blue-10 imageContainer w-100">
+                <div className="relative mt-16 bg-blue-10 imageContainer">
                     {/* 
                     TODO? Get image width/height and set layout to 'responsive' 
                     https://github.com/vercel/next.js/discussions/18739#discussioncomment-344932
@@ -51,6 +60,21 @@ const CardComponent = ({
                     <video controls src={video} className="w-full" />
                 </div>
             )}
+            {filePath && fileName && (
+                <a
+                    className="flex w-full p-16 mt-16 cursor-pointer rounded-8 bg-blue-10"
+                    download={fileName} // Only work if same domain
+                    href={filePath}
+                    target="_blank">
+                    <div className="mr-16">
+                        <FiFileText className="w-48 h-48" />
+                    </div>
+                    <div className="flex flex-col">
+                        <div className="t-h6">{fileName}</div>
+                        <div className="text-blue-200 t-sh5">Download</div>
+                    </div>
+                </a>
+            )}
             {date && <p className="mt-16 t-sh6 text-blue-60">{date}</p>}
         </SectionWrapper>
     );
@@ -69,6 +93,10 @@ CardComponent.propTypes = {
     image: t.string,
     // Video url - TODO: Supported foramts?
     video: t.string,
+    // Name of file to download
+    fileName: t.string,
+    // Url to file
+    filePath: t.string,
 };
 
 CardComponent.defaultProps = {};

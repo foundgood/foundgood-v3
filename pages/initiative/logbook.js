@@ -12,6 +12,7 @@ import Button from 'components/button';
 import TextCard from 'components/_logbook/textCard';
 import ImageCard from 'components/_logbook/imageCard';
 import VideoCard from 'components/_logbook/videoCard';
+import FileCard from 'components/_logbook/fileCard';
 
 const LogbookComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -29,6 +30,14 @@ const LogbookComponent = ({ pageProps }) => {
                     {labelTodo('Update')}
                 </Button>
             </div>
+            <FileCard
+                hasBackground={true}
+                summary="Download my file"
+                body="This is an example of someone attaching some sort of document to their update"
+                date="26/06/2019 at 13:03"
+                fileName="My-great-name.pdf"
+                filePath="/files/fg-pdf-test.pdf"
+            />
             <TextCard
                 hasBackground={true}
                 body="Project field officers and national office emergency coordinator have periodically monitored the progress of the project and provided constructive feedback to the government level supervisors and to the artesian."
