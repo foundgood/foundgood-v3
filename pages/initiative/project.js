@@ -11,9 +11,7 @@ import { useResponsive } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
-
-// Icons
-import { FiGithub } from 'react-icons/fi';
+import NumberCard from 'components/_report/numberCard';
 
 const ProjectComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -318,77 +316,42 @@ const ProjectComponent = ({ pageProps }) => {
                     </div>
 
                     <div className="inline-grid items-start w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
-                        <div className="p-16 rounded-4 bg-blue-10">
-                            <div className="text-blue-100 t-h1">
-                                {labelTodo('999')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('Researchers')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('67% female')}
-                            </div>
-                        </div>
-
-                        <div className="p-16 rounded-4 bg-blue-10">
-                            <div className="text-blue-100 t-h1">
-                                {labelTodo('2')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('Researchers')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('67% female')}
-                            </div>
-                        </div>
-
-                        <div className="p-16 rounded-4 bg-blue-10">
-                            <div className="text-blue-100 t-h1">
-                                {labelTodo('4')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('Researchers')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('67% female')}
-                            </div>
-                        </div>
-
-                        <div className="p-16 rounded-4 bg-blue-10">
-                            <div className="text-blue-100 t-h1">
-                                {labelTodo('20')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('Researchers')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('67% female')}
-                            </div>
-                        </div>
-
-                        <div className="p-16 rounded-4 bg-blue-10">
-                            <div className="text-blue-100 t-h1">
-                                {labelTodo('1')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('Researchers')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('67% female')}
-                            </div>
-                        </div>
-
-                        <div className="p-16 rounded-4 bg-blue-10">
-                            <div className="text-blue-100 t-h1">
-                                {labelTodo('6')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('Researchers')}
-                            </div>
-                            <div className="text-blue-60 t-footnote">
-                                {labelTodo('67% female')}
-                            </div>
-                        </div>
+                        <NumberCard
+                            useBackground={true}
+                            number="6"
+                            headline="Researchers"
+                            description="4 female, 2 male"
+                        />
+                        <NumberCard
+                            useBackground={true}
+                            number="2"
+                            headline="Project managers"
+                            description="2 male"
+                        />
+                        <NumberCard
+                            useBackground={true}
+                            number="5"
+                            headline="Administrative staff"
+                            description="3 female, 2 male"
+                        />
+                        <NumberCard
+                            useBackground={true}
+                            number="6"
+                            headline="Technical staff"
+                            description="4 female, 2 male"
+                        />
+                        <NumberCard
+                            useBackground={true}
+                            number="20"
+                            headline="Other"
+                            description="10 female, 10 male"
+                        />
+                        <NumberCard
+                            useBackground={true}
+                            number="3"
+                            headline="Scientists"
+                            description="3 female"
+                        />
                     </div>
                     <div className="mt-32">
                         {/* Table header */}

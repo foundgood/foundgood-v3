@@ -439,12 +439,6 @@ const ReportComponent = ({ pageProps }) => {
                     description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
                     items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
                 />
-                <TextCard
-                    hasBackground={false}
-                    className="mt-32"
-                    headline="Updates from this year"
-                    label="Custom"
-                />
                 <ChartCard
                     label="Children (age 0-5)"
                     items={[
@@ -452,18 +446,18 @@ const ReportComponent = ({ pageProps }) => {
                         { title: 'Adults (24+)', value: '384' },
                     ]}
                 />
+                <TextCard
+                    hasBackground={true}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement. "
+                />
                 <DividerLine />
 
                 <ReportDetailCard
-                    headline="Activity #1 name"
+                    headline="Activity #2 name"
                     description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
                     items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
-                />
-                <TextCard
-                    hasBackground={false}
-                    className="mt-32"
-                    headline="Updates from this year"
-                    label="Custom"
                 />
                 <ChartCard
                     label="Reached so far"
@@ -471,6 +465,12 @@ const ReportComponent = ({ pageProps }) => {
                         { title: 'Schools built', value: '12' },
                         { title: 'Wells built', value: '24' },
                     ]}
+                />
+                <TextCard
+                    hasBackground={true}
+                    className="mt-32"
+                    headline="Updates from this year"
+                    body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement. "
                 />
             </SectionWrapper>
             {/* ------------------------------------------------------------------------------------------ */}

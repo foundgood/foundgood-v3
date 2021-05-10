@@ -2,11 +2,25 @@
 import React from 'react';
 
 // Packages
+import cc from 'classcat';
 import t from 'prop-types';
 
-const NumberCardComponent = ({ number, headline, description }) => {
+const NumberCardComponent = ({
+    number,
+    headline,
+    description,
+    useBackground,
+}) => {
     return (
-        <div className="p-16 border-4 rounded-4 border-blue-10">
+        //
+        <div
+            className={cc([
+                'p-16 rounded-4',
+                {
+                    'border-blue-10 border-4': !useBackground,
+                    'bg-blue-10': useBackground,
+                },
+            ])}>
             <div className="text-blue-100 t-h1">{number}</div>
             <div className="text-blue-60 t-footnote-bold">{headline}</div>
             <div className="text-blue-60 t-footnote">{description}</div>

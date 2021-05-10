@@ -9,8 +9,6 @@ import Link from 'next/link';
 import { useAuth } from 'utilities/hooks';
 
 // Components
-import Card from 'components/_wizard/card';
-
 import ListCard from 'components/_wizard/listCard';
 import CollaboratorCard from 'components/_wizard/collaboratorCard';
 import ResultCard from 'components/_wizard/resultCard';
@@ -19,12 +17,11 @@ import ProjectMemberCard from 'components/_wizard/projectMemberCard';
 import GoalCard from 'components/_wizard/goalCard';
 import EvaluationCard from 'components/_wizard/evaluationCard';
 import OutcomeCard from 'components/_wizard/outcomeCard';
-
 import ActivityCard from 'components/_wizard/activityCard';
 import AlertMessage from 'components/_wizard/alertMessage';
 import KpiCard from 'components/_wizard/kpiCard';
 import ProgressCard from 'components/_wizard/progressCard';
-import ReportCard from 'components/_wizard/reportCard';
+import ReportsCard from 'components/_report/reportsCard';
 
 const CardsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -131,12 +128,12 @@ const CardsComponent = ({ pageProps }) => {
                     {
                         label: 'People',
                         headline: 'Made adults (24+)',
-                        value: 'Wrong!',
+                        value: '10',
                     },
                     {
                         label: 'Custom',
                         headline: 'Well build wells',
-                        value: 'wop 99',
+                        value: '5',
                     },
                     {
                         label: 'Hello',
@@ -148,24 +145,28 @@ const CardsComponent = ({ pageProps }) => {
 
             <br></br>
             <p>Report Cards</p>
-            <ReportCard
+            <ReportsCard
                 headline="Reports for Novo Nordisk Foundation"
                 items={[
                     {
                         headline: 'Status report',
-                        dueDate: 'April 28th 2021',
+                        date: 'April 28th 2021',
+                        status: 'review', // TODO - update to salesforece format
                     },
                     {
                         headline: 'Well build wells',
-                        dueDate: 'April 28th 2021',
+                        date: 'April 28th 2021',
+                        status: 'not-started', // TODO - update to salesforece format
                     },
                     {
                         headline: 'Does it work',
-                        dueDate: 'April 28th 2021',
+                        date: 'April 28th 2021',
+                        status: 'in-progress', // TODO - update to salesforece format
                     },
                     {
                         headline: 'Status report',
-                        dueDate: 'April 28th 2021',
+                        date: 'April 28th 2021',
+                        status: 'review', // TODO - update to salesforece format
                     },
                 ]}
             />
