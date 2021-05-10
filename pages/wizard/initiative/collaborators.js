@@ -184,16 +184,11 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         name="Type__c"
                         label={labelTodo('Collaborator type')}
                         placeholder={labelTodo('Please select')}
-                        options={valueSet('initiativeCollaborator.Type__c')
-                            .filter(item =>
-                                CONSTANTS.TYPES.COLLABORATORS.includes(
-                                    item.fullName
-                                )
-                            )
-                            .map(item => ({
-                                label: item.label,
-                                value: item.fullName,
-                            }))}
+                        options={valueSet(
+                            'initiativeCollaborator.Type__c'
+                        ).filter(item =>
+                            CONSTANTS.TYPES.COLLABORATORS.includes(item.value)
+                        )}
                         required
                         controller={control}
                     />

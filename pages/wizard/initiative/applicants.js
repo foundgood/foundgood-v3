@@ -185,16 +185,13 @@ const ApplicantsComponent = ({ pageProps }) => {
                             name="Type__c"
                             label={labelTodo('Type of applicant')}
                             placeholder={labelTodo('Please select')}
-                            options={valueSet('initiativeCollaborator.Type__c')
-                                .filter(item =>
-                                    CONSTANTS.TYPES.APPLICANTS_CREATE.includes(
-                                        item.fullName
-                                    )
+                            options={valueSet(
+                                'initiativeCollaborator.Type__c'
+                            ).filter(item =>
+                                CONSTANTS.TYPES.APPLICANTS_CREATE.includes(
+                                    item.value
                                 )
-                                .map(item => ({
-                                    label: item.label,
-                                    value: item.fullName,
-                                }))}
+                            )}
                             required
                             controller={control}
                         />

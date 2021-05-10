@@ -186,10 +186,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         placeholder={labelTodo('Please select')}
                         options={valueSet(
                             'initiativeEmployeeFunded.Role_Type__c'
-                        ).map(item => ({
-                            label: item.label,
-                            value: item.fullName,
-                        }))}
+                        )}
                         required
                         controller={control}
                     />
@@ -200,12 +197,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         textPlaceholder={labelTodo(
                             'If "other" feel free to specify'
                         )}
-                        options={valueSet(
-                            'initiativeEmployeeFunded.Gender__c'
-                        ).map(item => ({
-                            label: item.label,
-                            value: item.fullName,
-                        }))}
+                        options={valueSet('initiativeEmployeeFunded.Gender__c')}
                         showText
                         listMaxLength={1}
                         controller={control}
