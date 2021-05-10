@@ -85,18 +85,18 @@ const InformationCaptureComponent = () => {
                                 'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
                             required: true,
                         },
-                        {
-                            label: 'Planning',
-                            value: 'Planning',
-                            details:
-                                'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
-                        },
-                        {
-                            label: 'Detailing',
-                            value: 'Explain',
-                            details:
-                                'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
-                        },
+                        // {
+                        //     label: 'Planning',
+                        //     value: 'Planning',
+                        //     details:
+                        //         'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
+                        // },
+                        // {
+                        //     label: 'Detailing',
+                        //     value: 'Explain',
+                        //     details:
+                        //         'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
+                        // },
                     ]}
                 />
             </InputWrapper>

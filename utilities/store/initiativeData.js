@@ -38,6 +38,8 @@ const useInitiativeDataStore = create(
             ...defaultInitiative,
         },
 
+        // Update initiative model and connected models
+
         async updateInitiative(id) {
             const data = await sfQuery(queries.initiative.get(id));
             if (data) {
@@ -101,6 +103,54 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+        },
+
+        async updateReport(id) {
+            console.log('UPDATE REPORT TBD');
+            // const data = await sfQuery(
+            //     queries.initiativeReport.get(id)
+            // );
+            // if (data) {
+            //     set(state => ({
+            //         initiative: {
+            //             ...state.initiative,
+            //             _employeesFunded: {
+            //                 ...state.initiative._employeesFunded,
+            //                 [id]: {
+            //                     ...state?.initiative?._employeesFunded[id],
+            //                     ...data,
+            //                 },
+            //             },
+            //         },
+            //     }));
+            // }
+        },
+
+        // Get initiative and all sub data based on initiative ID
+        async populateInitiative(id) {
+            // Get initiative
+            const initiativeData = await sfQuery(queries.initiative.get(id));
+
+            // Populate dependent data based on same id
+            const collaboratorsData = await sfQuery(
+                queries.initiativeCollaborator.getAll(id)
+            );
+            const fundersData = await sfQuery(
+                queries.initiativeFunder.getAll(id)
+            );
+            const employeesFundedData = await sfQuery(
+                queries.initiativeEmployeeFunded.getAll(id)
+            );
+
+            // Update state
+            set(() => ({
+                initiative: {
+                    ...initiativeData,
+                    _collaborators: collaboratorsData,
+                    _funders: fundersData,
+                    _employeesFunded: employeesFundedData,
+                },
+            }));
         },
 
         reset() {

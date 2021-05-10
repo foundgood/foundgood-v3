@@ -157,10 +157,7 @@ const OverviewComponent = () => {
                     }))}
                     label={labelTodo('Where is it located?')}
                     listMaxLength={3}
-                    options={valueSet('account.Location__c').map(item => ({
-                        label: item.label,
-                        value: item.fullName,
-                    }))}
+                    options={valueSet('account.Location__c')}
                     selectPlaceholder={labelTodo('Please select')}
                     selectLabel={labelTodo('Country')}
                     textLabel={labelTodo('Region')}
@@ -171,10 +168,7 @@ const OverviewComponent = () => {
                     defaultValue={initiative?.Category__c}
                     label={labelTodo('Grant giving area')}
                     placeholder={labelTodo('Please select')}
-                    options={valueSet('initiative.Category__c').map(item => ({
-                        label: item.label,
-                        value: item.fullName,
-                    }))}
+                    options={valueSet('initiative.Category__c')}
                     controller={control}
                 />
             </InputWrapper>

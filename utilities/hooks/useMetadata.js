@@ -28,7 +28,7 @@ const useMetadata = () => {
         return _get(metadata.types, `${path}`, null);
     }
 
-    function valueSet(path) {
+    function valueSet(path, formattedAsSelect = true) {
         const valuesParent = _get(
             metadata.valueSets,
             `${locale}.${path}`,
@@ -37,12 +37,22 @@ const useMetadata = () => {
 
         // Check for controlled values
         if (valuesParent && valuesParent.controlledBy) {
-            return valuesParent.controlledValues;
+            return formattedAsSelect
+                ? valuesParent.controlledValues.map(item => ({
+                      label: item.label,
+                      value: item.fullName,
+                  }))
+                : valuesParent.controlledValues;
         }
 
         // Default values
         if (valuesParent) {
-            return valuesParent.values;
+            return formattedAsSelect
+                ? valuesParent.values.map(item => ({
+                      label: item.label,
+                      value: item.fullName,
+                  }))
+                : valuesParent.values;
         }
 
         return [];

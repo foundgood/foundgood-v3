@@ -20,17 +20,16 @@ import {
     Text,
     DateRange,
     DatePicker,
-    LongText,
 } from 'components/_inputs';
-import CollaboratorCard from 'components/_wizard/collaboratorCard';
+import FunderCard from 'components/_wizard/founderCard';
 
-const CollaboratorsComponent = ({ pageProps }) => {
+const FundersComponent = ({ pageProps }) => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, valueSet } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -40,15 +39,11 @@ const CollaboratorsComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Initiative data
-    const {
-        initiative,
-        updateCollaborator,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+    const { initiative, updateFunder } = useInitiativeDataStore();
 
     // Get data for form
-    const { data: accountOrganisations } = sfQuery(
-        queries.account.allOrganisations()
+    const { data: accountFoundations } = sfQuery(
+        queries.account.allFoundations()
     );
 
     // Method: Save new item, returns id
@@ -66,27 +61,37 @@ const CollaboratorsComponent = ({ pageProps }) => {
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
-            const { Dates, Account__c, Type__c, Description__c } = formData;
+            const {
+                Contribution,
+                GrantDate,
+                Account__c,
+                Type__c,
+                Approval_date__c,
+                Application_Id__c,
+            } = formData;
 
             // Object name
-            const object = 'Initiative_Collaborator__c';
+            const object = 'Initiative_Funder__c';
 
             // Data for sf
             const data = {
                 Account__c,
                 Type__c,
-                Description__c,
-                Start_Date__c: Dates.from,
-                End_Date__c: Dates.to,
+                Amount__c: Contribution[0]?.textValue,
+                CurrencyIsoCode: Contribution[0]?.selectValue,
+                Approval_date__c,
+                Grant_Start_Date__c: GrantDate.from,
+                Grant_End_Date__c: GrantDate.to,
+                Application_Id__c,
             };
 
             // Update / Save
-            const collaboratorId = updateId
+            const funderId = updateId
                 ? await update(object, data, updateId)
                 : await save(object, { ...data, Initiative__c: initiative.Id });
 
             // Update store
-            await updateCollaborator(collaboratorId);
+            await updateFunder(funderId);
 
             // Close modal
             setModalIsOpen(false);
@@ -107,48 +112,55 @@ const CollaboratorsComponent = ({ pageProps }) => {
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
         const {
-            Start_Date__c,
-            End_Date__c,
-            Account__c,
             Type__c,
-            Description__c,
-        } = initiative?._collaborators[updateId] ?? {};
+            Account__c,
+            CurrencyIsoCode,
+            Amount__c,
+            Approval_date__c,
+            Application_Id__c,
+            Grant_Start_Date__c,
+            Grant_End_Date__c,
+        } = initiative?._funders[updateId] ?? {};
 
         setValue('Type__c', Type__c);
         setValue('Account__c', Account__c);
-        setValue('Dates', {
-            from: Start_Date__c,
-            to: End_Date__c,
+        setValue('Contribution', [
+            { selectValue: CurrencyIsoCode, textValue: Amount__c },
+        ]);
+        setValue('Approval_date__c', Approval_date__c);
+        setValue('GrantDate', {
+            from: Grant_Start_Date__c,
+            to: Grant_End_Date__c,
         });
-        setValue('Description__c', Description__c);
+        setValue('Application_Id__c', Application_Id__c);
     }, [updateId, modalIsOpen]);
 
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Are you collaborating with anyone?')}
+                title={labelTodo('Who is funding the initiative?')}
                 preamble={labelTodo('Preamble')}
             />
             <InputWrapper>
-                {Object.keys(initiative._collaborators).map(collaboratorKey => {
-                    const collaborator =
-                        initiative._collaborators[collaboratorKey];
-                    return CONSTANTS.TYPES.COLLABORATORS.includes(
-                        collaborator.Type__c
-                    ) ? (
-                        <CollaboratorCard
-                            key={collaboratorKey}
-                            headline={
-                                _get(collaborator, 'Account__r.Name') || ''
-                            }
-                            label={_get(collaborator, 'Type__c') || ''}
-                            body={_get(collaborator, 'Description__c') || ''}
+                {Object.keys(initiative._funders).map(funderKey => {
+                    const funder = initiative._funders[funderKey];
+                    return (
+                        <FunderCard
+                            key={funderKey}
+                            headline={_get(funder, 'Account__r.Name') || ''}
+                            label={_get(funder, 'Type__c') || ''}
+                            subHeadline={`${
+                                _get(funder, 'CurrencyIsoCode') || ''
+                            } ${_get(funder, 'Amount__c') || ''}`}
+                            footnote={`${
+                                _get(funder, 'Grant_Start_Date__c') || ''
+                            } - ${_get(funder, 'Grant_End_Date__c') || ''}`}
                             action={() => {
-                                setUpdateId(collaboratorKey);
+                                setUpdateId(funderKey);
                                 setModalIsOpen(true);
                             }}
                         />
-                    ) : null;
+                    );
                 })}
                 <Button
                     theme="teal"
@@ -157,22 +169,22 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add collaborator')}
+                    {labelTodo('Add funder')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new collaborator')}
+                title={labelTodo('Add new funder')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
                         name="Account__c"
-                        label={labelTodo('Collaborator name')}
+                        label={labelTodo('Name of funder')}
                         placeholder={labelTodo('Please select')}
                         options={
-                            accountOrganisations?.records?.map(item => ({
+                            accountFoundations?.records?.map(item => ({
                                 label: item.Name,
                                 value: item.Id,
                             })) ?? []
@@ -182,26 +194,41 @@ const CollaboratorsComponent = ({ pageProps }) => {
                     />
                     <Select
                         name="Type__c"
-                        label={labelTodo('Collaborator type')}
+                        label={labelTodo('Type of funder')}
                         placeholder={labelTodo('Please select')}
-                        options={valueSet(
-                            'initiativeCollaborator.Type__c'
-                        ).filter(item =>
-                            CONSTANTS.TYPES.COLLABORATORS.includes(item.value)
-                        )}
+                        options={valueSet('initiativeFunder.Type__c')}
+                        controller={control}
                         required
+                    />
+                    <SelectList
+                        name="Contribution"
+                        showText
+                        selectPlaceholder={labelTodo('Please select')}
+                        label={labelTodo('Contribution')}
+                        listMaxLength={1}
+                        options={[
+                            { label: 'DKK', value: 'DKK' },
+                            { label: 'EUR', value: 'EUR' },
+                        ]}
+                        selectLabel={labelTodo('Currency')}
+                        textLabel={labelTodo('Amount granted')}
                         controller={control}
                     />
-                    <LongText
-                        name="Description__c"
-                        label={labelTodo('Description of collaboration')}
-                        placeholder={labelTodo('Enter your description')}
+                    <DatePicker
+                        name="Approval_date__c"
+                        label={labelTodo('Approval date')}
                         controller={control}
-                        required
                     />
                     <DateRange
-                        name="Dates"
-                        label={labelTodo('Collaboration period')}
+                        name="GrantDate"
+                        label={labelTodo('Grant period')}
+                        controller={control}
+                    />
+                    <Text
+                        name="Application_Id__c"
+                        label={labelTodo('Application ID number')}
+                        placeholder={labelTodo('Enter ID')}
+                        maxLength={15}
                         controller={control}
                     />
                 </InputWrapper>
@@ -210,10 +237,10 @@ const CollaboratorsComponent = ({ pageProps }) => {
     );
 };
 
-CollaboratorsComponent.propTypes = {};
+FundersComponent.propTypes = {};
 
-CollaboratorsComponent.defaultProps = {};
+FundersComponent.defaultProps = {};
 
-CollaboratorsComponent.layout = 'wizard';
+FundersComponent.layout = 'wizard';
 
-export default CollaboratorsComponent;
+export default FundersComponent;

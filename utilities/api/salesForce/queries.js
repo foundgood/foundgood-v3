@@ -18,20 +18,34 @@ const queries = {
         },
     },
     initiativeFunder: {
+        _query: `SELECT Id, Name, CurrencyIsoCode, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Account__c, Account__r.Name, Grant_Start_Date__c, Grant_End_Date__c, Approval_Date__c, Amount__c, Type__c,  toLabel(Type__c) Translated_Type__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Funder__c`,
         get(id) {
-            return `SELECT Id, Name, CurrencyIsoCode, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Account__c, Account__r.Name, Grant_Start_Date__c, Grant_End_Date__c, Approval_Date__c, Amount__c, Type__c,  toLabel(Type__c) Translated_Type__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Funder__c WHERE Id = '${id}'`;
+            return `${this._query} WHERE Id = '${id}'`;
+        },
+        getAll(initiativeId) {
+            return `${this._query} FROM Initiative_Funder__c WHERE Initiative__c = '${initiativeId}'`;
         },
     },
     initiativeCollaborator: {
+        _query: `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Account__c, Account__r.Name, Description__c, Start_Date__c, End_Date__c, Type__c, toLabel(Type__c) Translated_Type__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Collaborator__c`,
         get(id) {
-            return `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Account__c, Account__r.Name, Description__c, Start_Date__c, End_Date__c, Type__c, toLabel(Type__c) Translated_Type__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Collaborator__c WHERE Id = '${id}'`;
+            return `${this._query} WHERE Id = '${id}'`;
+        },
+        getAll(initiativeId) {
+            return `${this._query} FROM Initiative_Collaborator__c WHERE Initiative__c = '${initiativeId}'`;
         },
     },
     initiativeEmployeeFunded: {
+        _query: `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Gender__c, toLabel(Gender__c) Translated_Gender__c, Gender_Other__c, Role_Type__c, toLabel(Role_Type__c) Translated_Role_Type__c, Job_Title__c, Percent_Involvement__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Employee_Funded__c`,
         get(id) {
-            return `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Gender__c, toLabel(Gender__c) Translated_Gender__c, Gender_Other__c, Role_Type__c, toLabel(Role_Type__c) Translated_Role_Type__c, Job_Title__c, Percent_Involvement__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Employee_Funded__c WHERE Id = '${id}'`;
+            return `${this._query} WHERE Id = '${id}'`;
+        },
+        getAll(initiativeId) {
+            return `${this._query} FROM Initiative_Employee_Funded__c WHERE Initiative__c = '${initiativeId}'`;
         },
     },
+
+    // TBD
     getObjectById: {
         initiative(id) {
             return `SELECT Id, LastModifiedDate, CreatedById, Name, Situation_Today__c, Approach_Thinking__c, Problem_Effect__c, toLabel(Problem_Effect__c) Translated_Problem_Effect__c, Problem_Resolutions__c, Problem_Causes__c, Ultimate_Outcome__c, Stage__c, toLabel(Stage__c) Translated_Stage__c, Where_Is_Problem__c, toLabel(Where_Is_Problem__c) Translated_Where_Is_Problem__c, Who_Effect__c, Why_Problem_Solving__c, Lead_Grantee__r.Name, Initiator_Foundation__r.Name, Access_Level__c, toLabel(Access_Level__c) Translated_Access_Level__c, Hero_Image_URL__c, Summary__c, Application_Id__c, Grant_Start_Date__c, Grant_End_Date__c, Category__c, toLabel(Category__c) Translated_Category__c, Subcategory__c, toLabel(Subcategory__c) Translated_Subcategory__c, Collaborators__c, Partners__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative__c WHERE Id = '${id}'`;
