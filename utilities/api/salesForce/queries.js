@@ -23,7 +23,7 @@ const queries = {
             return `${this._query} WHERE Id = '${id}'`;
         },
         getAll(initiativeId) {
-            return `${this._query} FROM Initiative_Funder__c WHERE Initiative__c = '${initiativeId}'`;
+            return `${this._query} WHERE Initiative__c = '${initiativeId}'`;
         },
     },
     initiativeCollaborator: {
@@ -32,7 +32,7 @@ const queries = {
             return `${this._query} WHERE Id = '${id}'`;
         },
         getAll(initiativeId) {
-            return `${this._query} FROM Initiative_Collaborator__c WHERE Initiative__c = '${initiativeId}'`;
+            return `${this._query} WHERE Initiative__c = '${initiativeId}'`;
         },
     },
     initiativeEmployeeFunded: {
@@ -41,7 +41,16 @@ const queries = {
             return `${this._query} WHERE Id = '${id}'`;
         },
         getAll(initiativeId) {
-            return `${this._query} FROM Initiative_Employee_Funded__c WHERE Initiative__c = '${initiativeId}'`;
+            return `${this._query} WHERE Initiative__c = '${initiativeId}'`;
+        },
+    },
+    initiativeReport: {
+        _query: `SELECT Id, CreatedById, LastModifiedDate, Name, Funder_Report__c, Report_Type__c, Report_Period_Start_Date__c, Report_Period_End_Date__c, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, Executive_Summary__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Report__c`,
+        get(id) {
+            return `${this._query} WHERE Id = '${id}'`;
+        },
+        getAll(initiativeId) {
+            return `${this._query} WHERE Initiative__c = '${initiativeId}'`;
         },
     },
 

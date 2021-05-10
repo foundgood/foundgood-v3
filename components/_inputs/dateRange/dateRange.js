@@ -47,6 +47,7 @@ const DateRangeComponent = ({
     // Update state when using setValue
     useEffect(() => {
         if (value) {
+            console.log(value);
             setFrom(value.from);
             setTo(value.to);
         }
@@ -87,7 +88,7 @@ const DateRangeComponent = ({
                                             error?.type === 'isDateFrom',
                                     },
                                 ]),
-                                overlay: 'absolute bg-white mt-12',
+                                overlay: 'absolute bg-white mt-12 z-above',
                             }}
                         />
                     </div>
@@ -124,7 +125,7 @@ const DateRangeComponent = ({
                                     },
                                 ]),
                                 overlay: cc([
-                                    'absolute bg-white mt-12',
+                                    'absolute bg-white mt-12 z-above',
                                     {
                                         'pointer-events-none opacity-0': !from,
                                     },

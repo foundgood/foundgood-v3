@@ -21,15 +21,15 @@ import {
     DateRange,
     DatePicker,
 } from 'components/_inputs';
-import FunderCard from 'components/_wizard/founderCard';
+import ReportCard from 'components/_wizard/reportCard';
 
-const FundersComponent = ({ pageProps }) => {
+const ReportScheduleComponent = ({ pageProps }) => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet } = useMetadata();
+    const { labelTodo, valueSet, log } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -39,12 +39,7 @@ const FundersComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Initiative data
-    const { initiative, updateFunder } = useInitiativeDataStore();
-
-    // Get data for form
-    const { data: accountFoundations } = sfQuery(
-        queries.account.allFoundations()
-    );
+    const { initiative, updateReport } = useInitiativeDataStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -62,36 +57,33 @@ const FundersComponent = ({ pageProps }) => {
     async function submit(formData) {
         try {
             const {
-                Contribution,
-                GrantDate,
-                Account__c,
-                Type__c,
-                Approval_date__c,
-                Application_Id__c,
+                ReportDates,
+                Report_Type__c,
+                Due_Date__c,
+                Status__c,
             } = formData;
 
             // Object name
-            const object = 'Initiative_Funder__c';
+            const object = 'Initiative_Report__c';
 
             // Data for sf
             const data = {
-                Account__c,
-                Type__c,
-                Amount__c: Contribution[0]?.textValue,
-                CurrencyIsoCode: Contribution[0]?.selectValue,
-                Approval_date__c,
-                Grant_Start_Date__c: GrantDate.from,
-                Grant_End_Date__c: GrantDate.to,
-                Application_Id__c,
+                Name: `${initiative.Name} - ${funder.Account__r.Name} - ${Report_Type__c} ${Due_Date__c}`,
+                Report_Period_Start_Date__c: ReportDates.from,
+                Report_Period_End_Date__c: ReportDates.to,
+                Report_Type__c,
+                Due_Date__c,
+                Status__c,
+                Funder_Report__c: funder.Id,
             };
 
             // Update / Save
-            const funderId = updateId
+            const ReportId = updateId
                 ? await update(object, data, updateId)
                 : await save(object, { ...data, Initiative__c: initiative.Id });
 
             // Update store
-            await updateFunder(funderId);
+            await updateReport(ReportId);
 
             // Close modal
             setModalIsOpen(false);
@@ -108,127 +100,106 @@ const FundersComponent = ({ pageProps }) => {
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
+    const [funder, setFunder] = useState(null);
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
         const {
-            Type__c,
-            Account__c,
-            CurrencyIsoCode,
-            Amount__c,
-            Approval_date__c,
-            Application_Id__c,
-            Grant_Start_Date__c,
-            Grant_End_Date__c,
-        } = initiative?._funders[updateId] ?? {};
+            Report_Period_Start_Date__c,
+            Report_Period_End_Date__c,
+            Report_Type__c,
+            Due_Date__c,
+            Status__c,
+        } = initiative?._reports[updateId] ?? {};
 
-        setValue('Type__c', Type__c);
-        setValue('Account__c', Account__c);
-        setValue('Contribution', [
-            { selectValue: CurrencyIsoCode, textValue: Amount__c },
-        ]);
-        setValue('Approval_date__c', Approval_date__c);
-        setValue('GrantDate', {
-            from: Grant_Start_Date__c,
-            to: Grant_End_Date__c,
+        setValue('Report_Type__c', Report_Type__c);
+        setValue('Due_Date__c', Due_Date__c);
+        setValue('Status__c', Status__c);
+        setValue('ReportDates', {
+            from: Report_Period_Start_Date__c,
+            to: Report_Period_End_Date__c,
         });
-        setValue('Application_Id__c', Application_Id__c);
     }, [updateId, modalIsOpen]);
+
+    // Funders
+    const funders = Object.keys(initiative._funders);
 
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Who is funding the initiative?')}
+                title={labelTodo('Add reports for your funders')}
                 preamble={labelTodo('Preamble')}
             />
             <InputWrapper>
-                {Object.keys(initiative._funders).map(funderKey => {
-                    const funder = initiative._funders[funderKey];
-                    return (
-                        <FunderCard
-                            key={funderKey}
-                            headline={_get(funder, 'Account__r.Name') || ''}
-                            label={_get(funder, 'Type__c') || ''}
-                            subHeadline={`${
-                                _get(funder, 'CurrencyIsoCode') || ''
-                            } ${_get(funder, 'Amount__c') || ''}`}
-                            footnote={`${
-                                _get(funder, 'Grant_Start_Date__c') || ''
-                            } - ${_get(funder, 'Grant_End_Date__c') || ''}`}
-                            action={() => {
-                                setUpdateId(funderKey);
-                                setModalIsOpen(true);
-                            }}
-                        />
-                    );
-                })}
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {labelTodo('Add funder')}
-                </Button>
+                {funders.length > 0 ? (
+                    funders.map(funderKey => {
+                        const funder = initiative?._funders[funderKey];
+                        // Get report items based on funder id (funderKey) and report.Funder_Report__c
+                        const reportItems = Object.keys(initiative?._reports)
+                            .filter(
+                                reportKey =>
+                                    initiative?._reports[reportKey]
+                                        .Funder_Report__c === funderKey
+                            )
+                            .map(reportKey => initiative?._reports[reportKey]);
+                        return (
+                            <ReportCard
+                                key={funder.Id}
+                                headline={_get(funder, 'Account__r.Name') || ''}
+                                items={reportItems.map(item => ({
+                                    id: item.Id,
+                                    headline: labelTodo(item.Report_Type__c),
+                                    dueDate: labelTodo(item.Due_Date__c),
+                                }))}
+                                actionCreate={() => {
+                                    setModalIsOpen(true);
+                                    setFunder(funder);
+                                }}
+                                actionUpdate={item => {
+                                    setModalIsOpen(true);
+                                    setUpdateId(item.id);
+                                    setFunder(funder);
+                                }}
+                            />
+                        );
+                    })
+                ) : (
+                    <p className="t-h5">
+                        {labelTodo('No funders added to the initiative yet')}
+                    </p>
+                )}
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new funder')}
+                title={labelTodo(`New report for ${funder?.Account__r.Name}`)}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
-                        name="Account__c"
-                        label={labelTodo('Name of funder')}
+                        name="Report_Type__c"
+                        label={labelTodo('Type of report')}
                         placeholder={labelTodo('Please select')}
-                        options={
-                            accountFoundations?.records?.map(item => ({
-                                label: item.Name,
-                                value: item.Id,
-                            })) ?? []
-                        }
+                        options={valueSet('initiativeReport.Report_Type__c')}
+                        controller={control}
                         required
+                    />
+                    <DatePicker
+                        name="Due_Date__c"
+                        label={labelTodo('Report deadline')}
+                        controller={control}
+                        required
+                    />
+                    <DateRange
+                        name="ReportDates"
+                        label={labelTodo('Report start / end date')}
                         controller={control}
                     />
                     <Select
-                        name="Type__c"
-                        label={labelTodo('Type of funder')}
+                        name="Status__c"
+                        label={labelTodo('Report status')}
                         placeholder={labelTodo('Please select')}
-                        options={valueSet('initiativeFunder.Type__c')}
-                        controller={control}
-                        required
-                    />
-                    <SelectList
-                        name="Contribution"
-                        showText
-                        selectPlaceholder={labelTodo('Please select')}
-                        label={labelTodo('Contribution')}
-                        listMaxLength={1}
-                        options={[
-                            { label: 'DKK', value: 'DKK' },
-                            { label: 'EUR', value: 'EUR' },
-                        ]}
-                        selectLabel={labelTodo('Currency')}
-                        textLabel={labelTodo('Amount granted')}
-                        controller={control}
-                    />
-                    <DatePicker
-                        name="Approval_date__c"
-                        label={labelTodo('Approval date')}
-                        controller={control}
-                    />
-                    <DateRange
-                        name="GrantDate"
-                        label={labelTodo('Grant period')}
-                        controller={control}
-                    />
-                    <Text
-                        name="Application_Id__c"
-                        label={labelTodo('Application ID number')}
-                        placeholder={labelTodo('Enter ID')}
-                        maxLength={15}
+                        options={valueSet('initiativeReport.Status__c')}
                         controller={control}
                     />
                 </InputWrapper>
@@ -237,10 +208,10 @@ const FundersComponent = ({ pageProps }) => {
     );
 };
 
-FundersComponent.propTypes = {};
+ReportScheduleComponent.propTypes = {};
 
-FundersComponent.defaultProps = {};
+ReportScheduleComponent.defaultProps = {};
 
-FundersComponent.layout = 'wizard';
+ReportScheduleComponent.layout = 'wizard';
 
-export default FundersComponent;
+export default ReportScheduleComponent;

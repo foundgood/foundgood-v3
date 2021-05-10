@@ -21,6 +21,7 @@ const defaultInitiative = {
     _collaborators: {},
     _funders: {},
     _employeesFunded: {},
+    _reports: {},
 };
 
 const useInitiativeDataStore = create(
@@ -106,24 +107,21 @@ const useInitiativeDataStore = create(
         },
 
         async updateReport(id) {
-            console.log('UPDATE REPORT TBD');
-            // const data = await sfQuery(
-            //     queries.initiativeReport.get(id)
-            // );
-            // if (data) {
-            //     set(state => ({
-            //         initiative: {
-            //             ...state.initiative,
-            //             _employeesFunded: {
-            //                 ...state.initiative._employeesFunded,
-            //                 [id]: {
-            //                     ...state?.initiative?._employeesFunded[id],
-            //                     ...data,
-            //                 },
-            //             },
-            //         },
-            //     }));
-            // }
+            const data = await sfQuery(queries.initiativeReport.get(id));
+            if (data) {
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _reports: {
+                            ...state.initiative._reports,
+                            [id]: {
+                                ...state?.initiative?._reports[id],
+                                ...data,
+                            },
+                        },
+                    },
+                }));
+            }
         },
 
         // Get initiative and all sub data based on initiative ID
@@ -141,6 +139,9 @@ const useInitiativeDataStore = create(
             const employeesFundedData = await sfQuery(
                 queries.initiativeEmployeeFunded.getAll(id)
             );
+            const reportData = await sfQuery(
+                queries.initiativeReport.getAll(id)
+            );
 
             // Update state
             set(() => ({
@@ -149,6 +150,7 @@ const useInitiativeDataStore = create(
                     _collaborators: collaboratorsData,
                     _funders: fundersData,
                     _employeesFunded: employeesFundedData,
+                    _reports: reportData,
                 },
             }));
         },
