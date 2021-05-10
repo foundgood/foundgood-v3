@@ -13,7 +13,11 @@ function _goToNextSection(sectionIndex, items) {
     const nextSection = items[sectionIndex + 1];
 
     // Return url from next section or the first child in items
-    return nextSection.url ? nextSection.url : nextSection.items[0].url;
+    return nextSection ?? null
+        ? nextSection.url
+            ? nextSection.url
+            : nextSection.items[0].url
+        : null;
 }
 
 const useWizardNavigationStore = create(

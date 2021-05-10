@@ -80,7 +80,16 @@ const BottomNavigationComponent = () => {
                         {labelTodo('Back')}
                     </Button>
 
-                    <Button theme="coral" action={onHandleContinue}>
+                    <Button
+                        theme="coral"
+                        action={onHandleContinue}
+                        className={cc([
+                            'transition-default',
+                            {
+                                'opacity-100 pointer-events-auto': nextItemUrl,
+                                'opacity-0 pointer-events-none': !nextItemUrl,
+                            },
+                        ])}>
                         {labelTodo('Continue')}
                     </Button>
                 </div>
