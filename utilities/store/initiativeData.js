@@ -17,11 +17,25 @@ async function sfQuery(q) {
     }
 }
 
+const defaultInitiative = {
+    _collaborators: {},
+    _funders: {},
+    _employeesFunded: {},
+};
+
 const useInitiativeDataStore = create(
     persist((set, get) => ({
+        CONSTANTS: {
+            TYPES: {
+                COLLABORATORS: ['Additional collaborator'],
+                APPLICANTS_ALL: ['Co applicant', 'Main applicant'],
+                APPLICANTS_CREATE: ['Co applicant'],
+                MAIN_COLLABORATOR: 'Main applicant',
+            },
+        },
+
         initiative: {
-            _collaborators: {},
-            _funders: {},
+            ...defaultInitiative,
         },
 
         async updateInitiative(id) {
@@ -69,11 +83,30 @@ const useInitiativeDataStore = create(
             }
         },
 
+        async updateEmployeeFunded(id) {
+            const data = await sfQuery(
+                queries.initiativeEmployeeFunded.get(id)
+            );
+            if (data) {
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _employeesFunded: {
+                            ...state.initiative._employeesFunded,
+                            [id]: {
+                                ...state?.initiative?._employeesFunded[id],
+                                ...data,
+                            },
+                        },
+                    },
+                }));
+            }
+        },
+
         reset() {
             set(() => ({
                 initiative: {
-                    _collaborators: {},
-                    _funders: {},
+                    ...defaultInitiative,
                 },
             }));
         },

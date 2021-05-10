@@ -17,6 +17,7 @@ const DatePickerComponent = ({
     label,
     name,
     subLabel,
+    required,
 }) => {
     // Local state for handling dates
     const [date, setDate] = useState(defaultValue);
@@ -30,6 +31,7 @@ const DatePickerComponent = ({
         control: controller,
         defaultValue: defaultValue,
         rules: {
+            required,
             validate: {
                 isDate: v => (v ? dayjs(v).isValid() : true),
             },
@@ -96,12 +98,12 @@ DatePickerComponent.propTypes = {
     label: t.string,
     subLabel: t.string,
     defaultValue: t.string,
-    maxLength: t.number,
+    required: t.bool,
 };
 
 DatePickerComponent.defaultProps = {
-    maxLength: 0,
     defaultValue: null,
+    required: false,
 };
 
 export default DatePickerComponent;

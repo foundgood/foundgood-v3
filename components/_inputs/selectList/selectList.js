@@ -24,11 +24,13 @@ const SelectListComponent = ({
     maxLength,
     name,
     options,
-    placeholder,
+    selectPlaceholder,
+    textPlaceholder,
     selectLabel,
     showText,
     subLabel,
     textLabel,
+    required,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -78,6 +80,7 @@ const SelectListComponent = ({
         name,
         control: controller,
         defaultValue: defaultValue,
+        rules: { required },
     });
 
     // Update state when using setValue
@@ -109,7 +112,7 @@ const SelectListComponent = ({
                                     <div className="flex w-full space-x-12">
                                         {/* Select */}
                                         <div className="flex flex-col w-full">
-                                            {index === 0 && (
+                                            {index === 0 && selectLabel && (
                                                 <span className="mb-4 input-utility-text">
                                                     {selectLabel}
                                                 </span>
@@ -120,7 +123,7 @@ const SelectListComponent = ({
                                                         'input-defaults flex-grow',
                                                         'appearance-none pr-20',
                                                         {
-                                                            'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
+                                                            'input-defaults-error': error,
                                                         },
                                                     ])}
                                                     defaultValue={
@@ -151,7 +154,7 @@ const SelectListComponent = ({
                                                         default
                                                         value=""
                                                         className="hidden">
-                                                        {placeholder}
+                                                        {selectPlaceholder}
                                                     </option>
                                                     {options.map(option => (
                                                         <option
@@ -169,7 +172,7 @@ const SelectListComponent = ({
                                         {/* Input */}
                                         {showText && (
                                             <div className="flex flex-col w-full">
-                                                {index === 0 && (
+                                                {index === 0 && textLabel && (
                                                     <span className="mb-4 input-utility-text">
                                                         {textLabel}
                                                     </span>
@@ -186,7 +189,7 @@ const SelectListComponent = ({
                                                             item.textValue
                                                         }
                                                         placeholder={
-                                                            placeholder
+                                                            textPlaceholder
                                                         }
                                                         onChange={event => {
                                                             // Get next list
@@ -206,7 +209,7 @@ const SelectListComponent = ({
                                                             'flex-grow',
                                                             'input-defaults',
                                                             {
-                                                                'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
+                                                                'input-defaults-error': error,
                                                             },
                                                         ])}
                                                     />
@@ -276,16 +279,19 @@ SelectListComponent.propTypes = {
     selectLabel: t.string,
     textLabel: t.string,
     listMaxLength: t.number,
-    placeholder: t.string,
+    selectPlaceholder: t.string,
+    textPlaceholder: t.string,
+    required: t.bool,
 };
 
 SelectListComponent.defaultProps = {
     options: [],
     defaultValue: [{ selectValue: '', textValue: '', id: nanoid() }],
     showText: false,
-    selectLabel: 'Select',
-    textLabel: 'Text',
+    selectLabel: null,
+    textLabel: null,
     listMaxLength: 5,
+    required: false,
 };
 
 export default SelectListComponent;

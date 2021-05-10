@@ -18,6 +18,7 @@ const SelectComponent = ({
     placeholder,
     options,
     controller,
+    required,
     ...rest
 }) => {
     return (
@@ -30,6 +31,7 @@ const SelectComponent = ({
                 control={controller}
                 defaultValue={defaultValue}
                 name={name}
+                rules={{ required }}
                 render={({
                     field: { onChange, onBlur, value, ref },
                     fieldState: { error },
@@ -47,7 +49,7 @@ const SelectComponent = ({
                                 'input-defaults',
                                 'appearance-none flex-grow pr-20',
                                 {
-                                    'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
+                                    'input-defaults-error': error,
                                 },
                             ])}
                             onChange={event => onChange(event)}
@@ -83,10 +85,12 @@ SelectComponent.propTypes = {
             value: t.oneOfType([t.string, t.number, t.bool]),
         })
     ),
+    required: t.bool,
 };
 
 SelectComponent.defaultProps = {
     options: [],
+    required: false,
 };
 
 export default SelectComponent;

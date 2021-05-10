@@ -77,8 +77,9 @@
         @apply flex-grow w-full;
     }
 
+    .input-defaults-error,
     .input-defaults-date-error input {
-        @apply ring-2 ring-coral-300 bg-coral-10 text-coral-300;
+        @apply ring-2 !ring-coral-300 !bg-coral-10 !text-coral-300 !placeholder-coral-60;
     }
 
     .input-defaults::placeholder,

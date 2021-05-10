@@ -1,11 +1,6 @@
 import create from 'zustand';
-import produce from 'immer';
 
 const useReportNavigationStore = create(set => ({
-    // Update nested state values
-    // https://morioh.com/p/a687e3129a67
-    set: fn => set(produce(fn)),
-
     // Set progress icon - nav item (only one Item can be inProgress)
     onSetInProgess: (index, value) =>
         set(state => {

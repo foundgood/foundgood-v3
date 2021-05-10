@@ -25,6 +25,7 @@ const TextListComponent = ({
     name,
     placeholder,
     subLabel,
+    required,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -57,6 +58,7 @@ const TextListComponent = ({
         name,
         control: controller,
         defaultValue: defaultValue,
+        rules: { required },
     });
 
     // Update state when using setValue
@@ -103,7 +105,7 @@ const TextListComponent = ({
                                                 'flex-grow',
                                                 'input-defaults',
                                                 {
-                                                    'ring-2 ring-coral-300 bg-coral-10 text-coral-300': error,
+                                                    'input-defaults-error': error,
                                                 },
                                             ])}
                                         />
@@ -162,11 +164,13 @@ TextListComponent.propTypes = {
     defaultValue: t.arrayOf(t.oneOf([t.string, t.number])),
     error: t.object,
     maxLength: t.number,
+    required: t.bool,
 };
 
 TextListComponent.defaultProps = {
     maxLength: null,
     defaultValue: [],
+    required: false,
 };
 
 export default TextListComponent;

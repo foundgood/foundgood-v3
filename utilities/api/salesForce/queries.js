@@ -8,6 +8,9 @@ const queries = {
         allFoundations() {
             return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Foundation'`;
         },
+        allOrganisations() {
+            return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Organization'`;
+        },
     },
     initiative: {
         get(id) {
@@ -22,6 +25,11 @@ const queries = {
     initiativeCollaborator: {
         get(id) {
             return `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Account__c, Account__r.Name, Description__c, Start_Date__c, End_Date__c, Type__c, toLabel(Type__c) Translated_Type__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Collaborator__c WHERE Id = '${id}'`;
+        },
+    },
+    initiativeEmployeeFunded: {
+        get(id) {
+            return `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Gender__c, toLabel(Gender__c) Translated_Gender__c, Gender_Other__c, Role_Type__c, toLabel(Role_Type__c) Translated_Role_Type__c, Job_Title__c, Percent_Involvement__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Employee_Funded__c WHERE Id = '${id}'`;
         },
     },
     getObjectById: {

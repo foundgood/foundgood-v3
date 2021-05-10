@@ -1,9 +1,11 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
 import cc from 'classcat';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
+import t from 'prop-types';
 
 // Utilities
 import { useWizardNavigationStore } from 'utilities/store';
@@ -13,64 +15,50 @@ import { useWizardNavigationStore } from 'utilities/store';
 // Icons
 import { FiCircle, FiCheckCircle, FiMinusCircle } from 'react-icons/fi';
 
-const SubLevelItemComponent = ({
-    parentIndex,
-    index,
-    title,
-    inProgress,
-    completed,
-    url,
-}) => {
-    const router = useRouter();
-    const { onSetInProgess, onSetCompleted } = useWizardNavigationStore();
+const SubLevelItemComponent = ({ item }) => {
+    const { url, title } = item;
 
-    const onHandleRoute = () => {
-        // const urlPart = getSlug(title);
-        router.push(url);
+    // Hook: Router
+    const { asPath } = useRouter();
 
-        onSetCompleted(parentIndex, index, false);
-        onSetInProgess(parentIndex, index, true);
-    };
+    // Store: Wizard navigation
+    const { completedItems } = useWizardNavigationStore();
 
-    const getSlug = slug => {
-        // https://gist.github.com/codeguy/6684588
-        return slug
-            .toString()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .trim()
-            .replace(/\s+/g, '-')
-            .replace(/[^\w-]+/g, '')
-            .replace(/--+/g, '-');
-    };
+    // Checking current page or not
+    const inProgress = asPath === url || asPath.indexOf(url) > -1;
+
+    // Checking completed or not
+    const completed = completedItems.includes(url);
 
     return (
-        <li onClick={onHandleRoute} className="mt-24 md:cursor-pointer">
-            <span
-                className={cc([
-                    'flex t-caption',
-                    {
-                        't-caption-bold text-teal-300':
-                            !completed && inProgress,
-                    },
-                ])}>
-                <i className="mr-16">
-                    {/* ICONS:
-                    default - FiCircle
-                    inProgress - FiMinusCircle
-                    completed - FiCheckCircle */}
-                    {!inProgress && <FiCircle />}
-                    {!completed && inProgress && <FiMinusCircle />}
-                    {completed && inProgress && <FiCheckCircle />}
-                </i>
-                {title}
-            </span>
-        </li>
+        <Link href={url}>
+            <li className="mt-24 md:cursor-pointer">
+                <span
+                    className={cc([
+                        'flex t-caption',
+                        {
+                            't-caption-bold text-teal-300 transition-default': inProgress,
+                        },
+                    ])}>
+                    <i className="mr-16">
+                        {inProgress ? (
+                            <FiMinusCircle />
+                        ) : completed ? (
+                            <FiCheckCircle />
+                        ) : (
+                            <FiCircle />
+                        )}
+                    </i>
+                    {title}
+                </span>
+            </li>
+        </Link>
     );
 };
 
-SubLevelItemComponent.propTypes = {};
+SubLevelItemComponent.propTypes = {
+    item: t.object,
+};
 
 SubLevelItemComponent.defaultProps = {};
 

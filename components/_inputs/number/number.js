@@ -1,24 +1,22 @@
 // React
-import React, { useState } from 'react';
+import React from 'react';
 
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
 import { Controller } from 'react-hook-form';
 
-const TextComponent = ({
+const NumberComponent = ({
     name,
     label,
     subLabel,
     defaultValue,
-    maxLength,
+    maxValue,
+    minValue,
     controller,
     required,
     ...rest
 }) => {
-    // Local state for handling char count
-    const [value, setValue] = useState(defaultValue || '');
-
     return (
         <label className="flex flex-col">
             {label && <span className="input-label">{label}</span>}
@@ -29,7 +27,12 @@ const TextComponent = ({
                 control={controller}
                 defaultValue={defaultValue}
                 name={name}
-                rules={{ maxLength, required }}
+                rules={{
+                    required,
+                    pattern: /^(0|[1-9][0-9]*)$/,
+                    min: minValue,
+                    max: maxValue,
+                }}
                 render={({
                     field: { onChange, onBlur, value, ref },
                     fieldState: { error },
@@ -37,16 +40,14 @@ const TextComponent = ({
                     <>
                         <input
                             ref={ref}
-                            type="text"
+                            type="tel"
                             defaultValue={defaultValue}
-                            maxLength={maxLength ? maxLength : 'none'}
                             onChange={event => {
                                 // Local value state
-                                setValue(event.target.value);
                                 onChange(event);
                             }}
                             className={cc([
-                                'input-defaults',
+                                'input-defaults appearance-none',
                                 {
                                     'input-defaults-error': error,
                                     'mt-16': label,
@@ -57,28 +58,25 @@ const TextComponent = ({
                     </>
                 )}
             />
-            {maxLength > 0 && (
-                <div className="mt-4 -mb-16 text-right input-utility-text">
-                    {value.length} / {maxLength.toString()}
-                </div>
-            )}
         </label>
     );
 };
 
-TextComponent.propTypes = {
+NumberComponent.propTypes = {
     name: t.string,
     label: t.string,
     subLabel: t.string,
     defaultValue: t.string,
     error: t.object,
-    maxLength: t.number,
     required: t.bool,
+    minValue: t.number,
+    maxValue: t.number,
 };
 
-TextComponent.defaultProps = {
-    maxLength: null,
+NumberComponent.defaultProps = {
     required: false,
+    minValue: 0,
+    maxValue: null,
 };
 
-export default TextComponent;
+export default NumberComponent;

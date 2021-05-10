@@ -6,6 +6,7 @@ import DatePicker from './datePicker';
 import TextList from './textList';
 import SelectList from './selectList';
 import SelectionCards from './selectionCards';
+import Number from './number';
 import InputWrapper from './inputWrapper';
 
 export {
@@ -18,4 +19,5 @@ export {
     SelectList,
     SelectionCards,
     TextList,
+    Number,
 };

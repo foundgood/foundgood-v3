@@ -141,14 +141,14 @@ const detailingItems = () => [
         visible: true,
         items: [
             {
-                title: 'Causes of the problem',
-                url: '/wizard/initiative/causes-of-the-problem',
+                title: 'Problems to be solved',
+                url: '/wizard/initiative/problems-to-be-solved',
                 inProgress: false,
                 completed: false,
             },
             {
-                title: 'Our vision',
-                url: '/wizard/initiative/our-vision',
+                title: 'Causes of the problem',
+                url: '/wizard/initiative/causes-of-the-problem',
                 inProgress: false,
                 completed: false,
             },
@@ -159,8 +159,8 @@ const detailingItems = () => [
                 completed: false,
             },
             {
-                title: 'Problems to be solved',
-                url: '/wizard/initiative/problems-to-be-solved',
+                title: 'Our vision',
+                url: '/wizard/initiative/our-vision',
                 inProgress: false,
                 completed: false,
             },
