@@ -40,12 +40,12 @@
             @apply font-normal leading-normal font-heading text-16;
         }
         .t-sh7 {
-            @apply font-heading font-normal leading-normal text-14;
+            @apply font-normal leading-normal font-heading text-14;
         }
 
         /* Other */
         .t-preamble {
-            @apply leading-normal font-body text-24;
+            @apply font-medium leading-normal text-24;
         }
         .t-body {
             @apply font-normal leading-normal font-body text-20;
@@ -54,7 +54,7 @@
             @apply font-normal leading-normal font-body text-18;
         }
         .t-caption {
-            @apply leading-normal font-body text-16;
+            @apply font-medium leading-normal font-body text-16;
         }
         .t-caption-bold {
             @apply font-bold leading-normal font-body text-16;
