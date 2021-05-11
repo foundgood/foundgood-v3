@@ -11,6 +11,40 @@ const instanceUrl = () => useAuthStore.getState().instanceUrl ?? null;
 // Default limit
 const limit = 100;
 
+async function setExportResults(
+    results,
+    token = accessToken(),
+    url = instanceUrl()
+) {
+    try {
+        const response = await axios.post(
+            `${url}/services/apexrest/InitiativeReport/setExportResults`,
+            {
+                listExportResults: results,
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        // Convert non-ok HTTP responses into errors:
+        if (response.status !== 200) {
+            throw {
+                statusText: response,
+                response,
+            };
+        }
+
+        return response;
+    } catch (error) {
+        console.warn(error);
+        return error;
+    }
+}
+
 async function setUserLanguage({ language }) {
     try {
         const response = await axios.patch(
@@ -95,4 +129,9 @@ async function getInitiativeList({ offset = 0 }) {
     }
 }
 
-export { setUserLanguage, getUserInitiativeRights, getInitiativeList };
+export {
+    setExportResults,
+    setUserLanguage,
+    getUserInitiativeRights,
+    getInitiativeList,
+};

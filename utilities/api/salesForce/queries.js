@@ -62,7 +62,6 @@ const queries = {
             return `${this._query} WHERE Initiative__c = '${initiativeId}'`;
         },
     },
-
     initiativeActivity: {
         _query: `SELECT Id, CreatedById, Things_To_Do__c, Things_To_Do_Description__c, Problem_Resolutions__c, Measurement__c, Access_Level__c, toLabel(Access_Level__c) Translated_Access_Level__c, Initiative__c, Activity_Position__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess, (SELECT Id, Name, Target__c, Current_Status__c, Progress__c, Current_Status_Last_Modified_Date__c, KPI__c, toLabel(KPI__c) Translated_KPI__c, KPI_Category__c, toLabel(KPI_Category__c) Translated_KPI_Category__c, SDG__c, toLabel(SDG__c) Translated_SDG__c, SDG_Target__c, toLabel(SDG_Target__c) Translated_SDG_Target__c, SDG_Indicator__c, toLabel(SDG_Indicator__c) Translated_SDG_Indicator__c FROM Initiative_Activity_Success_Metrics__r) FROM Initiative_Activity__c`,
         get(id) {
@@ -70,6 +69,15 @@ const queries = {
         },
         getAll(initiativeId) {
             return `${this._query} WHERE Initiative__c = '${initiativeId}'`;
+        },
+    },
+
+    initiativeReportComplete: {
+        _queries: {
+            initiativeReport: `Id, CreatedById, LastModifiedDate, Name, Funder_Report__c, Report_Type__c, Report_Period_Start_Date__c, Report_Period_End_Date__c, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, Executive_Summary__c`,
+        },
+        get(id) {
+            return `SELECT ${this._queries.initiativeReport} FROM Initiative_Report__c WHERE Id = '${id}'`;
         },
     },
 
