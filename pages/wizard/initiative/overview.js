@@ -138,6 +138,15 @@ const OverviewComponent = () => {
                     required
                     controller={control}
                 />
+                <Select
+                    name="Category__c"
+                    defaultValue={initiative?.Category__c}
+                    label={labelTodo('Grant giving area')}
+                    placeholder={labelTodo('Please select')}
+                    options={valueSet('initiative.Category__c')}
+                    controller={control}
+                    required
+                />
                 <LongText
                     name="Summary__c"
                     defaultValue={initiative?.Summary__c}
@@ -161,14 +170,6 @@ const OverviewComponent = () => {
                     selectPlaceholder={labelTodo('Please select')}
                     selectLabel={labelTodo('Country')}
                     textLabel={labelTodo('Region')}
-                    controller={control}
-                />
-                <Select
-                    name="Category__c"
-                    defaultValue={initiative?.Category__c}
-                    label={labelTodo('Grant giving area')}
-                    placeholder={labelTodo('Please select')}
-                    options={valueSet('initiative.Category__c')}
                     controller={control}
                 />
             </InputWrapper>

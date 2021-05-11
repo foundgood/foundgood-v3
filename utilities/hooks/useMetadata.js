@@ -35,16 +35,6 @@ const useMetadata = () => {
             null
         );
 
-        // Check for controlled values
-        if (valuesParent && valuesParent.controlledBy) {
-            return formattedAsSelect
-                ? valuesParent.controlledValues.map(item => ({
-                      label: item.label,
-                      value: item.fullName,
-                  }))
-                : valuesParent.controlledValues;
-        }
-
         // Default values
         if (valuesParent) {
             return formattedAsSelect
@@ -58,6 +48,42 @@ const useMetadata = () => {
         return [];
     }
 
+    function controlledValueSet(
+        path,
+        key,
+        complete = false,
+        formattedAsSelect = true
+    ) {
+        const valuesObject = _get(
+            metadata.valueSets,
+            `${locale}.${path}.controlledValues`,
+            null
+        );
+
+        // Compile all values if they are there
+        if (!valuesObject[key] || complete) {
+            return formattedAsSelect
+                ? Object.values(valuesObject)
+                      .flat()
+                      .map(item => ({
+                          label: item.label,
+                          value: item.fullName,
+                      }))
+                : Object.values(valuesObject).flat();
+        }
+
+        if (valuesObject[key]) {
+            return formattedAsSelect
+                ? valuesObject[key].map(item => ({
+                      label: item.label,
+                      value: item.fullName,
+                  }))
+                : valuesObject[key];
+        }
+
+        return [];
+    }
+
     function labelTodo(label) {
         return label;
     }
@@ -66,7 +92,15 @@ const useMetadata = () => {
         console.log(metadata);
     }
 
-    return { label, labelTodo, type, valueSet, helpText, log };
+    return {
+        label,
+        labelTodo,
+        type,
+        valueSet,
+        helpText,
+        log,
+        controlledValueSet,
+    };
 };
 
 export default useMetadata;

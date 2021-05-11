@@ -56,7 +56,7 @@ const ModalComponent = ({
                 className="absolute inset-0 flex items-end justify-center sm:items-center">
                 <div className="flex flex-col w-full max-w-[664px] p-18 lg:p-[30px] bg-white rounded-t-16 sm:rounded-16 sm:mx-16">
                     {/* Modal content */}
-                    <div className="flex flex-col overflow-y-auto scrolling-touch max-h-[90vh] sm:max-h-[80vh] pb-32 p-2">
+                    <div className="flex flex-col overflow-y-auto scrolling-touch max-h-[90vh] sm:max-h-[80vh] pb-32 p-2 overflow-x-hidden">
                         {title && (
                             <h3 className="mb-32 text-teal-100 t-h3">
                                 {title}

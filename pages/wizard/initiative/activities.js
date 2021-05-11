@@ -23,13 +23,14 @@ import {
 } from 'components/_inputs';
 import FunderCard from 'components/_wizard/founderCard';
 
-const FundersComponent = ({ pageProps }) => {
+const ActivitiesComponent = ({ pageProps }) => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet } = useMetadata();
+    const { labelTodo, valueSet, controlledValueSet, log } = useMetadata();
+    log();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -39,12 +40,7 @@ const FundersComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Initiative data
-    const { initiative, updateFunder } = useInitiativeDataStore();
-
-    // Get data for form
-    const { data: accountFoundations } = sfQuery(
-        queries.account.allFoundations()
-    );
+    const { initiative, updateActivity } = useInitiativeDataStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -60,38 +56,28 @@ const FundersComponent = ({ pageProps }) => {
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
+        // TODO: Mangler at blive hooket op med "Link to one of your goals"
         try {
-            const {
-                Contribution,
-                GrantDate,
-                Account__c,
-                Type__c,
-                Approval_date__c,
-                Application_Id__c,
-            } = formData;
+            const { Things_To_Do__c, Activity_Tag__c, Location } = formData;
 
             // Object name
-            const object = 'Initiative_Funder__c';
+            const object = 'Initiative_Activity__c';
 
             // Data for sf
             const data = {
-                Account__c,
-                Type__c,
-                Amount__c: Contribution[0]?.textValue,
-                CurrencyIsoCode: Contribution[0]?.selectValue,
-                Approval_date__c,
-                Grant_Start_Date__c: GrantDate.from,
-                Grant_End_Date__c: GrantDate.to,
-                Application_Id__c,
+                Things_To_Do__c,
+                Activity_Tag__c,
+                Initiative_Location__c: Location[0]?.selectValue,
+                Additional_Location_Information__c: Location[0]?.textValue,
             };
 
             // Update / Save
-            const funderId = updateId
+            const activityId = updateId
                 ? await update(object, data, updateId)
                 : await save(object, { ...data, Initiative__c: initiative.Id });
 
             // Update store
-            await updateFunder(funderId);
+            await updateActivity(activityId);
 
             // Close modal
             setModalIsOpen(false);
@@ -112,33 +98,26 @@ const FundersComponent = ({ pageProps }) => {
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
         const {
-            Type__c,
-            Account__c,
-            CurrencyIsoCode,
-            Amount__c,
-            Approval_date__c,
-            Application_Id__c,
-            Grant_Start_Date__c,
-            Grant_End_Date__c,
+            Things_To_Do__c,
+            Activity_Tag__c,
+            Initiative_Location__c,
+            Additional_Location_Information__c,
         } = initiative?._funders[updateId] ?? {};
 
-        setValue('Type__c', Type__c);
-        setValue('Account__c', Account__c);
-        setValue('Contribution', [
-            { selectValue: CurrencyIsoCode, textValue: Amount__c },
+        setValue('Things_To_Do__c', Things_To_Do__c);
+        setValue('Activity_Tag__c', Activity_Tag__c);
+        setValue('Location', [
+            {
+                selectValue: Initiative_Location__c,
+                textValue: Additional_Location_Information__c,
+            },
         ]);
-        setValue('Approval_date__c', Approval_date__c);
-        setValue('GrantDate', {
-            from: Grant_Start_Date__c,
-            to: Grant_End_Date__c,
-        });
-        setValue('Application_Id__c', Application_Id__c);
     }, [updateId, modalIsOpen]);
 
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Who is funding the initiative?')}
+                title={labelTodo('Outline your activities')}
                 preamble={labelTodo('Preamble')}
             />
             <InputWrapper>
@@ -169,66 +148,46 @@ const FundersComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add funder')}
+                    {labelTodo('Add activity')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new funder')}
+                title={labelTodo('Add new activity')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
-                    <Select
-                        name="Account__c"
-                        label={labelTodo('Name of funder')}
-                        placeholder={labelTodo('Please select')}
-                        options={
-                            accountFoundations?.records?.map(item => ({
-                                label: item.Name,
-                                value: item.Id,
-                            })) ?? []
-                        }
-                        required
+                    <Text
+                        name="Things_To_Do__c"
+                        label={labelTodo('Activity name')}
+                        placeholder={labelTodo('Enter name')}
+                        maxLength={200}
                         controller={control}
-                    />
-                    <Select
-                        name="Type__c"
-                        label={labelTodo('Type of funder')}
-                        placeholder={labelTodo('Please select')}
-                        options={valueSet('initiativeFunder.Type__c')}
-                        controller={control}
-                        required
                     />
                     <SelectList
-                        name="Contribution"
+                        name="Activity_Tag__c"
+                        label={labelTodo('Activity tag')}
+                        subLabel={labelTodo('Select up to 3')}
+                        selectPlaceholder={labelTodo('Please select')}
+                        options={controlledValueSet(
+                            'initiativeActivity.Activity_Tag__c'
+                        )}
+                        listMaxLength={4}
+                        controller={control}
+                    />
+
+                    <SelectList
+                        name="Location"
+                        label={labelTodo('Where is it located?')}
+                        listMaxLength={1}
+                        options={valueSet(
+                            'initiativeActivity.Initiative_Location__c'
+                        )}
                         showText
                         selectPlaceholder={labelTodo('Please select')}
-                        label={labelTodo('Contribution')}
-                        listMaxLength={1}
-                        options={[
-                            { label: 'DKK', value: 'DKK' },
-                            { label: 'EUR', value: 'EUR' },
-                        ]}
-                        selectLabel={labelTodo('Currency')}
-                        textLabel={labelTodo('Amount granted')}
-                        controller={control}
-                    />
-                    <DatePicker
-                        name="Approval_date__c"
-                        label={labelTodo('Approval date')}
-                        controller={control}
-                    />
-                    <DateRange
-                        name="GrantDate"
-                        label={labelTodo('Grant period')}
-                        controller={control}
-                    />
-                    <Text
-                        name="Application_Id__c"
-                        label={labelTodo('Application ID number')}
-                        placeholder={labelTodo('Enter ID')}
-                        maxLength={15}
+                        selectLabel={labelTodo('Country')}
+                        textLabel={labelTodo('Region')}
                         controller={control}
                     />
                 </InputWrapper>
@@ -237,10 +196,10 @@ const FundersComponent = ({ pageProps }) => {
     );
 };
 
-FundersComponent.propTypes = {};
+ActivitiesComponent.propTypes = {};
 
-FundersComponent.defaultProps = {};
+ActivitiesComponent.defaultProps = {};
 
-FundersComponent.layout = 'wizard';
+ActivitiesComponent.layout = 'wizard';
 
-export default FundersComponent;
+export default ActivitiesComponent;
