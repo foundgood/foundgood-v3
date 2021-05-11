@@ -179,8 +179,10 @@ const IndicatorsComponent = ({ pageProps }) => {
                             );
                         return (
                             <ReportCard
-                                key={funder.Id}
-                                headline={_get(funder, 'Account__r.Name') || ''}
+                                key={activity.Id}
+                                headline={
+                                    _get(activity, 'Account__r.Name') || ''
+                                }
                                 items={successMetricItems.map(item => ({
                                     id: item.Id,
                                     headline: labelTodo(item.Report_Type__c),
@@ -188,7 +190,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 }))}
                                 actionCreate={() => {
                                     setModalIsOpen(true);
-                                    setFunder(activity);
+                                    setActivity(activity);
                                 }}
                                 actionUpdate={item => {
                                     setModalIsOpen(true);
@@ -206,7 +208,7 @@ const IndicatorsComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo(`New report for ${funder?.Account__r.Name}`)}
+                title={labelTodo(`New report for ${activity?.Account__r.Name}`)}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
