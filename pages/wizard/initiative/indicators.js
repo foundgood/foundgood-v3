@@ -21,7 +21,7 @@ import {
     DateRange,
     DatePicker,
 } from 'components/_inputs';
-import ReportCard from 'components/_wizard/reportCard';
+import KpiCard from 'components/_wizard/kpiCard';
 
 const IndicatorsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -30,7 +30,6 @@ const IndicatorsComponent = ({ pageProps }) => {
 
     // Hook: Metadata
     const { labelTodo, valueSet, log } = useMetadata();
-    log();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -41,7 +40,11 @@ const IndicatorsComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Initiative data
-    const { initiative, updateReport, CONSTANTS } = useInitiativeDataStore();
+    const {
+        initiative,
+        updateActivitySuccessMetric,
+        CONSTANTS,
+    } = useInitiativeDataStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -59,8 +62,10 @@ const IndicatorsComponent = ({ pageProps }) => {
     async function submit(formData) {
         // TODO: Sørg for at grant giving area kan vælges under INITIATIVE_PREDEFINED hvis ikke det allerede er valgt
         // TODO: Luke sørger for nogle empty-states og et flow
-        // TODO: Opdatér store med object _activitySuccessMetrics object, med update funktion og queries med tilsvarende
-        // TODO: Generel færdiggørelse med data på kort mv. Husk der er to actions på kortet.
+        // TODO: Hvilken tekst skal der vises i headline på kortet, hvis Type__c = people
+        // TODO: REQUIRED Combination of GENDER TAG AGE (this to that)
+        // TODO: Coupled to Initiative_Activity__c
+
         try {
             const {
                 KPI__c,
@@ -95,7 +100,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                 : await save(object, { ...data, Initiative__c: initiative.Id });
 
             // Update store
-            await updateReport(ReportId);
+            await updateActivitySuccessMetric(ReportId);
 
             // Close modal
             setModalIsOpen(false);
@@ -149,7 +154,7 @@ const IndicatorsComponent = ({ pageProps }) => {
     }, [indicatorTypeSelect]);
 
     // Funders
-    const activities = Object.keys(initiative._activities);
+    const activities = Object.keys(initiative?._activities);
 
     return (
         <>
@@ -163,6 +168,10 @@ const IndicatorsComponent = ({ pageProps }) => {
                 {activities.length > 0 ? (
                     activities.map(activityKey => {
                         const activity = initiative?._activities[activityKey];
+                        console.log({
+                            activity,
+                            successMetrics: initiative?._activitySuccessMetrics,
+                        });
                         // Get success metric items based on activity id (activityKey) and activitySuccessMetric.XXX
                         const successMetricItems = Object.keys(
                             initiative?._activitySuccessMetrics
@@ -171,22 +180,22 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 successMetricKey =>
                                     initiative?._activitySuccessMetrics[
                                         successMetricKey
-                                    ].xxx === activityKey
+                                    ].Initiative_Activity__c === activityKey
                             )
                             .map(
                                 successMetricKey =>
                                     initiative?._reports[successMetricKey]
                             );
                         return (
-                            <ReportCard
+                            <KpiCard
                                 key={activity.Id}
                                 headline={
                                     _get(activity, 'Account__r.Name') || ''
                                 }
                                 items={successMetricItems.map(item => ({
                                     id: item.Id,
-                                    headline: labelTodo(item.Report_Type__c),
-                                    dueDate: labelTodo(item.Due_Date__c),
+                                    headline: labelTodo(item.Type__c),
+                                    label: labelTodo(item.Type__c),
                                 }))}
                                 actionCreate={() => {
                                     setModalIsOpen(true);
@@ -215,9 +224,11 @@ const IndicatorsComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Type__c"
-                        label={labelTodo('Type of indicator')}
+                        label={labelTodo('Type of KPI')}
                         placeholder={labelTodo('Please select')}
-                        options={valueSet('initiativeIndicator.Type__c')}
+                        options={valueSet(
+                            'initiativeActivitySuccessMetric.Type__c'
+                        )}
                         controller={control}
                         required
                     />
@@ -225,9 +236,11 @@ const IndicatorsComponent = ({ pageProps }) => {
                     {/* Custom indicator */}
                     {indicatorType === CONSTANTS.TYPES.INDICATOR_CUSTOM && (
                         <Text
-                            name="Initiative_Activity_Success_Metric__c"
+                            name="Success_Metric__c"
                             label={labelTodo('Metric name')}
-                            placeholder={labelTodo('Enter name')}
+                            placeholder={labelTodo(
+                                'Enter name - e.g. schools built'
+                            )}
                             maxLength={80}
                             controller={control}
                         />
@@ -235,35 +248,50 @@ const IndicatorsComponent = ({ pageProps }) => {
 
                     {/* Predefined indicator */}
                     {indicatorType === CONSTANTS.TYPES.INDICATOR_PREDEFINED && (
-                        <p></p>
+                        <>
+                            <Select
+                                name="Type__c"
+                                label={labelTodo('Type of KPI')}
+                                placeholder={labelTodo('Please select')}
+                                options={controlledValueSet(
+                                    'initiativeActivitySuccessMetric.KPI__c',
+                                    initiative?.Category__c
+                                )}
+                                listMaxLength={4}
+                                controller={control}
+                            />
+                            <SelectList
+                                name="Gender"
+                                label={labelTodo('Gender')}
+                                selectPlaceholder={labelTodo('Please select')}
+                                textPlaceholder={labelTodo(
+                                    'If "other" feel free to specify'
+                                )}
+                                options={valueSet(
+                                    'initiativeActivitySuccessMetric.Gender__c'
+                                )}
+                                showText
+                                listMaxLength={1}
+                                controller={control}
+                            />
+                            <Number
+                                name="Lowest_Age__c"
+                                label={labelTodo('Lowest age')}
+                                placeholder={labelTodo('Enter age')}
+                                minValue={0}
+                                maxValue={150}
+                                controller={control}
+                            />
+                            <Number
+                                name="Highest_Age__c"
+                                label={labelTodo('Highest age')}
+                                placeholder={labelTodo('Enter age')}
+                                minValue={0}
+                                maxValue={150}
+                                controller={control}
+                            />
+                        </>
                     )}
-
-                    <Select
-                        name="Report_Type__c"
-                        label={labelTodo('Type of report')}
-                        placeholder={labelTodo('Please select')}
-                        options={valueSet('initiativeReport.Report_Type__c')}
-                        controller={control}
-                        required
-                    />
-                    <DatePicker
-                        name="Due_Date__c"
-                        label={labelTodo('Report deadline')}
-                        controller={control}
-                        required
-                    />
-                    <DateRange
-                        name="ReportDates"
-                        label={labelTodo('Report start / end date')}
-                        controller={control}
-                    />
-                    <Select
-                        name="Status__c"
-                        label={labelTodo('Report status')}
-                        placeholder={labelTodo('Please select')}
-                        options={valueSet('initiativeReport.Status__c')}
-                        controller={control}
-                    />
                 </InputWrapper>
             </Modal>
         </>

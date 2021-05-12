@@ -57,6 +57,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // TODO: Mangler at blive hooket op med "Link to one of your goals"
+        // TODO: Only show "intervention" And add when saving
         try {
             const { Things_To_Do__c, Activity_Tag__c, Location } = formData;
 
@@ -190,6 +191,10 @@ const ActivitiesComponent = ({ pageProps }) => {
                         textLabel={labelTodo('Region')}
                         controller={control}
                     />
+                    {/* TODO: Initiative_Activity_Goal__c SELECT
+                        Create new intitiative activity goals based on goals
+
+                     */}
                 </InputWrapper>
             </Modal>
         </>

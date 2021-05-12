@@ -40,7 +40,7 @@ const useAuth = () => {
 
     // Helper: Extracts login url
     function _getLoginUrl() {
-        const authUrl = process.env.NEXT_PUBLIC_LOGIN_AUTH_URL;
+        const authUrl = process.env.NEXT_PUBLIC_AUTH_URL;
         const clientId = process.env.NEXT_PUBLIC_LOGIN_CLIENT_ID;
         const redirectUrl = encodeURIComponent(
             `${process.env.NEXT_PUBLIC_LOGIN_REDIRECT_URL_PREFIX}/login_callback`

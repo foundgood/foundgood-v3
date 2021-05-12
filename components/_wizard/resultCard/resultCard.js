@@ -7,19 +7,29 @@ import t from 'prop-types';
 // Components
 import Card from 'components/_wizard/card';
 
-const ListCardComponent = ({ headline, footnote, tags }) => {
-    return <Card headline={headline} footnote={footnote} tags={tags} />;
+const ResultCardComponent = ({ headline, footnote, tags = [], action }) => {
+    console.log({ headline, footnote, tags });
+    return (
+        <Card
+            headline={headline}
+            footnote={footnote}
+            tags={tags}
+            action={action}
+        />
+    );
 };
 
-ListCardComponent.propTypes = {
+ResultCardComponent.propTypes = {
     // Card title
     headline: t.string,
     // Text after body text
     footnote: t.string,
     // Tags shown in bottom
     tags: t.arrayOf(t.string),
+    // Button action
+    action: t.func,
 };
 
-ListCardComponent.defaultProps = {};
+ResultCardComponent.defaultProps = {};
 
-export default ListCardComponent;
+export default ResultCardComponent;

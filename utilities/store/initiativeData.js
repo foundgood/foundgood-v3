@@ -24,6 +24,7 @@ const defaultInitiative = {
     _reports: {},
     _goals: {},
     _activities: {},
+    _activitySuccessMetrics: {},
 };
 
 const constants = {
@@ -36,6 +37,9 @@ const constants = {
         GOAL_PREDEFINED: 'Foundation',
         INDICATOR_CUSTOM: 'Custom',
         INDICATOR_PREDEFINED: 'People',
+        ACTIVITY_INTERVENTION: 'Intervention',
+        ACTIVITY_DISSEMINATION: 'Dissemination',
+        ACTIVITY_JOURNAL: 'Journal publication',
     },
 };
 
@@ -168,6 +172,28 @@ const useInitiativeDataStore = create(
             }
         },
 
+        async updateActivitySuccessMetric(id) {
+            const data = await sfQuery(
+                queries.initiativeActivitySuccessMetric.get(id)
+            );
+            if (data) {
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _activitySuccessMetrics: {
+                            ...state.initiative._activitySuccessMetrics,
+                            [id]: {
+                                ...state?.initiative?._activitySuccessMetrics[
+                                    id
+                                ],
+                                ...data,
+                            },
+                        },
+                    },
+                }));
+            }
+        },
+
         // Get initiative and all sub data based on initiative ID
         async populateInitiative(id) {
             // Get initiative
@@ -190,6 +216,9 @@ const useInitiativeDataStore = create(
             const activitiesData = await sfQuery(
                 queries.initiativeActivity.getAll(id)
             );
+            const activitySuccessMetricsData = await sfQuery(
+                queries.initiativeActivitySuccessMetric.getAll(id)
+            );
 
             // Update state
             set(() => ({
@@ -201,6 +230,7 @@ const useInitiativeDataStore = create(
                     _reports: reportsData,
                     _goals: goalsData,
                     _activities: activitiesData,
+                    _activitySuccessMetrics: activitySuccessMetricsData,
                 },
             }));
         },

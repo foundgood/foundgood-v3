@@ -10,7 +10,7 @@ import { useMetadata } from 'utilities/hooks';
 // Components
 import Button from 'components/button';
 
-const KpiCardComponent = ({ headline, items }) => {
+const KpiCardComponent = ({ headline, items, actionCreate, actionUpdate }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
@@ -19,14 +19,14 @@ const KpiCardComponent = ({ headline, items }) => {
             <div className="flex justify-between">
                 {headline && (
                     <div className="flex items-center">
-                        <h4 className="t-sh4">{labelTodo(headline)}</h4>
+                        <h4 className="t-sh4">{headline}</h4>
                     </div>
                 )}
-                <Button theme="teal" variant="quaternary">
+                <Button theme="teal" variant="quaternary" action={actionCreate}>
                     {labelTodo('Add indicator')}
                 </Button>
             </div>
-            {items && (
+            {items?.length > 0 && (
                 <div className="flex flex-col">
                     {items.map((item, index) => (
                         <div
@@ -34,13 +34,16 @@ const KpiCardComponent = ({ headline, items }) => {
                             className="flex justify-between p-16 mt-16 bg-white rounded-8">
                             <div>
                                 <div className="text-teal-60 t-sh6">
-                                    {labelTodo(item.label)}
+                                    {item.label}
                                 </div>
                                 <div className="text-teal-100 t-h5">
-                                    {labelTodo(item.headline)}
+                                    {item.headline}
                                 </div>
                             </div>
-                            <Button theme="teal" variant="secondary">
+                            <Button
+                                theme="teal"
+                                variant="secondary"
+                                action={actionUpdate}>
                                 {labelTodo('Update')}
                             </Button>
                         </div>
