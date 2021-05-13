@@ -440,10 +440,18 @@ const ReportComponent = ({ pageProps }) => {
                     items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
                 />
                 <ChartCard
-                    label="Children (age 0-5)"
+                    headline="Indicators"
                     items={[
-                        { title: 'Schools built', value: '256' },
-                        { title: 'Adults (24+)', value: '384' },
+                        {
+                            title: 'Schools built',
+                            value: '256',
+                            label: 'Reached so far',
+                        },
+                        {
+                            title: 'Adults (24+)',
+                            value: '384',
+                            label: 'Reached so far',
+                        },
                     ]}
                 />
                 <TextCard
@@ -460,10 +468,18 @@ const ReportComponent = ({ pageProps }) => {
                     items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
                 />
                 <ChartCard
-                    label="Reached so far"
+                    headline="Indicators"
                     items={[
-                        { title: 'Schools built', value: '12' },
-                        { title: 'Wells built', value: '24' },
+                        {
+                            title: 'Schools built',
+                            value: '12',
+                            label: 'Reached so far',
+                        },
+                        {
+                            title: 'Wells buil',
+                            value: '24',
+                            label: 'Reached so far',
+                        },
                     ]}
                 />
                 <TextCard

@@ -9,7 +9,7 @@ import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
 
-const BackgroundComponent = ({ pageProps }) => {
+const DevelopmentsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
@@ -19,7 +19,7 @@ const BackgroundComponent = ({ pageProps }) => {
 
     return (
         <div className="flex flex-col">
-            <h1 className="pr-56 t-h1">Background details</h1>
+            <h1 className="pr-56 t-h1">Developments details</h1>
         </div>
     );
 };
@@ -30,14 +30,14 @@ export async function getStaticProps(context) {
     };
 }
 
-BackgroundComponent.propTypes = {
+DevelopmentsComponent.propTypes = {
     pageProps: t.object,
 };
 
-BackgroundComponent.defaultProps = {
+DevelopmentsComponent.defaultProps = {
     pageProps: {},
 };
 
-BackgroundComponent.layout = 'initiative';
+DevelopmentsComponent.layout = 'initiative';
 
-export default BackgroundComponent;
+export default DevelopmentsComponent;

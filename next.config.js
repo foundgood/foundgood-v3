@@ -13,5 +13,8 @@ module.exports = {
 
         return config;
     },
+    images: {
+        domains: ['foundgood-initiative-update-content-media.s3.amazonaws.com'],
+    },
     target: 'serverless',
 };

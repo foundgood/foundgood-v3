@@ -1,11 +1,12 @@
 // React
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import t from 'prop-types';
 
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
@@ -19,8 +20,15 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
+    // Fetch initiative data
+    const { initiative } = useInitiativeDataStore();
+
     // Hook: Metadata
     const { labelTodo, label, valueSet, log } = useMetadata();
+
+    useEffect(() => {
+        console.log(initiative);
+    }, [initiative]);
 
     return (
         <>
@@ -105,6 +113,10 @@ const ActivitiesComponent = ({ pageProps }) => {
 
             {/* Indicators */}
             <div className="bg-white rounded-8">
+                <div className="flex justify-between">
+                    <h2 className="t-h3">{labelTodo('Activities')}</h2>
+                    <Button variant="secondary">{labelTodo('Update')}</Button>
+                </div>
                 <ChartCard
                     items={[
                         { title: 'Schools built' },
@@ -115,8 +127,8 @@ const ActivitiesComponent = ({ pageProps }) => {
                 {/* <ChartCard
                     label="Reached so far"
                     items={[
-                        { title: 'Schools built', value: '12' },
-                        { title: 'Wells built', value: '24' },
+                        { title: 'Schools built', value: '12', label: 'Reached so far' },
+                        { title: 'Wells built', value: '24', label: 'Reached so far'},
                     ]}
                 /> */}
             </div>

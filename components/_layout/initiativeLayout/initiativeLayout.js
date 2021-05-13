@@ -1,12 +1,15 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
 
 // Utilities
-import { useInitiativeLayoutStore } from 'utilities/store';
+import {
+    useInitiativeLayoutStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 import { useMetadata } from 'utilities/hooks';
 
 // Components
@@ -16,9 +19,17 @@ import MobileNavigation from 'components/_initiative/mobileNavigation';
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
     // Store: InitiativeLayout
     const { navigation } = useInitiativeLayoutStore();
+    const { populateInitiative } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { labelTodo } = useMetadata();
+
+    useEffect(() => {
+        // Fetch initiative data
+        // TODO - Get ID from URL or Store
+        const id = 'a0p1x00000Eh8COAAZ';
+        populateInitiative(id);
+    }, []);
 
     return (
         <>

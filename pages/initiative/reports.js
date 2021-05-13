@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import t from 'prop-types';
@@ -9,7 +9,7 @@ import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
-import ReportCard from 'components/_wizard/reportCard';
+import ReportCard from 'components/_report/reportCard';
 
 const ReportsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -27,7 +27,16 @@ const ReportsComponent = ({ pageProps }) => {
                     <h2 className="t-h3">
                         {labelTodo('Reports for Novo Nordisk Foundation')}
                     </h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
+                    <Button
+                        variant="secondary"
+                        action={() => {
+                            console.log('Update reports');
+                            // TODO!
+                            // setModalIsOpen(true);
+                            // setFunder(funder);
+                        }}>
+                        {labelTodo('Update')}
+                    </Button>
                 </div>
 
                 <div className="flex flex-wrap items-start">
@@ -36,48 +45,75 @@ const ReportsComponent = ({ pageProps }) => {
                         headline="Status report"
                         date="April 28th 2021"
                         status="not-started"
+                        actionUpdate={() => {
+                            console.log('Update report: ');
+                            // setModalIsOpen(true);
+                            // setUpdateId(item.id);
+                            // setFunder(funder);
+                        }}
                     />
                     <ReportCard
                         useBackground={false}
                         headline="Status report"
                         date="April 28th 2021"
                         status="in-progress"
+                        actionUpdate={() => {
+                            console.log('Update report: ');
+                        }}
                     />
                     <ReportCard
                         useBackground={false}
                         headline="Status report"
                         date="April 28th 2021"
                         status="review"
+                        actionUpdate={() => {
+                            console.log('Update report: ');
+                        }}
                     />
                     <ReportCard
                         useBackground={false}
                         headline="Status report"
                         date="April 28th 2021"
                         status="complete"
+                        actionUpdate={() => {
+                            console.log('Update report: ');
+                        }}
                     />
                     <ReportCard
                         useBackground={false}
                         headline="Status report"
                         date="April 28th 2021"
                         status="not-started"
+                        actionUpdate={() => {
+                            console.log('Update report: ');
+                        }}
                     />
                     <ReportCard
                         useBackground={false}
                         headline="Status report"
                         date="April 28th 2021"
                         status="in-progress"
+                        actionUpdate={() => {
+                            console.log('Update report: ');
+                        }}
                     />
                     <ReportCard
                         useBackground={false}
                         headline="Status report"
                         date="April 28th 2021"
                         status="review"
+                        actionUpdate={() => {
+                            console.log('Update report: ');
+                        }}
                     />
                     <ReportCard
                         useBackground={false}
                         headline="Status report"
                         date="April 28th 2021"
                         status="complete"
+                        actionUpdate={() => {
+                            console.log('Update report: ');
+                        }}
                     />
                 </div>
             </div>
@@ -86,7 +122,16 @@ const ReportsComponent = ({ pageProps }) => {
                     <h2 className="t-h3">
                         {labelTodo('Reports for Tuborg Foundation')}
                     </h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
+                    <Button
+                        variant="secondary"
+                        action={() => {
+                            console.log('Update reports');
+                            // TODO!
+                            // setModalIsOpen(true);
+                            // setFunder(funder);
+                        }}>
+                        {labelTodo('Update')}
+                    </Button>
                 </div>
 
                 <ReportCard
@@ -94,6 +139,9 @@ const ReportsComponent = ({ pageProps }) => {
                     headline="Status report"
                     date="April 28th 2021"
                     status="review"
+                    actionUpdate={() => {
+                        console.log('Update report: ');
+                    }}
                 />
             </div>
         </>

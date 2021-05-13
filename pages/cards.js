@@ -21,7 +21,7 @@ import ActivityCard from 'components/_wizard/activityCard';
 import AlertMessage from 'components/_wizard/alertMessage';
 import KpiCard from 'components/_wizard/kpiCard';
 import ProgressCard from 'components/_wizard/progressCard';
-import ReportsCard from 'components/_report/reportsCard';
+import ReportCard from 'components/_wizard/reportCard';
 
 const CardsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -145,7 +145,7 @@ const CardsComponent = ({ pageProps }) => {
 
             <br></br>
             <p>Report Cards</p>
-            <ReportsCard
+            <ReportCard
                 headline="Reports for Novo Nordisk Foundation"
                 items={[
                     {
@@ -169,6 +169,17 @@ const CardsComponent = ({ pageProps }) => {
                         status: 'review', // TODO - update to salesforece format
                     },
                 ]}
+                actionCreate={() => {
+                    console.log('action create');
+                    // setModalIsOpen(true);
+                    // setFunder(funder);
+                }}
+                actionUpdate={item => {
+                    console.log('action Update ', item);
+                    // setModalIsOpen(true);
+                    // setUpdateId(item.id);
+                    // setFunder(funder);
+                }}
             />
 
             <br></br>
