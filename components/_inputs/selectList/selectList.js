@@ -111,7 +111,13 @@ const SelectListComponent = ({
                                     {/* Select / Input */}
                                     <div className="flex w-full space-x-12">
                                         {/* Select */}
-                                        <div className="flex flex-col w-full">
+                                        <div
+                                            className={cc([
+                                                'flex flex-col w-full',
+                                                {
+                                                    'max-w-[50%]': showText,
+                                                },
+                                            ])}>
                                             {index === 0 && selectLabel && (
                                                 <span className="mb-4 input-utility-text">
                                                     {selectLabel}
@@ -124,6 +130,7 @@ const SelectListComponent = ({
                                                         'appearance-none pr-20',
                                                         {
                                                             'input-defaults-error': error,
+                                                            'max-w-full': showText,
                                                         },
                                                     ])}
                                                     defaultValue={

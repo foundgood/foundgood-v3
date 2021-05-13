@@ -47,7 +47,7 @@ const SelectComponent = ({
                             ref={ref}
                             className={cc([
                                 'input-defaults',
-                                'appearance-none flex-grow pr-20',
+                                'appearance-none flex-grow pr-20 max-w-full',
                                 {
                                     'input-defaults-error': error,
                                 },

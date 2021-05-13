@@ -8,16 +8,14 @@ import { useAuthStore } from 'utilities/store';
 const accessToken = () => useAuthStore.getState().accessToken ?? null;
 const instanceUrl = () => useAuthStore.getState().instanceUrl ?? null;
 
-async function query(query) {
+async function query(query, token = accessToken(), url = instanceUrl()) {
     try {
         const response = await axios.get(
-            `${instanceUrl()}/services/data/v${
-                process.env.NEXT_PUBLIC_SF_VERSION
-            }/query/?q=${query}`,
+            `${url}/services/data/v${process.env.NEXT_PUBLIC_SF_VERSION}/query/?q=${query}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken()}`,
+                    Authorization: `Bearer ${token}`,
                 },
             }
         );

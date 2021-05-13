@@ -21,18 +21,27 @@ const defaultInitiative = {
     _collaborators: {},
     _funders: {},
     _employeesFunded: {},
+    _reports: {},
+    _goals: {},
+    _activities: {},
+};
+
+const constants = {
+    TYPES: {
+        COLLABORATORS: ['Additional collaborator'],
+        APPLICANTS_ALL: ['Co applicant', 'Main applicant'],
+        APPLICANTS_CREATE: ['Co applicant'],
+        MAIN_COLLABORATOR: 'Main applicant',
+        GOAL_CUSTOM: 'Custom',
+        GOAL_PREDEFINED: 'Foundation',
+        INDICATOR_CUSTOM: 'Custom',
+        INDICATOR_PREDEFINED: 'People',
+    },
 };
 
 const useInitiativeDataStore = create(
     persist((set, get) => ({
-        CONSTANTS: {
-            TYPES: {
-                COLLABORATORS: ['Additional collaborator'],
-                APPLICANTS_ALL: ['Co applicant', 'Main applicant'],
-                APPLICANTS_CREATE: ['Co applicant'],
-                MAIN_COLLABORATOR: 'Main applicant',
-            },
-        },
+        CONSTANTS: { ...constants },
 
         initiative: {
             ...defaultInitiative,
@@ -106,24 +115,57 @@ const useInitiativeDataStore = create(
         },
 
         async updateReport(id) {
-            console.log('UPDATE REPORT TBD');
-            // const data = await sfQuery(
-            //     queries.initiativeReport.get(id)
-            // );
-            // if (data) {
-            //     set(state => ({
-            //         initiative: {
-            //             ...state.initiative,
-            //             _employeesFunded: {
-            //                 ...state.initiative._employeesFunded,
-            //                 [id]: {
-            //                     ...state?.initiative?._employeesFunded[id],
-            //                     ...data,
-            //                 },
-            //             },
-            //         },
-            //     }));
-            // }
+            const data = await sfQuery(queries.initiativeReport.get(id));
+            if (data) {
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _reports: {
+                            ...state.initiative._reports,
+                            [id]: {
+                                ...state?.initiative?._reports[id],
+                                ...data,
+                            },
+                        },
+                    },
+                }));
+            }
+        },
+
+        async updateGoal(id) {
+            const data = await sfQuery(queries.initiativeGoal.get(id));
+            if (data) {
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _goals: {
+                            ...state.initiative._goals,
+                            [id]: {
+                                ...state?.initiative?._goals[id],
+                                ...data,
+                            },
+                        },
+                    },
+                }));
+            }
+        },
+
+        async updateActivity(id) {
+            const data = await sfQuery(queries.initiativeActivity.get(id));
+            if (data) {
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _activities: {
+                            ...state.initiative._activities,
+                            [id]: {
+                                ...state?.initiative?._activities[id],
+                                ...data,
+                            },
+                        },
+                    },
+                }));
+            }
         },
 
         // Get initiative and all sub data based on initiative ID
@@ -141,6 +183,13 @@ const useInitiativeDataStore = create(
             const employeesFundedData = await sfQuery(
                 queries.initiativeEmployeeFunded.getAll(id)
             );
+            const reportsData = await sfQuery(
+                queries.initiativeReport.getAll(id)
+            );
+            const goalsData = await sfQuery(queries.initiativeGoal.getAll(id));
+            const activitiesData = await sfQuery(
+                queries.initiativeActivity.getAll(id)
+            );
 
             // Update state
             set(() => ({
@@ -149,12 +198,18 @@ const useInitiativeDataStore = create(
                     _collaborators: collaboratorsData,
                     _funders: fundersData,
                     _employeesFunded: employeesFundedData,
+                    _reports: reportsData,
+                    _goals: goalsData,
+                    _activities: activitiesData,
                 },
             }));
         },
 
         reset() {
             set(() => ({
+                CONSTANTS: {
+                    ...constants,
+                },
                 initiative: {
                     ...defaultInitiative,
                 },
