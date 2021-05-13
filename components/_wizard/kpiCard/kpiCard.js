@@ -43,7 +43,7 @@ const KpiCardComponent = ({ headline, items, actionCreate, actionUpdate }) => {
                             <Button
                                 theme="teal"
                                 variant="secondary"
-                                action={actionUpdate}>
+                                action={() => actionUpdate(item)}>
                                 {labelTodo('Update')}
                             </Button>
                         </div>

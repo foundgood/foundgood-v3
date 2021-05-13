@@ -8,7 +8,6 @@ import t from 'prop-types';
 import Card from 'components/_wizard/card';
 
 const ResultCardComponent = ({ headline, footnote, tags = [], action }) => {
-    console.log({ headline, footnote, tags });
     return (
         <Card
             headline={headline}

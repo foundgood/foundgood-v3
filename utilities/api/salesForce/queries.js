@@ -63,7 +63,7 @@ const queries = {
         },
     },
     initiativeActivity: {
-        _query: `SELECT Id, Publication_DOI__c, Publication_Author__c, Publication_Publisher__c, Publication_Title__c, Publication_Year__c, Publication_Type__c, Dissemination_Method__c, Audience_Tag__c, CreatedById, Things_To_Do__c, Activity_Type__c, Things_To_Do_Description__c, Problem_Resolutions__c, Measurement__c, Access_Level__c, toLabel(Access_Level__c) Translated_Access_Level__c, Initiative__c, Activity_Position__c, KPI_Category__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess, (SELECT Id, Name, Target__c, Current_Status__c, Progress__c, Current_Status_Last_Modified_Date__c, KPI__c, toLabel(KPI__c) Translated_KPI__c, KPI_Category__c, toLabel(KPI_Category__c) Translated_KPI_Category__c, SDG__c, toLabel(SDG__c) Translated_SDG__c, SDG_Target__c, toLabel(SDG_Target__c) Translated_SDG_Target__c, SDG_Indicator__c, toLabel(SDG_Indicator__c) Translated_SDG_Indicator__c FROM Initiative_Activity_Success_Metrics__r) FROM Initiative_Activity__c`,
+        _query: `SELECT Id, Activity_Tag__c, Additional_Location_Information__c, Initiative_Location__c, Publication_DOI__c, Publication_Author__c, Publication_Publisher__c, Publication_Title__c, Publication_Year__c, Publication_Type__c, Dissemination_Method__c, Audience_Tag__c, CreatedById, Things_To_Do__c, Activity_Type__c, Things_To_Do_Description__c, Problem_Resolutions__c, Measurement__c, Access_Level__c, toLabel(Access_Level__c) Translated_Access_Level__c, Initiative__c, Activity_Position__c, KPI_Category__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess, (SELECT Id, Name, Target__c, Current_Status__c, Progress__c, Current_Status_Last_Modified_Date__c, KPI__c, toLabel(KPI__c) Translated_KPI__c, KPI_Category__c, toLabel(KPI_Category__c) Translated_KPI_Category__c, SDG__c, toLabel(SDG__c) Translated_SDG__c, SDG_Target__c, toLabel(SDG_Target__c) Translated_SDG_Target__c, SDG_Indicator__c, toLabel(SDG_Indicator__c) Translated_SDG_Indicator__c FROM Initiative_Activity_Success_Metrics__r) FROM Initiative_Activity__c`,
         get(id) {
             return `${this._query} WHERE Id = '${id}'`;
         },
@@ -71,8 +71,22 @@ const queries = {
             return `${this._query} WHERE Initiative__c = '${initiativeId}'`;
         },
     },
+    initiativeActivityGoal: {
+        _query: `SELECT Id, Name, Initiative_Goal__r.Goal__c, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative_Activity__c, Initiative_Goal__c, Position__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Activity_Goal__c`,
+        get(id) {
+            return `${this._query} WHERE Id = '${id}' ORDER BY Initiative_Activity__r.Name`;
+        },
+        getMultiple(ids) {
+            return `${this._query} WHERE Id IN ('${ids.join(
+                "','"
+            )}') ORDER BY Initiative_Activity__r.Name`;
+        },
+        getAll(initiativeId) {
+            return `${this._query} WHERE Initiative_Activity__r.Initiative__c = '${initiativeId}' ORDER BY Initiative_Activity__r.Name, Current_Status_Last_Modified_Date__c`;
+        },
+    },
     initiativeActivitySuccessMetric: {
-        _query: `SELECT Id, CreatedById, LastModifiedDate, Name, Target__c, Current_Status__c, Progress__c, Current_Status_Last_Modified_Date__c, KPI__c, toLabel(KPI__c) Translated_KPI__c, KPI_Category__c, toLabel(KPI_Category__c) Translated_KPI_Category__c, SDG__c, toLabel(SDG__c) Translated_SDG__c, SDG_Target__c, toLabel(SDG_Target__c) Translated_SDG_Target__c, SDG_Indicator__c, toLabel(SDG_Indicator__c) Translated_SDG_Indicator__c, Initiative_Activity__r.Name, Initiative_Activity__r.Problem_Resolutions__c, Initiative_Activity__r.Initiative__r.Problem_Resolutions__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Activity_Success_Metric__c`,
+        _query: `SELECT Id, Gender__c, Gender_Other__c, Highest_Age__c, Lowest_Age__c, CreatedById, Initiative_Activity__c, LastModifiedDate, Name, Type__c, Target__c, Current_Status__c, Progress__c, Current_Status_Last_Modified_Date__c, KPI__c, toLabel(KPI__c) Translated_KPI__c, KPI_Category__c, toLabel(KPI_Category__c) Translated_KPI_Category__c, SDG__c, toLabel(SDG__c) Translated_SDG__c, SDG_Target__c, toLabel(SDG_Target__c) Translated_SDG_Target__c, SDG_Indicator__c, toLabel(SDG_Indicator__c) Translated_SDG_Indicator__c, Initiative_Activity__r.Name, Initiative_Activity__r.Problem_Resolutions__c, Initiative_Activity__r.Initiative__r.Problem_Resolutions__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Activity_Success_Metric__c`,
         get(id) {
             return `${this._query} WHERE Id = '${id}' ORDER BY Initiative_Activity__r.Name, Current_Status_Last_Modified_Date__c`;
         },
@@ -136,7 +150,7 @@ const queries = {
             return `SELECT Id, CreatedById, LastModifiedDate, Name, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, Executive_Summary__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Report__c WHERE Initiative__c = '${id}' ORDER BY Due_Date__c LIMIT ${limit} OFFSET ${offset}`;
         },
         initiativeReportDetail(id, offset = 0) {
-            return `SELECT Id, Initiative_Report__c, CreatedById, LastModifiedDate, Type__c, toLabel(Type__c) Translated_Type__c, Description__c, Problem_Resolutions__c, URL__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess, (SELECT Id, CreatedById, LastModifiedDate, Initiative_Activity__c, Type__c, toLabel(Type__c) Translated_Type__c FROM Initiative_Report_Detail_Entries__r) FROM Initiative_Report_Detail__c WHERE Initiative_Report__c= '{{initiativeReportId}}' LIMIT ${limit} OFFSET ${offset}`;
+            return `SELECT Id, Initiative_Report__c, Initiative_Activity__c, CreatedById, LastModifiedDate, Type__c, toLabel(Type__c) Translated_Type__c, Description__c, Problem_Resolutions__c, URL__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess, (SELECT Id, CreatedById, LastModifiedDate, Initiative_Activity__c, Type__c, toLabel(Type__c) Translated_Type__c FROM Initiative_Report_Detail_Entries__r) FROM Initiative_Report_Detail__c WHERE Initiative_Report__c= '{{initiativeReportId}}' LIMIT ${limit} OFFSET ${offset}`;
         },
     },
     getGrandChildObjectListByGrandParentId: {

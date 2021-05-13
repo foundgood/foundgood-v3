@@ -10,7 +10,13 @@ import { useMetadata } from 'utilities/hooks';
 // Components
 import Button from 'components/button';
 
-const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
+const ActivityCardComponent = ({
+    headline,
+    tags,
+    locations,
+    goals,
+    action,
+}) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
@@ -20,21 +26,10 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                 <div className="w-full flex-start">
                     {headline && (
                         <div className="flex items-center">
-                            <h4 className="t-sh4">{labelTodo(headline)}</h4>
+                            <h4 className="t-sh4">{headline}</h4>
                         </div>
                     )}
-                    {/* {tags && (
-                        <div className="flex flex-col items-start mt-8">
-                            {tags.map((tag, index) => (
-                                <p
-                                    key={`t-${index}`}
-                                    className="px-8 pt-3 pb-1 mb-8 mr-8 t-sh7 bg-teal-20 rounded-4">
-                                    {labelTodo(tag)}
-                                </p>
-                            ))}
-                        </div>
-                    )} */}
-                    {tags && (
+                    {tags && tags.length > 0 && (
                         <>
                             <div className="mt-8 t-caption-bold">
                                 {labelTodo('Success indicators')}
@@ -44,7 +39,7 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                                     <p
                                         key={`t-${index}`}
                                         className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
-                                        {labelTodo(tag)}
+                                        {tag}
                                     </p>
                                 ))}
                             </div>
@@ -61,13 +56,13 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                                     <li
                                         key={`l-${index}`}
                                         className="mt-4 mr-8 t-caption text-teal-60">
-                                        {labelTodo(location)}
+                                        {location}
                                     </li>
                                 ))}
                             </ul>
                         </>
                     )}
-                    {goals && (
+                    {goals && goals.length > 0 && (
                         <>
                             <div className="mt-16 t-caption-bold">
                                 {labelTodo('Related goals')}
@@ -77,7 +72,7 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                                     <p
                                         key={`t-${index}`}
                                         className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
-                                        {labelTodo(goal)}
+                                        {goal}
                                     </p>
                                 ))}
                             </div>
@@ -86,7 +81,7 @@ const ActivityCardComponent = ({ headline, tags, locations, goals }) => {
                 </div>
 
                 <div className="self-center">
-                    <Button theme="teal" variant="secondary">
+                    <Button theme="teal" variant="secondary" action={action}>
                         {labelTodo('Update')}
                     </Button>
                 </div>
@@ -100,6 +95,7 @@ ActivityCardComponent.propTypes = {
     tags: t.arrayOf(t.string),
     locations: t.arrayOf(t.string),
     goals: t.arrayOf(t.string),
+    action: t.func,
 };
 
 ActivityCardComponent.defaultProps = {};

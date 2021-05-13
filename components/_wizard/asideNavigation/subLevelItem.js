@@ -35,8 +35,6 @@ const SubLevelItemComponent = ({ item }) => {
             // Submit throws if there is any validation errors
             await handleSubmit();
 
-            console.log(url);
-
             // Go to next in flow
             push(url);
         } catch (error) {
