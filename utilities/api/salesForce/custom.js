@@ -32,10 +32,7 @@ async function setExportResults(
 
         // Convert non-ok HTTP responses into errors:
         if (response.status !== 200) {
-            throw {
-                statusText: response,
-                response,
-            };
+            throw 'error';
         }
 
         return response;

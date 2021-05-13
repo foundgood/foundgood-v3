@@ -6,7 +6,8 @@
     "metadata": "run-func ./utilities/metadata/extract extractToJsonFile",
     "dev": "yarn metadata; next dev",
     "build": "yarn metadata; next build",
-    "start": "next start"
+    "start": "next start",
+    "test-api": "curl -v https://foundgood.remotely.sh/api/foundgood/initiativeReportSnapshotTest"
   },
   "dependencies": {
     "@headlessui/react": "^1.1.1",
@@ -14,6 +15,7 @@
     "@svgr/webpack": "^5.5.0",
     "@tailwindcss/line-clamp": "^0.2.0",
     "adm-zip": "^0.5.5",
+    "atob": "^2.1.2",
     "autoprefixer": "^10.2.5",
     "aws-sdk": "^2.904.0",
     "axios": "^0.21.1",
