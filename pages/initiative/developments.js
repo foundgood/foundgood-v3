@@ -12,7 +12,7 @@ import Button from 'components/button';
 import ChartCard from 'components/_report/chartCard';
 import ReportSharingCard from 'components/_report/reportSharingCard';
 import DividerLine from 'components/_report/dividerLine';
-import SectionWrapper from 'components/_report/sectionWrapper';
+import SectionWrapper from 'components/sectionWrapper';
 
 const DevelopmentsComponent = ({ pageProps }) => {
     // Hook: Verify logged in

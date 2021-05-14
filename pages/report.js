@@ -9,7 +9,7 @@ import t from 'prop-types';
 import { useMetadata, useAuth } from 'utilities/hooks';
 
 // Components
-import SectionWrapper from 'components/_report/sectionWrapper';
+import SectionWrapper from 'components/sectionWrapper';
 import ReportDetailCard from 'components/_report/reportDetailCard';
 import ReportSharingCard from 'components/_report/reportSharingCard';
 import TextCard from 'components/_report/textCard';

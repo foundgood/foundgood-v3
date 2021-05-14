@@ -8,9 +8,6 @@ import Image from 'next/image';
 // Utilities
 import { isJson } from 'utilities';
 
-// Components
-import SectionWrapper from 'components/_report/sectionWrapper';
-
 const ReportDetailCardComponent = ({ headline, image, description, items }) => {
     return (
         <div className="flex justify-between">

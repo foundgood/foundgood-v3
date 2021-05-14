@@ -10,7 +10,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
-import SectionWrapper from 'components/_report/sectionWrapper';
+import SectionWrapper from 'components/sectionWrapper';
 import ReportDetailCard from 'components/_report/reportDetailCard';
 import DividerLine from 'components/_report/dividerLine';
 import ChartCard from 'components/_report/chartCard';

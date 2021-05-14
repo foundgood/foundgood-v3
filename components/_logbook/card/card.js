@@ -7,7 +7,7 @@ import t from 'prop-types';
 import Image from 'next/image';
 
 // Components
-import SectionWrapper from 'components/_report/sectionWrapper';
+import SectionWrapper from 'components/sectionWrapper';
 
 // Icons
 import { FiFileText } from 'react-icons/fi';

@@ -12,7 +12,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import Button from 'components/button';
 import NumberCard from 'components/_report/numberCard';
-import SectionWrapper from 'components/_report/sectionWrapper';
+import SectionWrapper from 'components/sectionWrapper';
 
 const ProjectComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -33,6 +33,7 @@ const ProjectComponent = ({ pageProps }) => {
 
     // Data manipulation
     const [developmentGoals, setDevelopmentGoals] = useState();
+    const [initiativeData, setInitiativeData] = useState();
 
     useEffect(() => {
         console.log(initiative);
@@ -44,11 +45,12 @@ const ProjectComponent = ({ pageProps }) => {
             });
             setDevelopmentGoals(developmentGoals);
         }
+        setInitiativeData(initiative);
     }, [initiative]);
 
     return (
         <>
-            {initiative && (
+            {initiativeData && (
                 <>
                     <SectionWrapper>
                         <h1 className="t-h1">{labelTodo('Overview')}</h1>
@@ -66,12 +68,12 @@ const ProjectComponent = ({ pageProps }) => {
                             {largeBps.includes(bp) && (
                                 <div className="overflow-hidden rounded-8">
                                     <div className="relative w-full h-full">
-                                        {initiative.Hero_Image_URL__c && (
+                                        {initiativeData.Hero_Image_URL__c && (
                                             <div className="relative mt-16 bg-blue-10 imageContainer">
                                                 <Image
                                                     className="image"
                                                     src={
-                                                        initiative.Hero_Image_URL__c
+                                                        initiativeData.Hero_Image_URL__c
                                                     }
                                                     layout="fill"
                                                 />
@@ -83,7 +85,7 @@ const ProjectComponent = ({ pageProps }) => {
 
                             <div className="flex flex-col mt-24">
                                 <p className="t-preamble">
-                                    {initiative.Summary__c}
+                                    {initiativeData.Summary__c}
                                 </p>
                                 <div className="mt-48 lg:mt-32 lg:flex lg:items-start">
                                     <div className="p-16 mb-20 border-4 lg:mr-12 lg:w-1/2 border-gray-10 rounded-8">
@@ -91,16 +93,18 @@ const ProjectComponent = ({ pageProps }) => {
                                             {labelTodo('Grant giving area')}
                                         </h4>
                                         <h3 className="t-h5">
-                                            {initiative.Translated_Category__c}
+                                            {
+                                                initiativeData.Translated_Category__c
+                                            }
                                         </h3>
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
                                             {labelTodo('Initiative period')}
                                         </h4>
                                         <h3 className="t-h5">
-                                            {initiative.Grant_Start_Date__c}
+                                            {initiativeData.Grant_Start_Date__c}
                                             {' - '}
-                                            {initiative.Grant_End_Date__c}
+                                            {initiativeData.Grant_End_Date__c}
                                         </h3>
                                     </div>
 
@@ -109,7 +113,7 @@ const ProjectComponent = ({ pageProps }) => {
                                             {labelTodo('Initiative location')}
                                         </h4>
                                         <h3 className="t-h5">
-                                            {initiative.Translated_Where_Is_Problem__c?.split(
+                                            {initiativeData.Translated_Where_Is_Problem__c?.split(
                                                 ';'
                                             ).join(', ')}
                                         </h3>
@@ -169,8 +173,8 @@ const ProjectComponent = ({ pageProps }) => {
                             </div>
 
                             {/* Table Rows */}
-                            {initiative._funders?.length &&
-                                initiative._funders.map((item, index) => (
+                            {initiativeData._funders?.length &&
+                                initiativeData._funders.map((item, index) => (
                                     <div
                                         key={`f-${index}`}
                                         className="flex pt-16 pb-16 border-t-2 border-amber-10">
@@ -208,8 +212,8 @@ const ProjectComponent = ({ pageProps }) => {
                                 {labelTodo('Update')}
                             </Button>
                         </div>
-                        {initiative._collaborators?.length &&
-                            initiative._collaborators.map((item, index) => (
+                        {initiativeData._collaborators?.length &&
+                            initiativeData._collaborators.map((item, index) => (
                                 <div key={`c-${index}`} className="mt-32">
                                     <h4 className="t-h5">
                                         {item.Translated_Type__c}
@@ -239,7 +243,7 @@ const ProjectComponent = ({ pageProps }) => {
                             ))}
                     </SectionWrapper>
                     {/* Employees funded */}
-                    {initiative._employeesFunded && (
+                    {initiativeData._employeesFunded && (
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
@@ -306,8 +310,8 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </div>
                                 {/* Table Rows */}
-                                {initiative._employeesFunded?.length &&
-                                    initiative._employeesFunded?.map(
+                                {initiativeData._employeesFunded?.length &&
+                                    initiativeData._employeesFunded?.map(
                                         (item, index) => (
                                             <div
                                                 key={`e-${index}`}
@@ -336,7 +340,7 @@ const ProjectComponent = ({ pageProps }) => {
                         </SectionWrapper>
                     )}
                     {/* Problem Causes */}
-                    {initiative.Problem_Causes__c && (
+                    {initiativeData.Problem_Causes__c && (
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
@@ -347,7 +351,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 </Button>
                             </div>
 
-                            {JSON.parse(initiative.Problem_Causes__c).map(
+                            {JSON.parse(initiativeData.Problem_Causes__c).map(
                                 item => (
                                     <p key={item.id} className="mt-16 t-body">
                                         {item.text}
@@ -357,7 +361,7 @@ const ProjectComponent = ({ pageProps }) => {
                         </SectionWrapper>
                     )}
                     {/* Our vision */}
-                    {initiative.Ultimate_Outcome__c && (
+                    {initiativeData.Ultimate_Outcome__c && (
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
@@ -369,12 +373,12 @@ const ProjectComponent = ({ pageProps }) => {
                             </div>
 
                             <p className="mt-16 t-body">
-                                {initiative.Ultimate_Outcome__c}
+                                {initiativeData.Ultimate_Outcome__c}
                             </p>
                         </SectionWrapper>
                     )}
                     {/* Organisational focus */}
-                    {initiative.Why_Problem_Solving__c && (
+                    {initiativeData.Why_Problem_Solving__c && (
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
@@ -386,12 +390,12 @@ const ProjectComponent = ({ pageProps }) => {
                             </div>
 
                             <p className="mt-16 t-body">
-                                {initiative.Why_Problem_Solving__c}
+                                {initiativeData.Why_Problem_Solving__c}
                             </p>
                         </SectionWrapper>
                     )}
                     {/* The problem to be solved */}
-                    {initiative.Situation_Today__c && (
+                    {initiativeData.Situation_Today__c && (
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
@@ -403,12 +407,12 @@ const ProjectComponent = ({ pageProps }) => {
                             </div>
 
                             <p className="mt-16 t-body">
-                                {initiative.Situation_Today__c}
+                                {initiativeData.Situation_Today__c}
                             </p>
                         </SectionWrapper>
                     )}
                     {/* Reason for approach */}
-                    {initiative.Approach_Thinking__c && (
+                    {initiativeData.Approach_Thinking__c && (
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
@@ -420,7 +424,7 @@ const ProjectComponent = ({ pageProps }) => {
                             </div>
 
                             <p className="mt-16 t-body">
-                                {initiative.Approach_Thinking__c}
+                                {initiativeData.Approach_Thinking__c}
                             </p>
                         </SectionWrapper>
                     )}

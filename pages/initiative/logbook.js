@@ -13,7 +13,7 @@ import TextCard from 'components/_logbook/textCard';
 import ImageCard from 'components/_logbook/imageCard';
 import VideoCard from 'components/_logbook/videoCard';
 import FileCard from 'components/_logbook/fileCard';
-import SectionWrapper from 'components/_report/sectionWrapper';
+import SectionWrapper from 'components/sectionWrapper';
 
 const LogbookComponent = ({ pageProps }) => {
     // Hook: Verify logged in

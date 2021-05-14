@@ -46,22 +46,19 @@ const ReportCardComponent = ({
             <div
                 className={cc([
                     'px-8 pt-3 pb-1 rounded-4',
-                    { 'bg-coral-20': status == 'not-started' },
-                    { 'bg-amber-20': status == 'in-progress' },
-                    { 'bg-teal-20': status == 'review' },
-                    { 'bg-blue-20': status == 'complete' },
+                    { 'bg-coral-20': status == 'Not started' },
+                    { 'bg-amber-20': status == 'In progress' },
+                    { 'bg-teal-20': status == 'Review' },
+                    { 'bg-blue-20': status == 'Published' },
                 ])}>
-                {status == 'not-started' && 'No started'}
-                {status == 'in-progress' && 'In progress'}
-                {status == 'review' && 'Review'}
-                {status == 'complete' && 'Complete'}
+                {status}
             </div>
             <div className="mt-8 text-teal-100 t-h5">{labelTodo(headline)}</div>
             <div className="text-teal-60 t-sh6">
-                {status == 'not-started' && 'Starts'}
-                {status == 'in-progress' && 'Due'}
-                {status == 'review' && 'Due'}
-                {status == 'complete' && 'Sent'}
+                {status == 'Not started' && 'Due '}
+                {status == 'In progress' && 'Due '}
+                {status == 'Review' && 'Due '}
+                {status == 'Published' && 'Sent (invalid date) '}{' '}
                 {labelTodo(date)}
             </div>
             <div className="self-end mt-16">

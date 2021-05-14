@@ -6,9 +6,15 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 // Components
-import SectionWrapper from 'components/_report/sectionWrapper';
+import SectionWrapper from 'components/sectionWrapper';
 
-const CardComponent = ({ headline, body, label, hasBackground, className }) => {
+const TextCardComponent = ({
+    headline,
+    body,
+    label,
+    hasBackground,
+    className,
+}) => {
     return (
         <SectionWrapper
             className={cc([
@@ -26,13 +32,13 @@ const CardComponent = ({ headline, body, label, hasBackground, className }) => {
     );
 };
 
-CardComponent.propTypes = {
+TextCardComponent.propTypes = {
     // Card title
     headline: t.string,
     // Card description
     body: t.string,
 };
 
-CardComponent.defaultProps = {};
+TextCardComponent.defaultProps = {};
 
-export default CardComponent;
+export default TextCardComponent;
