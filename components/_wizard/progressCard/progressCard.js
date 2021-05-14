@@ -2,51 +2,47 @@
 import React from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
 import t from 'prop-types';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
 
 // Components
-import { Text, InputWrapper } from 'components/_inputs';
+import { Number, InputWrapper } from 'components/_inputs';
 
-const ProgressCardComponent = ({ headline, items }) => {
+const ProgressCardComponent = ({ headline, items, controller }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
-
-    // Hook: useForm setup
-    const { register, handleSubmit, control } = useForm();
-
-    // Hook: useForm state
-    const { errors } = useFormState({ control });
-
     return (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100">
-            {headline && <h4 className="t-sh4">{labelTodo(headline)}</h4>}
+            {headline && <h4 className="t-sh4">{headline}</h4>}
             {items && (
                 <div className="flex flex-col">
                     {items.map((item, index) => (
                         <div
                             key={`i-${index}`}
                             className="flex justify-between p-16 mt-16 bg-white rounded-8">
-                            <div>
+                            <div className="mr-16">
                                 <div className="text-teal-60 t-sh6">
-                                    {labelTodo(item.label)}
+                                    {item.label}
                                 </div>
                                 <div className="text-teal-100 t-h5">
-                                    {labelTodo(item.headline)}
+                                    {item.headline}
+                                </div>
+                                <div className="text-teal-60 t-caption">
+                                    {labelTodo('Currently')} {item.currently}
                                 </div>
                             </div>
 
                             <div>
                                 <InputWrapper>
-                                    <Text
-                                        name={`i-${index}`}
-                                        subLabel="Reached so far"
+                                    <Number
+                                        name={item.id}
+                                        subLabel={labelTodo(
+                                            'Additional reached'
+                                        )}
                                         placeholder="0"
-                                        controller={control}
-                                        defaultValue={item.value.toString()} // Numbers not working?
+                                        controller={controller}
                                     />
                                 </InputWrapper>
                             </div>

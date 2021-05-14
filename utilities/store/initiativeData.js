@@ -194,6 +194,27 @@ const useInitiativeDataStore = create(
             }
         },
 
+        async updateActivitySuccessMetrics(ids) {
+            let data = await sfQuery(
+                queries.initiativeActivitySuccessMetric.getMultiple(ids)
+            );
+            if (data) {
+                data = Array.isArray(data) ? data : [data];
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _activitySuccessMetrics: {
+                            ...state.initiative._activitySuccessMetrics,
+                            ...data.reduce(
+                                (acc, item) => ({ ...acc, [item.Id]: item }),
+                                {}
+                            ),
+                        },
+                    },
+                }));
+            }
+        },
+
         // Get initiative and all sub data based on initiative ID
         async populateInitiative(id) {
             // Get initiative

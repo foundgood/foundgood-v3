@@ -30,7 +30,6 @@ const ActivitiesComponent = ({ pageProps }) => {
 
     // Hook: Metadata
     const { labelTodo, valueSet, controlledValueSet, log } = useMetadata();
-    log();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();

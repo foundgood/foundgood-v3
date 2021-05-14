@@ -31,7 +31,6 @@ const IndicatorsComponent = ({ pageProps }) => {
 
     // Hook: Metadata
     const { labelTodo, valueSet, log, controlledValueSet } = useMetadata();
-    log();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset, unregister } = useForm();

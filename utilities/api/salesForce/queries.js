@@ -90,6 +90,11 @@ const queries = {
         get(id) {
             return `${this._query} WHERE Id = '${id}' ORDER BY Initiative_Activity__r.Name, Current_Status_Last_Modified_Date__c`;
         },
+        getMultiple(ids) {
+            return `${this._query} WHERE Id IN ('${ids.join(
+                "','"
+            )}') ORDER BY Initiative_Activity__r.Name`;
+        },
         getAll(initiativeId) {
             return `${this._query} WHERE Initiative_Activity__r.Initiative__c = '${initiativeId}' ORDER BY Initiative_Activity__r.Name, Current_Status_Last_Modified_Date__c`;
         },
