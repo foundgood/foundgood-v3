@@ -8,51 +8,46 @@ import Image from 'next/image';
 // Utilities
 import { useMetadata } from 'utilities/hooks';
 
-// Components
-import SectionWrapper from 'components/_report/sectionWrapper';
-
 const ReportSharingCardComponent = ({ headline, label, tags, items }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
     return (
-        <SectionWrapper>
-            <div className="flex items-start justify-between">
-                <div className="flex-auto mr-24">
-                    <div className="t-h6">{headline}</div>
-                    <p className="mt-16">{label}</p>
-                    {items && (
-                        <div className="px-16 pt-8 pb-16 mt-8 bg-blue-10 rounded-8">
-                            {items.map((item, index) => (
-                                <div
-                                    key={`i-${index}`}
-                                    className="flex justify-between mt-8">
-                                    <div className="mr-16 text-blue-60 t-sh7">
-                                        {item.label}
-                                    </div>
-                                    <div className="t-sh7">{item.text}</div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                {tags && (
-                    <div className="flex flex-col items-start w-1/3 p-16 border-4 border-blue-10 rounded-8">
-                        <div className="text-blue-60 t-sh7">
-                            {labelTodo('Primary audiences')}
-                        </div>
-                        {tags.map((tag, index) => (
+        <div className="flex items-start justify-between">
+            <div className="flex-auto mr-24">
+                <div className="t-h6">{headline}</div>
+                <p className="mt-16">{label}</p>
+                {items && (
+                    <div className="px-16 pt-8 pb-16 mt-8 bg-blue-10 rounded-8">
+                        {items.map((item, index) => (
                             <div
-                                key={`t-${index}`}
-                                className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-blue-20 rounded-4">
-                                {tag}
+                                key={`i-${index}`}
+                                className="flex justify-between mt-8">
+                                <div className="mr-16 text-blue-60 t-sh7">
+                                    {item.label}
+                                </div>
+                                <div className="t-sh7">{item.text}</div>
                             </div>
                         ))}
                     </div>
                 )}
             </div>
-        </SectionWrapper>
+
+            {tags && (
+                <div className="flex flex-col items-start w-1/3 p-16 border-4 border-blue-10 rounded-8">
+                    <div className="text-blue-60 t-sh7">
+                        {labelTodo('Primary audiences')}
+                    </div>
+                    {tags.map((tag, index) => (
+                        <div
+                            key={`t-${index}`}
+                            className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-blue-20 rounded-4">
+                            {tag}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 };
 
