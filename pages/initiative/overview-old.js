@@ -248,7 +248,7 @@ const ProjectComponent = ({ pageProps }) => {
                         </Button>
                     </div>
 
-                    <div className="inline-grid items-start w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
+                    <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
                         <NumberCard
                             useBackground={true}
                             number="6"
