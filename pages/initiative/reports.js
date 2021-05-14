@@ -10,6 +10,7 @@ import { useMetadata, useAuth } from 'utilities/hooks';
 // Components
 import Button from 'components/button';
 import ReportCard from 'components/_report/reportCard';
+import SectionWrapper from 'components/_report/sectionWrapper';
 
 const ReportsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -21,8 +22,11 @@ const ReportsComponent = ({ pageProps }) => {
 
     return (
         <>
-            <h1 className="t-h1">Reports</h1>
-            <div className="p-16 bg-white rounded-8 lg:p-32">
+            <SectionWrapper>
+                <h1 className="t-h1">Reports</h1>
+            </SectionWrapper>
+
+            <SectionWrapper className="bg-white rounded-8">
                 <div className="flex justify-between">
                     <h2 className="t-h3">
                         {labelTodo('Reports for Novo Nordisk Foundation')}
@@ -116,8 +120,8 @@ const ReportsComponent = ({ pageProps }) => {
                         }}
                     />
                 </div>
-            </div>
-            <div className="p-16 mt-24 bg-white rounded-8 lg:p-32">
+            </SectionWrapper>
+            <SectionWrapper className="mt-32 bg-white rounded-8">
                 <div className="flex justify-between">
                     <h2 className="t-h3">
                         {labelTodo('Reports for Tuborg Foundation')}
@@ -143,7 +147,7 @@ const ReportsComponent = ({ pageProps }) => {
                         console.log('Update report: ');
                     }}
                 />
-            </div>
+            </SectionWrapper>
         </>
     );
 };
