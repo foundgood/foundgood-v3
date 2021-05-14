@@ -28,29 +28,31 @@ const ReportComponent = ({ pageProps }) => {
     return (
         <>
             {/* Header */}
-            <div className="p-32 md:pt-64 md:px-64 xl:px-128">
-                <div className="w-64 h-64 overflow-hidden rounded-4">
-                    <Image
-                        src="/images/fg-card-square-1.png"
-                        width="64"
-                        height="64"></Image>
-                </div>
-                <div className="mt-16">{labelTodo('SOS Børnebyerne')}</div>
+            <SectionWrapper>
+                <SectionWrapper>
+                    <div className="w-64 h-64 overflow-hidden rounded-4">
+                        <Image
+                            src="/images/fg-card-square-1.png"
+                            width="64"
+                            height="64"></Image>
+                    </div>
+                    <div className="mt-16">{labelTodo('SOS Børnebyerne')}</div>
 
-                <div className="mt-48 t-h1">
-                    {labelTodo(
-                        'Coastal Hazard Wheel – Global coastal disaster prevention & recovery project'
-                    )}
-                </div>
-                <div className="mt-16 t-sh2">
-                    {labelTodo('Annual report 2021')}
-                </div>
-                <div className="flex mt-16 t-caption text-blue-60">
-                    {labelTodo('NN123456789AAS')}
-                    <div className="mx-4">•</div>
-                    {labelTodo('In progress')}
-                </div>
-            </div>
+                    <div className="mt-48 t-h1">
+                        {labelTodo(
+                            'Coastal Hazard Wheel – Global coastal disaster prevention & recovery project'
+                        )}
+                    </div>
+                    <div className="mt-16 t-sh2">
+                        {labelTodo('Annual report 2021')}
+                    </div>
+                    <div className="flex mt-16 t-caption text-blue-60">
+                        {labelTodo('NN123456789AAS')}
+                        <div className="mx-4">•</div>
+                        {labelTodo('In progress')}
+                    </div>
+                </SectionWrapper>
+            </SectionWrapper>
             {/* Overview */}
             <SectionWrapper>
                 {/* <div className="p-16 md:p-32 xl:px-64"> */}
@@ -186,46 +188,22 @@ const ReportComponent = ({ pageProps }) => {
 
                 {/* List of funders */}
                 <>
-                    <div className="p-16 mt-48 md:p-32 xl:px-64">
-                        <div className="flex justify-between">
-                            <div className="mr-24">
-                                <div className="flex">
-                                    <div className="h-24 mr-8 overflow-hidden rounded-4">
-                                        <Image
-                                            src="/images/fg-card-square-1.png"
-                                            width="24"
-                                            height="24"
-                                        />
-                                    </div>
-                                    <div>Co-funder name</div>
-                                </div>
+                    <SectionWrapper>
+                        <ReportDetailCard
+                            headline="Co-funder name"
+                            image="/images/fg-card-square-1.png"
+                            description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                            items={[
+                                { label: 'Amount', text: 'DKK 500.000' },
+                                {
+                                    label: 'Approval date',
+                                    text: 'June 15th 2020',
+                                },
+                            ]}
+                        />
+                    </SectionWrapper>
 
-                                <p className="mt-16">
-                                    Physiological respiration involves the
-                                    mechanisms that ensure that the composition
-                                    of the functional residual capacity is kept
-                                    constant.
-                                </p>
-                            </div>
-
-                            <div className="flex flex-col flex-none">
-                                <div className="p-16 mt-8 border-4 border-blue-10 rounded-4">
-                                    <div className="t-sh7">Amount</div>
-                                    <div className="t-caption-bold">
-                                        DKK 500.000
-                                    </div>
-                                </div>
-                                <div className="p-16 mt-8 border-4 border-blue-10 rounded-4">
-                                    <div className="t-sh7">Approval date</div>
-                                    <div className="t-caption-bold">
-                                        June 15th 2020
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="p-16 md:p-32 xl:p-64 bg-blue-10 rounded-8">
+                    <SectionWrapper className="bg-blue-10 rounded-8">
                         <div className="t-h5">Updates from this year</div>
                         <p className="mt-8 t-body">
                             In the eighteenth century the German philosopher
@@ -236,7 +214,7 @@ const ReportComponent = ({ pageProps }) => {
                             simply true by virtue of the meaning of the words in
                             the statement.
                         </p>
-                    </div>
+                    </SectionWrapper>
                 </>
             </SectionWrapper>
             {/* Report Summary */}
@@ -268,29 +246,33 @@ const ReportComponent = ({ pageProps }) => {
                     </h3>
                 </SectionWrapper>
 
-                <ReportDetailCard
-                    headline="Co-funder name"
-                    image="/images/fg-card-square-1.png"
-                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                    items={[
-                        { label: 'Amount', text: 'DKK 500.000' },
-                        { label: 'Approval date', text: 'June 15th 2020' },
-                    ]}
-                />
+                <SectionWrapper>
+                    <ReportDetailCard
+                        headline="Co-funder name"
+                        image="/images/fg-card-square-1.png"
+                        description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                        items={[
+                            { label: 'Amount', text: 'DKK 500.000' },
+                            { label: 'Approval date', text: 'June 15th 2020' },
+                        ]}
+                    />
+                </SectionWrapper>
                 <TextCard
                     hasBackground={true}
                     headline="Updates from this year"
                     body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
                 />
-                <ReportDetailCard
-                    headline="Co-funder name"
-                    image="/images/fg-card-square-1.png"
-                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                    items={[
-                        { label: 'Amount', text: 'DKK 500.000' },
-                        { label: 'Approval date', text: 'June 15th 2020' },
-                    ]}
-                />
+                <SectionWrapper>
+                    <ReportDetailCard
+                        headline="Co-funder name"
+                        image="/images/fg-card-square-1.png"
+                        description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                        items={[
+                            { label: 'Amount', text: 'DKK 500.000' },
+                            { label: 'Approval date', text: 'June 15th 2020' },
+                        ]}
+                    />
+                </SectionWrapper>
                 <TextCard
                     hasBackground={true}
                     headline="Updates from this year"
@@ -306,29 +288,33 @@ const ReportComponent = ({ pageProps }) => {
                     </h3>
                 </SectionWrapper>
 
-                <ReportDetailCard
-                    headline="Co-funder name"
-                    image="/images/fg-card-square-1.png"
-                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                    items={[
-                        { label: 'Amount', text: 'DKK 500.000' },
-                        { label: 'Approval date', text: 'June 15th 2020' },
-                    ]}
-                />
+                <SectionWrapper>
+                    <ReportDetailCard
+                        headline="Co-funder name"
+                        image="/images/fg-card-square-1.png"
+                        description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                        items={[
+                            { label: 'Amount', text: 'DKK 500.000' },
+                            { label: 'Approval date', text: 'June 15th 2020' },
+                        ]}
+                    />
+                </SectionWrapper>
                 <TextCard
                     hasBackground={true}
                     headline="Updates from this year"
                     body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
                 />
-                <ReportDetailCard
-                    headline="Co-funder name"
-                    image="/images/fg-card-square-1.png"
-                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                    items={[
-                        { label: 'Amount', text: 'DKK 500.000' },
-                        { label: 'Approval date', text: 'June 15th 2020' },
-                    ]}
-                />
+                <SectionWrapper>
+                    <ReportDetailCard
+                        headline="Co-funder name"
+                        image="/images/fg-card-square-1.png"
+                        description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                        items={[
+                            { label: 'Amount', text: 'DKK 500.000' },
+                            { label: 'Approval date', text: 'June 15th 2020' },
+                        ]}
+                    />
+                </SectionWrapper>
                 <TextCard
                     hasBackground={true}
                     headline="Updates from this year"
@@ -344,7 +330,7 @@ const ReportComponent = ({ pageProps }) => {
                     </h3>
                 </SectionWrapper>
 
-                <div className="inline-grid items-start w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 2xl:grid-cols-6">
+                <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 2xl:grid-cols-6">
                     <NumberCard
                         number="6"
                         headline="Researchers"
@@ -434,26 +420,31 @@ const ReportComponent = ({ pageProps }) => {
                     <h3 className="t-h4">{labelTodo('Activities')}</h3>
                 </SectionWrapper>
 
-                <ReportDetailCard
-                    headline="Activity #1 name"
-                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                    items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
-                />
-                <ChartCard
-                    headline="Indicators"
-                    items={[
-                        {
-                            title: 'Schools built',
-                            value: '256',
-                            label: 'Reached so far',
-                        },
-                        {
-                            title: 'Adults (24+)',
-                            value: '384',
-                            label: 'Reached so far',
-                        },
-                    ]}
-                />
+                <SectionWrapper>
+                    <ReportDetailCard
+                        headline="Activity #1 name"
+                        description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                        items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
+                    />
+                </SectionWrapper>
+                <SectionWrapper>
+                    <ChartCard
+                        useBorder={true}
+                        headline="Indicators"
+                        items={[
+                            {
+                                title: 'Schools built',
+                                value: '256',
+                                label: 'Reached so far',
+                            },
+                            {
+                                title: 'Adults (24+)',
+                                value: '384',
+                                label: 'Reached so far',
+                            },
+                        ]}
+                    />
+                </SectionWrapper>
                 <TextCard
                     hasBackground={true}
                     className="mt-32"
@@ -462,26 +453,31 @@ const ReportComponent = ({ pageProps }) => {
                 />
                 <DividerLine />
 
-                <ReportDetailCard
-                    headline="Activity #2 name"
-                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                    items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
-                />
-                <ChartCard
-                    headline="Indicators"
-                    items={[
-                        {
-                            title: 'Schools built',
-                            value: '12',
-                            label: 'Reached so far',
-                        },
-                        {
-                            title: 'Wells buil',
-                            value: '24',
-                            label: 'Reached so far',
-                        },
-                    ]}
-                />
+                <SectionWrapper>
+                    <ReportDetailCard
+                        headline="Activity #2 name"
+                        description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
+                        items={[{ label: 'Location', text: 'Uganda, Denmark' }]}
+                    />
+                </SectionWrapper>
+                <SectionWrapper>
+                    <ChartCard
+                        useBorder={true}
+                        headline="Indicators"
+                        items={[
+                            {
+                                title: 'Schools built',
+                                value: '12',
+                                label: 'Reached so far',
+                            },
+                            {
+                                title: 'Wells buil',
+                                value: '24',
+                                label: 'Reached so far',
+                            },
+                        ]}
+                    />
+                </SectionWrapper>
                 <TextCard
                     hasBackground={true}
                     className="mt-32"
@@ -494,30 +490,30 @@ const ReportComponent = ({ pageProps }) => {
             <SectionWrapper>
                 <SectionWrapper>
                     <h3 className="t-h4">{labelTodo('Sharing of results')}</h3>
-                </SectionWrapper>
 
-                <ReportSharingCard
-                    headline="Science Weekly 🔬"
-                    label="Journal publication"
-                    tags={[
-                        'Policymakers',
-                        'Politicians',
-                        'Professional practitioners',
-                    ]}
-                    items={[
-                        {
-                            label: 'Publication type',
-                            text: 'Industry magazine',
-                        },
-                        { label: 'Publication year', text: '2021' },
-                        {
-                            label: 'Publisher',
-                            text: 'Media company publishing international',
-                        },
-                        { label: 'Author', text: 'Uganda, Denmark' },
-                        { label: 'DOI', text: 'Uganda, Denmark' },
-                    ]}
-                />
+                    <ReportSharingCard
+                        headline="Science Weekly 🔬"
+                        label="Journal publication"
+                        tags={[
+                            'Policymakers',
+                            'Politicians',
+                            'Professional practitioners',
+                        ]}
+                        items={[
+                            {
+                                label: 'Publication type',
+                                text: 'Industry magazine',
+                            },
+                            { label: 'Publication year', text: '2021' },
+                            {
+                                label: 'Publisher',
+                                text: 'Media company publishing international',
+                            },
+                            { label: 'Author', text: 'Uganda, Denmark' },
+                            { label: 'DOI', text: 'Uganda, Denmark' },
+                        ]}
+                    />
+                </SectionWrapper>
 
                 <TextCard
                     hasBackground={true}
@@ -527,15 +523,17 @@ const ReportComponent = ({ pageProps }) => {
 
                 <DividerLine />
 
-                <ReportSharingCard
-                    headline="The Joe Rogan Podcast 💪"
-                    label="TV/radio/film/podcast"
-                    tags={[
-                        'Policymakers',
-                        'Politicians',
-                        'Professional practitioners',
-                    ]}
-                />
+                <SectionWrapper>
+                    <ReportSharingCard
+                        headline="The Joe Rogan Podcast 💪"
+                        label="TV/radio/film/podcast"
+                        tags={[
+                            'Policymakers',
+                            'Politicians',
+                            'Professional practitioners',
+                        ]}
+                    />
+                </SectionWrapper>
 
                 <TextCard
                     hasBackground={true}
@@ -565,28 +563,12 @@ const ReportComponent = ({ pageProps }) => {
                     <h2 className="t-h5">{labelTodo('Indented container')}</h2>
                 </SectionWrapper>
             </SectionWrapper>
+
             <SectionWrapper className="bg-amber-300">
                 <SectionWrapper paddingY={false}>
                     <h2 className="t-h5">{labelTodo('No padding Y')}</h2>
                 </SectionWrapper>
             </SectionWrapper>
-            {/* 
-            <div className="p-16 md:p-32 xl:px-64 bg-blue-40">
-                <h2 className="t-h5">{labelTodo('To edge container')}</h2>
-            </div>
-            <div className="px-16 pt-16 md:px-32 xl:px-64 bg-coral-20">
-                <h2 className="t-h5">{labelTodo('TITLE container')}</h2>
-            </div>
-            <div className="p-32 md:px-64 xl:px-128 bg-amber-40">
-                <h2 className="t-h5">{labelTodo('Indented container')}</h2>
-            </div>
-            <div className="p-16 md:p-32 xl:px-64 bg-coral-40">
-                <h2 className="t-h5">{labelTodo('To edge content')}</h2>
-                <div className="p-16 md:p-32 xl:px-64 bg-coral-20">
-                    <h2 className="t-h5">{labelTodo('Indented content')}</h2>
-                </div>
-            </div>
-            */}
         </>
     );
 };
