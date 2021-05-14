@@ -13,6 +13,7 @@ import TextCard from 'components/_logbook/textCard';
 import ImageCard from 'components/_logbook/imageCard';
 import VideoCard from 'components/_logbook/videoCard';
 import FileCard from 'components/_logbook/fileCard';
+import SectionWrapper from 'components/_report/sectionWrapper';
 
 const LogbookComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -24,12 +25,14 @@ const LogbookComponent = ({ pageProps }) => {
 
     return (
         <>
-            <div className="flex justify-between mr-48 md:mr-0">
-                <h1 className="t-h1">Logbook</h1>
-                <Button variant="secondary" theme="teal">
-                    {labelTodo('Update')}
-                </Button>
-            </div>
+            <SectionWrapper>
+                <div className="flex justify-between mr-48 md:mr-0">
+                    <h1 className="t-h1">Logbook</h1>
+                    <Button variant="secondary" theme="teal">
+                        {labelTodo('Update')}
+                    </Button>
+                </div>
+            </SectionWrapper>
             <FileCard
                 hasBackground={true}
                 summary="Download my file"

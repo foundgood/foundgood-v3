@@ -14,10 +14,31 @@ const useInitiativeLayoutStore = create(set => ({
 
     // Navigation object
     navigation: [
-        { href: '/initiative/project', label: labelTodo('Project details') },
+        { href: '/initiative/overview', label: labelTodo('Overview') },
         { href: '/initiative/activities', label: labelTodo('Activities') },
         { href: '/initiative/developments', label: labelTodo('Developments') },
         { href: '/initiative/logbook', label: labelTodo('Logbook') },
+        { href: '/initiative/reports', label: labelTodo('Reports') },
+    ],
+
+    // TODO!
+    newNavigation: [
+        { href: '/initiative/overview', label: labelTodo('Overview') },
+        {
+            href: '/',
+            label: labelTodo('Initiative details'),
+            subNavigation: [
+                {
+                    href: '/initiative/activities',
+                    label: labelTodo('Activities'),
+                },
+                {
+                    href: '/initiative/developments',
+                    label: labelTodo('Developments'),
+                },
+                { href: '/initiative/logbook', label: labelTodo('Logbook') },
+            ],
+        },
         { href: '/initiative/reports', label: labelTodo('Reports') },
     ],
 }));

@@ -65,7 +65,7 @@ const HeaderComponent = ({ showUserControls }) => {
                 {showUserControls && (
                     <ul className="flex space-x-20 t-aside-nav">
                         <li className="lg:cursor-pointer hover:text-blue-100">
-                            <Link href="/initiative/project">
+                            <Link href="/initiative/overview">
                                 <a>
                                     <FiHeart className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
