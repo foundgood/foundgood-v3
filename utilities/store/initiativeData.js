@@ -24,6 +24,8 @@ const defaultInitiative = {
     _reports: {},
     _goals: {},
     _activities: {},
+    _activityGoals: {},
+    _activitySuccessMetrics: {},
 };
 
 const constants = {
@@ -36,6 +38,9 @@ const constants = {
         GOAL_PREDEFINED: 'Foundation',
         INDICATOR_CUSTOM: 'Custom',
         INDICATOR_PREDEFINED: 'People',
+        ACTIVITY_INTERVENTION: 'Intervention',
+        ACTIVITY_DISSEMINATION: 'Dissemination',
+        ACTIVITY_JOURNAL: 'Journal publication',
     },
 };
 
@@ -48,7 +53,6 @@ const useInitiativeDataStore = create(
         },
 
         // Update initiative model and connected models
-
         async updateInitiative(id) {
             const data = await sfQuery(queries.initiative.get(id));
             if (data) {
@@ -58,6 +62,7 @@ const useInitiativeDataStore = create(
             }
         },
 
+        // Update single item
         async updateFunder(id) {
             const data = await sfQuery(queries.initiativeFunder.get(id));
             if (data) {
@@ -66,10 +71,7 @@ const useInitiativeDataStore = create(
                         ...state.initiative,
                         _funders: {
                             ...state.initiative._funders,
-                            [id]: {
-                                ...state?.initiative?._funders[id],
-                                ...data,
-                            },
+                            [id]: data,
                         },
                     },
                 }));
@@ -84,10 +86,7 @@ const useInitiativeDataStore = create(
                         ...state.initiative,
                         _collaborators: {
                             ...state.initiative._collaborators,
-                            [id]: {
-                                ...state?.initiative?._collaborators[id],
-                                ...data,
-                            },
+                            [id]: data,
                         },
                     },
                 }));
@@ -104,10 +103,7 @@ const useInitiativeDataStore = create(
                         ...state.initiative,
                         _employeesFunded: {
                             ...state.initiative._employeesFunded,
-                            [id]: {
-                                ...state?.initiative?._employeesFunded[id],
-                                ...data,
-                            },
+                            [id]: data,
                         },
                     },
                 }));
@@ -122,10 +118,7 @@ const useInitiativeDataStore = create(
                         ...state.initiative,
                         _reports: {
                             ...state.initiative._reports,
-                            [id]: {
-                                ...state?.initiative?._reports[id],
-                                ...data,
-                            },
+                            [id]: data,
                         },
                     },
                 }));
@@ -140,10 +133,7 @@ const useInitiativeDataStore = create(
                         ...state.initiative,
                         _goals: {
                             ...state.initiative._goals,
-                            [id]: {
-                                ...state?.initiative?._goals[id],
-                                ...data,
-                            },
+                            [id]: data,
                         },
                     },
                 }));
@@ -158,10 +148,67 @@ const useInitiativeDataStore = create(
                         ...state.initiative,
                         _activities: {
                             ...state.initiative._activities,
-                            [id]: {
-                                ...state?.initiative?._activities[id],
-                                ...data,
-                            },
+                            [id]: data,
+                        },
+                    },
+                }));
+            }
+        },
+
+        async updateActivitySuccessMetric(id) {
+            const data = await sfQuery(
+                queries.initiativeActivitySuccessMetric.get(id)
+            );
+            if (data) {
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _activitySuccessMetrics: {
+                            ...state.initiative._activitySuccessMetrics,
+                            [id]: data,
+                        },
+                    },
+                }));
+            }
+        },
+
+        // Bulk update multiple ids
+        async updateActivityGoals(ids) {
+            let data = await sfQuery(
+                queries.initiativeActivityGoal.getMultiple(ids)
+            );
+            if (data) {
+                data = Array.isArray(data) ? data : [data];
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _activityGoals: {
+                            ...state.initiative._activityGoals,
+                            ...data.reduce(
+                                (acc, item) => ({ ...acc, [item.Id]: item }),
+                                {}
+                            ),
+                        },
+                    },
+                }));
+            }
+        },
+
+        async updateActivitySuccessMetrics(ids) {
+            let data = await sfQuery(
+                queries.initiativeActivitySuccessMetric.getMultiple(ids)
+            );
+            if (data) {
+                data = Array.isArray(data) ? data : [data];
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _activitySuccessMetrics: {
+                            ...state.initiative._activitySuccessMetrics,
+                            ...data.reduce(
+                                (acc, item) => ({ ...acc, [item.Id]: item }),
+                                {}
+                            ),
                         },
                     },
                 }));
@@ -190,6 +237,9 @@ const useInitiativeDataStore = create(
             const activitiesData = await sfQuery(
                 queries.initiativeActivity.getAll(id)
             );
+            const activitySuccessMetricsData = await sfQuery(
+                queries.initiativeActivitySuccessMetric.getAll(id)
+            );
 
             // Update state
             set(() => ({
@@ -201,6 +251,7 @@ const useInitiativeDataStore = create(
                     _reports: reportsData,
                     _goals: goalsData,
                     _activities: activitiesData,
+                    _activitySuccessMetrics: activitySuccessMetricsData,
                 },
             }));
         },

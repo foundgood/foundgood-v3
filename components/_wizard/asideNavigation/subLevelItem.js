@@ -19,10 +19,10 @@ const SubLevelItemComponent = ({ item }) => {
     const { url, title } = item;
 
     // Hook: Router
-    const { asPath } = useRouter();
+    const { asPath, push } = useRouter();
 
     // Store: Wizard navigation
-    const { completedItems } = useWizardNavigationStore();
+    const { completedItems, handleSubmit } = useWizardNavigationStore();
 
     // Checking current page or not
     const inProgress = asPath === url || asPath.indexOf(url) > -1;
@@ -30,9 +30,21 @@ const SubLevelItemComponent = ({ item }) => {
     // Checking completed or not
     const completed = completedItems.includes(url);
 
+    async function onHandleNavigate() {
+        try {
+            // Submit throws if there is any validation errors
+            await handleSubmit();
+
+            // Go to next in flow
+            push(url);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
-        <Link href={url}>
-            <li className="mt-24 md:cursor-pointer">
+        <li className="mt-24 md:cursor-pointer">
+            <button onClick={() => onHandleNavigate()}>
                 <span
                     className={cc([
                         'flex t-caption',
@@ -51,8 +63,8 @@ const SubLevelItemComponent = ({ item }) => {
                     </i>
                     {title}
                 </span>
-            </li>
-        </Link>
+            </button>
+        </li>
     );
 };
 

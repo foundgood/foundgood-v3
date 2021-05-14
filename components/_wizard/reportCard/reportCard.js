@@ -29,7 +29,7 @@ const ReportCardComponent = ({
             <div className="flex justify-between mb-32">
                 {headline && (
                     <div className="flex items-center">
-                        <h4 className="t-sh4">{labelTodo(headline)}</h4>
+                        <h4 className="t-sh4">{headline}</h4>
                     </div>
                 )}
                 <Button theme="teal" variant="primary" action={actionCreate}>

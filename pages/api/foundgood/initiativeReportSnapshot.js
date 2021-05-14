@@ -1,25 +1,37 @@
 import { salesForce, s3 } from 'utilities/api';
+import atob from 'atob';
 
 export default async (req, res) => {
-    const {
-        method,
-        body: { ids, version = '1.1' },
-    } = req;
+    const { method, body } = req;
+
+    const validUser =
+        (req?.headers?.authorization ?? false) &&
+        atob(req.headers.authorization.replace('Basic ', '')) ===
+            `${process.env.API_USER}:${process.env.API_PASSWORD}`;
 
     try {
-        // Check for method and content
-        if (method === 'POST' && Array.isArray(ids) && ids.length > 0) {
-            // Got the ids now send response
-            res.status(202).send(); // For when it's done
+        // Chcek if valid user
+        if (!validUser) {
+            res.status(401).send();
+            return;
+        }
 
+        // Check for authentication, method and content
+        if (
+            method === 'POST' &&
+            Array.isArray(body.ids) &&
+            body.ids.length > 0
+        ) {
             // Login to SalesForce with OAuth2
             const { data: sfLoginData } = await salesForce.user.login(
                 process.env.SYSTEM_LOGIN_USERNAME,
                 process.env.SYSTEM_LOGIN_PASSWORD
             );
 
+            // console.log({ sfLoginData });
+
             // Create array of promises based on ids
-            const sfDataPromises = ids.map(id =>
+            const sfDataPromises = body.ids.map(id =>
                 salesForce.fetchers.query(
                     salesForce.queries.initiativeReportComplete.get(id),
                     sfLoginData.access_token,
@@ -27,8 +39,12 @@ export default async (req, res) => {
                 )
             );
 
+            // console.log({ sfDataPromises });
+
             // Resolve SalesForce promises to get SalesForce data
             const sfDataObjects = await Promise.all(sfDataPromises);
+
+            // console.log({ sfDataObjects });
 
             // Create array of promises based on results to send to S3
             const s3DataPromises = sfDataObjects.map(dataObject => {
@@ -43,27 +59,38 @@ export default async (req, res) => {
                 }
             });
 
+            // console.log({ s3DataPromises });
+
             // Resolve S3 promises to get URLs
             const s3Data = await Promise.all(s3DataPromises);
+
+            // console.log({ s3Data });
 
             // Map data from s3 to fit SalesForce custom endpoint
             const exportResults = s3Data.map(item => ({
                 initiativeReportId: item.key
                     .replace('snapshots/', '')
                     .replace('.json', ''),
-                reportViewerVersion: version,
+                reportViewerVersion: body.version ?? '1.1',
                 exportedReportUrl: item.Location,
             }));
 
+            // console.log({ exportResults });
+
             // Send to SalesForce custom endpoint
-            await salesForce.custom.setExportResults(
+            const { data } = await salesForce.custom.setExportResults(
                 exportResults,
                 sfLoginData.access_token,
                 sfLoginData.instance_url
             );
 
+            // console.log({ data });
+
             // Logout from SalesForce
             await salesForce.user.logout(sfLoginData.access_token);
+
+            res.status(200).json({ Status: 'Complete' }); // For when it's done
+
             return;
         }
     } catch (error) {

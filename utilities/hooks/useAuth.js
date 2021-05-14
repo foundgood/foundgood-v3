@@ -40,7 +40,7 @@ const useAuth = () => {
 
     // Helper: Extracts login url
     function _getLoginUrl() {
-        const authUrl = process.env.NEXT_PUBLIC_LOGIN_AUTH_URL;
+        const authUrl = process.env.NEXT_PUBLIC_AUTH_URL;
         const clientId = process.env.NEXT_PUBLIC_LOGIN_CLIENT_ID;
         const redirectUrl = encodeURIComponent(
             `${process.env.NEXT_PUBLIC_LOGIN_REDIRECT_URL_PREFIX}/login_callback`
@@ -69,8 +69,6 @@ const useAuth = () => {
 
     // Handle login callback
     function handleLoginCallback() {
-        // username: 'allen.dziedzic@example.com',
-        // password: 's^7Vy_MFY1fsad_$23xCp_1',
         return useEffect(() => {
             if (hasWindow()) {
                 console.log('Auth: Handling Login Callback');

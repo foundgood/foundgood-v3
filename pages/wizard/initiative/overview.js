@@ -145,6 +145,7 @@ const OverviewComponent = () => {
                     placeholder={labelTodo('Please select')}
                     options={valueSet('initiative.Category__c')}
                     controller={control}
+                    disabled={initiative.Category__c}
                     required
                 />
                 <LongText
@@ -169,7 +170,6 @@ const OverviewComponent = () => {
                     options={valueSet('account.Location__c')}
                     selectPlaceholder={labelTodo('Please select')}
                     selectLabel={labelTodo('Country')}
-                    textLabel={labelTodo('Region')}
                     controller={control}
                 />
             </InputWrapper>

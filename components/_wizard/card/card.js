@@ -34,7 +34,7 @@ const CardComponent = ({
                         <Image src={image} layout="fill" objectFit="contain" />
                     </div>
                 )}
-                <div className="w-full flex-start">
+                <div className="w-full mr-16 flex-start">
                     {headline && (
                         <div className="flex items-center">
                             <h4 className="t-sh4">{labelTodo(headline)}</h4>

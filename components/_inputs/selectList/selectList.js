@@ -79,13 +79,13 @@ const SelectListComponent = ({
     } = useController({
         name,
         control: controller,
-        defaultValue: defaultValue,
+        defaultValue: defaultValue.filter(item => item.selectValue.length > 0),
         rules: { required },
     });
 
     // Update state when using setValue
     useEffect(() => {
-        if (value) {
+        if (value && value.length > 0) {
             setList(
                 value.map(item => ({
                     selectValue: item.selectValue,
@@ -103,140 +103,95 @@ const SelectListComponent = ({
                 <span className="mt-8 input-sublabel">{subLabel}</span>
             )}
             <div className={cc(['flex flex-col', { 'mt-16': label }])}>
+                {(selectLabel || textLabel) && (
+                    <div className="flex mb-4 input-utility-text">
+                        <span className="flex-grow mr-6">
+                            {selectLabel || ''}
+                        </span>
+                        <span className="flex-grow ml-6">
+                            {textLabel || ''}
+                        </span>
+                    </div>
+                )}
                 <div className="flex flex-col space-y-12">
-                    {list.map((item, index) => {
+                    {list.map(item => {
                         return (
-                            <div key={item.id} className="flex flex-col">
-                                <div className="flex space-x-4">
-                                    {/* Select / Input */}
-                                    <div className="flex w-full space-x-12">
-                                        {/* Select */}
-                                        <div
+                            <div key={item.id} className="flex w-full">
+                                {/* Select / Input */}
+                                <div className="flex flex-grow">
+                                    {/* Select */}
+                                    <div
+                                        style={{
+                                            width: showText
+                                                ? 'calc(50% - 6px)'
+                                                : '100%',
+                                        }}
+                                        className={cc([
+                                            'relative flex items-center',
+                                            {
+                                                'mr-6': showText,
+                                            },
+                                        ])}>
+                                        <select
                                             className={cc([
-                                                'flex flex-col w-full',
+                                                'input-defaults w-full',
+                                                'appearance-none !pr-40',
                                                 {
-                                                    'max-w-[50%]': showText,
+                                                    'input-defaults-error': error,
                                                 },
-                                            ])}>
-                                            {index === 0 && selectLabel && (
-                                                <span className="mb-4 input-utility-text">
-                                                    {selectLabel}
-                                                </span>
-                                            )}
-                                            <div className="relative flex items-center">
-                                                <select
-                                                    className={cc([
-                                                        'input-defaults flex-grow',
-                                                        'appearance-none pr-20',
-                                                        {
-                                                            'input-defaults-error': error,
-                                                            'max-w-full': showText,
-                                                        },
-                                                    ])}
-                                                    defaultValue={
-                                                        item.selectValue
-                                                    }
-                                                    onChange={event => {
-                                                        // Get next list
-                                                        const nextList = getListWithNewSelectValue(
-                                                            item.id,
-                                                            event.target.value
-                                                        );
+                                            ])}
+                                            defaultValue={item.selectValue}
+                                            onChange={event => {
+                                                // Get next list
+                                                const nextList = getListWithNewSelectValue(
+                                                    item.id,
+                                                    event.target.value
+                                                );
 
-                                                        // Update current list
-                                                        setList(nextList);
+                                                // Update current list
+                                                setList(nextList);
 
-                                                        // Update form
-                                                        onChange(
-                                                            nextList.filter(
-                                                                item =>
-                                                                    item
-                                                                        .selectValue
-                                                                        .length >
-                                                                    0
-                                                            )
-                                                        );
-                                                    }}>
-                                                    <option
-                                                        default
-                                                        value=""
-                                                        className="hidden">
-                                                        {selectPlaceholder}
-                                                    </option>
-                                                    {options.map(option => (
-                                                        <option
-                                                            key={option.value}
-                                                            value={option.value}
-                                                            className="font-normal text-black">
-                                                            {option.label}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                                <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
-                                            </div>
-                                        </div>
-
-                                        {/* Input */}
-                                        {showText && (
-                                            <div className="flex flex-col w-full">
-                                                {index === 0 && textLabel && (
-                                                    <span className="mb-4 input-utility-text">
-                                                        {textLabel}
-                                                    </span>
-                                                )}
-                                                <div className="relative flex items-center">
-                                                    <input
-                                                        type="text"
-                                                        maxLength={
-                                                            maxLength
-                                                                ? maxLength
-                                                                : 'none'
-                                                        }
-                                                        defaultValue={
-                                                            item.textValue
-                                                        }
-                                                        placeholder={
-                                                            textPlaceholder
-                                                        }
-                                                        onChange={event => {
-                                                            // Get next list
-                                                            const nextList = getListWithNewTextValue(
-                                                                item.id,
-                                                                event.target
-                                                                    .value
-                                                            );
-
-                                                            // Update current list
-                                                            setList(nextList);
-
-                                                            // Update form
-                                                            onChange(nextList);
-                                                        }}
-                                                        className={cc([
-                                                            'flex-grow',
-                                                            'input-defaults',
-                                                            {
-                                                                'input-defaults-error': error,
-                                                            },
-                                                        ])}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
+                                                // Update form
+                                                onChange(
+                                                    nextList.filter(
+                                                        item =>
+                                                            item.selectValue
+                                                                .length > 0
+                                                    )
+                                                );
+                                            }}>
+                                            <option
+                                                default
+                                                value=""
+                                                className="hidden">
+                                                {selectPlaceholder}
+                                            </option>
+                                            {options.map((option, index) => (
+                                                <option
+                                                    key={`${option.value}-${index}`}
+                                                    value={option.value}
+                                                    className="font-normal text-black">
+                                                    {option.label}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
                                     </div>
 
-                                    {/* Delete item */}
-                                    {list.length > 1 && (
-                                        <Button
-                                            variant="tertiary"
-                                            theme="teal"
-                                            icon={FiX}
-                                            className="self-end"
-                                            iconPosition="center"
-                                            action={event => {
-                                                // Get next list                                                     // Get next list
-                                                const nextList = getListWithoutItem(
-                                                    item.id
+                                    {/* Input */}
+                                    {showText && (
+                                        <input
+                                            type="text"
+                                            maxLength={
+                                                maxLength ? maxLength : 'none'
+                                            }
+                                            defaultValue={item.textValue}
+                                            placeholder={textPlaceholder}
+                                            onChange={event => {
+                                                // Get next list
+                                                const nextList = getListWithNewTextValue(
+                                                    item.id,
+                                                    event.target.value
                                                 );
 
                                                 // Update current list
@@ -245,14 +200,49 @@ const SelectListComponent = ({
                                                 // Update form
                                                 onChange(nextList);
                                             }}
+                                            style={{
+                                                width: showText
+                                                    ? 'calc(50% - 6px)'
+                                                    : '100%',
+                                            }}
+                                            className={cc([
+                                                'ml-6',
+                                                'input-defaults',
+                                                {
+                                                    'input-defaults-error': error,
+                                                },
+                                            ])}
                                         />
                                     )}
                                 </div>
+
+                                {/* Delete item */}
+                                {list.length > 1 && (
+                                    <Button
+                                        variant="tertiary"
+                                        theme="teal"
+                                        icon={FiX}
+                                        className="self-end"
+                                        iconPosition="center"
+                                        action={event => {
+                                            // Get next list                                                     // Get next list
+                                            const nextList = getListWithoutItem(
+                                                item.id
+                                            );
+
+                                            // Update current list
+                                            setList(nextList);
+
+                                            // Update form
+                                            onChange(nextList);
+                                        }}
+                                    />
+                                )}
                             </div>
                         );
                     })}
                 </div>
-                {listMaxLength > 1 && (
+                {listMaxLength > 1 && options.length > 1 && (
                     <Button
                         variant="secondary"
                         className="self-start mt-16"

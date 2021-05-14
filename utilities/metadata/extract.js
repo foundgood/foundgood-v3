@@ -4,9 +4,10 @@ const xmlParser = require('xml2json');
 const fs = require('fs');
 const _uniq = require('lodash.uniq');
 const _get = require('lodash.get');
+const path = require('path');
+require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
 
 const config = {
-    zipUrl: 'https://www.dropbox.com/s/dmxytw9trjye00g/metadata.zip?dl=1',
     locales: ['da'],
     files: {
         account: 'Account',
@@ -440,18 +441,110 @@ class zipExtractor {
     }
 }
 
+async function login(username, password) {
+    return axios.post(
+        `${process.env.NEXT_PUBLIC_AUTH_URL}/services/oauth2/token`,
+        new URLSearchParams({
+            grant_type: 'password',
+            client_id: process.env.SYSTEM_LOGIN_CLIENT_ID,
+            client_secret: process.env.SYSTEM_LOGIN_CLIENT_SECRET,
+            username,
+            password,
+        })
+    );
+}
+
+async function getMetadataResourceBody(token, url) {
+    try {
+        // Get url id
+        const urlResponse = await axios.get(
+            `${url}/services/data/v${process.env.NEXT_PUBLIC_SF_VERSION}/query/?q=SELECT Id FROM StaticResource WHERE Name = 'FoundgoodSFMetadata' LIMIT 1`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        // Convert non-ok HTTP responses into errors:
+        if (urlResponse.status !== 200) {
+            throw {
+                statusText: response.statusText,
+                response,
+            };
+        }
+
+        // Get body
+        const bodyResponse = await axios.get(
+            `${url}/services/data/v${process.env.NEXT_PUBLIC_SF_VERSION}/sobjects/StaticResource/${urlResponse.data.records[0].Id}/Body`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                responseType: 'arraybuffer',
+                responseEncoding: 'binary',
+            }
+        );
+
+        // Convert non-ok HTTP responses into errors:
+        if (bodyResponse.status !== 200) {
+            throw {
+                statusText: response.statusText,
+                response,
+            };
+        }
+
+        return bodyResponse.data;
+    } catch (error) {
+        console.warn(error);
+        return error;
+    }
+}
+
+async function logout(token) {
+    try {
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_AUTH_URL}/services/oauth2/revoke`,
+            new URLSearchParams({
+                token,
+            })
+        );
+
+        // Convert non-ok HTTP responses into errors:
+        if (response.status !== 200) {
+            throw {
+                statusText: response.statusText,
+                response,
+            };
+        }
+
+        return 'User have been logged out';
+    } catch (error) {
+        console.warn(error);
+        return error;
+    }
+}
+
 async function extract() {
     try {
-        // Download zip file to buffer
-        const { data } = await axios({
-            method: 'GET',
-            url: config.zipUrl,
-            responseType: 'arraybuffer',
-            responseEncoding: 'binary',
-        });
+        // Login to SalesForce with OAuth2
+        const { data: sfLoginData } = await login(
+            process.env.SYSTEM_LOGIN_USERNAME,
+            process.env.SYSTEM_LOGIN_PASSWORD
+        );
+
+        const metadataBody = await getMetadataResourceBody(
+            sfLoginData.access_token,
+            sfLoginData.instance_url
+        );
 
         // Create instance of zip extractor file based on buffered data
-        const zip = new zipExtractor(data);
+        const zip = new zipExtractor(metadataBody);
+
+        // Logout
+        await logout(sfLoginData.access_token);
 
         return {
             // Create labels object

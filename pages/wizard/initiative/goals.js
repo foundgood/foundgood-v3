@@ -57,8 +57,6 @@ const GoalsComponent = ({ pageProps }) => {
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
-        // TODO: Sørg for at grant giving area kan vælges under GOAL_PREDEFINED hvis ikke det allerede er valgt
-        // TODO: Luke sørger for nogle empty-states og et flow
         try {
             const { Type__c, Goal__c, Funder_Objective__c } = formData;
 
@@ -68,10 +66,17 @@ const GoalsComponent = ({ pageProps }) => {
             // Data for sf
             // Get type of submission based on goalType
             const data = {
-                [CONSTANTS.TYPES.GOAL_CUSTOM]: { Type__c, Goal__c },
+                [CONSTANTS.TYPES.GOAL_CUSTOM]: {
+                    Type__c,
+                    Goal__c,
+                    Funder_Objective__c: '',
+                    KPI_Category__c: initiative?.Category__c,
+                },
                 [CONSTANTS.TYPES.GOAL_PREDEFINED]: {
+                    Goal__c: Funder_Objective__c,
                     Type__c,
                     Funder_Objective__c,
+                    KPI_Category__c: initiative?.Category__c,
                 },
             };
 
@@ -130,7 +135,6 @@ const GoalsComponent = ({ pageProps }) => {
             <InputWrapper>
                 {Object.keys(initiative?._goals).map(goalKey => {
                     const goal = initiative?._goals[goalKey];
-                    console.log(goal);
                     return (
                         <GoalCard
                             key={goalKey}
