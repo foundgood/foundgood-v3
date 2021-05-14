@@ -14,6 +14,7 @@ import WizardStatus from 'components/_report/wizardStatus';
 import { AsideNavigation } from 'components/_report/asideNavigation';
 import IconButton from 'components/iconButton';
 import Button from 'components/button';
+import Footer from 'components/_layout/footer';
 
 // Icons
 import { FiAlignLeft, FiChevronsLeft } from 'react-icons/fi';
@@ -100,8 +101,9 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
                     },
                 ])}>
                 {/* Content */}
-                <div className="w-full bg-white transition-slow max-w-[900px] page-mx mt-264 xl:mt-192 pb-64 lg:pb-96 rounded-8">
+                <div className="w-full bg-white transition-slow max-w-[900px] page-mx mt-264 xl:mt-192 rounded-8">
                     {children}
+                    <Footer />
                 </div>
             </div>
         </>

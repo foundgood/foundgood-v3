@@ -13,6 +13,7 @@ import {
 import { useMetadata } from 'utilities/hooks';
 
 // Components
+import Footer from 'components/_layout/footer';
 import ActiveLink from 'components/activeLink';
 import MobileNavigation from 'components/_initiative/mobileNavigation';
 
@@ -34,7 +35,6 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
     return (
         <>
             <div className="fixed inset-0 bg-amber-10"></div>
-
             {/* Initiative title and initiative navigation wrapper */}
             <div className="fixed left-0 right-0 flex flex-col header-t z-below-aside">
                 {/* Iniative title */}
@@ -60,10 +60,8 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                     ))}
                 </div>
             </div>
-
             {/* Mobile navigation */}
             <MobileNavigation />
-
             {/* Content wrapper */}
             <div
                 className={cc([
@@ -72,6 +70,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                 {/* Content */}
                 <div className="w-full max-w-[900px] page-mx mt-160 md:mt-232 pb-64 lg:pb-96 rounded-8">
                     {children}
+                    <Footer />
                 </div>
             </div>
         </>
