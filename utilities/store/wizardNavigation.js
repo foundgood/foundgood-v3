@@ -2,10 +2,12 @@ import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
 import {
-    reportingItems,
-    detailingItems,
-    planningItems,
-} from 'utilities/data/wizardNavigationItems';
+    initiativeItems,
+    initiativeDetailingItems,
+    initiativePlanningItems,
+} from 'utilities/data/initiativeNavigationItems';
+
+import { reportItems } from 'utilities/data/reportNavigationItems';
 
 // Helper for getting next url
 function _goToNextSection(sectionIndex, items) {
@@ -23,7 +25,7 @@ function _goToNextSection(sectionIndex, items) {
 const useWizardNavigationStore = create(
     persist((set, get) => ({
         // Handles url change in bottom navigation
-        async onUrlChange(url) {
+        async onUrlOrContextChange(url) {
             // Reset submitHandler
             get().setCurrentSubmitHandler(null);
 
@@ -48,15 +50,15 @@ const useWizardNavigationStore = create(
             return currentSubmitHandler ? currentSubmitHandler() : true;
         },
 
-        // Rebuilds wizard items
-        buildWizardItems(configurationType = []) {
+        // Rebuilds initiative wizard items
+        buildInitiativeWizardItems(configurationType = []) {
             set(state => {
                 // What types
                 const planning = configurationType.includes('Planning');
                 const detailing = configurationType.includes('Explain');
 
                 // Baseline for items = reporting items
-                let items = reportingItems();
+                let items = initiativeItems();
 
                 // Add planning if needed
                 if (planning) {
@@ -78,6 +80,41 @@ const useWizardNavigationStore = create(
                         ...items.slice(3, items.length),
                     ];
                 }
+
+                state.items = items;
+            });
+        },
+
+        // Rebuilds report wizard items
+        buildReportWizardItems(configurationType = []) {
+            set(state => {
+                // What types
+                const planning = configurationType.includes('Planning');
+                const detailing = configurationType.includes('Explain');
+
+                // Baseline for items = reporting items
+                let items = reportItems();
+
+                // // Add planning if needed
+                // if (planning) {
+                //     items[4] = {
+                //         ...items[4],
+                //         items: [
+                //             planningItems()[0],
+                //             ...items[4].items,
+                //             planningItems()[1],
+                //         ],
+                //     };
+                // }
+
+                // // Add detailing if selected
+                // if (detailing) {
+                //     items = [
+                //         ...items.slice(0, 3),
+                //         ...detailingItems(),
+                //         ...items.slice(3, items.length),
+                //     ];
+                // }
 
                 state.items = items;
             });
@@ -181,7 +218,7 @@ const useWizardNavigationStore = create(
             });
         },
 
-        items: reportingItems(),
+        items: [],
         completedItems: [],
         openSection: null,
         currentItem: null,
@@ -190,7 +227,7 @@ const useWizardNavigationStore = create(
 
         reset() {
             set(() => ({
-                items: reportingItems(),
+                items: [],
                 completedItems: [],
                 openSection: null,
                 currentItem: null,

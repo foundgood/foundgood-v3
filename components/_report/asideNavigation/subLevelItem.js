@@ -48,15 +48,15 @@ const SubLevelItemComponent = ({ index, title, inProgress, completed }) => {
                             !completed && inProgress,
                     },
                 ])}>
-                <i className="mr-16">
-                    {/* ICONS:
+                {/* <i className="mr-16"> */}
+                {/* ICONS:
                     default - FiCircle
                     inProgress - FiMinusCircle
                     completed - FiCheckCircle */}
-                    {!inProgress && <FiCircle />}
+                {/* {!inProgress && <FiCircle />}
                     {!completed && inProgress && <FiMinusCircle />}
                     {completed && inProgress && <FiCheckCircle />}
-                </i>
+                </i> */}
                 {title}
             </span>
         </li>

@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 // Utilities
 import { useMetadata } from 'utilities/hooks';
 import { useWizardNavigationStore } from 'utilities/store';
+import { createQuerystring } from 'utilities';
 
 // Components
 import Button from 'components/button';
@@ -22,14 +23,14 @@ const BottomNavigationComponent = () => {
     const { labelTodo } = useMetadata();
     const {
         nextItemUrl,
-        onUrlChange,
+        onUrlOrContextChange,
         handleSubmit,
         currentItem,
     } = useWizardNavigationStore();
 
     // Effect: Handle path change
     useEffect(() => {
-        onUrlChange(router.pathname);
+        onUrlOrContextChange(router.pathname);
     }, [router.pathname]);
 
     async function onHandleContinue() {
@@ -39,7 +40,7 @@ const BottomNavigationComponent = () => {
             await handleSubmit();
 
             // Go to next in flow
-            router.push(nextItemUrl);
+            router.push(nextItemUrl + createQuerystring(router.query));
 
             // Stop loading indicator
             setLoading(false);
@@ -80,16 +81,7 @@ const BottomNavigationComponent = () => {
                         {labelTodo('Back')}
                     </Button>
 
-                    <Button
-                        theme="coral"
-                        action={onHandleContinue}
-                        className={cc([
-                            'transition-default',
-                            {
-                                'opacity-100 pointer-events-auto': nextItemUrl,
-                                'opacity-0 pointer-events-none': !nextItemUrl,
-                            },
-                        ])}>
+                    <Button theme="coral" action={onHandleContinue}>
                         {labelTodo('Continue')}
                     </Button>
                 </div>
