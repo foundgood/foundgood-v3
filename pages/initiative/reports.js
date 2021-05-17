@@ -26,11 +26,12 @@ const ReportsComponent = ({ pageProps }) => {
     const { labelTodo, label, valueSet, log } = useMetadata();
 
     useEffect(() => {
-        console.log(initiative);
+        // console.log(initiative);
+
         // Group reports by funder
-        const funders = initiative._funders.map(item => {
+        const funders = Object.values(initiative._funders).map(item => {
             // Get reports
-            const reports = initiative._reports.filter(
+            const reports = Object.values(initiative._reports).filter(
                 report => report.Funder_Report__c == item.Id
             );
             return { ...item, ...{ reports: reports } };

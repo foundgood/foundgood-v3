@@ -53,24 +53,28 @@ const ProjectComponent = ({ pageProps }) => {
     ];
 
     useEffect(() => {
-        // Initial Load - Handle empty object state
+        // Initial Load - Handle empty object state?
         if (initiative._funders == null) return;
 
-        console.log('initiative: ', initiative);
+        // console.log('initiative: ', initiative);
 
         // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
         // Split them up depending on the type.
         // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
-        const collaborators = initiative._collaborators.filter(item => {
-            if (item.Translated_Type__c == 'Additional collaborator') {
-                return item;
+        const collaborators = Object.values(initiative._collaborators).filter(
+            item => {
+                if (item.Translated_Type__c == 'Additional collaborator') {
+                    return item;
+                }
             }
-        });
-        const applicants = initiative._collaborators.filter(item => {
-            if (item.Translated_Type__c != 'Additional collaborator') {
-                return item;
+        );
+        const applicants = Object.values(initiative._collaborators).filter(
+            item => {
+                if (item.Translated_Type__c != 'Additional collaborator') {
+                    return item;
+                }
             }
-        });
+        );
         setApplicants(applicants);
         setCollaborators(collaborators);
 
@@ -88,29 +92,35 @@ const ProjectComponent = ({ pageProps }) => {
         // Build donut slices using color gradient
         // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
 
-        const totalAmount = initiative?._funders.reduce((total, funder) => {
-            return total + funder.Amount__c;
-        }, 0);
+        const totalAmount = Object.values(initiative._funders).reduce(
+            (total, funder) => {
+                return total + funder.Amount__c;
+            },
+            0
+        );
 
         // // TEMPORARY USE OTHER AMOUNTS
         // const donutAmounts = [500000, 1000000, 350000];
         // const totalAmount = 1850000;
 
-        const donutData = initiative?._funders.map((funder, index) => {
-            return {
-                color: donutColors[index],
-                hex: donutHex[index],
-                name: funder.Account__r.Name,
-                currency: funder.CurrencyIsoCode,
-                amount: funder.Amount__c,
-                totalAmount: totalAmount,
-                percentage: funder.Amount__c / totalAmount,
-                // // TEMPORARY USE OTHER AMOUNTS
-                // amount: donutAmounts[index],
-                // totalAmount: totalAmount,
-                // percentage: donutAmounts[index] / totalAmount,
-            };
-        });
+        // const donutData = initiative?._funders.map((funder, index) => {
+        const donutData = Object.values(initiative._funders).map(
+            (funder, index) => {
+                return {
+                    color: donutColors[index],
+                    hex: donutHex[index],
+                    name: funder.Account__r.Name,
+                    currency: funder.CurrencyIsoCode,
+                    amount: funder.Amount__c,
+                    totalAmount: totalAmount,
+                    percentage: funder.Amount__c / totalAmount,
+                    // // TEMPORARY USE OTHER AMOUNTS
+                    // amount: donutAmounts[index],
+                    // totalAmount: totalAmount,
+                    // percentage: donutAmounts[index] / totalAmount,
+                };
+            }
+        );
 
         const multiplier = 3.6; // 1% of 360
 
@@ -299,36 +309,38 @@ const ProjectComponent = ({ pageProps }) => {
                                         {labelTodo('Grant period')}
                                     </div>
                                 </div>
-
                                 {/* Table Rows */}
-                                {initiativeData._funders.map((item, index) => (
-                                    <div
-                                        key={`f-${index}`}
-                                        className="flex pt-16 pb-16 border-t-2 border-amber-10">
-                                        <div className="w-full t-h6">
-                                            {item.Account__r.Name}
+                                {/* initiativeData._funders.map((item, index) => ( */}
+                                {Object.values(initiativeData._funders).map(
+                                    (item, index) => (
+                                        <div
+                                            key={`f-${index}`}
+                                            className="flex pt-16 pb-16 border-t-2 border-amber-10">
+                                            <div className="w-full t-h6">
+                                                {item.Account__r.Name}
+                                            </div>
+                                            <div className="w-full">
+                                                <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
+                                                    {item.Translated_Type__c}
+                                                </span>
+                                            </div>
+                                            <div className="w-full t-caption">
+                                                {item.CurrencyIsoCode}{' '}
+                                                {item.Amount__c.toLocaleString(
+                                                    'de-DE'
+                                                )}
+                                            </div>
+                                            <div className="w-full t-caption">
+                                                {item.Approval_Date__c}
+                                            </div>
+                                            <div className="w-full t-caption">
+                                                {item.Grant_Start_Date__c}
+                                                {' - '}
+                                                {item.Grant_End_Date__c}
+                                            </div>
                                         </div>
-                                        <div className="w-full">
-                                            <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
-                                                {item.Translated_Type__c}
-                                            </span>
-                                        </div>
-                                        <div className="w-full t-caption">
-                                            {item.CurrencyIsoCode}{' '}
-                                            {item.Amount__c.toLocaleString(
-                                                'de-DE'
-                                            )}
-                                        </div>
-                                        <div className="w-full t-caption">
-                                            {item.Approval_Date__c}
-                                        </div>
-                                        <div className="w-full t-caption">
-                                            {item.Grant_Start_Date__c}
-                                            {' - '}
-                                            {item.Grant_End_Date__c}
-                                        </div>
-                                    </div>
-                                ))}
+                                    )
+                                )}
                             </div>
                         </div>
                     </SectionWrapper>
@@ -340,16 +352,19 @@ const ProjectComponent = ({ pageProps }) => {
                                 {labelTodo('Update')}
                             </Button>
                         </div>
-                        {initiativeData._goals.map((goal, index) => (
-                            <div
-                                key={`g-${index}`}
-                                className="p-16 mt-24 border-4 border-blue-10 rounded-4">
-                                <p className="t-preamble">{goal.Goal__c}</p>
-                                <p className="t-sh6 text-blue-60">
-                                    {goal.Type__c}
-                                </p>
-                            </div>
-                        ))}
+                        {/* initiativeData._goals.map((goal, index) => ( */}
+                        {Object.values(initiativeData._goals).map(
+                            (goal, index) => (
+                                <div
+                                    key={`g-${index}`}
+                                    className="p-16 mt-24 border-4 border-blue-10 rounded-4">
+                                    <p className="t-preamble">{goal.Goal__c}</p>
+                                    <p className="t-sh6 text-blue-60">
+                                        {goal.Type__c}
+                                    </p>
+                                </div>
+                            )
+                        )}
                     </SectionWrapper>
                     {/* Applicants */}
                     <SectionWrapper className="mt-32 bg-white rounded-8">
@@ -498,32 +513,29 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </div>
                                 {/* Table Rows */}
-                                {initiativeData._employeesFunded?.length &&
-                                    initiativeData._employeesFunded?.map(
-                                        (item, index) => (
-                                            <div
-                                                key={`e-${index}`}
-                                                className="flex pt-16 pb-16 border-t-2 border-amber-10">
-                                                <div className="w-full t-h6">
-                                                    {item.Job_Title__c}
-                                                </div>
-                                                <div className="w-full">
-                                                    <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
-                                                        {
-                                                            item.Translated_Role_Type__c
-                                                        }
-                                                    </span>
-                                                </div>
-                                                {largeBps.includes(bp) && (
-                                                    <div className="w-full t-caption">
-                                                        {
-                                                            item.Percent_Involvement__c
-                                                        }
-                                                    </div>
-                                                )}
+
+                                {/* initiativeData._employeesFunded?.length && */}
+                                {Object.values(
+                                    initiativeData._employeesFunded
+                                ).map((item, index) => (
+                                    <div
+                                        key={`e-${index}`}
+                                        className="flex pt-16 pb-16 border-t-2 border-amber-10">
+                                        <div className="w-full t-h6">
+                                            {item.Job_Title__c}
+                                        </div>
+                                        <div className="w-full">
+                                            <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
+                                                {item.Translated_Role_Type__c}
+                                            </span>
+                                        </div>
+                                        {largeBps.includes(bp) && (
+                                            <div className="w-full t-caption">
+                                                {item.Percent_Involvement__c}
                                             </div>
-                                        )
-                                    )}
+                                        )}
+                                    </div>
+                                ))}
                             </div>
                         </SectionWrapper>
                     )}

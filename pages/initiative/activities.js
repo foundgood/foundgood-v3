@@ -29,24 +29,27 @@ const ActivitiesComponent = ({ pageProps }) => {
     const [activities, setActivities] = useState();
 
     useEffect(() => {
-        console.log(initiative);
-        if (initiative._activities?.length > 0) {
+        console.log(initiative._activities);
+        if (initiative._activities) {
             const descriptions = JSON.parse(initiative.Problem_Resolutions__c);
-            const activities = initiative._activities.map((item, index) => {
-                const title = `Activity #${index + 1}`;
-                const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
-                    success => {
-                        return success.Name;
-                    }
-                );
+            const activities = Object.values(initiative._activities).map(
+                (item, index) => {
+                    console.log('item: ', item);
+                    const title = `Activity #${index + 1}`;
+                    const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
+                        success => {
+                            return success.Name;
+                        }
+                    );
 
-                return {
-                    title: title,
-                    description: descriptions[index].text,
-                    location: 'Missing data',
-                    successIndicators: successIndicators,
-                };
-            });
+                    return {
+                        title: title,
+                        description: '', //descriptions[index].text,
+                        location: item.Initiative_Location__c, //labelTodo('Location is missing'),
+                        successIndicators: successIndicators,
+                    };
+                }
+            );
             setActivities(activities);
         }
     }, [initiative]);
