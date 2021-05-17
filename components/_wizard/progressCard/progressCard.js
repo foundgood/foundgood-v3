@@ -13,7 +13,7 @@ import { Number, InputWrapper } from 'components/_inputs';
 const ProgressCardComponent = ({ headline, items, controller }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
-    return (
+    return controller ? (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100">
             {headline && <h4 className="t-sh4">{headline}</h4>}
             {items && (
@@ -41,7 +41,8 @@ const ProgressCardComponent = ({ headline, items, controller }) => {
                                         subLabel={labelTodo(
                                             'Additional reached'
                                         )}
-                                        placeholder="0"
+                                        plac
+                                        eholder="0"
                                         controller={controller}
                                     />
                                 </InputWrapper>
@@ -51,7 +52,7 @@ const ProgressCardComponent = ({ headline, items, controller }) => {
                 </div>
             )}
         </div>
-    );
+    ) : null;
 };
 
 ProgressCardComponent.propTypes = {
@@ -65,6 +66,7 @@ ProgressCardComponent.propTypes = {
             value: t.any, //number, // Default number input value
         })
     ),
+    controller: t.object,
 };
 
 ProgressCardComponent.defaultProps = {};
