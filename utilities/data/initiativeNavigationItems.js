@@ -1,13 +1,13 @@
-const reportingItems = () => [
+const initiativeItems = () => [
     {
         title: 'Introduction',
-        url: '/wizard/initiative/introduction',
+        url: '/wizard/introduction',
         visible: false,
         hideBack: true,
     },
     {
         title: 'Information capture',
-        url: '/wizard/initiative/information-capture',
+        url: '/wizard/information-capture',
         visible: false,
         hideBack: true,
     },
@@ -17,23 +17,23 @@ const reportingItems = () => [
         items: [
             {
                 title: 'Overview',
-                url: '/wizard/initiative/overview',
+                url: '/wizard/overview',
             },
             {
                 title: 'Funders',
-                url: '/wizard/initiative/funders',
+                url: '/wizard/funders',
             },
             {
                 title: 'Applicants',
-                url: '/wizard/initiative/applicants',
+                url: '/wizard/applicants',
             },
             {
                 title: 'Collaborators',
-                url: '/wizard/initiative/collaborators',
+                url: '/wizard/collaborators',
             },
             {
                 title: 'Employees funded',
-                url: '/wizard/initiative/employees-funded',
+                url: '/wizard/employees-funded',
             },
         ],
     },
@@ -43,19 +43,19 @@ const reportingItems = () => [
         items: [
             {
                 title: 'Goals',
-                url: '/wizard/initiative/goals',
+                url: '/wizard/goals',
             },
             {
                 title: 'Activities',
-                url: '/wizard/initiative/activities',
+                url: '/wizard/activities',
             },
             {
                 title: 'Indicators',
-                url: '/wizard/initiative/indicators',
+                url: '/wizard/indicators',
             },
             {
                 title: 'Sharing results',
-                url: '/wizard/initiative/sharing-results',
+                url: '/wizard/sharing-results',
             },
         ],
     },
@@ -65,15 +65,15 @@ const reportingItems = () => [
         items: [
             {
                 title: 'Progress so far',
-                url: '/wizard/initiative/progress-so-far',
+                url: '/wizard/progress-so-far',
             },
             // {
             //     title: 'Evaluations',
-            //     url: '/wizard/initiative/evaluations',
+            //     url: '/wizard/evaluations',
             // },
             // {
             //     title: 'Influence on policy',
-            //     url: '/wizard/initiative/influence-on-policy',
+            //     url: '/wizard/influence-on-policy',
             // },
         ],
     },
@@ -83,7 +83,7 @@ const reportingItems = () => [
     //     items: [
     //         {
     //             title: 'Logbook entry',
-    //             url: '/wizard/initiative/logbook-entry',
+    //             url: '/wizard/logbook-entry',
     //         },
     //     ],
     // },
@@ -93,50 +93,50 @@ const reportingItems = () => [
         items: [
             {
                 title: 'Report schedule',
-                url: '/wizard/initiative/report-schedule',
+                url: '/wizard/report-schedule',
             },
         ],
     },
 ];
 
-const detailingItems = () => [
+const initiativeDetailingItems = () => [
     // {
     //     title: 'Background',
     //     visible: true,
     //     items: [
     //         {
     //             title: 'Problems to be solved',
-    //             url: '/wizard/initiative/problems-to-be-solved',
+    //             url: '/wizard/problems-to-be-solved',
     //         },
     //         {
     //             title: 'Causes of the problem',
-    //             url: '/wizard/initiative/causes-of-the-problem',
+    //             url: '/wizard/causes-of-the-problem',
     //         },
     //         {
     //             title: 'Organisational focus',
-    //             url: '/wizard/initiative/organisational-focus',
+    //             url: '/wizard/organisational-focus',
     //         },
     //         {
     //             title: 'Our vision',
-    //             url: '/wizard/initiative/our-vision',
+    //             url: '/wizard/our-vision',
     //         },
     //         {
     //             title: 'Reasons for this solve',
-    //             url: '/wizard/initiative/reasons-for-this-solve',
+    //             url: '/wizard/reasons-for-this-solve',
     //         },
     //     ],
     // },
 ];
 
-const planningItems = () => [
+const initiativePlanningItems = () => [
     // {
     //     title: 'Targets',
-    //     url: '/wizard/initiative/targets',
+    //     url: '/wizard/targets',
     // },
     // {
     //     title: 'Outcomes',
-    //     url: '/wizard/initiative/outcomes',
+    //     url: '/wizard/outcomes',
     // },
 ];
 
-export { reportingItems, detailingItems, planningItems };
+export { initiativeItems, initiativeDetailingItems, initiativePlanningItems };

@@ -2,6 +2,7 @@ import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import { query } from 'utilities/api/salesForce/fetchers';
 import { queries } from 'utilities/api/salesForce/queries';
+import { data } from 'autoprefixer';
 
 // Wrapper for sales force query
 async function sfQuery(q) {
@@ -15,6 +16,17 @@ async function sfQuery(q) {
     } catch (error) {
         console.warn(error);
     }
+}
+
+function _returnAsKeys(data) {
+    if (data) {
+        const keyedData = [...(Array.isArray(data) ? data : [data])].reduce(
+            (acc, item) => ({ ...acc, [item.Id]: item }),
+            {}
+        );
+        return keyedData;
+    }
+    return null;
 }
 
 const defaultInitiative = {
@@ -50,6 +62,12 @@ const useInitiativeDataStore = create(
 
         initiative: {
             ...defaultInitiative,
+        },
+
+        // Getter for report based on ID
+        getReport(id) {
+            console.log(get().initiative);
+            return id ? get().initiative?._reports[id] ?? {} : {};
         },
 
         // Update initiative model and connected models
@@ -245,13 +263,15 @@ const useInitiativeDataStore = create(
             set(() => ({
                 initiative: {
                     ...initiativeData,
-                    _collaborators: collaboratorsData,
-                    _funders: fundersData,
-                    _employeesFunded: employeesFundedData,
-                    _reports: reportsData,
-                    _goals: goalsData,
-                    _activities: activitiesData,
-                    _activitySuccessMetrics: activitySuccessMetricsData,
+                    _collaborators: _returnAsKeys(collaboratorsData),
+                    _funders: _returnAsKeys(fundersData),
+                    _employeesFunded: _returnAsKeys(employeesFundedData),
+                    _reports: _returnAsKeys(reportsData),
+                    _goals: _returnAsKeys(goalsData),
+                    _activities: _returnAsKeys(activitiesData),
+                    _activitySuccessMetrics: _returnAsKeys(
+                        activitySuccessMetricsData
+                    ),
                 },
             }));
         },

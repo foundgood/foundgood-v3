@@ -8,24 +8,35 @@ import {
     useWizardNavigationStore,
     useInitiativeDataStore,
 } from 'utilities/store';
-import { useMetadata } from 'utilities/hooks';
+import { useMetadata, useContextMode } from 'utilities/hooks';
 
 // Components
 import { TopLevelItem } from 'components/_wizard/asideNavigation';
 
 const AsideNavigationComponent = () => {
+    // Context for wizard pages
+    const { MODE, CONTEXTS, UPDATE } = useContextMode();
+
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
     // Store: wizardNavigation
-    const { buildWizardItems, items } = useWizardNavigationStore();
+    const {
+        buildInitiativeWizardItems,
+        buildReportWizardItems,
+        items,
+    } = useWizardNavigationStore();
 
     // Store: Initiative data
     const { initiative } = useInitiativeDataStore();
 
     // Effect: Update wizard navigation items
     useEffect(() => {
-        buildWizardItems(initiative.Configuration_Type__c);
+        if (MODE === CONTEXTS.REPORT) {
+            buildReportWizardItems();
+        } else {
+            buildInitiativeWizardItems(initiative.Configuration_Type__c);
+        }
     }, []);
 
     return (
