@@ -34,9 +34,27 @@ const ProjectComponent = ({ pageProps }) => {
     // Data manipulation
     const [developmentGoals, setDevelopmentGoals] = useState();
     const [initiativeData, setInitiativeData] = useState();
+    const [donutData, setDonutData] = useState();
+    const [pieChartStyle, setPieChartStyle] = useState({});
+
+    const donutColors = [
+        'bg-teal-60',
+        'bg-blue-60',
+        'bg-coral-60',
+        'bg-amber-60',
+    ];
+    const donutHex = [
+        '#507C93', // bg-teal-60
+        '#545E92', // bg-blue-60
+        '#995B57', // bg-coral-60
+        '#977958', // bg-amber-60
+    ];
 
     useEffect(() => {
-        console.log(initiative);
+        // Initial Load - Handle empty object state
+        if (initiative._funders == null) return;
+
+        // Merge goal data, to signel array
         const goalAmounts = initiative?.Problem_Effect__c?.split(';');
         const goalTitles = initiative?.Translated_Problem_Effect__c?.split(';');
         if (goalTitles && goalTitles.length > 0) {
@@ -45,6 +63,64 @@ const ProjectComponent = ({ pageProps }) => {
             });
             setDevelopmentGoals(developmentGoals);
         }
+
+        // 🍩 Donut data 🍩
+        // Build donut slices using color gradient
+        // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
+
+        const totalAmount = initiative?._funders.reduce((total, funder) => {
+            return total + funder.Amount__c;
+        }, 0);
+
+        // // TEMPORARY USE OTHER AMOUNTS
+        // const donutAmounts = [500000, 1000000, 350000];
+        // const totalAmount = 1850000;
+
+        const donutData = initiative?._funders.map((funder, index) => {
+            return {
+                color: donutColors[index],
+                hex: donutHex[index],
+                name: funder.Account__r.Name,
+                currency: funder.CurrencyIsoCode,
+                amount: funder.Amount__c,
+                totalAmount: totalAmount,
+                percentage: funder.Amount__c / totalAmount,
+                // // TEMPORARY USE OTHER AMOUNTS
+                // amount: donutAmounts[index],
+                // totalAmount: totalAmount,
+                // percentage: donutAmounts[index] / totalAmount,
+            };
+        });
+
+        const multiplier = 3.6; // 1% of 360
+
+        // Create object array - add previous items "deg" (360 deg), to position current slice
+        let donutStyles = donutData.reduce((previous, slice) => {
+            const prevDeg = previous[previous.length - 1]
+                ? previous[previous.length - 1].deg
+                : 0;
+            const deg = slice.percentage * 100 * multiplier;
+            const obj = {
+                deg: deg + prevDeg,
+                hex: slice.hex,
+            };
+            previous.push(obj);
+            return previous;
+        }, []);
+        // Create array of color / deg pairs, one per slice
+        donutStyles = donutStyles.map((slice, index) => {
+            // Last Slice uses '0' instead of 'X deg' - to close circle
+            if (index == donutStyles.length - 1) {
+                return `${slice.hex} 0`;
+            } else {
+                return `${slice.hex} 0 ${slice.deg}deg`;
+            }
+        });
+        // Construct gradient string
+        // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
+        const gradient = `conic-gradient(${donutStyles.join(', ')})`;
+        setPieChartStyle({ backgroundImage: gradient });
+        setDonutData(donutData);
         setInitiativeData(initiative);
     }, [initiative]);
 
@@ -131,7 +207,9 @@ const ProjectComponent = ({ pageProps }) => {
                                                             key={`g-${index}`}
                                                             className="mt-8 t-h5">
                                                             <span className="px-6 pt-4 mr-4 leading-none text-white bg-teal-300 rounded-4">
-                                                                {problem.amount}
+                                                                {problem.amount.toLocaleString(
+                                                                    'de-DE'
+                                                                )}
                                                             </span>
                                                             {problem.title}
                                                         </h3>
@@ -152,29 +230,58 @@ const ProjectComponent = ({ pageProps }) => {
                             </Button>
                         </div>
 
-                        <div className="mt-32">
-                            {/* Table header */}
-                            <div className="flex pb-8">
-                                <div className="w-full t-footnote-bold">
-                                    {labelTodo('Funder')}
-                                </div>
-                                <div className="w-full t-footnote-bold">
-                                    {labelTodo('Type')}
-                                </div>
-                                <div className="w-full t-footnote-bold">
-                                    {labelTodo('Amount')}
-                                </div>
-                                <div className="w-full t-footnote-bold">
-                                    {labelTodo('Approval date')}
-                                </div>
-                                <div className="w-full t-footnote-bold">
-                                    {labelTodo('Grant period')}
-                                </div>
+                        <div className="flex items-center p-16 bg-coral-10">
+                            <div className="w-1/2 p-24 t-h1">
+                                {/* Donut chart */}
+                                <div
+                                    className="pie"
+                                    style={pieChartStyle}></div>
                             </div>
+                            <div className="w-1/2">
+                                {/* Headline */}
+                                <div className="t-caption-bold">
+                                    Funders and contributions overall
+                                </div>
+                                {/* List of funders */}
+                                {donutData.map((item, index) => (
+                                    <div
+                                        key={`d-${index}`}
+                                        className="flex mt-8 t-caption">
+                                        <span
+                                            className={`w-16 h-16 mr-8 rounded-2 ${item.color}`}></span>
+                                        {`${item.name} - ${
+                                            item.currency
+                                        } ${item.amount.toLocaleString(
+                                            'de-DE'
+                                        )}`}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-                            {/* Table Rows */}
-                            {initiativeData._funders?.length &&
-                                initiativeData._funders.map((item, index) => (
+                        <div className="mt-32 overflow-x-scroll md:overflow-hidden">
+                            <div className="mt-32 min-w-[680px]">
+                                {/* Table header */}
+                                <div className="flex pb-8">
+                                    <div className="w-full t-footnote-bold">
+                                        {labelTodo('Funder')}
+                                    </div>
+                                    <div className="w-full t-footnote-bold">
+                                        {labelTodo('Type')}
+                                    </div>
+                                    <div className="w-full t-footnote-bold">
+                                        {labelTodo('Amount')}
+                                    </div>
+                                    <div className="w-full t-footnote-bold">
+                                        {labelTodo('Approval date')}
+                                    </div>
+                                    <div className="w-full t-footnote-bold">
+                                        {labelTodo('Grant period')}
+                                    </div>
+                                </div>
+
+                                {/* Table Rows */}
+                                {initiativeData._funders.map((item, index) => (
                                     <div
                                         key={`f-${index}`}
                                         className="flex pt-16 pb-16 border-t-2 border-amber-10">
@@ -188,7 +295,9 @@ const ProjectComponent = ({ pageProps }) => {
                                         </div>
                                         <div className="w-full t-caption">
                                             {item.CurrencyIsoCode}{' '}
-                                            {item.Amount__c}
+                                            {item.Amount__c.toLocaleString(
+                                                'de-DE'
+                                            )}
                                         </div>
                                         <div className="w-full t-caption">
                                             {item.Approval_Date__c}
@@ -200,6 +309,7 @@ const ProjectComponent = ({ pageProps }) => {
                                         </div>
                                     </div>
                                 ))}
+                            </div>
                         </div>
                     </SectionWrapper>
                     {/* Collaborators */}

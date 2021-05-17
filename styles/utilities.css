@@ -101,4 +101,33 @@
         position: relative !important;
         height: unset !important;
     }
+
+    /* PIE CHART - Using color gradient */
+    /* https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/ */
+    .pie {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+        border-radius: 50%;
+        background-origin: border-box; /* fixes a minor clipping issue in Chrome */
+
+        /* EXMAPLE of calculation of PIE SLICES
+
+        20%             20  * 3.6 = 72 degrees      (end of segment 1)
+        45%                         72 degreess      (start of segment 2)
+        45%       (45 + 20) * 3.6 = 234 degrees      (end of segment 2)
+        15%                         234 degrees      (start of segment 3)
+        15%   (45 + 20 + 15) * 3.6 = 288 degrees     (end of segment 3)
+        20%     last stop is always 360 degrees      (start of segment 4)
+        
+        background-image: conic-gradient(
+            #ff0000 72deg,
+            #ff00ff 72deg,
+            #ff00ff 234deg,
+            #fff000 234deg,
+            #fff000 288deg,
+            #0000ff 0
+        );
+        */
+    }
 }
