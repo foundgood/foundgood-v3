@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 
 // Utilities
+import CryptoJS from 'crypto-js';
 import { salesForce } from 'utilities/api';
 import { useAuthStore } from 'utilities/store';
 import { hasWindow } from 'utilities';
@@ -40,8 +41,11 @@ const useAuth = () => {
 
     // Helper: Extracts login url
     function _getLoginUrl() {
-        const authUrl = process.env.NEXT_PUBLIC_AUTH_URL;
-        const clientId = process.env.NEXT_PUBLIC_LOGIN_CLIENT_ID;
+        const authUrl = process.env.NEXT_PUBLIC_END_USER_AUTH_URL;
+        const clientId = CryptoJS.AES.decrypt(
+            process.env.NEXT_PUBLIC_LOGIN_CLIENT_ID,
+            process.env.NEXT_PUBLIC_SECRET
+        ).toString(CryptoJS.enc.Utf8);
         const redirectUrl = encodeURIComponent(
             `${process.env.NEXT_PUBLIC_LOGIN_REDIRECT_URL_PREFIX}/login_callback`
         );
