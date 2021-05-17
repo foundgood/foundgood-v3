@@ -27,10 +27,10 @@ const ReportCardComponent = ({
     // TODO - update to salesforece format
 
     // Status:
-    // - not started
-    // - in progress
-    // - review
-    // - complete
+    // - Published
+    // - In review
+    // - Not started
+    // - In progress
     return (
         <div
             className={cc([
@@ -48,17 +48,14 @@ const ReportCardComponent = ({
                     'px-8 pt-3 pb-1 rounded-4',
                     { 'bg-coral-20': status == 'Not started' },
                     { 'bg-amber-20': status == 'In progress' },
-                    { 'bg-teal-20': status == 'Review' },
+                    { 'bg-teal-20': status == 'In review' },
                     { 'bg-blue-20': status == 'Published' },
                 ])}>
                 {status}
             </div>
             <div className="mt-8 text-teal-100 t-h5">{labelTodo(headline)}</div>
             <div className="text-teal-60 t-sh6">
-                {status == 'Not started' && 'Due '}
-                {status == 'In progress' && 'Due '}
-                {status == 'Review' && 'Due '}
-                {status == 'Published' && 'Sent (invalid date) '}{' '}
+                {status == 'Published' ? 'Sent ' : 'Due '}
                 {labelTodo(date)}
             </div>
             <div className="self-end mt-16">

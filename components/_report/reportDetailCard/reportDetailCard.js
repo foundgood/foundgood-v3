@@ -21,13 +21,16 @@ const ReportDetailCardComponent = ({ headline, image, description, items }) => {
                     <div className="t-h6">{headline}</div>
                 </div>
 
-                {isJson(description) &&
+                {description &&
+                    isJson(description) &&
                     JSON.parse(description).map(item => (
                         <p key={item.id} className="mt-16">
                             {item.text}
                         </p>
                     ))}
-                {!isJson(description) && <p className="mt-16">{description}</p>}
+                {description && !isJson(description) && (
+                    <p className="mt-16">{description}</p>
+                )}
             </div>
 
             {items && (

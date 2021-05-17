@@ -20,14 +20,26 @@ const ReportsComponent = ({ pageProps }) => {
 
     // Fetch initiative data
     const { initiative } = useInitiativeDataStore();
-    const [initiativeData, setInitiativeData] = useState();
+    const [reportGroups, setReportGroups] = useState();
 
     // Hook: Metadata
     const { labelTodo, label, valueSet, log } = useMetadata();
 
     useEffect(() => {
         console.log(initiative);
-        setInitiativeData(initiative);
+        // Group reports by funder
+        const funders = initiative._funders.map(item => {
+            // Get reports
+            const reports = initiative._reports.filter(
+                report => report.Funder_Report__c == item.Id
+            );
+            return { ...item, ...{ reports: reports } };
+        });
+        // Filter out funders without reports
+        const reports = funders.filter(funder => {
+            return funder.reports.length > 0;
+        });
+        setReportGroups(reports);
     }, [initiative]);
 
     return (
@@ -36,163 +48,51 @@ const ReportsComponent = ({ pageProps }) => {
                 <h1 className="t-h1">Reports</h1>
             </SectionWrapper>
 
-            {initiativeData && initiativeData._reports.length && (
-                <SectionWrapper className="mt-32 bg-white rounded-8">
-                    <div className="flex justify-between">
-                        <h2 className="t-h3">
-                            {labelTodo('Reports for Tuborg Foundation')}
-                        </h2>
-                        <Button
-                            variant="secondary"
-                            action={() => {
-                                console.log('Update reports');
-                                // TODO!
-                                // setModalIsOpen(true);
-                                // setFunder(funder);
-                            }}>
-                            {labelTodo('Update')}
-                        </Button>
-                    </div>
+            {reportGroups &&
+                reportGroups.map((item, index) => (
+                    <SectionWrapper
+                        key={`r-${index}`}
+                        className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">{item.Translated_Type__c}</h2>
+                            <Button
+                                variant="secondary"
+                                action={() => {
+                                    console.log('Update reports');
+                                    // TODO!
+                                    // setModalIsOpen(true);
+                                    // setFunder(funder);
+                                }}>
+                                {labelTodo('Update')}
+                            </Button>
+                        </div>
 
-                    <div className="flex flex-wrap items-start">
-                        {initiativeData._reports.map((item, index) => (
-                            <ReportCard
-                                key={`r-${index}`}
-                                useBackground={false}
-                                headline={'Missing data'}
-                                date={item.Due_Date__c}
-                                status={item.Status__c}
-                                actionUpdate={() => {
-                                    console.log('Update report: ', item);
-                                }}
-                            />
-                        ))}
-                    </div>
-                </SectionWrapper>
-            )}
-
-            {/* <SectionWrapper className="bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">
-                        {labelTodo('Reports for Novo Nordisk Foundation')}
-                    </h2>
-                    <Button
-                        variant="secondary"
-                        action={() => {
-                            console.log('Update reports');
-                            // TODO!
-                            // setModalIsOpen(true);
-                            // setFunder(funder);
-                        }}>
-                        {labelTodo('Update')}
-                    </Button>
-                </div>
-
-                <div className="flex flex-wrap items-start">
-                    <ReportCard
-                        useBackground={false}
-                        headline="Status report"
-                        date="April 28th 2021"
-                        status="not-started"
-                        actionUpdate={() => {
-                            console.log('Update report: ');
-                            // setModalIsOpen(true);
-                            // setUpdateId(item.id);
-                            // setFunder(funder);
-                        }}
-                    />
-                    <ReportCard
-                        useBackground={false}
-                        headline="Status report"
-                        date="April 28th 2021"
-                        status="in-progress"
-                        actionUpdate={() => {
-                            console.log('Update report: ');
-                        }}
-                    />
-                    <ReportCard
-                        useBackground={false}
-                        headline="Status report"
-                        date="April 28th 2021"
-                        status="review"
-                        actionUpdate={() => {
-                            console.log('Update report: ');
-                        }}
-                    />
-                    <ReportCard
-                        useBackground={false}
-                        headline="Status report"
-                        date="April 28th 2021"
-                        status="complete"
-                        actionUpdate={() => {
-                            console.log('Update report: ');
-                        }}
-                    />
-                    <ReportCard
-                        useBackground={false}
-                        headline="Status report"
-                        date="April 28th 2021"
-                        status="not-started"
-                        actionUpdate={() => {
-                            console.log('Update report: ');
-                        }}
-                    />
-                    <ReportCard
-                        useBackground={false}
-                        headline="Status report"
-                        date="April 28th 2021"
-                        status="in-progress"
-                        actionUpdate={() => {
-                            console.log('Update report: ');
-                        }}
-                    />
-                    <ReportCard
-                        useBackground={false}
-                        headline="Status report"
-                        date="April 28th 2021"
-                        status="review"
-                        actionUpdate={() => {
-                            console.log('Update report: ');
-                        }}
-                    />
-                    <ReportCard
-                        useBackground={false}
-                        headline="Status report"
-                        date="April 28th 2021"
-                        status="complete"
-                        actionUpdate={() => {
-                            console.log('Update report: ');
-                        }}
-                    />
-                </div>
-            </SectionWrapper>
-            <SectionWrapper className="mt-32 bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">
-                        {labelTodo('Reports for Tuborg Foundation')}
-                    </h2>
-                    <Button
-                        variant="secondary"
-                        action={() => {
-                            console.log('Update reports');
-                            // TODO!
-                            // setModalIsOpen(true);
-                            // setFunder(funder);
-                        }}>
-                        {labelTodo('Update')}
-                    </Button>
-                </div>
-
-                <ReportCard
-                    useBackground={false}
-                    headline="Status report"
-                    date="April 28th 2021"
-                    status="review"
-                    actionUpdate={() => {
-                        console.log('Update report: ');
-                    }}
-                />
-            </SectionWrapper> */}
+                        <div className="flex flex-wrap">
+                            {item.reports.map((item, index) => {
+                                const headline =
+                                    item.Report_Viewer_Version__c == '1'
+                                        ? labelTodo('Report')
+                                        : item.Report_Type__c;
+                                const date = item.Due_Date__c;
+                                return (
+                                    <ReportCard
+                                        key={`r-${index}`}
+                                        useBackground={false}
+                                        headline={headline}
+                                        date={date}
+                                        status={item.Status__c}
+                                        actionUpdate={() => {
+                                            console.log(
+                                                'Update report: ',
+                                                item
+                                            );
+                                        }}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </SectionWrapper>
+                ))}
         </>
     );
 };

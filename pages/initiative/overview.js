@@ -36,6 +36,8 @@ const ProjectComponent = ({ pageProps }) => {
     const [initiativeData, setInitiativeData] = useState();
     const [donutData, setDonutData] = useState();
     const [pieChartStyle, setPieChartStyle] = useState({});
+    const [applicants, setApplicants] = useState();
+    const [collaborators, setCollaborators] = useState();
 
     const donutColors = [
         'bg-teal-60',
@@ -53,6 +55,24 @@ const ProjectComponent = ({ pageProps }) => {
     useEffect(() => {
         // Initial Load - Handle empty object state
         if (initiative._funders == null) return;
+
+        console.log('initiative: ', initiative);
+
+        // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
+        // Split them up depending on the type.
+        // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
+        const collaborators = initiative._collaborators.filter(item => {
+            if (item.Translated_Type__c == 'Additional collaborator') {
+                return item;
+            }
+        });
+        const applicants = initiative._collaborators.filter(item => {
+            if (item.Translated_Type__c != 'Additional collaborator') {
+                return item;
+            }
+        });
+        setApplicants(applicants);
+        setCollaborators(collaborators);
 
         // Merge goal data, to signel array
         const goalAmounts = initiative?.Problem_Effect__c?.split(';');
@@ -230,7 +250,7 @@ const ProjectComponent = ({ pageProps }) => {
                             </Button>
                         </div>
 
-                        <div className="flex items-center p-16 bg-coral-10">
+                        <div className="flex items-center p-16">
                             <div className="w-1/2 p-24 t-h1">
                                 {/* Donut chart */}
                                 <div
@@ -312,33 +332,50 @@ const ProjectComponent = ({ pageProps }) => {
                             </div>
                         </div>
                     </SectionWrapper>
-                    {/* Collaborators */}
+                    {/* Goals */}
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
-                            <h2 className="t-h3">
-                                {labelTodo('Collaborators')}
-                            </h2>
+                            <h2 className="t-h3">{labelTodo('Goals')}</h2>
                             <Button variant="secondary">
                                 {labelTodo('Update')}
                             </Button>
                         </div>
-                        {initiativeData._collaborators?.length &&
-                            initiativeData._collaborators.map((item, index) => (
-                                <div key={`c-${index}`} className="mt-32">
+                        {initiativeData._goals.map((goal, index) => (
+                            <div
+                                key={`g-${index}`}
+                                className="p-16 mt-24 border-4 border-blue-10 rounded-4">
+                                <p className="t-preamble">{goal.Goal__c}</p>
+                                <p className="t-sh6 text-blue-60">
+                                    {goal.Type__c}
+                                </p>
+                            </div>
+                        ))}
+                    </SectionWrapper>
+                    {/* Applicants */}
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">{labelTodo('Applicants')}</h2>
+                            <Button variant="secondary">
+                                {labelTodo('Update')}
+                            </Button>
+                        </div>
+                        {applicants &&
+                            applicants.map((item, index) => (
+                                <div key={item.Id} className="mt-32">
                                     <h4 className="t-h5">
                                         {item.Translated_Type__c}
                                     </h4>
                                     <h3 className="flex items-center leading-none t-h4">
-                                        <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
-                                            {/* TODO - Where does image come from? */}
+                                        {/* TODO - Where does image come from? */}
+                                        {/* <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
                                             <Image
                                                 src="/images/fg-landscape-1.jpg"
                                                 layout="fill"
                                                 objectFit="cover"
                                                 sizes="64px"
                                             />
-                                        </div>
-                                        {item.Translated_Type__c.Name}
+                                        </div> */}
+                                        {item.Account__r.Name}
                                     </h3>
                                     <p className="mt-16 t-sh5 text-blue-60">
                                         {/* Display year, not full date */}
@@ -352,6 +389,47 @@ const ProjectComponent = ({ pageProps }) => {
                                 </div>
                             ))}
                     </SectionWrapper>
+                    {/* Collaborators */}
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {labelTodo('Collaborators')}
+                            </h2>
+                            <Button variant="secondary">
+                                {labelTodo('Update')}
+                            </Button>
+                        </div>
+                        {collaborators &&
+                            collaborators.map((item, index) => (
+                                <div key={item.Id} className="mt-32">
+                                    <h4 className="t-h5">
+                                        {item.Translated_Type__c}
+                                    </h4>
+                                    <h3 className="flex items-center leading-none t-h4">
+                                        {/* TODO - Where does image come from? */}
+                                        {/* <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
+                                            <Image
+                                                src="/images/fg-landscape-1.jpg"
+                                                layout="fill"
+                                                objectFit="cover"
+                                                sizes="64px"
+                                            />
+                                        </div> */}
+                                        {item.Account__r.Name}
+                                    </h3>
+                                    <p className="mt-16 t-sh5 text-blue-60">
+                                        {/* Display year, not full date */}
+                                        {item.Start_Date__c.substring(0, 4)}
+                                        {' - '}
+                                        {item.End_Date__c.substring(0, 4)}
+                                    </p>
+                                    <p className="mt-16 t-body">
+                                        {item.Description__c}
+                                    </p>
+                                </div>
+                            ))}
+                    </SectionWrapper>
+
                     {/* Employees funded */}
                     {initiativeData._employeesFunded && (
                         <SectionWrapper className="mt-32 bg-white rounded-8">
