@@ -28,7 +28,8 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
     useEffect(() => {
         // Fetch initiative data
         // TODO - Get ID from URL or Store
-        const id = 'a0p1x00000Eh8COAAZ';
+        const id = 'a0p1x00000EkTIwAAN'; // New one from Luke!
+        // const id = 'a0p1x00000Eh8COAAZ'; // Org test case from Hanne
         populateInitiative(id);
     }, []);
 

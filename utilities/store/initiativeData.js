@@ -252,13 +252,16 @@ const useInitiativeDataStore = create(
                 queries.initiativeReport.getAll(id)
             );
             const goalsData = await sfQuery(queries.initiativeGoal.getAll(id));
+
             const activitiesData = await sfQuery(
                 queries.initiativeActivity.getAll(id)
+            );
+            const activityGoalsData = await sfQuery(
+                queries.initiativeActivityGoal.getAll(id)
             );
             const activitySuccessMetricsData = await sfQuery(
                 queries.initiativeActivitySuccessMetric.getAll(id)
             );
-
             // Update state
             set(() => ({
                 initiative: {
@@ -272,6 +275,7 @@ const useInitiativeDataStore = create(
                     _activitySuccessMetrics: _returnAsKeys(
                         activitySuccessMetricsData
                     ),
+                    _activityGoals: _returnAsKeys(activityGoalsData),
                 },
             }));
         },

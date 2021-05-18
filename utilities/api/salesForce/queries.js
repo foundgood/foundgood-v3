@@ -82,7 +82,7 @@ const queries = {
             )}') ORDER BY Initiative_Activity__r.Name`;
         },
         getAll(initiativeId) {
-            return `${this._query} WHERE Initiative_Activity__r.Initiative__c = '${initiativeId}' ORDER BY Initiative_Activity__r.Name, Current_Status_Last_Modified_Date__c`;
+            return `${this._query} WHERE Initiative_Activity__r.Initiative__c = '${initiativeId}' ORDER BY Initiative_Activity__r.Name`;
         },
     },
     initiativeActivitySuccessMetric: {

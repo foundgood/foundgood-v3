@@ -29,30 +29,78 @@ const ActivitiesComponent = ({ pageProps }) => {
     const [activities, setActivities] = useState();
 
     useEffect(() => {
-        console.log(initiative._activities);
+        // console.log(initiative);
         if (initiative._activities) {
             const descriptions = JSON.parse(initiative.Problem_Resolutions__c);
-            const activities = Object.values(initiative._activities).map(
+            let activities = Object.values(initiative._activities).map(
                 (item, index) => {
-                    console.log('item: ', item);
-                    const title = `Activity #${index + 1}`;
+                    const title = item.Things_To_Do__c;
+                    const location = item.Initiative_Location__c
+                        ? item.Initiative_Location__c.split(';').join(', ')
+                        : labelTodo('Location not available');
                     const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
                         success => {
                             return success.Name;
                         }
                     );
+                    const relatedGoals = Object.values(
+                        initiative._activityGoals
+                    ).map(relatedGoal => {
+                        // This activity has a RelatedGoal
+                        if (relatedGoal.Initiative_Activity__c == item.Id) {
+                            // Compare RelatedGoals ID -> with Goal Ids
+                            return Object.values(initiative._goals).map(
+                                (goal, index) => {
+                                    // Return the original Goal
+                                    if (
+                                        relatedGoal.Initiative_Goal__c ==
+                                        goal.Id
+                                    ) {
+                                        return {
+                                            description:
+                                                goal.Funder_Objective__c,
+                                        };
+                                    }
+                                }
+                            );
+                        }
+                    });
 
+                    // console.log('Goals: ', stripUndefined(relatedGoals));
                     return {
+                        type: item.Activity_Type__c, // "Intervention" or "Dissemination"
                         title: title,
-                        description: '', //descriptions[index].text,
-                        location: item.Initiative_Location__c, //labelTodo('Location is missing'),
+                        description: item.Things_To_Do_Description__c,
+                        location: location,
                         successIndicators: successIndicators,
+                        goals: descriptions,
+                        relatedGoals: stripUndefined(relatedGoals),
                     };
                 }
             );
+            // Only show activities with type "Intervention"
+            activities = activities.filter(item => {
+                return item.type === 'Intervention' ? true : false;
+            });
+            // console.log('activities goal?: ', activities);
             setActivities(activities);
         }
     }, [initiative]);
+
+    // Remove undefined values from array
+    const stripUndefined = array => {
+        var result = [];
+
+        array.forEach(function (item) {
+            if (Array.isArray(item) && item.length != 0) {
+                // Item is a nested array, go one level deeper recursively
+                result.push(stripUndefined(item));
+            } else if (typeof item !== 'undefined') {
+                result.push(item);
+            }
+        });
+        return result;
+    };
 
     return (
         <>
@@ -98,25 +146,20 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 </>
                             )}
 
-                            {/* <SectionWrapper>
+                            <SectionWrapper>
                                 <div className="t-h5">Related goals</div>
-                                <div className="p-8 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
-                                    Building an inspiring and enabling learning
-                                    environment for the natural science in
-                                    Primart and lower secondary school (basic
-                                    school)
-                                </div>
-                                <div className="p-8 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
-                                    Building a strong voice for the importance
-                                    of natural sciences in Primary and lower
-                                    secondary school (basic school)
-                                </div>
-                            </SectionWrapper> */}
+                                {item.relatedGoals.map((goal, index) => (
+                                    <div
+                                        key={`g-${index}`}
+                                        className="p-8 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
+                                        {goal[0].description}
+                                    </div>
+                                ))}
+                            </SectionWrapper>
                         </div>
                     ))}
             </SectionWrapper>
 
-            <SectionWrapper>ah</SectionWrapper>
             {/* Indicators */}
             {/* <div className="mt-32 bg-white rounded-8">
                 <SectionWrapper>
