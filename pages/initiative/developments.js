@@ -10,9 +10,9 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
-import ChartCard from 'components/_report/chartCard';
-import ReportSharingCard from 'components/_report/reportSharingCard';
-import DividerLine from 'components/_report/dividerLine';
+import ChartCard from 'components/_initiative/chartCard';
+import ReportSharingCard from 'components/_initiative/reportSharingCard';
+import DividerLine from 'components/_initiative/dividerLine';
 import SectionWrapper from 'components/sectionWrapper';
 
 const DevelopmentsComponent = ({ pageProps }) => {
