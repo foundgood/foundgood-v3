@@ -51,7 +51,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                             // Compare RelatedGoals ID -> with Goal Ids
                             return Object.values(initiative._goals).map(
                                 (goal, index) => {
-                                    // Return the original Goal
+                                    // Return the original Goal description
                                     if (
                                         relatedGoal.Initiative_Goal__c ==
                                         goal.Id

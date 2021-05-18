@@ -17,7 +17,7 @@ const ReportSharingCardComponent = ({ headline, label, tags, items }) => {
             <div className="flex-auto mr-24">
                 <div className="t-h6">{headline}</div>
                 <p className="mt-16">{label}</p>
-                {items && (
+                {items && items.length > 0 && (
                     <div className="px-16 pt-8 pb-16 mt-8 bg-blue-10 rounded-8">
                         {items.map((item, index) => (
                             <div

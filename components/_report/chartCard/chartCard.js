@@ -19,7 +19,7 @@ const ChartCardComponent = ({ items, headline, useBorder }) => {
                     className="flex items-end justify-between mt-16">
                     <div className="pb-10 t-h5">{item.title}</div>
                     <div>
-                        <div className="t-caption">{item.label}</div>
+                        <div className="text-right t-caption">{item.label}</div>
                         <div className="leading-none text-right t-h1">
                             {item.value}
                         </div>
