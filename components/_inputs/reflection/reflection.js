@@ -20,7 +20,7 @@ const ReflectionComponent = ({
     const [value, setValue] = useState(defaultValue || '');
 
     return (
-        <label className="flex flex-col p-16 !mt-16 rounded-4 bg-teal-10">
+        <label className="flex flex-col p-16 mt-16 rounded-4 bg-teal-10">
             {label && <span className="input-label">{label}</span>}
             {subLabel && (
                 <span className="mt-8 input-sublabel">{subLabel}</span>

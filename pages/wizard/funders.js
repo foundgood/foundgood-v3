@@ -59,6 +59,8 @@ const FundersComponent = ({ pageProps }) => {
         getReportDetails,
         updateFunder,
         updateReportDetails,
+        isNovoLeadFunder,
+        CONSTANTS,
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
@@ -188,6 +190,7 @@ const FundersComponent = ({ pageProps }) => {
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
+    const [funder, setFunder] = useState(null);
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
@@ -252,6 +255,7 @@ const FundersComponent = ({ pageProps }) => {
                             } - ${_get(funder, 'Grant_End_Date__c') || ''}`}
                             action={() => {
                                 setUpdateId(funderKey);
+                                setFunder(funder);
                                 setModalIsOpen(true);
                             }}
                             controller={
@@ -293,6 +297,10 @@ const FundersComponent = ({ pageProps }) => {
                                 value: item.Id,
                             })) ?? []
                         }
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                         required
                         controller={control}
                     />
@@ -301,6 +309,10 @@ const FundersComponent = ({ pageProps }) => {
                         label={labelTodo('Type of funder')}
                         placeholder={labelTodo('Please select')}
                         options={valueSet('initiativeFunder.Type__c')}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                         controller={control}
                         required
                     />
@@ -317,6 +329,10 @@ const FundersComponent = ({ pageProps }) => {
                         selectLabel={labelTodo('Currency')}
                         textLabel={labelTodo('Amount granted')}
                         controller={control}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                     />
                     <DatePicker
                         name="Approval_date__c"
@@ -327,12 +343,20 @@ const FundersComponent = ({ pageProps }) => {
                         name="GrantDate"
                         label={labelTodo('Grant period')}
                         controller={control}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                     />
                     <Text
                         name="Application_Id__c"
                         label={labelTodo('Application ID number')}
                         placeholder={labelTodo('Enter ID')}
                         maxLength={15}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                         controller={control}
                     />
                 </InputWrapper>

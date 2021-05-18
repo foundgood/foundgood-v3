@@ -6,21 +6,22 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
-import { useInitiativeDataStore } from 'utilities/store';
+import {
+    useAuth,
+    useMetadata,
+    useSalesForce,
+    useContextMode,
+} from 'utilities/hooks';
+import {
+    useInitiativeDataStore,
+    useWizardNavigationStore,
+} from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import {
-    InputWrapper,
-    Select,
-    SelectList,
-    Text,
-    DateRange,
-    DatePicker,
-} from 'components/_inputs';
+import { InputWrapper, SelectList, Text } from 'components/_inputs';
 import ActivityCard from 'components/_wizard/activityCard';
 
 const ActivitiesComponent = ({ pageProps }) => {
@@ -28,11 +29,18 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
+    // Context for wizard pages
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+
     // Hook: Metadata
     const { labelTodo, valueSet, controlledValueSet, log } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
+    const {
+        handleSubmit: handleSubmitReflections,
+        control: controlReflections,
+    } = useForm();
     const { isDirty } = useFormState({ control });
 
     // Hook: Salesforce setup
@@ -41,10 +49,15 @@ const ActivitiesComponent = ({ pageProps }) => {
     // Store: Initiative data
     const {
         initiative,
+        getReportDetails,
         updateActivity,
         updateActivityGoals,
+        updateReportDetails,
         CONSTANTS,
     } = useInitiativeDataStore();
+
+    // Store: Wizard navigation
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -112,6 +125,63 @@ const ActivitiesComponent = ({ pageProps }) => {
         }
     }
 
+    // Method: Adds reflections
+    async function submitReflections(formData) {
+        // Reformat form data based on topic keys
+        const reportDetails = Object.keys(initiative?._activities)
+            .reduce((acc, key) => {
+                // Does the reflection relation exist already?
+                const currentReflection = currentReportDetails.filter(
+                    item => item.Initiative_Activity__c === key
+                );
+                return [
+                    ...acc,
+                    {
+                        reportDetailId: currentReflection[0]?.Id ?? false,
+                        relationId: key,
+                        value: formData[`${key}-reflection`],
+                        selected: formData[`${key}-selector`],
+                    },
+                ];
+            }, [])
+            .filter(item => item.selected);
+
+        // Object name
+        const object = 'Initiative_Report_Detail__c';
+
+        // Create or update report detail ids based on reformatted form data
+        // Update if reportDetailId exist in item - this means we have it already in the store
+        const reportDetailIds = await Promise.all(
+            reportDetails.map(item =>
+                item.reportDetailId
+                    ? sfUpdate({
+                          object,
+                          id: item.reportDetailId,
+                          data: {
+                              Description__c: item.value,
+                          },
+                      })
+                    : sfCreate({
+                          object,
+                          data: {
+                              Initiative_Activity__c: item.relationId,
+                              Description__c: item.value,
+                              Initiative_Report__c: REPORT_ID,
+                          },
+                      })
+            )
+        );
+
+        // Bulk update affected activity goals
+        await updateReportDetails(reportDetailIds);
+    }
+
+    // Method: Form error/validation handler
+    function error(error) {
+        console.warn('Form invalid', error);
+        throw error;
+    }
+
     // Local state to handle modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -153,6 +223,18 @@ const ActivitiesComponent = ({ pageProps }) => {
         );
     }, [updateId, modalIsOpen]);
 
+    // Add submit handler to wizard navigation store
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentSubmitHandler(
+                handleSubmitReflections(submitReflections, error)
+            );
+        }, 10);
+    }, []);
+
+    // Current report details
+    const [currentReportDetails] = useState(getReportDetails(REPORT_ID));
+
     return (
         <>
             <TitlePreamble
@@ -187,6 +269,10 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     activityGoal.Initiative_Goal__r.Goal__c
                             );
 
+                        const reflection = currentReportDetails.filter(
+                            item => item.Initiative_Activity__c === activityKey
+                        );
+
                         return (
                             <ActivityCard
                                 key={activityKey}
@@ -197,6 +283,19 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     setUpdateId(activityKey);
                                     setModalIsOpen(true);
                                 }}
+                                controller={
+                                    MODE === CONTEXTS.REPORT &&
+                                    controlReflections
+                                }
+                                name={activityKey}
+                                defaultValue={{
+                                    selected:
+                                        reflection[0] ?? false ? true : false,
+                                    value: reflection[0]?.Description__c ?? '',
+                                }}
+                                inputLabel={labelTodo(
+                                    'Outline your reflection'
+                                )}
                             />
                         );
                     })}

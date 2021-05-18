@@ -31,6 +31,7 @@ const SelectListComponent = ({
     subLabel,
     textLabel,
     required,
+    disabled,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -140,6 +141,7 @@ const SelectListComponent = ({
                                                     'input-defaults-error': error,
                                                 },
                                             ])}
+                                            disabled={disabled}
                                             defaultValue={item.selectValue}
                                             onChange={event => {
                                                 // Get next list
@@ -185,6 +187,7 @@ const SelectListComponent = ({
                                             maxLength={
                                                 maxLength ? maxLength : 'none'
                                             }
+                                            disabled={disabled}
                                             defaultValue={item.textValue}
                                             placeholder={textPlaceholder}
                                             onChange={event => {

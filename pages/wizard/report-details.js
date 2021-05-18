@@ -1,5 +1,5 @@
 // React
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import { useForm, useFormState } from 'react-hook-form';
@@ -97,7 +97,7 @@ const ReportDetailsComponent = () => {
     }, []);
 
     // Get current report
-    const currentReport = getReport(REPORT_ID);
+    const [currentReport] = useState(getReport(REPORT_ID));
 
     return (
         <>

@@ -25,7 +25,7 @@ function _returnAsKeys(data) {
         );
         return keyedData;
     }
-    return;
+    return {};
 }
 
 const defaultInitiative = {
@@ -54,6 +54,9 @@ const constants = {
         ACTIVITY_DISSEMINATION: 'Dissemination',
         ACTIVITY_JOURNAL: 'Journal publication',
     },
+    IDS: {
+        NNF_ACCOUNT: '0011x000002rJb4AAE',
+    },
 };
 
 const useInitiativeDataStore = create(
@@ -68,7 +71,9 @@ const useInitiativeDataStore = create(
         isNovoLeadFunder() {
             const funders = Object.values(get().initiative?._funders ?? [])
                 .filter(funder => funder.Type__c === 'Lead funder')
-                .filter(funder => funder.Account__c === '0011x000002rJb4AAE');
+                .filter(
+                    funder => funder.Account__c === constants.IDS.NNF_ACCOUNT
+                );
             return funders?.length > 0;
         },
 

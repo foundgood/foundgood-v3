@@ -48,7 +48,6 @@ const DateRangeComponent = ({
     // Update state when using setValue
     useEffect(() => {
         if (value) {
-            console.log(value);
             setFrom(value.from);
             setTo(value.to);
         }

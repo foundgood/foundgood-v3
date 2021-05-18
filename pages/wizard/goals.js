@@ -133,7 +133,7 @@ const GoalsComponent = ({ pageProps }) => {
                 preamble={labelTodo('Preamble')}
             />
             <InputWrapper>
-                {Object.keys(initiative?._goals).map(goalKey => {
+                {/* {Object.keys(initiative?._goals).map(goalKey => {
                     const goal = initiative?._goals[goalKey];
                     return (
                         <GoalCard
@@ -150,7 +150,7 @@ const GoalsComponent = ({ pageProps }) => {
                             }}
                         />
                     );
-                })}
+                })} */}
                 <Button
                     theme="teal"
                     className="self-start"

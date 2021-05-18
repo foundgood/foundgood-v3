@@ -43,6 +43,7 @@ const FounderCardComponent = ({
                     label={inputLabel}
                     defaultValue={defaultValue.value}
                     required={selected}
+                    maxLength={750}
                 />
             </AnimateHeight>
         </div>
