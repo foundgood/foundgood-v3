@@ -136,6 +136,7 @@ const ButtonComponent = ({
                 <button
                     disabled={disabled}
                     onClick={event => {
+                        event.stopPropagation();
                         event.preventDefault();
                         action();
                     }}

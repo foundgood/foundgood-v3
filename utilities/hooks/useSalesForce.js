@@ -48,6 +48,8 @@ const useSalesForce = () => {
 
             // Update user timeout
             updateUserTimeout();
+
+            return id;
         } catch (error) {
             console.warn(error);
         }
