@@ -8,6 +8,7 @@ import Image from 'next/image';
 // Utilities
 import { useMetadata, useAuth, useResponsive } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
+import { isJson } from 'utilities';
 
 // Components
 import Button from 'components/button';
@@ -56,7 +57,7 @@ const ProjectComponent = ({ pageProps }) => {
         // Initial Load - Handle empty object state?
         if (initiative._funders == null) return;
 
-        // console.log('initiative: ', initiative);
+        console.log('initiative: ', initiative);
 
         // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
         // Split them up depending on the type.
@@ -176,13 +177,13 @@ const ProjectComponent = ({ pageProps }) => {
                                     <div className="relative w-full h-full">
                                         {initiativeData.Hero_Image_URL__c && (
                                             <div className="relative mt-16 bg-blue-10 imageContainer">
-                                                <Image
+                                                {/* <Image
                                                     className="image"
                                                     src={
                                                         initiativeData.Hero_Image_URL__c
                                                     }
                                                     layout="fill"
-                                                />
+                                                /> */}
                                             </div>
                                         )}
                                     </div>
@@ -551,12 +552,19 @@ const ProjectComponent = ({ pageProps }) => {
                                 </Button>
                             </div>
 
-                            {JSON.parse(initiativeData.Problem_Causes__c).map(
-                                item => (
+                            {/* Some fields are sometimes JSON strings */}
+                            {isJson(initiativeData.Problem_Causes__c) &&
+                                JSON.parse(
+                                    initiativeData.Problem_Causes__c
+                                ).map(item => (
                                     <p key={item.id} className="mt-16 t-body">
                                         {item.text}
                                     </p>
-                                )
+                                ))}
+                            {!isJson(initiativeData.Problem_Causes__c) && (
+                                <p className="mt-16 t-body">
+                                    {initiativeData.Problem_Causes__c}
+                                </p>
                             )}
                         </SectionWrapper>
                     )}
