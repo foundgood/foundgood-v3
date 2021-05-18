@@ -8,6 +8,7 @@ import t from 'prop-types';
 // Utilities
 import { useReportLayoutStore } from 'utilities/store';
 import { useResponsive, useMetadata } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WizardStatus from 'components/_report/wizardStatus';
@@ -22,12 +23,21 @@ import { FiAlignLeft, FiChevronsLeft } from 'react-icons/fi';
 const ReportLayoutComponent = ({ children, pageProps }) => {
     // Store: ReportLayout
     const { leftMenuActive, toggleLeftMenu } = useReportLayoutStore();
+    const { populateInitiative } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
+
+    useEffect(() => {
+        // TODO - Get data from report!
+        // Fetch initiative data
+        const id = 'a0p1x00000EkTIwAAN'; // New one from Luke!
+        // const id = 'a0p1x00000Eh8COAAZ'; // Org test case from Hanne
+        populateInitiative(id);
+    }, []);
 
     // Effect: Listen to breakpoint and toggle menu accordingly
     const smallBps = ['2xs', 'xs', 'sm', 'md', 'lg'];

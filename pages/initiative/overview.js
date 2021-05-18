@@ -12,7 +12,7 @@ import { isJson } from 'utilities';
 
 // Components
 import Button from 'components/button';
-import NumberCard from 'components/_report/numberCard';
+import NumberCard from 'components/_initiative/numberCard';
 import SectionWrapper from 'components/sectionWrapper';
 
 const ProjectComponent = ({ pageProps }) => {
@@ -92,7 +92,6 @@ const ProjectComponent = ({ pageProps }) => {
         // 🍩 Donut data 🍩
         // Build donut slices using color gradient
         // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
-
         const totalAmount = Object.values(initiative._funders).reduce(
             (total, funder) => {
                 return total + funder.Amount__c;
@@ -100,11 +99,6 @@ const ProjectComponent = ({ pageProps }) => {
             0
         );
 
-        // // TEMPORARY USE OTHER AMOUNTS
-        // const donutAmounts = [500000, 1000000, 350000];
-        // const totalAmount = 1850000;
-
-        // const donutData = initiative?._funders.map((funder, index) => {
         const donutData = Object.values(initiative._funders).map(
             (funder, index) => {
                 return {
@@ -115,10 +109,6 @@ const ProjectComponent = ({ pageProps }) => {
                     amount: funder.Amount__c,
                     totalAmount: totalAmount,
                     percentage: funder.Amount__c / totalAmount,
-                    // // TEMPORARY USE OTHER AMOUNTS
-                    // amount: donutAmounts[index],
-                    // totalAmount: totalAmount,
-                    // percentage: donutAmounts[index] / totalAmount,
                 };
             }
         );
@@ -184,6 +174,11 @@ const ProjectComponent = ({ pageProps }) => {
                                                     }
                                                     layout="fill"
                                                 /> */}
+                                                <img
+                                                    src={
+                                                        initiativeData.Hero_Image_URL__c
+                                                    }
+                                                />
                                             </div>
                                         )}
                                     </div>
@@ -311,7 +306,6 @@ const ProjectComponent = ({ pageProps }) => {
                                     </div>
                                 </div>
                                 {/* Table Rows */}
-                                {/* initiativeData._funders.map((item, index) => ( */}
                                 {Object.values(initiativeData._funders).map(
                                     (item, index) => (
                                         <div

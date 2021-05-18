@@ -7,13 +7,13 @@ import t from 'prop-types';
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
+import { isJson } from 'utilities';
 
 // Components
 import Button from 'components/button';
 import SectionWrapper from 'components/sectionWrapper';
-import ReportDetailCard from 'components/_report/reportDetailCard';
-import DividerLine from 'components/_report/dividerLine';
-import ChartCard from 'components/_report/chartCard';
+import ReportDetailCard from 'components/_initiative/reportDetailCard';
+// import ChartCard from 'components/_initiative/chartCard';
 
 const ActivitiesComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -31,7 +31,9 @@ const ActivitiesComponent = ({ pageProps }) => {
     useEffect(() => {
         // console.log(initiative);
         if (initiative._activities) {
-            const descriptions = JSON.parse(initiative.Problem_Resolutions__c);
+            const descriptions = isJson(initiative.Problem_Resolutions__c)
+                ? JSON.parse(initiative.Problem_Resolutions__c)
+                : initiative.Problem_Resolutions__c;
             let activities = Object.values(initiative._activities).map(
                 (item, index) => {
                     const title = item.Things_To_Do__c;
