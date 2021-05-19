@@ -51,6 +51,7 @@ const IntroductionComponent = ({ pageProps }) => {
         initiative,
         reset: resetInitiativeStore,
         populateInitiative,
+        populateReportDetails,
     } = useInitiativeDataStore();
 
     // Method: Submit page content
@@ -80,6 +81,7 @@ const IntroductionComponent = ({ pageProps }) => {
             // Initiative ID "a0p1x00000EkTKOAA3"
             // Report ID a101x000002pIiZAAU
             populateInitiative('a0p1x00000EkTKOAA3');
+            populateReportDetails(REPORT_ID);
         } else {
             // New initiative - reset store
             resetInitiativeStore();

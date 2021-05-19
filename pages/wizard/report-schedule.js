@@ -11,7 +11,6 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Button from 'components/button';
 import Modal from 'components/modal';
 import {
     InputWrapper,
@@ -39,7 +38,11 @@ const ReportScheduleComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Initiative data
-    const { initiative, updateReport } = useInitiativeDataStore();
+    const {
+        initiative,
+        updateReport,
+        isNovoLeadFunder,
+    } = useInitiativeDataStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -182,6 +185,10 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         placeholder={labelTodo('Please select')}
                         options={valueSet('initiativeReport.Report_Type__c')}
                         controller={control}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                         required
                     />
                     <DatePicker
@@ -189,6 +196,10 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         label={labelTodo('Report deadline')}
                         controller={control}
                         required
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                     />
                     <DateRange
                         name="ReportDates"

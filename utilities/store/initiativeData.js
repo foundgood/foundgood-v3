@@ -2,7 +2,6 @@ import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import { query } from 'utilities/api/salesForce/fetchers';
 import { queries } from 'utilities/api/salesForce/queries';
-import { data } from 'autoprefixer';
 
 // Wrapper for sales force query
 async function sfQuery(q) {
@@ -26,7 +25,7 @@ function _returnAsKeys(data) {
         );
         return keyedData;
     }
-    return null;
+    return {};
 }
 
 const defaultInitiative = {
@@ -38,6 +37,7 @@ const defaultInitiative = {
     _activities: {},
     _activityGoals: {},
     _activitySuccessMetrics: {},
+    _reportDetails: {},
 };
 
 const constants = {
@@ -54,6 +54,9 @@ const constants = {
         ACTIVITY_DISSEMINATION: 'Dissemination',
         ACTIVITY_JOURNAL: 'Journal publication',
     },
+    IDS: {
+        NNF_ACCOUNT: '0011x000002rJb4AAE',
+    },
 };
 
 const useInitiativeDataStore = create(
@@ -64,10 +67,28 @@ const useInitiativeDataStore = create(
             ...defaultInitiative,
         },
 
+        // Helper for knowing if NNF is lead funder
+        isNovoLeadFunder() {
+            const funders = Object.values(get().initiative?._funders ?? [])
+                .filter(funder => funder.Type__c === 'Lead funder')
+                .filter(
+                    funder => funder.Account__c === constants.IDS.NNF_ACCOUNT
+                );
+            return funders?.length > 0;
+        },
+
         // Getter for report based on ID
         getReport(id) {
-            console.log(get().initiative);
             return id ? get().initiative?._reports[id] ?? {} : {};
+        },
+
+        // Getter for report details based on report ID
+        getReportDetails(id) {
+            return id
+                ? Object.values(get().initiative?._reportDetails).filter(
+                      item => item.Initiative_Report__c === id
+                  ) ?? []
+                : [];
         },
 
         // Update initiative model and connected models
@@ -192,20 +213,16 @@ const useInitiativeDataStore = create(
 
         // Bulk update multiple ids
         async updateActivityGoals(ids) {
-            let data = await sfQuery(
+            const data = await sfQuery(
                 queries.initiativeActivityGoal.getMultiple(ids)
             );
             if (data) {
-                data = Array.isArray(data) ? data : [data];
                 set(state => ({
                     initiative: {
                         ...state.initiative,
                         _activityGoals: {
                             ...state.initiative._activityGoals,
-                            ...data.reduce(
-                                (acc, item) => ({ ...acc, [item.Id]: item }),
-                                {}
-                            ),
+                            ..._returnAsKeys(data),
                         },
                     },
                 }));
@@ -213,24 +230,56 @@ const useInitiativeDataStore = create(
         },
 
         async updateActivitySuccessMetrics(ids) {
-            let data = await sfQuery(
+            const data = await sfQuery(
                 queries.initiativeActivitySuccessMetric.getMultiple(ids)
             );
             if (data) {
-                data = Array.isArray(data) ? data : [data];
                 set(state => ({
                     initiative: {
                         ...state.initiative,
                         _activitySuccessMetrics: {
                             ...state.initiative._activitySuccessMetrics,
-                            ...data.reduce(
-                                (acc, item) => ({ ...acc, [item.Id]: item }),
-                                {}
-                            ),
+                            ..._returnAsKeys(data),
                         },
                     },
                 }));
             }
+        },
+
+        async updateReportDetails(ids) {
+            const data = await sfQuery(
+                queries.initiativeReportDetail.getMultiple(ids)
+            );
+
+            if (data) {
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        _reportDetails: {
+                            ...state.initiative._reportDetails,
+                            ..._returnAsKeys(data),
+                        },
+                    },
+                }));
+            }
+        },
+
+        // Custom data updaters
+        async populateReportDetails(reportId) {
+            const reportDetailsData = await sfQuery(
+                queries.initiativeReportDetail.getAllReport(reportId)
+            );
+
+            // Update state
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _reportDetails: {
+                        ...state.initiative._reportDetails,
+                        ..._returnAsKeys(reportDetailsData),
+                    },
+                },
+            }));
         },
 
         // Get initiative and all sub data based on initiative ID
@@ -263,8 +312,9 @@ const useInitiativeDataStore = create(
                 queries.initiativeActivitySuccessMetric.getAll(id)
             );
             // Update state
-            set(() => ({
+            set(state => ({
                 initiative: {
+                    ...state.initiative,
                     ...initiativeData,
                     _collaborators: _returnAsKeys(collaboratorsData),
                     _funders: _returnAsKeys(fundersData),

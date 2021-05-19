@@ -2,6 +2,7 @@
 import React from 'react';
 
 // Packages
+import cc from 'classcat';
 import t from 'prop-types';
 import Image from 'next/image';
 
@@ -22,12 +23,19 @@ const CardComponent = ({
     evaluator,
     goals,
     action,
+    selected,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
     return (
-        <div className="p-16 max-w-[600px] border-4 border-teal-20 rounded-8 text-teal-100">
+        <div
+            className={cc([
+                'p-16 max-w-[600px] border-4 border-teal-20 rounded-8 text-teal-100 transition-default',
+                {
+                    '!border-teal-40': selected,
+                },
+            ])}>
             <div className="flex items-start justify-between">
                 {image && (
                     <div className="relative flex-none mr-16 h-96 w-96">
@@ -116,8 +124,12 @@ CardComponent.propTypes = {
     image: t.string,
     // Button action
     action: t.func,
+    // Is card selected
+    selected: t.bool,
 };
 
-CardComponent.defaultProps = {};
+CardComponent.defaultProps = {
+    selected: false,
+};
 
 export default CardComponent;

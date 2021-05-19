@@ -1,5 +1,5 @@
 // React
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import { useForm, useFormState } from 'react-hook-form';
@@ -22,8 +22,10 @@ import {
     InputWrapper,
     Select,
     Text,
+    DatePicker,
     LongText,
     SelectList,
+    DateRange,
 } from 'components/_inputs';
 
 const ReportDetailsComponent = () => {
@@ -48,24 +50,19 @@ const ReportDetailsComponent = () => {
 
     // Store: Initiative data
     const {
-        CONSTANTS,
-        initiative,
         updateReport,
         getReport,
+        isNovoLeadFunder,
     } = useInitiativeDataStore();
-
-    // Get data for form
-    const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
 
     // Method: Submit page content
     async function submit(formData) {
         try {
             const {
                 Name,
-                Summary__c,
-                Where_Is_Problem__c,
-                Account__c,
-                Category__c,
+                Report_Type__c,
+                Due_Date__c,
+                ReportDuration,
             } = formData;
 
             await sfUpdate({
@@ -73,15 +70,14 @@ const ReportDetailsComponent = () => {
                 id: REPORT_ID,
                 data: {
                     Name,
-                    Summary__c,
-                    Category__c,
-                    Where_Is_Problem__c: Where_Is_Problem__c.map(
-                        item => item.selectValue
-                    ).join(';'),
+                    Report_Type__c,
+                    Due_Date__c,
+                    Report_Period_Start_Date__c: ReportDuration.from,
+                    Report_Period_End_Date__c: ReportDuration.to,
                 },
             });
 
-            await updateReport(REPORT_ID.Id);
+            await updateReport(REPORT_ID);
         } catch (error) {
             console.warn(error);
         }
@@ -101,11 +97,7 @@ const ReportDetailsComponent = () => {
     }, []);
 
     // Get current report
-    const currentReport = getReport(REPORT_ID);
-
-    console.log(currentReport);
-
-    log();
+    const [currentReport] = useState(getReport(REPORT_ID));
 
     return (
         <>
@@ -114,57 +106,44 @@ const ReportDetailsComponent = () => {
                 preamble={labelTodo('Preamble')}
             />
             <InputWrapper>
+                <Text
+                    name="Name"
+                    defaultValue={currentReport.Name}
+                    label={labelTodo('Report title')}
+                    placeholder={labelTodo('Title of report')}
+                    maxLength={80}
+                    disabled={isNovoLeadFunder()}
+                    required={!isNovoLeadFunder()}
+                    controller={control}
+                />
                 <Select
                     name="Report_Type__c"
                     defaultValue={currentReport.Report_Type__c}
                     label={labelTodo('Report type')}
                     placeholder={labelTodo('Type')}
                     options={valueSet('initiativeReport.Report_Type__c')}
-                    required
+                    disabled={isNovoLeadFunder()}
+                    required={!isNovoLeadFunder()}
                     controller={control}
                 />
-                <Text
-                    name="Name"
-                    defaultValue={initiative?.Name?.replace('___', '')}
-                    label={labelTodo('What is the name of your initiative?')}
-                    placeholder={labelTodo('Title of initiative')}
-                    maxLength={80}
-                    required
+                <DatePicker
+                    name="Due_Date__c"
+                    defaultValue={currentReport.Due_Date__c}
+                    label={labelTodo('Report deadline')}
                     controller={control}
+                    disabled={isNovoLeadFunder()}
+                    required={!isNovoLeadFunder()}
                 />
-                <Select
-                    name="Category__c"
-                    defaultValue={initiative?.Category__c}
-                    label={labelTodo('Grant giving area')}
-                    placeholder={labelTodo('Please select')}
-                    options={valueSet('initiative.Category__c')}
+                <DateRange
+                    name="ReportDuration"
+                    defaultValue={{
+                        from: currentReport.Report_Period_Start_Date__c,
+                        to: currentReport.Report_Period_End_Date__c,
+                    }}
+                    disabled={isNovoLeadFunder()}
+                    label={labelTodo('Report duration')}
                     controller={control}
-                    disabled={initiative.Category__c}
-                    required
-                />
-                <LongText
-                    name="Summary__c"
-                    defaultValue={initiative?.Summary__c}
-                    label={labelTodo('What are your initiative about')}
-                    placeholder={labelTodo(
-                        "Brief description of initiative that details why it's important"
-                    )}
-                    maxLength={400}
-                    controller={control}
-                />
-                <SelectList
-                    name="Where_Is_Problem__c"
-                    defaultValue={initiative?.Where_Is_Problem__c?.split(
-                        ';'
-                    ).map(value => ({
-                        selectValue: value,
-                    }))}
-                    label={labelTodo('Where is it located?')}
-                    listMaxLength={3}
-                    options={valueSet('account.Location__c')}
-                    selectPlaceholder={labelTodo('Please select')}
-                    selectLabel={labelTodo('Country')}
-                    controller={control}
+                    required={!isNovoLeadFunder()}
                 />
             </InputWrapper>
         </>

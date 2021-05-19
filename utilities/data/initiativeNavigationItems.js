@@ -17,22 +17,57 @@ const initiativeItems = () => [
         items: [
             {
                 title: 'Overview',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/overview',
             },
             {
                 title: 'Funders',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/funders',
             },
             {
                 title: 'Applicants',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/applicants',
             },
             {
                 title: 'Collaborators',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/collaborators',
             },
             {
                 title: 'Employees funded',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/employees-funded',
             },
         ],
@@ -43,18 +78,46 @@ const initiativeItems = () => [
         items: [
             {
                 title: 'Goals',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/goals',
             },
             {
                 title: 'Activities',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/activities',
             },
             {
                 title: 'Indicators',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/indicators',
             },
             {
                 title: 'Sharing results',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/sharing-results',
             },
         ],
@@ -93,9 +156,21 @@ const initiativeItems = () => [
         items: [
             {
                 title: 'Report schedule',
+                labels: {
+                    form: {
+                        title: '',
+                        preamble: '',
+                    },
+                    help: { title: '', why: '', what: '', guide: '' },
+                },
                 url: '/wizard/report-schedule',
             },
         ],
+    },
+    {
+        title: 'Done',
+        visible: false,
+        url: '/',
     },
 ];
 

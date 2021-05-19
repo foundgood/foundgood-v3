@@ -19,6 +19,7 @@ const DateRangeComponent = ({
     name,
     subLabel,
     required,
+    disabled,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -47,7 +48,6 @@ const DateRangeComponent = ({
     // Update state when using setValue
     useEffect(() => {
         if (value) {
-            console.log(value);
             setFrom(value.from);
             setTo(value.to);
         }
@@ -66,6 +66,7 @@ const DateRangeComponent = ({
                             {labelTodo('From')}
                         </span>
                         <DayPickerInput
+                            inputProps={{ disabled }}
                             value={from}
                             formatDate={date =>
                                 dayjs(date).format('YYYY-MM-DD')
@@ -97,7 +98,7 @@ const DateRangeComponent = ({
                             {labelTodo('To')}
                         </span>
                         <DayPickerInput
-                            disabled={!from}
+                            inputProps={{ disabled: disabled || !from }}
                             value={to}
                             placeholder="yyyy-mm-dd"
                             formatDate={date =>

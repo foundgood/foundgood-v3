@@ -19,6 +19,7 @@ import {
     Text,
     LongText,
     SelectList,
+    DateRange,
 } from 'components/_inputs';
 
 const OverviewComponent = () => {
@@ -42,6 +43,7 @@ const OverviewComponent = () => {
     const {
         CONSTANTS,
         initiative,
+        isNovoLeadFunder,
         updateInitiative,
         updateCollaborator,
     } = useInitiativeDataStore();
@@ -58,6 +60,7 @@ const OverviewComponent = () => {
                 Where_Is_Problem__c,
                 Account__c,
                 Category__c,
+                GrantDate,
             } = formData;
 
             await sfUpdate({
@@ -67,6 +70,8 @@ const OverviewComponent = () => {
                     Name,
                     Summary__c,
                     Category__c,
+                    Grant_Start_Date__c: GrantDate.from,
+                    Grant_End_Date__c: GrantDate.to,
                     Where_Is_Problem__c: Where_Is_Problem__c.map(
                         item => item.selectValue
                     ).join(';'),
@@ -126,6 +131,13 @@ const OverviewComponent = () => {
                             value: item.Id,
                         })) ?? []
                     }
+                    disabled={
+                        Object.values(initiative?._collaborators).find(
+                            item =>
+                                item.Type__c ===
+                                CONSTANTS.TYPES.MAIN_COLLABORATOR
+                        )?.Account__c?.length > 0
+                    }
                     required
                     controller={control}
                 />
@@ -136,6 +148,7 @@ const OverviewComponent = () => {
                     placeholder={labelTodo('Title of initiative')}
                     maxLength={80}
                     required
+                    disabled={isNovoLeadFunder()}
                     controller={control}
                 />
                 <Select
@@ -145,7 +158,7 @@ const OverviewComponent = () => {
                     placeholder={labelTodo('Please select')}
                     options={valueSet('initiative.Category__c')}
                     controller={control}
-                    disabled={initiative.Category__c}
+                    disabled={initiative.Category__c || isNovoLeadFunder()}
                     required
                 />
                 <LongText
@@ -157,6 +170,16 @@ const OverviewComponent = () => {
                     )}
                     maxLength={400}
                     controller={control}
+                />
+                <DateRange
+                    name="GrantDate"
+                    label={labelTodo('Initiative period')}
+                    defaultValue={{
+                        from: initiative?.Grant_Start_Date__c,
+                        to: initiative?.Grant_End_Date__c,
+                    }}
+                    controller={control}
+                    disabled={isNovoLeadFunder()}
                 />
                 <SelectList
                     name="Where_Is_Problem__c"

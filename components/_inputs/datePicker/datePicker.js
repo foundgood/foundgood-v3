@@ -18,6 +18,7 @@ const DatePickerComponent = ({
     name,
     subLabel,
     required,
+    disabled,
 }) => {
     // Local state for handling dates
     const [date, setDate] = useState(defaultValue);
@@ -55,6 +56,7 @@ const DatePickerComponent = ({
                 <div className={cc(['space-x-12 flex', { 'mt-16': label }])}>
                     <div className="flex flex-col flex-grow">
                         <DayPickerInput
+                            inputProps={{ disabled }}
                             value={date}
                             formatDate={date =>
                                 dayjs(date).format('YYYY-MM-DD')

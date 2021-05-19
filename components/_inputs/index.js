@@ -8,6 +8,7 @@ import SelectList from './selectList';
 import SelectionCards from './selectionCards';
 import Number from './number';
 import InputWrapper from './inputWrapper';
+import Reflection from './reflection';
 
 export {
     InputWrapper,
@@ -20,4 +21,5 @@ export {
     SelectionCards,
     TextList,
     Number,
+    Reflection,
 };
