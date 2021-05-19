@@ -2,27 +2,19 @@
 import React, { useEffect } from 'react';
 
 // Packages
-import { useForm, useFormState, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
 import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
 import {
-    useInitiativeDataStore,
     useWizardNavigationStore,
+    useInitiativeDataStore,
 } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import {
-    InputWrapper,
-    Select,
-    SelectList,
-    Text,
-    Number,
-    DateRange,
-    DatePicker,
-} from 'components/_inputs';
+import { InputWrapper } from 'components/_inputs';
 import ProgressCard from 'components/_wizard/progressCard';
 
 const ProgressSoFarComponent = ({ pageProps }) => {
@@ -34,7 +26,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     const { labelTodo } = useMetadata();
 
     // Hook: useForm setup
-    const { handleSubmit, control, setValue, reset, unregister } = useForm();
+    const { handleSubmit, control } = useForm();
 
     // Hook: Salesforce setup
     const { sfUpdate } = useSalesForce();
@@ -77,7 +69,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                 await updateActivitySuccessMetrics(
                     Object.keys(formData).filter(key => formData[key])
                 );
-            }, 400);
+            }, 200);
         } catch (error) {
             console.warn(error);
         }

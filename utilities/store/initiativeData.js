@@ -38,6 +38,7 @@ const defaultInitiative = {
     _activityGoals: {},
     _activitySuccessMetrics: {},
     _reportDetails: {},
+    _initiativeUpdates: {},
 };
 
 const constants = {
@@ -46,6 +47,7 @@ const constants = {
         APPLICANTS_ALL: ['Co applicant', 'Main applicant'],
         APPLICANTS_CREATE: ['Co applicant'],
         MAIN_COLLABORATOR: 'Main applicant',
+        LEAD_FUNDER: 'Lead funder',
         GOAL_CUSTOM: 'Custom',
         GOAL_PREDEFINED: 'Foundation',
         INDICATOR_CUSTOM: 'Custom',
@@ -53,6 +55,7 @@ const constants = {
         ACTIVITY_INTERVENTION: 'Intervention',
         ACTIVITY_DISSEMINATION: 'Dissemination',
         ACTIVITY_JOURNAL: 'Journal publication',
+        EMPLOYEES_FUNDED_OVERVIEW: 'Employees Funded Overview',
     },
     IDS: {
         NNF_ACCOUNT: '0011x000002rJb4AAE',
@@ -70,7 +73,9 @@ const useInitiativeDataStore = create(
         // Helper for knowing if NNF is lead funder
         isNovoLeadFunder() {
             const funders = Object.values(get().initiative?._funders ?? [])
-                .filter(funder => funder.Type__c === 'Lead funder')
+                .filter(
+                    funder => funder.Type__c === constants.TYPES.LEAD_FUNDER
+                )
                 .filter(
                     funder => funder.Account__c === constants.IDS.NNF_ACCOUNT
                 );

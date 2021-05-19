@@ -1,5 +1,5 @@
 // React
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Packages
 import { useForm, useFormState } from 'react-hook-form';
@@ -78,17 +78,20 @@ const OverviewComponent = () => {
                 },
             });
 
-            const collaboratorId = await sfCreate({
-                object: 'Initiative_Collaborator__c',
-                data: {
-                    Type__c: CONSTANTS.TYPES.MAIN_COLLABORATOR,
-                    Initiative__c: initiative.Id,
-                    Account__c,
-                },
-            });
+            // Only create collaborator if main collaborator have not been set
+            if (!mainCollaborator?.Account__c || false) {
+                const collaboratorId = await sfCreate({
+                    object: 'Initiative_Collaborator__c',
+                    data: {
+                        Type__c: CONSTANTS.TYPES.MAIN_COLLABORATOR,
+                        Initiative__c: initiative.Id,
+                        Account__c,
+                    },
+                });
+                await updateCollaborator(collaboratorId);
+            }
 
             await updateInitiative(initiative.Id);
-            await updateCollaborator(collaboratorId);
         } catch (error) {
             console.warn(error);
         }
@@ -107,95 +110,92 @@ const OverviewComponent = () => {
         }, 10);
     }, []);
 
+    // Main collaborator
+    const [mainCollaborator] = useState(
+        Object.values(initiative?._collaborators).find(
+            item => item.Type__c === CONSTANTS.TYPES.MAIN_COLLABORATOR
+        ) || {}
+    );
+
     return (
         <>
             <TitlePreamble
                 title={labelTodo('Overview')}
                 preamble={labelTodo('Preamble')}
             />
-            <InputWrapper>
-                <Select
-                    name="Account__c"
-                    defaultValue={
-                        Object.values(initiative?._collaborators).find(
-                            item =>
-                                item.Type__c ===
-                                CONSTANTS.TYPES.MAIN_COLLABORATOR
-                        )?.Account__c
-                    }
-                    label={labelTodo('Responsible organisation')}
-                    placeholder={labelTodo('Grantee name')}
-                    options={
-                        accountGrantees?.records?.map(item => ({
+            {accountGrantees && (
+                <InputWrapper>
+                    <Select
+                        name="Account__c"
+                        defaultValue={mainCollaborator?.Account__c}
+                        label={labelTodo('Responsible organisation')}
+                        placeholder={labelTodo('Grantee name')}
+                        options={accountGrantees?.records?.map(item => ({
                             label: item.Name,
                             value: item.Id,
-                        })) ?? []
-                    }
-                    disabled={
-                        Object.values(initiative?._collaborators).find(
-                            item =>
-                                item.Type__c ===
-                                CONSTANTS.TYPES.MAIN_COLLABORATOR
-                        )?.Account__c?.length > 0
-                    }
-                    required
-                    controller={control}
-                />
-                <Text
-                    name="Name"
-                    defaultValue={initiative?.Name?.replace('___', '')}
-                    label={labelTodo('What is the name of your initiative?')}
-                    placeholder={labelTodo('Title of initiative')}
-                    maxLength={80}
-                    required
-                    disabled={isNovoLeadFunder()}
-                    controller={control}
-                />
-                <Select
-                    name="Category__c"
-                    defaultValue={initiative?.Category__c}
-                    label={labelTodo('Grant giving area')}
-                    placeholder={labelTodo('Please select')}
-                    options={valueSet('initiative.Category__c')}
-                    controller={control}
-                    disabled={initiative.Category__c || isNovoLeadFunder()}
-                    required
-                />
-                <LongText
-                    name="Summary__c"
-                    defaultValue={initiative?.Summary__c}
-                    label={labelTodo('What are your initiative about')}
-                    placeholder={labelTodo(
-                        "Brief description of initiative that details why it's important"
-                    )}
-                    maxLength={400}
-                    controller={control}
-                />
-                <DateRange
-                    name="GrantDate"
-                    label={labelTodo('Initiative period')}
-                    defaultValue={{
-                        from: initiative?.Grant_Start_Date__c,
-                        to: initiative?.Grant_End_Date__c,
-                    }}
-                    controller={control}
-                    disabled={isNovoLeadFunder()}
-                />
-                <SelectList
-                    name="Where_Is_Problem__c"
-                    defaultValue={initiative?.Where_Is_Problem__c?.split(
-                        ';'
-                    ).map(value => ({
-                        selectValue: value,
-                    }))}
-                    label={labelTodo('Where is it located?')}
-                    listMaxLength={3}
-                    options={valueSet('account.Location__c')}
-                    selectPlaceholder={labelTodo('Please select')}
-                    selectLabel={labelTodo('Country')}
-                    controller={control}
-                />
-            </InputWrapper>
+                        }))}
+                        disabled={mainCollaborator?.Account__c ?? false}
+                        required
+                        controller={control}
+                    />
+                    <Text
+                        name="Name"
+                        defaultValue={initiative?.Name?.replace('___', '')}
+                        label={labelTodo(
+                            'What is the name of your initiative?'
+                        )}
+                        placeholder={labelTodo('Title of initiative')}
+                        maxLength={80}
+                        required
+                        disabled={isNovoLeadFunder()}
+                        controller={control}
+                    />
+                    <Select
+                        name="Category__c"
+                        defaultValue={initiative?.Category__c}
+                        label={labelTodo('Grant giving area')}
+                        placeholder={labelTodo('Please select')}
+                        options={valueSet('initiative.Category__c')}
+                        controller={control}
+                        disabled={initiative.Category__c || isNovoLeadFunder()}
+                        required
+                    />
+                    <LongText
+                        name="Summary__c"
+                        defaultValue={initiative?.Summary__c}
+                        label={labelTodo('What are your initiative about')}
+                        placeholder={labelTodo(
+                            "Brief description of initiative that details why it's important"
+                        )}
+                        maxLength={400}
+                        controller={control}
+                    />
+                    <DateRange
+                        name="GrantDate"
+                        label={labelTodo('Initiative period')}
+                        defaultValue={{
+                            from: initiative?.Grant_Start_Date__c,
+                            to: initiative?.Grant_End_Date__c,
+                        }}
+                        controller={control}
+                        disabled={isNovoLeadFunder()}
+                    />
+                    <SelectList
+                        name="Where_Is_Problem__c"
+                        defaultValue={initiative?.Where_Is_Problem__c?.split(
+                            ';'
+                        ).map(value => ({
+                            selectValue: value,
+                        }))}
+                        label={labelTodo('Where is it located?')}
+                        listMaxLength={3}
+                        options={valueSet('account.Location__c')}
+                        selectPlaceholder={labelTodo('Please select')}
+                        selectLabel={labelTodo('Country')}
+                        controller={control}
+                    />
+                </InputWrapper>
+            )}
         </>
     );
 };

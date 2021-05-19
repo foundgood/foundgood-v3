@@ -78,9 +78,9 @@ const IntroductionComponent = ({ pageProps }) => {
         if (MODE === CONTEXTS.REPORT) {
             buildReportWizardItems();
             // TEMP JUST FOR DEV
-            // Initiative ID "a0p1x00000EkTKOAA3"
-            // Report ID a101x000002pIiZAAU
-            populateInitiative('a0p1x00000EkTKOAA3');
+            // Initiative ID a0p1x00000EkU9OAAV
+            // Report ID a101x000002pKetAAE
+            populateInitiative('a0p1x00000EkU9OAAV');
             populateReportDetails(REPORT_ID);
         } else {
             // New initiative - reset store
