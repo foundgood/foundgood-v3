@@ -35,6 +35,9 @@ const ReportComponent = ({ pageProps }) => {
     const [initiativeData, setInitiativeData] = useState();
     const [donutData, setDonutData] = useState();
     const [pieChartStyle, setPieChartStyle] = useState({});
+    const [totalAmount, setTotalAmount] = useState();
+    const [currency, setCurrency] = useState();
+
     const [applicants, setApplicants] = useState();
     const [collaborators, setCollaborators] = useState();
 
@@ -106,13 +109,15 @@ const ReportComponent = ({ pageProps }) => {
         // 🍩 Donut data 🍩
         // Build donut slices using color gradient
         // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
-
+        const currency = Object.values(initiative._funders)[0].CurrencyIsoCode;
         const totalAmount = Object.values(initiative._funders).reduce(
             (total, funder) => {
                 return total + funder.Amount__c;
             },
             0
         );
+        setTotalAmount(totalAmount);
+        setCurrency(currency);
 
         // Header - If Novo Nordisk is lead funder
         // Calculate Novo's funding share
@@ -128,7 +133,6 @@ const ReportComponent = ({ pageProps }) => {
                 } ${item.Amount__c.toLocaleString('de-DE')}`,
                 share: `${Math.round((item.Amount__c / totalAmount) * 100)}%`,
             }))[0];
-        console.log(novoFunder);
         setNovoFunder(novoFunder);
 
         const donutData = Object.values(initiative._funders).map(
@@ -219,7 +223,6 @@ const ReportComponent = ({ pageProps }) => {
                             </h3>
                         </SectionWrapper>
                         {/* Information cards */}
-                        {/* <div className="flex flex-col items-start md:flex-row"> */}
                         <div className="inline-grid items-start w-full grid-cols-1 md:grid-cols-2 md:gap-24">
                             <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                                 <div className="t-sh6 text-blue-60">
@@ -316,14 +319,23 @@ const ReportComponent = ({ pageProps }) => {
                         <SectionWrapper>
                             <h3 className="t-h4">{labelTodo('Funders')}</h3>
                         </SectionWrapper>
-
                         {/* Donut chart */}
-                        <div className="flex items-center p-16">
-                            <div className="w-1/2 p-24 t-h1">
+                        <div className="flex items-center p-16 border-4 border-blue-10 rounded-8">
+                            <div className="w-1/2 p-32">
                                 {/* Donut chart */}
-                                <div
-                                    className="pie"
-                                    style={pieChartStyle}></div>
+                                <div className="pie" style={pieChartStyle}>
+                                    <div className="absolute w-full -mt-16 text-center top-1/2">
+                                        <p className="t-sh7 text-blue-60">
+                                            Total
+                                        </p>
+                                        <p className="t-h6">
+                                            {currency}{' '}
+                                            {totalAmount.toLocaleString(
+                                                'de-DE'
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                             <div className="w-1/2">
                                 {/* Headline */}
@@ -346,27 +358,41 @@ const ReportComponent = ({ pageProps }) => {
                                 ))}
                             </div>
                         </div>
-
                         {/* List of funders */}
                         <>
-                            <SectionWrapper>
-                                <ReportDetailCard
-                                    headline="Co-funder name"
-                                    image="/images/fg-card-square-1.png"
-                                    description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                                    items={[
-                                        {
-                                            label: 'Amount',
-                                            text: 'DKK 500.000',
-                                        },
-                                        {
-                                            label: 'Approval date',
-                                            text: 'June 15th 2020',
-                                        },
-                                    ]}
-                                />
-                            </SectionWrapper>
-
+                            {Object.values(initiative._funders).map(
+                                (item, index) => {
+                                    if (item.Type__c == 'Co funder') {
+                                        return (
+                                            <SectionWrapper key={`f-${index}`}>
+                                                <ReportDetailCard
+                                                    headline={
+                                                        item.Account__r.Name
+                                                    }
+                                                    image="/images/fg-card-square-1.png"
+                                                    description="Missing data 🛑"
+                                                    items={[
+                                                        {
+                                                            label: 'Amount',
+                                                            text: `${
+                                                                item.CurrencyIsoCode
+                                                            } ${item.Amount__c.toLocaleString(
+                                                                'de-DE'
+                                                            )}`,
+                                                        },
+                                                        {
+                                                            label:
+                                                                'Approval date',
+                                                            text:
+                                                                item.Grant_Start_Date__c,
+                                                        },
+                                                    ]}
+                                                />
+                                            </SectionWrapper>
+                                        );
+                                    }
+                                }
+                            )}
                             <SectionWrapper className="bg-blue-10 rounded-8">
                                 <div className="t-h5">
                                     Updates from this year

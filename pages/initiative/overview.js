@@ -37,6 +37,9 @@ const ProjectComponent = ({ pageProps }) => {
     const [initiativeData, setInitiativeData] = useState();
     const [donutData, setDonutData] = useState();
     const [pieChartStyle, setPieChartStyle] = useState({});
+    const [totalAmount, setTotalAmount] = useState();
+    const [currency, setCurrency] = useState();
+
     const [applicants, setApplicants] = useState();
     const [collaborators, setCollaborators] = useState();
 
@@ -92,12 +95,15 @@ const ProjectComponent = ({ pageProps }) => {
         // 🍩 Donut data 🍩
         // Build donut slices using color gradient
         // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
+        const currency = Object.values(initiative._funders)[0].CurrencyIsoCode;
         const totalAmount = Object.values(initiative._funders).reduce(
             (total, funder) => {
                 return total + funder.Amount__c;
             },
             0
         );
+        setTotalAmount(totalAmount);
+        setCurrency(currency);
 
         const donutData = Object.values(initiative._funders).map(
             (funder, index) => {
@@ -257,11 +263,21 @@ const ProjectComponent = ({ pageProps }) => {
                         </div>
 
                         <div className="flex items-center p-16">
-                            <div className="w-1/2 p-24 t-h1">
+                            <div className="w-1/2 p-32">
                                 {/* Donut chart */}
-                                <div
-                                    className="pie"
-                                    style={pieChartStyle}></div>
+                                <div className="pie" style={pieChartStyle}>
+                                    <div className="absolute w-full -mt-16 text-center top-1/2">
+                                        <p className="t-sh7 text-blue-60">
+                                            Total
+                                        </p>
+                                        <p className="t-h6">
+                                            {currency}{' '}
+                                            {totalAmount.toLocaleString(
+                                                'de-DE'
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                             <div className="w-1/2">
                                 {/* Headline */}
