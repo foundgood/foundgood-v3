@@ -6,6 +6,9 @@ import t from 'prop-types';
 import { useWatch } from 'react-hook-form';
 import AnimateHeight from 'react-animate-height';
 
+// Utilities
+import { useMetadata } from 'utilities/hooks';
+
 // Components
 import Card from 'components/_wizard/card';
 import ComponentSelectorWrapper from 'components/componentSelectorWrapper';
@@ -16,6 +19,7 @@ const ResultCardComponent = ({
     controller,
     name,
     inputLabel,
+    journalPublication,
     ...rest
 }) => {
     const selected = controller
@@ -31,7 +35,11 @@ const ResultCardComponent = ({
                 controller={controller}
                 name={`${name}-selector`}
                 defaultValue={defaultValue.selected}>
-                <Card {...rest} />
+                <Card {...rest}>
+                    {journalPublication && (
+                        <JournalPublication {...journalPublication} />
+                    )}
+                </Card>
             </ComponentSelectorWrapper>
             <AnimateHeight
                 duration={300}
@@ -48,7 +56,69 @@ const ResultCardComponent = ({
             </AnimateHeight>
         </div>
     ) : (
-        <Card {...rest} />
+        <Card {...rest}>{journalPublication && <p>test</p>}</Card>
+    );
+};
+
+const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
+    // Hook: Metadata
+    const { labelTodo, valueSet, log } = useMetadata();
+    return (
+        <div className="p-16 my-16 space-y-8 rounded t-sh7 bg-teal-10">
+            {title && (
+                <div className="flex flex-col md:flex-row">
+                    <span className="w-4/12 text-teal-60">
+                        {labelTodo('Publication Title')}
+                    </span>
+                    <span className="text-teal-100">{title}</span>
+                </div>
+            )}
+
+            {type && (
+                <div className="flex flex-col md:flex-row">
+                    <span className="w-4/12 text-teal-60">
+                        {labelTodo('Publication Type')}
+                    </span>
+                    <span className="text-teal-100">{type}</span>
+                </div>
+            )}
+
+            {year && (
+                <div className="flex flex-col md:flex-row">
+                    <span className="w-4/12 text-teal-60">
+                        {labelTodo('Publication year')}
+                    </span>
+                    <span className="text-teal-100">{year}</span>
+                </div>
+            )}
+
+            {publisher && (
+                <div className="flex flex-col md:flex-row">
+                    <span className="w-4/12 text-teal-60">
+                        {labelTodo('Publisher')}
+                    </span>
+                    <span className="text-teal-100">{publisher}</span>
+                </div>
+            )}
+
+            {author && (
+                <div className="flex flex-col md:flex-row">
+                    <span className="w-4/12 text-teal-60">
+                        {labelTodo('Author')}
+                    </span>
+                    <span className="text-teal-100">{author}</span>
+                </div>
+            )}
+
+            {doi && (
+                <div className="flex flex-col md:flex-row">
+                    <span className="w-4/12 text-teal-60">
+                        {labelTodo('DOI')}
+                    </span>
+                    <span className="text-teal-100">{doi}</span>
+                </div>
+            )}
+        </div>
     );
 };
 
@@ -67,11 +137,14 @@ ResultCardComponent.propTypes = {
     name: t.string,
     // Default value for reflection
     defaultValue: t.shape({ selected: t.bool, value: t.string }),
+    // Show weird extra fields
+    journalPublication: t.object,
 };
 
 ResultCardComponent.defaultProps = {
     controller: null,
     defaultValue: { selected: false, value: '' },
+    journalPublication: null,
 };
 
 export default ResultCardComponent;

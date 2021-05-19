@@ -290,6 +290,10 @@ const SharingResultsComponent = ({ pageProps }) => {
                             item => item.Initiative_Activity__c === activityKey
                         );
 
+                        const showJournalPublication =
+                            activity.Dissemination_Method__c ===
+                            CONSTANTS.TYPES.ACTIVITY_JOURNAL;
+
                         return (
                             <ResultCard
                                 key={activityKey}
@@ -310,6 +314,23 @@ const SharingResultsComponent = ({ pageProps }) => {
                                         reflection[0] ?? false ? true : false,
                                     value: reflection[0]?.Description__c ?? '',
                                 }}
+                                journalPublication={
+                                    showJournalPublication
+                                        ? {
+                                              type:
+                                                  activity.Publication_Type__c,
+                                              year:
+                                                  activity.Publication_Year__c,
+                                              title:
+                                                  activity.Publication_Title__c,
+                                              publisher:
+                                                  activity.Publication_Publisher__c,
+                                              author:
+                                                  activity.Publication_Author__c,
+                                              doi: activity.Publication_DOI__c,
+                                          }
+                                        : null
+                                }
                                 inputLabel={labelTodo(
                                     'Outline your reflection'
                                 )}

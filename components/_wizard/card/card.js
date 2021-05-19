@@ -24,6 +24,7 @@ const CardComponent = ({
     goals,
     action,
     selected,
+    children,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -45,7 +46,7 @@ const CardComponent = ({
                 <div className="w-full mr-16 flex-start">
                     {headline && (
                         <div className="flex items-center">
-                            <h4 className="t-sh4">{labelTodo(headline)}</h4>
+                            <h4 className="t-sh4">{headline}</h4>
                             {label && (
                                 <div className="ml-16 text-teal-60 t-caption">
                                     {label}
@@ -54,28 +55,27 @@ const CardComponent = ({
                         </div>
                     )}
                     {subHeadline && (
-                        <h4 className="mt-8 t-h6">{labelTodo(subHeadline)}</h4>
+                        <h4 className="mt-8 t-h6">{subHeadline}</h4>
                     )}
-                    {body && <p className="mt-8 mr-16">{labelTodo(body)}</p>}
+                    {body && <p className="mt-8 mr-16">{body}</p>}
                     {footnote && (
                         <p className="mt-8 t-footnote text-teal-60">
-                            {labelTodo(footnote)}
+                            {footnote}
                         </p>
                     )}
+                    {children}
                     {tags && (
                         <div className="flex mt-8">
                             {tags.map((tag, index) => (
                                 <p
                                     key={`t-${index}`}
                                     className="px-8 pt-3 pb-1 mr-8 t-sh7 bg-teal-20 rounded-4">
-                                    {labelTodo(tag)}
+                                    {tag}
                                 </p>
                             ))}
                         </div>
                     )}
-                    {evaluator && (
-                        <p className="mt-8 t-sh4">{labelTodo(evaluator)}</p>
-                    )}
+                    {evaluator && <p className="mt-8 t-sh4">{evaluator}</p>}
 
                     {goals && (
                         <>
@@ -87,7 +87,7 @@ const CardComponent = ({
                                     <p
                                         key={`t-${index}`}
                                         className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
-                                        {labelTodo(goal)}
+                                        {goal}
                                     </p>
                                 ))}
                             </div>
