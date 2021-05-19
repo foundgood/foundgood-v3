@@ -58,97 +58,104 @@ const ProjectComponent = ({ pageProps }) => {
 
     useEffect(() => {
         // Initial Load - Handle empty object state?
-        if (initiative._funders == null) return;
-
         console.log('initiative: ', initiative);
 
-        // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
-        // Split them up depending on the type.
-        // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
-        const collaborators = Object.values(initiative._collaborators).filter(
-            item => {
+        // Make sure data is loaded
+        if (
+            initiative?._funders &&
+            Object.keys(initiative?._funders).length !== 0
+        ) {
+            // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
+            // Split them up depending on the type.
+            // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
+            const collaborators = Object.values(
+                initiative._collaborators
+            ).filter(item => {
                 if (item.Translated_Type__c == 'Additional collaborator') {
                     return item;
                 }
-            }
-        );
-        const applicants = Object.values(initiative._collaborators).filter(
-            item => {
-                if (item.Translated_Type__c != 'Additional collaborator') {
-                    return item;
-                }
-            }
-        );
-        setApplicants(applicants);
-        setCollaborators(collaborators);
-
-        // Merge goal data, to signel array
-        const goalAmounts = initiative?.Problem_Effect__c?.split(';');
-        const goalTitles = initiative?.Translated_Problem_Effect__c?.split(';');
-        if (goalTitles && goalTitles.length > 0) {
-            const developmentGoals = goalTitles.map((title, index) => {
-                return { title: title, amount: goalAmounts[index] };
             });
-            setDevelopmentGoals(developmentGoals);
-        }
+            const applicants = Object.values(initiative._collaborators).filter(
+                item => {
+                    if (item.Translated_Type__c != 'Additional collaborator') {
+                        return item;
+                    }
+                }
+            );
+            setApplicants(applicants);
+            setCollaborators(collaborators);
 
-        // 🍩 Donut data 🍩
-        // Build donut slices using color gradient
-        // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
-        const currency = Object.values(initiative._funders)[0].CurrencyIsoCode;
-        const totalAmount = Object.values(initiative._funders).reduce(
-            (total, funder) => {
-                return total + funder.Amount__c;
-            },
-            0
-        );
-        setTotalAmount(totalAmount);
-        setCurrency(currency);
+            // Merge goal data, to signel array
+            const goalAmounts = initiative?.Problem_Effect__c?.split(';');
+            const goalTitles = initiative?.Translated_Problem_Effect__c?.split(
+                ';'
+            );
+            if (goalTitles && goalTitles.length > 0) {
+                const developmentGoals = goalTitles.map((title, index) => {
+                    return { title: title, amount: goalAmounts[index] };
+                });
+                setDevelopmentGoals(developmentGoals);
+            }
 
-        const donutData = Object.values(initiative._funders).map(
-            (funder, index) => {
-                return {
-                    color: donutColors[index],
-                    hex: donutHex[index],
-                    name: funder.Account__r.Name,
-                    currency: funder.CurrencyIsoCode,
-                    amount: funder.Amount__c,
-                    totalAmount: totalAmount,
-                    percentage: funder.Amount__c / totalAmount,
+            // 🍩 Donut data 🍩
+            // Build donut slices using color gradient
+            // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
+            const currency = Object.values(initiative._funders)[0]
+                .CurrencyIsoCode;
+            const totalAmount = Object.values(initiative._funders).reduce(
+                (total, funder) => {
+                    return total + funder.Amount__c;
+                },
+                0
+            );
+            setTotalAmount(totalAmount);
+            setCurrency(currency);
+
+            const donutData = Object.values(initiative._funders).map(
+                (funder, index) => {
+                    return {
+                        color: donutColors[index],
+                        hex: donutHex[index],
+                        name: funder.Account__r.Name,
+                        currency: funder.CurrencyIsoCode,
+                        amount: funder.Amount__c,
+                        totalAmount: totalAmount,
+                        percentage: funder.Amount__c / totalAmount,
+                    };
+                }
+            );
+
+            const multiplier = 3.6; // 1% of 360
+
+            // Create object array - add previous items "deg" (360 deg), to position current slice
+            let donutStyles = donutData.reduce((previous, slice) => {
+                const prevDeg = previous[previous.length - 1]
+                    ? previous[previous.length - 1].deg
+                    : 0;
+                const deg = slice.percentage * 100 * multiplier;
+                const obj = {
+                    deg: deg + prevDeg,
+                    hex: slice.hex,
                 };
-            }
-        );
-
-        const multiplier = 3.6; // 1% of 360
-
-        // Create object array - add previous items "deg" (360 deg), to position current slice
-        let donutStyles = donutData.reduce((previous, slice) => {
-            const prevDeg = previous[previous.length - 1]
-                ? previous[previous.length - 1].deg
-                : 0;
-            const deg = slice.percentage * 100 * multiplier;
-            const obj = {
-                deg: deg + prevDeg,
-                hex: slice.hex,
-            };
-            previous.push(obj);
-            return previous;
-        }, []);
-        // Create array of color / deg pairs, one per slice
-        donutStyles = donutStyles.map((slice, index) => {
-            // Last Slice uses '0' instead of 'X deg' - to close circle
-            if (index == donutStyles.length - 1) {
-                return `${slice.hex} 0`;
-            } else {
-                return `${slice.hex} 0 ${slice.deg}deg`;
-            }
-        });
-        // Construct gradient string
-        // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
-        const gradient = `conic-gradient(${donutStyles.join(', ')})`;
-        setPieChartStyle({ backgroundImage: gradient });
-        setDonutData(donutData);
-        setInitiativeData(initiative);
+                previous.push(obj);
+                return previous;
+            }, []);
+            // Create array of color / deg pairs, one per slice
+            donutStyles = donutStyles.map((slice, index) => {
+                // Last Slice uses '0' instead of 'X deg' - to close circle
+                if (index == donutStyles.length - 1) {
+                    return `${slice.hex} 0`;
+                } else {
+                    return `${slice.hex} 0 ${slice.deg}deg`;
+                }
+            });
+            // Construct gradient string
+            // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
+            const gradient = `conic-gradient(${donutStyles.join(', ')})`;
+            setPieChartStyle({ backgroundImage: gradient });
+            setDonutData(donutData);
+            setInitiativeData(initiative);
+        }
     }, [initiative]);
 
     return (
@@ -393,14 +400,15 @@ const ProjectComponent = ({ pageProps }) => {
                                     </h4>
                                     <h3 className="flex items-center leading-none t-h4">
                                         {/* TODO - Where does image come from? */}
-                                        {/* <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
-                                            <Image
+                                        <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
+                                            🛑 Missing image
+                                            {/* <Image
                                                 src="/images/fg-landscape-1.jpg"
                                                 layout="fill"
                                                 objectFit="cover"
                                                 sizes="64px"
-                                            />
-                                        </div> */}
+                                            /> */}
+                                        </div>
                                         {item.Account__r.Name}
                                     </h3>
                                     <p className="mt-16 t-sh5 text-blue-60">

@@ -26,21 +26,25 @@ const ReportsComponent = ({ pageProps }) => {
     const { labelTodo, label, valueSet, log } = useMetadata();
 
     useEffect(() => {
-        // console.log(initiative);
-
-        // Group reports by funder
-        const funders = Object.values(initiative._funders).map(item => {
-            // Get reports
-            const reports = Object.values(initiative._reports).filter(
-                report => report.Funder_Report__c == item.Id
-            );
-            return { ...item, ...{ reports: reports } };
-        });
-        // Filter out funders without reports
-        const reports = funders.filter(funder => {
-            return funder.reports.length > 0;
-        });
-        setReportGroups(reports);
+        // Make sure data it loaded
+        if (
+            initiative?._funders &&
+            Object.keys(initiative?._funders).length !== 0
+        ) {
+            // Group reports by funder
+            const funders = Object.values(initiative._funders).map(item => {
+                // Get reports
+                const reports = Object.values(initiative._reports).filter(
+                    report => report.Funder_Report__c == item.Id
+                );
+                return { ...item, ...{ reports: reports } };
+            });
+            // Filter out funders without reports
+            const reports = funders.filter(funder => {
+                return funder.reports.length > 0;
+            });
+            setReportGroups(reports);
+        }
     }, [initiative]);
 
     return (

@@ -29,8 +29,11 @@ const DevelopmentsComponent = ({ pageProps }) => {
     const { labelTodo, label, valueSet, log } = useMetadata();
 
     useEffect(() => {
-        console.log(initiative);
-        if (initiative._activitySuccessMetrics) {
+        // Make sure data it loaded
+        if (
+            initiative?._activitySuccessMetrics &&
+            Object.keys(initiative?._activitySuccessMetrics).length !== 0
+        ) {
             // Example of object:
             // [
             //     {
@@ -138,7 +141,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                 return {
                     headline: item.Things_To_Do__c,
                     label: item.Dissemination_Method__c,
-                    tags: item.Audience_Tag__c.split(';'),
+                    tags: item.Audience_Tag__c?.split(';'),
                     items: items,
                 };
             });
@@ -192,7 +195,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                 </div>
                 {activities &&
                     activities.map((item, index) => (
-                        <div className="mt-24">
+                        <div key={`a-${index}`} className="mt-24">
                             <ReportSharingCard
                                 key={`r-${index}`}
                                 headline={item.headline}

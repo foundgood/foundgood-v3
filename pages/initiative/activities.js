@@ -29,8 +29,11 @@ const ActivitiesComponent = ({ pageProps }) => {
     const [activities, setActivities] = useState();
 
     useEffect(() => {
-        // console.log(initiative);
-        if (initiative._activities) {
+        // Make sure data it loaded
+        if (
+            initiative?._activities &&
+            Object.keys(initiative?._activities).length !== 0
+        ) {
             const descriptions = isJson(initiative.Problem_Resolutions__c)
                 ? JSON.parse(initiative.Problem_Resolutions__c)
                 : initiative.Problem_Resolutions__c;
