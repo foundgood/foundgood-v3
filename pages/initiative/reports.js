@@ -10,7 +10,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
-import ReportCard from 'components/_report/reportCard';
+import ReportCard from 'components/_initiative/reportCard';
 import SectionWrapper from 'components/sectionWrapper';
 
 const ReportsComponent = ({ pageProps }) => {
