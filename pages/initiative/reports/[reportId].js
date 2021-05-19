@@ -31,7 +31,11 @@ const ReportComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Fetch initiative data
-    const { initiative, getReportComplete } = useInitiativeDataStore();
+    const {
+        initiative,
+        populateReportDetails,
+        // getReportDetails,
+    } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { labelTodo, label, valueSet, log } = useMetadata();
@@ -44,12 +48,19 @@ const ReportComponent = ({ pageProps }) => {
     const [totalAmount, setTotalAmount] = useState();
     const [currency, setCurrency] = useState();
 
-    const [applicants, setApplicants] = useState();
-    const [collaborators, setCollaborators] = useState();
-
+    // Overview
     const [coApplicants, setCoApplicants] = useState();
     const [coFunders, setCoFunders] = useState();
     const [novoFunder, setNovoFunder] = useState();
+
+    // Specific data for this report
+    const [funders, setFunders] = useState();
+    const [applicants, setApplicants] = useState();
+    const [collaborators, setCollaborators] = useState();
+    const [
+        employeesFundedReflection,
+        setEmployeesFundedReflection,
+    ] = useState();
 
     const donutColors = [
         'bg-teal-60',
@@ -65,138 +76,228 @@ const ReportComponent = ({ pageProps }) => {
     ];
 
     useEffect(() => {
-        loadReport();
+        if (reportId) {
+            // console.log('reportId: ', reportId);
+            populateReportDetails(reportId);
+            // const report = getReportDetails(reportId);
+            // console.log('report: ', report);
+        }
     }, [reportId]);
-
-    const loadReport = async () => {
-        console.log('reportId: ', reportId);
-        // initiativeReportComplete;
-        const report = await getReportComplete(reportId);
-        console.log('report: ', report);
-    };
 
     useEffect(() => {
         // Initial Load - Handle empty object state?
-        if (initiative._funders == null) return;
+        if (
+            reportId &&
+            initiative?._activities &&
+            Object.keys(initiative?._activities).length !== 0 &&
+            initiative?._reports &&
+            Object.keys(initiative?._reports).length !== 0
+        ) {
+            console.log('initiative: ', initiative);
 
-        console.log('initiative: ', initiative);
+            // Get Report version
+            // const currentReport = initiative._reports[reportId]
+            // const reportVersion = currentReport.version; // "1" or "1.1"
 
-        // Co-Funders & Co-Applicants (used in Header)
-        const coFunders = Object.values(initiative._funders)
-            .filter(item => item.Type__c == 'Co funder')
-            .map(item => item.Account__r.Name);
+            // Get list of funders
+            const funders = Object.values(initiative._reportDetails)
+                .filter(item => {
+                    return item.Type__c == 'Funder Overview' ? true : false;
+                })
+                .map(item => {
+                    // Get funder based on key
+                    const funder =
+                        initiative._funders[item.Initiative_Funder__c];
 
-        const coApplicants = Object.values(initiative._collaborators)
-            .filter(item => item.Type__c == 'Co applicant')
-            .map(item => item.Account__r.Name);
+                    // Add reflection to funder
+                    funder.reportReflection = item.Description__c;
+                    return funder;
+                });
+            setFunders(funders);
 
-        setCoFunders(coFunders);
-        setCoApplicants(coApplicants);
+            // Collaborators are split in two groups
+            // "Co-applicants" & "Additional Collaborator"
+            // Get all and then split them
+            const allCollaborators = Object.values(initiative._reportDetails)
+                .filter(item => {
+                    return item.Type__c == 'Collaborator Overview'
+                        ? true
+                        : false;
+                })
+                .map(item => {
+                    // Get funder based on key
 
-        // Header - Merge goal data, to signel array
-        const goalAmounts = initiative?.Problem_Effect__c?.split(';');
-        const goalTitles = initiative?.Translated_Problem_Effect__c?.split(';');
-        if (goalTitles && goalTitles.length > 0) {
-            const developmentGoals = goalTitles.map((title, index) => {
-                return { title: title, amount: goalAmounts[index] };
-            });
-            setDevelopmentGoals(developmentGoals);
-        }
+                    const collaborator =
+                        initiative._collaborators[
+                            item.Initiative_Collaborator__c
+                        ];
+                    // Add Report Reflection text to collaborators
+                    collaborator.reportReflection = item.Description__c;
+                    return collaborator;
+                });
+            const applicants = allCollaborators.filter(
+                item => item.Translated_Type__c != 'Additional collaborator'
+            );
+            const collaborators = allCollaborators.filter(
+                item => item.Translated_Type__c == 'Additional collaborator'
+            );
+            setApplicants(applicants);
+            setCollaborators(collaborators);
 
-        // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
-        // Split them up depending on the type.
-        // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
-        let collaborators = Object.values(initiative._collaborators).filter(
-            item => {
-                return item.Translated_Type__c == 'Additional collaborator'
-                    ? true
-                    : false;
+            // Get reflection for employees funded
+            const employees = Object.values(initiative._reportDetails).filter(
+                item => {
+                    return item.Type__c == 'Employees Funded Overview'
+                        ? true
+                        : false;
+                }
+            );
+            // bajs
+            setEmployeesFundedReflection(employees[0].Description__c);
+
+            // const influence = Object.values(initiative._reportDetails).filter(
+            //     item => {
+            //         return item.Type__c == 'Influence On Policy' ? true : false;
+            //     }
+            // );
+            // const outcomes = Object.values(initiative._reportDetails).filter(
+            //     item => {
+            //         return item.Type__c == 'Outcome' ? true : false;
+            //     }
+            // );
+            // const activities = Object.values(initiative._reportDetails).filter(
+            //     item => {
+            //         return item.Type__c == 'Activity Overview' ? true : false;
+            //     }
+            // );
+            // const achievements = Object.values(
+            //     initiative._reportDetails
+            // ).filter(item => {
+            //     return item.Type__c == 'Achievement' ? true : false;
+            // });
+
+            // Co-Funders & Co-Applicants (used in Header)
+            const coFunders = Object.values(initiative._funders)
+                .filter(item => item.Type__c == 'Co funder')
+                .map(item => item.Account__r.Name);
+
+            const coApplicants = Object.values(initiative._collaborators)
+                .filter(item => item.Type__c == 'Co applicant')
+                .map(item => item.Account__r.Name);
+
+            setCoFunders(coFunders);
+            setCoApplicants(coApplicants);
+
+            // Header - Merge goal data, to signel array
+            const goalAmounts = initiative?.Problem_Effect__c?.split(';');
+            const goalTitles = initiative?.Translated_Problem_Effect__c?.split(
+                ';'
+            );
+            if (goalTitles && goalTitles.length > 0) {
+                const developmentGoals = goalTitles.map((title, index) => {
+                    return { title: title, amount: goalAmounts[index] };
+                });
+                setDevelopmentGoals(developmentGoals);
             }
-        );
-        let applicants = Object.values(initiative._collaborators).filter(
-            item => {
-                return item.Translated_Type__c != 'Additional collaborator'
-                    ? true
-                    : false;
-            }
-        );
-        setApplicants(applicants);
-        setCollaborators(collaborators);
 
-        // 🍩 Donut data 🍩
-        // Build donut slices using color gradient
-        // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
-        const currency = Object.values(initiative._funders)[0].CurrencyIsoCode;
-        const totalAmount = Object.values(initiative._funders).reduce(
-            (total, funder) => {
-                return total + funder.Amount__c;
-            },
-            0
-        );
-        setTotalAmount(totalAmount);
-        setCurrency(currency);
+            // // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
+            // // Split them up depending on the type.
+            // // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
+            // let collaborators = Object.values(initiative._collaborators).filter(
+            //     item => {
+            //         return item.Translated_Type__c == 'Additional collaborator'
+            //             ? true
+            //             : false;
+            //     }
+            // );
+            // let applicants = Object.values(initiative._collaborators).filter(
+            //     item => {
+            //         return item.Translated_Type__c != 'Additional collaborator'
+            //             ? true
+            //             : false;
+            //     }
+            // );
+            // setApplicants(applicants);
+            // setCollaborators(collaborators);
 
-        // Header - If Novo Nordisk is lead funder
-        // Calculate Novo's funding share
-        const novoFunder = Object.values(initiative._funders)
-            .filter(
-                item =>
-                    item.Type__c == 'Lead funder' &&
-                    item.Account__r.Name == 'Novo Nordisk Fonden'
-            )
-            .map(item => ({
-                amount: `${
-                    item.CurrencyIsoCode
-                } ${item.Amount__c.toLocaleString('de-DE')}`,
-                share: `${Math.round((item.Amount__c / totalAmount) * 100)}%`,
-            }))[0];
-        setNovoFunder(novoFunder);
+            // 🍩 Donut data 🍩
+            // Build donut slices using color gradient
+            // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
+            const currency = Object.values(initiative._funders)[0]
+                .CurrencyIsoCode;
+            const totalAmount = Object.values(initiative._funders).reduce(
+                (total, funder) => {
+                    return total + funder.Amount__c;
+                },
+                0
+            );
+            setTotalAmount(totalAmount);
+            setCurrency(currency);
 
-        const donutData = Object.values(initiative._funders).map(
-            (funder, index) => {
-                return {
-                    color: donutColors[index],
-                    hex: donutHex[index],
-                    name: funder.Account__r.Name,
-                    currency: funder.CurrencyIsoCode,
-                    amount: funder.Amount__c,
-                    totalAmount: totalAmount,
-                    percentage: funder.Amount__c / totalAmount,
+            // Header - If Novo Nordisk is lead funder
+            // Calculate Novo's funding share
+            const novoFunder = Object.values(initiative._funders)
+                .filter(
+                    item =>
+                        item.Type__c == 'Lead funder' &&
+                        item.Account__r.Name == 'Novo Nordisk Fonden'
+                )
+                .map(item => ({
+                    amount: `${
+                        item.CurrencyIsoCode
+                    } ${item.Amount__c.toLocaleString('de-DE')}`,
+                    share: `${Math.round(
+                        (item.Amount__c / totalAmount) * 100
+                    )}%`,
+                }))[0];
+            setNovoFunder(novoFunder);
+
+            const donutData = Object.values(initiative._funders).map(
+                (funder, index) => {
+                    return {
+                        color: donutColors[index],
+                        hex: donutHex[index],
+                        name: funder.Account__r.Name,
+                        currency: funder.CurrencyIsoCode,
+                        amount: funder.Amount__c,
+                        totalAmount: totalAmount,
+                        percentage: funder.Amount__c / totalAmount,
+                    };
+                }
+            );
+
+            const multiplier = 3.6; // 1% of 360
+
+            // Create object array.
+            // Use reduce to add previous "deg" to position current slice (360 deg)
+            let donutStyles = donutData.reduce((previous, slice) => {
+                const prevDeg = previous[previous.length - 1]
+                    ? previous[previous.length - 1].deg
+                    : 0;
+                const deg = slice.percentage * 100 * multiplier;
+                const obj = {
+                    deg: deg + prevDeg,
+                    hex: slice.hex,
                 };
-            }
-        );
-
-        const multiplier = 3.6; // 1% of 360
-
-        // Create object array.
-        // Use reduce to add previous "deg" to position current slice (360 deg)
-        let donutStyles = donutData.reduce((previous, slice) => {
-            const prevDeg = previous[previous.length - 1]
-                ? previous[previous.length - 1].deg
-                : 0;
-            const deg = slice.percentage * 100 * multiplier;
-            const obj = {
-                deg: deg + prevDeg,
-                hex: slice.hex,
-            };
-            previous.push(obj);
-            return previous;
-        }, []);
-        // Create array of color / deg pairs, one per slice
-        donutStyles = donutStyles.map((slice, index) => {
-            // Last Slice uses '0' instead of 'X deg' - to close circle
-            if (index == donutStyles.length - 1) {
-                return `${slice.hex} 0`;
-            } else {
-                return `${slice.hex} 0 ${slice.deg}deg`;
-            }
-        });
-        // Construct gradient string
-        // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
-        const gradient = `conic-gradient(${donutStyles.join(', ')})`;
-        setPieChartStyle({ backgroundImage: gradient });
-        setDonutData(donutData);
-        setInitiativeData(initiative);
+                previous.push(obj);
+                return previous;
+            }, []);
+            // Create array of color / deg pairs, one per slice
+            donutStyles = donutStyles.map((slice, index) => {
+                // Last Slice uses '0' instead of 'X deg' - to close circle
+                if (index == donutStyles.length - 1) {
+                    return `${slice.hex} 0`;
+                } else {
+                    return `${slice.hex} 0 ${slice.deg}deg`;
+                }
+            });
+            // Construct gradient string
+            // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
+            const gradient = `conic-gradient(${donutStyles.join(', ')})`;
+            setPieChartStyle({ backgroundImage: gradient });
+            setDonutData(donutData);
+            setInitiativeData(initiative);
+        }
     }, [initiative]);
 
     return (
@@ -207,6 +308,7 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper>
                         <SectionWrapper>
                             <div className="w-64 h-64 overflow-hidden rounded-4">
+                                🛑 Missing image
                                 {/* {initiativeData.Hero_Image_URL__c && (
                                     <Image
                                         src={initiativeData.Hero_Image_URL__c}
@@ -377,53 +479,39 @@ const ReportComponent = ({ pageProps }) => {
                             </div>
                         </div>
                         {/* List of funders */}
-                        {Object.values(initiative._funders).map(
-                            (item, index) => {
-                                if (item.Type__c == 'Co funder') {
-                                    return (
-                                        <div key={`f-${index}`}>
-                                            <SectionWrapper>
-                                                <ReportDetailCard
-                                                    headline={
-                                                        item.Account__r.Name
-                                                    }
-                                                    image="/images/fg-card-square-1.png"
-                                                    description="Missing data 🛑"
-                                                    items={[
-                                                        {
-                                                            label: 'Amount',
-                                                            text: `${
-                                                                item.CurrencyIsoCode
-                                                            } ${item.Amount__c.toLocaleString(
-                                                                'de-DE'
-                                                            )}`,
-                                                        },
-                                                        {
-                                                            label:
-                                                                'Approval date',
-                                                            text:
-                                                                item.Grant_Start_Date__c,
-                                                        },
-                                                    ]}
-                                                />
-                                            </SectionWrapper>
-                                            <SectionWrapper className="bg-blue-10 rounded-8">
-                                                <div className="t-h5">
-                                                    {labelTodo(
-                                                        'Updates from this year'
-                                                    )}
-                                                </div>
-                                                <p className="mt-8 t-body">
-                                                    {labelTodo(
-                                                        'Report content missing 🛑'
-                                                    )}
-                                                </p>
-                                            </SectionWrapper>
-                                        </div>
-                                    );
-                                }
-                            }
-                        )}
+                        {Object.values(funders).map((item, index) => (
+                            <div key={`f-${index}`}>
+                                <SectionWrapper>
+                                    <ReportDetailCard
+                                        headline={item.Account__r.Name}
+                                        image="" // Funders don't have logo/image
+                                        description="" // Funders don't have a description
+                                        items={[
+                                            {
+                                                label: 'Amount',
+                                                text: `${
+                                                    item.CurrencyIsoCode
+                                                } ${item.Amount__c.toLocaleString(
+                                                    'de-DE'
+                                                )}`,
+                                            },
+                                            {
+                                                label: 'Approval date',
+                                                text: item.Grant_Start_Date__c,
+                                            },
+                                        ]}
+                                    />
+                                </SectionWrapper>
+                                <SectionWrapper className="bg-blue-10 rounded-8">
+                                    <div className="t-h5">
+                                        {labelTodo('Updates from this year')}
+                                    </div>
+                                    <p className="mt-8 t-body">
+                                        {item.reportReflection}
+                                    </p>
+                                </SectionWrapper>
+                            </div>
+                        ))}
                     </SectionWrapper>
                     {/* Report Summary */}
                     <SectionWrapper>
@@ -434,159 +522,160 @@ const ReportComponent = ({ pageProps }) => {
                         </SectionWrapper>
                         <TextCard
                             hasBackground={true}
-                            headline="🛑 Overall perfomance"
-                            body="🛑 In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                            headline="Overall perfomance"
+                            body={
+                                initiativeData._reports[reportId]
+                                    ?.Summary_Of_Activities__c
+                            }
                         />
                         <TextCard
                             hasBackground={true}
                             className="mt-32"
-                            headline="🛑 Challenges & Learnings"
-                            body="🛑 In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                            headline="Challenges & Learnings"
+                            body={
+                                initiativeData._reports[reportId]
+                                    ?.Summary_Of_Challenges_And_Learnings__c
+                            }
                         />
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Key changes */}
-                    <SectionWrapper>
-                        <SectionWrapper className="mt-96">
-                            <h2 className="t-h3">{labelTodo('Key changes')}</h2>
+                    {/* Headline: "Key changes" */}
+                    <SectionWrapper paddingY={false}>
+                        <SectionWrapper paddingY={false}>
+                            <h2 className="t-h3 mt-96">
+                                {labelTodo('Key changes')}
+                            </h2>
                         </SectionWrapper>
-                        <SectionWrapper>
-                            <h3 className="t-h4">
-                                {labelTodo(
-                                    'New co-applicant relationships this year'
-                                )}
-                            </h3>
-                        </SectionWrapper>
-
-                        <SectionWrapper>
-                            <ReportDetailCard
-                                headline="Co-funder name"
-                                image="/images/fg-card-square-1.png"
-                                description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                                items={[
-                                    { label: 'Amount', text: 'DKK 500.000' },
-                                    {
-                                        label: 'Approval date',
-                                        text: 'June 15th 2020',
-                                    },
-                                ]}
-                            />
-                        </SectionWrapper>
-                        <TextCard
-                            hasBackground={true}
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
-                        <SectionWrapper>
-                            <ReportDetailCard
-                                headline="Co-funder name"
-                                image="/images/fg-card-square-1.png"
-                                description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                                items={[
-                                    { label: 'Amount', text: 'DKK 500.000' },
-                                    {
-                                        label: 'Approval date',
-                                        text: 'June 15th 2020',
-                                    },
-                                ]}
-                            />
-                        </SectionWrapper>
-                        <TextCard
-                            hasBackground={true}
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Overview of collaborations */}
-                    <SectionWrapper>
+                    {/* Applicants */}
+                    {applicants && (
                         <SectionWrapper>
-                            <h3 className="t-h4">
-                                {labelTodo('Overview of collaborations')}
-                            </h3>
+                            <SectionWrapper>
+                                <h3 className="t-h4">
+                                    {labelTodo(
+                                        'New co-applicant relationships this year'
+                                    )}
+                                </h3>
+                            </SectionWrapper>
+                            {applicants.map((item, index) => (
+                                <div key={`a-${index}`}>
+                                    <SectionWrapper>
+                                        <ReportDetailCard
+                                            headline={item.Account__r.Name}
+                                            image="" // Collaborators don't have an image
+                                            description="" // Collaborators don't have a description
+                                            items={[
+                                                {
+                                                    label: labelTodo('Type'),
+                                                    text: item.Type__c,
+                                                },
+                                                {
+                                                    label: labelTodo('Period'),
+                                                    text: `${item.Start_Date__c} - ${item.End_Date__c}`,
+                                                },
+                                            ]}
+                                        />
+                                    </SectionWrapper>
+                                    <TextCard
+                                        hasBackground={true}
+                                        headline={labelTodo(
+                                            'Updates from this year'
+                                        )}
+                                        body={item.reportReflection}
+                                    />
+                                </div>
+                            ))}
                         </SectionWrapper>
-
+                    )}
+                    {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Collaborators */}
+                    {collaborators && (
                         <SectionWrapper>
-                            <ReportDetailCard
-                                headline="Co-funder name"
-                                image="/images/fg-card-square-1.png"
-                                description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                                items={[
-                                    { label: 'Amount', text: 'DKK 500.000' },
-                                    {
-                                        label: 'Approval date',
-                                        text: 'June 15th 2020',
-                                    },
-                                ]}
-                            />
+                            <SectionWrapper>
+                                <h3 className="t-h4">
+                                    {labelTodo('Overview of collaborations')}
+                                </h3>
+                            </SectionWrapper>
+                            {collaborators.map((item, index) => (
+                                <div key={`c-${index}`}>
+                                    <SectionWrapper>
+                                        <ReportDetailCard
+                                            headline={item.Account__r.Name}
+                                            image="" // Collaborators don't have an image
+                                            description="" // Collaborators don't have a description
+                                            items={[
+                                                {
+                                                    label: labelTodo('Type'),
+                                                    text: item.Type__c,
+                                                },
+                                                {
+                                                    label: labelTodo('Period'),
+                                                    text: `${item.Start_Date__c} - ${item.End_Date__c}`,
+                                                },
+                                            ]}
+                                        />
+                                    </SectionWrapper>
+                                    <TextCard
+                                        hasBackground={true}
+                                        headline={labelTodo(
+                                            'Updates from this year'
+                                        )}
+                                        body={item.reportReflection}
+                                    />
+                                </div>
+                            ))}
                         </SectionWrapper>
-                        <TextCard
-                            hasBackground={true}
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
-                        <SectionWrapper>
-                            <ReportDetailCard
-                                headline="Co-funder name"
-                                image="/images/fg-card-square-1.png"
-                                description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                                items={[
-                                    { label: 'Amount', text: 'DKK 500.000' },
-                                    {
-                                        label: 'Approval date',
-                                        text: 'June 15th 2020',
-                                    },
-                                ]}
-                            />
-                        </SectionWrapper>
-                        <TextCard
-                            hasBackground={true}
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
-                    </SectionWrapper>
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Employees funded by the grant */}
-                    <SectionWrapper>
+                    {employeesFundedReflection && (
                         <SectionWrapper>
-                            <h3 className="t-h4">
-                                {labelTodo('Employees funded by the grant')}
-                            </h3>
-                        </SectionWrapper>
+                            <SectionWrapper>
+                                <h3 className="t-h4">
+                                    {labelTodo('Employees funded by the grant')}
+                                </h3>
+                            </SectionWrapper>
 
-                        <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 2xl:grid-cols-6">
-                            <NumberCard
-                                number="6"
-                                headline="Researchers"
-                                description="4 female, 2 male"
+                            {/* <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 2xl:grid-cols-6">
+                                <NumberCard
+                                    number="6"
+                                    headline="Researchers"
+                                    description="4 female, 2 male"
+                                />
+                                <NumberCard
+                                    number="2"
+                                    headline="Project managers"
+                                    description="2 male"
+                                />
+                                <NumberCard
+                                    number="5"
+                                    headline="Administrative staff"
+                                    description="3 female, 2 male"
+                                />
+                                <NumberCard
+                                    number="6"
+                                    headline="Technical staff"
+                                    description="4 female, 2 male"
+                                />
+                                <NumberCard
+                                    number="20"
+                                    headline="Other"
+                                    description="10 female, 10 male"
+                                />
+                                <NumberCard
+                                    number="3"
+                                    headline="Scientists"
+                                    description="3 female"
+                                />
+                            </div> */}
+                            <TextCard
+                                hasBackground={true}
+                                headline={labelTodo('Updates from this year')}
+                                body={employeesFundedReflection}
                             />
-                            <NumberCard
-                                number="2"
-                                headline="Project managers"
-                                description="2 male"
-                            />
-                            <NumberCard
-                                number="5"
-                                headline="Administrative staff"
-                                description="3 female, 2 male"
-                            />
-                            <NumberCard
-                                number="6"
-                                headline="Technical staff"
-                                description="4 female, 2 male"
-                            />
-                            <NumberCard
-                                number="20"
-                                headline="Other"
-                                description="10 female, 10 male"
-                            />
-                            <NumberCard
-                                number="3"
-                                headline="Scientists"
-                                description="3 female"
-                            />
-                        </div>
-                    </SectionWrapper>
+                        </SectionWrapper>
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
                     <SectionWrapper>
@@ -781,7 +870,6 @@ const ReportComponent = ({ pageProps }) => {
                             body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
                         />
                     </SectionWrapper>
-
                     <SectionWrapper>
                         <SectionWrapper>
                             <h3 className="t-h4">
