@@ -75,7 +75,7 @@ const HeaderComponent = ({ showUserControls }) => {
                             </Link>
                         </li>
                         <li className="lg:cursor-pointer hover:text-blue-100">
-                            <Link href="/report">
+                            <Link href="/initiatives/reports">
                                 <a>
                                     <FiInbox className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
