@@ -4,12 +4,13 @@ import React, { useEffect, useState } from 'react';
 // Packages
 import Image from 'next/image';
 import t from 'prop-types';
+import { useRouter } from 'next/router';
 
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
-import { isJson } from 'utilities';
 
+import { isJson } from 'utilities';
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 import ReportDetailCard from 'components/_initiative/reportDetailCard';
@@ -19,13 +20,18 @@ import NumberCard from 'components/_initiative/numberCard';
 import DividerLine from 'components/_initiative/dividerLine';
 import ChartCard from 'components/_initiative/chartCard';
 
+// a101x000002pIiFAAU
+
 const ReportComponent = ({ pageProps }) => {
+    const router = useRouter();
+    const { reportId } = router.query;
+
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Fetch initiative data
-    const { initiative } = useInitiativeDataStore();
+    const { initiative, getReportComplete } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { labelTodo, label, valueSet, log } = useMetadata();
@@ -57,6 +63,17 @@ const ReportComponent = ({ pageProps }) => {
         '#995B57', // bg-coral-60
         '#977958', // bg-amber-60
     ];
+
+    useEffect(() => {
+        loadReport();
+    }, [reportId]);
+
+    const loadReport = async () => {
+        console.log('reportId: ', reportId);
+        // initiativeReportComplete;
+        const report = await getReportComplete(reportId);
+        console.log('report: ', report);
+    };
 
     useEffect(() => {
         // Initial Load - Handle empty object state?
@@ -779,11 +796,11 @@ const ReportComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+// export async function getStaticProps(context) {
+//     return {
+//         props: {}, // will be passed to the page component as props
+//     };
+// }
 
 ReportComponent.propTypes = {
     pageProps: t.object,

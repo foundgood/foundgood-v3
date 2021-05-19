@@ -142,7 +142,6 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     items: items,
                 };
             });
-            console.log('Wop: ', activities);
             setActivities(activities);
         }
     }, [initiative]);
