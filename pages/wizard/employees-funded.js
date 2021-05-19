@@ -6,8 +6,16 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
-import { useInitiativeDataStore } from 'utilities/store';
+import {
+    useAuth,
+    useMetadata,
+    useSalesForce,
+    useContextMode,
+} from 'utilities/hooks';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -18,10 +26,8 @@ import {
     Select,
     SelectList,
     Text,
-    DateRange,
-    DatePicker,
-    LongText,
     Number,
+    Reflection,
 } from 'components/_inputs';
 import ProjectMemberCard from 'components/_wizard/projectMemberCard';
 
@@ -30,20 +36,32 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
+    // Context for wizard pages
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+
     // Hook: Metadata
     const { labelTodo, valueSet, log } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
+    const {
+        handleSubmit: handleSubmitReflections,
+        control: controlReflections,
+    } = useForm();
     const { isDirty } = useFormState({ control });
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
+    // Store: Wizard navigation
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+
     // Store: Initiative data
     const {
         initiative,
         updateEmployeeFunded,
+        getReportDetails,
+        updateReportDetails,
         CONSTANTS,
     } = useInitiativeDataStore();
 
@@ -99,6 +117,42 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         }
     }
 
+    // Method: Adds reflections
+    async function submitReflections(formData) {
+        const { Employees_Funded_Overview } = formData;
+
+        // Object name
+        const object = 'Initiative_Report_Detail__c';
+
+        // Check if reflection exist - then update
+
+        const reportDetailId = currentReflection
+            ? await sfUpdate({
+                  object,
+                  id: currentReflection.Id,
+                  data: {
+                      Description__c: Employees_Funded_Overview,
+                  },
+              })
+            : await sfCreate({
+                  object,
+                  data: {
+                      Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
+                      Description__c: Employees_Funded_Overview,
+                      Initiative_Report__c: REPORT_ID,
+                  },
+              });
+
+        // Update affected activity goals
+        await updateReportDetails([reportDetailId]);
+    }
+
+    // Method: Form error/validation handler
+    function error(error) {
+        console.warn('Form invalid', error);
+        throw error;
+    }
+
     // Local state to handle modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
 
@@ -125,6 +179,27 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         ]);
         setValue('Percent_Involvement__c', Percent_Involvement__c);
     }, [updateId, modalIsOpen]);
+
+    // Add submit handler to wizard navigation store
+    useEffect(() => {
+        if (MODE === CONTEXTS.REPORT) {
+            setTimeout(() => {
+                setCurrentSubmitHandler(
+                    handleSubmitReflections(submitReflections, error)
+                );
+            }, 10);
+        }
+    }, []);
+
+    // Current report details
+    const [currentReportDetails] = useState(getReportDetails(REPORT_ID));
+
+    const [currentReflection] = useState(
+        currentReportDetails.find(
+            detail =>
+                detail.Type__c === CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
+        )
+    );
 
     return (
         <>
@@ -164,6 +239,20 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     }}>
                     {labelTodo('Add employee')}
                 </Button>
+                {MODE === CONTEXTS.REPORT && (
+                    <Reflection
+                        name="Employees_Funded_Overview"
+                        defaultValue={currentReflection.Description__c}
+                        label={labelTodo('Add your reflections')}
+                        subLabel={labelTodo(
+                            'Descriptive text that explains what to write and what the foundation is looking for.'
+                        )}
+                        placeholder={labelTodo('Enter reflections')}
+                        maxLength={750}
+                        required
+                        controller={controlReflections}
+                    />
+                )}
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}

@@ -41,8 +41,7 @@ const ProgressCardComponent = ({ headline, items, controller }) => {
                                         subLabel={labelTodo(
                                             'Additional reached'
                                         )}
-                                        plac
-                                        eholder="0"
+                                        placeholder="0"
                                         controller={controller}
                                     />
                                 </InputWrapper>

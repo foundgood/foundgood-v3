@@ -241,11 +241,13 @@ const SharingResultsComponent = ({ pageProps }) => {
 
     // Add submit handler to wizard navigation store
     useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                handleSubmitReflections(submitReflections, error)
-            );
-        }, 10);
+        if (MODE === CONTEXTS.REPORT) {
+            setTimeout(() => {
+                setCurrentSubmitHandler(
+                    handleSubmitReflections(submitReflections, error)
+                );
+            }, 10);
+        }
     }, []);
 
     // Current report details
