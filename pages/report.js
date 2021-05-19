@@ -151,7 +151,8 @@ const ReportComponent = ({ pageProps }) => {
 
         const multiplier = 3.6; // 1% of 360
 
-        // Create object array - add previous items "deg" (360 deg), to position current slice
+        // Create object array.
+        // Use reduce to add previous "deg" to position current slice (360 deg)
         let donutStyles = donutData.reduce((previous, slice) => {
             const prevDeg = previous[previous.length - 1]
                 ? previous[previous.length - 1].deg
@@ -359,12 +360,12 @@ const ReportComponent = ({ pageProps }) => {
                             </div>
                         </div>
                         {/* List of funders */}
-                        <>
-                            {Object.values(initiative._funders).map(
-                                (item, index) => {
-                                    if (item.Type__c == 'Co funder') {
-                                        return (
-                                            <SectionWrapper key={`f-${index}`}>
+                        {Object.values(initiative._funders).map(
+                            (item, index) => {
+                                if (item.Type__c == 'Co funder') {
+                                    return (
+                                        <div key={`f-${index}`}>
+                                            <SectionWrapper>
                                                 <ReportDetailCard
                                                     headline={
                                                         item.Account__r.Name
@@ -389,26 +390,23 @@ const ReportComponent = ({ pageProps }) => {
                                                     ]}
                                                 />
                                             </SectionWrapper>
-                                        );
-                                    }
+                                            <SectionWrapper className="bg-blue-10 rounded-8">
+                                                <div className="t-h5">
+                                                    {labelTodo(
+                                                        'Updates from this year'
+                                                    )}
+                                                </div>
+                                                <p className="mt-8 t-body">
+                                                    {labelTodo(
+                                                        'Report content missing 🛑'
+                                                    )}
+                                                </p>
+                                            </SectionWrapper>
+                                        </div>
+                                    );
                                 }
-                            )}
-                            <SectionWrapper className="bg-blue-10 rounded-8">
-                                <div className="t-h5">
-                                    Updates from this year
-                                </div>
-                                <p className="mt-8 t-body">
-                                    In the eighteenth century the German
-                                    philosopher Immanuel Kant developed a theory
-                                    of knowledge in which knowledge about space
-                                    can be both a priori and synthetic.
-                                    According to Kant, knowledge about space is
-                                    synthetic, in that statements about space
-                                    are not simply true by virtue of the meaning
-                                    of the words in the statement.
-                                </p>
-                            </SectionWrapper>
-                        </>
+                            }
+                        )}
                     </SectionWrapper>
                     {/* Report Summary */}
                     <SectionWrapper>
@@ -419,14 +417,14 @@ const ReportComponent = ({ pageProps }) => {
                         </SectionWrapper>
                         <TextCard
                             hasBackground={true}
-                            headline="Overall perfomance"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                            headline="🛑 Overall perfomance"
+                            body="🛑 In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
                         />
                         <TextCard
                             hasBackground={true}
                             className="mt-32"
-                            headline="Challenges & Learnings"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                            headline="🛑 Challenges & Learnings"
+                            body="🛑 In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
                         />
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
@@ -774,33 +772,6 @@ const ReportComponent = ({ pageProps }) => {
                             </h3>
                         </SectionWrapper>
                         entries...
-                    </SectionWrapper>
-
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <br></br>
-                    <SectionWrapper className="bg-coral-40">
-                        <h2 className="t-h5">
-                            {labelTodo('To edge container')}
-                        </h2>
-                    </SectionWrapper>
-                    <SectionWrapper className="bg-teal-300">
-                        <SectionWrapper>
-                            <h2 className="t-h5">
-                                {labelTodo('Indented container')}
-                            </h2>
-                        </SectionWrapper>
-                    </SectionWrapper>
-
-                    <SectionWrapper className="bg-amber-300">
-                        <SectionWrapper paddingY={false}>
-                            <h2 className="t-h5">
-                                {labelTodo('No padding Y')}
-                            </h2>
-                        </SectionWrapper>
                     </SectionWrapper>
                 </>
             )}
