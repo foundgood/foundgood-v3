@@ -131,7 +131,7 @@
         );
         */
     }
-    .pie:after {
+    .pie:before {
         /* Donut width = 40px */
         content: '';
         position: absolute;
