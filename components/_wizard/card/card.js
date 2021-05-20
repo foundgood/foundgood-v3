@@ -17,7 +17,7 @@ const CardComponent = ({
     subHeadline,
     body,
     image,
-    label,
+    label: cardLabel,
     footnote,
     tags,
     evaluator,
@@ -27,7 +27,7 @@ const CardComponent = ({
     children,
 }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     return (
         <div
@@ -47,9 +47,9 @@ const CardComponent = ({
                     {headline && (
                         <div className="flex items-center">
                             <h4 className="t-sh4">{headline}</h4>
-                            {label && (
+                            {cardLabel && (
                                 <div className="ml-16 text-teal-60 t-caption">
-                                    {label}
+                                    {cardLabel}
                                 </div>
                             )}
                         </div>
@@ -97,7 +97,7 @@ const CardComponent = ({
 
                 <div className="self-center">
                     <Button theme="teal" variant="secondary" action={action}>
-                        {labelTodo('Update')}
+                        {label('custom.FA_ButtonUpdate')}
                     </Button>
                 </div>
             </div>

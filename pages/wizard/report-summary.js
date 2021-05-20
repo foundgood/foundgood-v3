@@ -85,8 +85,8 @@ const ReportSummaryComponent = () => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Report summary')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 <Reflection

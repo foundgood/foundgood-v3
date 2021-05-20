@@ -8,6 +8,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useWizardNavigationStore } from 'utilities/store';
+import { useMetadata } from 'utilities/hooks';
 
 // Components
 import { SubLevelItem } from 'components/_wizard/asideNavigation';
@@ -17,6 +18,9 @@ import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 
 const TopLevelItemComponent = ({ item }) => {
     const { title, items } = item;
+
+    // Hook: Metadata
+    const { labelTodo } = useMetadata();
 
     // Store: wizardNavigation
     const { toggleSection, openSection } = useWizardNavigationStore();
@@ -33,7 +37,7 @@ const TopLevelItemComponent = ({ item }) => {
                     {sectionToggled && <FiChevronUp />}
                     {!sectionToggled && <FiChevronDown />}
                 </i>
-                {title}
+                {labelTodo(title)}
             </span>
 
             {/* Sub-level items */}

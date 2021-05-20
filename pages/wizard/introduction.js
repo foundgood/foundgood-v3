@@ -31,8 +31,7 @@ const IntroductionComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
 
     // Hook: Metadata
-    const { labelTodo, log } = useMetadata();
-    log();
+    const { label, log } = useMetadata();
 
     // Hook: Salesforce setup
     const { sfCreate } = useSalesForce();
@@ -100,29 +99,21 @@ const IntroductionComponent = ({ pageProps }) => {
     return MODE === CONTEXTS.REPORT ? (
         <>
             <TitlePreamble
-                title={labelTodo('Let’s run through your Annual Report: 2021')}
-                preamble={labelTodo(
-                    'Foundgood will guide you through each section. Be sure to do the following:'
-                )}
+                title={label('custom.FA_ReportWizardWelcomeHeading')}
+                preamble={label('custom.FA_ReportWizardWelcomeSubHeading')}
             />
             <div className="flex justify-center">
                 <Image src="/images/new-report.png" width="600" height="471" />
             </div>
             <p className="t-body">
-                - Check all of your details are accurate and up to date
-                <br />
-                - Add any additional missing information that is outstanding
-                <br />- Follow the help text for guidance on how to complete
-                each section
+                {label('custom.FA_ReportWizardWelcomeMain')}
             </p>
         </>
     ) : (
         <>
             <TitlePreamble
-                title={labelTodo('Welcome to your new initiative')}
-                preamble={labelTodo(
-                    'A new way to structure your project and report on your impact'
-                )}
+                title={label('custom.FA_InitiativeWizardWelcomeHeading')}
+                preamble={label('custom.FA_InitiativeWizardWelcomeSubHeading')}
             />
             <div className="flex justify-center my-64">
                 <Image
@@ -132,13 +123,7 @@ const IntroductionComponent = ({ pageProps }) => {
                 />
             </div>
             <p className="t-body">
-                Maxwell's equations – the foundation of classical
-                electromagnetism – describe light as a wave that moves with a
-                characteristic velocity. The modern view is that light needs no
-                medium of transmission, but Maxwell and his contemporaries were
-                convinced that light waves were propagated in a medium,
-                analogous to sound propagating in air, and ripples propagating
-                on the surface of a pond
+                {label('custom.FA_InitiativeWizardWelcomeMain')}
             </p>
         </>
     );

@@ -33,7 +33,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, label, valueSet, log, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -56,7 +56,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Get data for form
     const { data: accountOrganisations } = sfQuery(
@@ -209,8 +209,8 @@ const CollaboratorsComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Are you collaborating with anyone?')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {Object.keys(initiative._collaborators).map(collaboratorKey => {
@@ -242,7 +242,9 @@ const CollaboratorsComponent = ({ pageProps }) => {
                                 selected: reflection[0] ?? false ? true : false,
                                 value: reflection[0]?.Description__c ?? '',
                             }}
-                            inputLabel={labelTodo('Outline your reflection')}
+                            inputLabel={label(
+                                'custom.FA_ReportWizardCollaboratorReflectionSubHeading'
+                            )}
                         />
                     ) : null;
                 })}
@@ -253,7 +255,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add collaborator')}
+                    {label('custom.FA_ButtonAddCollaborator')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -265,7 +267,12 @@ const CollaboratorsComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Account__c"
-                        label={labelTodo('Collaborator name')}
+                        label={label(
+                            'objects.initiativeCollaborator.Account__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeCollaborator.Account__c'
+                        )}
                         placeholder={labelTodo('Please select')}
                         options={
                             accountOrganisations?.records?.map(item => ({
@@ -278,7 +285,10 @@ const CollaboratorsComponent = ({ pageProps }) => {
                     />
                     <Select
                         name="Type__c"
-                        label={labelTodo('Collaborator type')}
+                        label={label('objects.initiativeCollaborator.Type__c')}
+                        subLabel={helpText(
+                            'objects.initiativeCollaborator.Type__c'
+                        )}
                         placeholder={labelTodo('Please select')}
                         options={valueSet(
                             'initiativeCollaborator.Type__c'
@@ -290,14 +300,23 @@ const CollaboratorsComponent = ({ pageProps }) => {
                     />
                     <LongText
                         name="Description__c"
-                        label={labelTodo('Description of collaboration')}
-                        placeholder={labelTodo('Enter your description')}
+                        label={label(
+                            'objects.initiativeCollaborator.Description__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeCollaborator.Description__c'
+                        )}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         controller={control}
                         required
                     />
                     <DateRange
                         name="Dates"
-                        label={labelTodo('Collaboration period')}
+                        label={`${label(
+                            'objects.initiativeCollaborator.Start_Date__c'
+                        )} / ${label(
+                            'objects.initiativeCollaborator.End_Date__c'
+                        )}`}
                         controller={control}
                     />
                 </InputWrapper>

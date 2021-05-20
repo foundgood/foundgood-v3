@@ -6,7 +6,7 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 // Utilities
-import { useWizardLayoutStore, useInitiativeDataStore } from 'utilities/store';
+import { useWizardLayoutStore } from 'utilities/store';
 import { useResponsive, useMetadata } from 'utilities/hooks';
 
 // Components
@@ -14,6 +14,7 @@ import IconButton from 'components/iconButton';
 import Button from 'components/button';
 import BottomNavigation from 'components/_wizard/bottomNavigation';
 import { AsideNavigation } from 'components/_wizard/asideNavigation';
+import AsideHelp from 'components/_wizard/asideHelp';
 
 // Icons
 import { FiAlignLeft, FiChevronsLeft } from 'react-icons/fi';
@@ -28,8 +29,8 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     } = useWizardLayoutStore();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
-
+    const { labelTodo, log } = useMetadata();
+    log();
     // Hook: Get breakpoint
     const bp = useResponsive();
 
@@ -46,12 +47,6 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
             toggleRightMenu(true);
         }
     }, [bp]);
-
-    // Logging of initiative data
-    const { initiative } = useInitiativeDataStore();
-    useEffect(() => {
-        console.log({ initiative });
-    }, [initiative]);
 
     return (
         <>
@@ -103,7 +98,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                     </Button>
                     {/* Help content */}
                     <div className="mt-32 overflow-y-auto scrolling-touch">
-                        Help content
+                        <AsideHelp />
                     </div>
                 </div>
             )}

@@ -9,19 +9,31 @@ const useMetadata = () => {
     const { locale } = useRouter();
 
     function label(path) {
-        return _get(
-            metadata.labels,
-            `${locale}.${path}.label`,
-            _get(metadata.labels.en, `${path}.label`, '')
-        );
+        // Locale based
+        let label = _get(metadata.labels, `${locale}.${path}.label`);
+        if (typeof label === 'string') {
+            return label;
+        }
+        // Fallback
+        label = _get(metadata.labels.en, `${path}.label`);
+        if (typeof label === 'string') {
+            return label;
+        }
+        return label;
     }
 
     function helpText(path) {
-        return _get(
-            metadata.labels,
-            `${locale}.${path}.helpText`,
-            _get(metadata.labels.en, `${path}.helpText`, '')
-        );
+        // Locale based
+        let label = _get(metadata.labels, `${locale}.${path}.helpText`);
+        if (typeof label === 'string') {
+            return label;
+        }
+        // Fallback
+        label = _get(metadata.labels.en, `${path}.helpText`);
+        if (typeof label === 'string') {
+            return label;
+        }
+        return label;
     }
 
     function type(path) {

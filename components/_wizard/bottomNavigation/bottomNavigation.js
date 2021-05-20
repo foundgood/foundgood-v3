@@ -20,7 +20,7 @@ const BottomNavigationComponent = () => {
     const [loading, setLoading] = useState(false);
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
     const {
         nextItemUrl,
         onUrlOrContextChange,
@@ -53,7 +53,7 @@ const BottomNavigationComponent = () => {
         <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
             <div className="flex items-center justify-between w-full">
                 <Button theme="coral" variant="secondary" action="/">
-                    {labelTodo('Exit')}
+                    {label('custom.FA_ButtonExit')}
                 </Button>
                 <p
                     className={cc([
@@ -62,7 +62,7 @@ const BottomNavigationComponent = () => {
                             'opacity-100': loading,
                         },
                     ])}>
-                    {labelTodo('Saving updates...')}
+                    {label('custom.FA_MessageSaved')}
                 </p>
                 <div className="flex space-x-12">
                     <Button
@@ -78,11 +78,11 @@ const BottomNavigationComponent = () => {
                         theme="coral"
                         variant="secondary"
                         action={router.back}>
-                        {labelTodo('Back')}
+                        {label('custom.FA_ButtonBack')}
                     </Button>
 
                     <Button theme="coral" action={onHandleContinue}>
-                        {labelTodo('Continue')}
+                        {label('custom.FA_ButtonContinue')}
                     </Button>
                 </div>
             </div>

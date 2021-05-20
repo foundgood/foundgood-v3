@@ -23,7 +23,7 @@ const ReportCardComponent = ({
     actionUpdate,
 }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
     const tempUrl = '/initiative/reports/a101x000002pIiFAAU';
 
     // Status:
@@ -54,19 +54,17 @@ const ReportCardComponent = ({
                     ])}>
                     {status}
                 </div>
-                <div className="mt-8 text-teal-100 t-h5">
-                    {labelTodo(headline)}
-                </div>
+                <div className="mt-8 text-teal-100 t-h5">{headline}</div>
                 <div className="text-teal-60 t-sh6">
                     {status == 'Published' ? 'Sent ' : 'Due '}
-                    {labelTodo(date)}
+                    {date}
                 </div>
                 <div className="self-end mt-16">
                     <Button
                         theme="teal"
                         variant="quaternary"
                         action={actionUpdate}>
-                        {labelTodo('Update')}
+                        {label('custom.FA_ButtonUpdate')}
                     </Button>
                 </div>
             </div>

@@ -33,7 +33,14 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, controlledValueSet, log } = useMetadata();
+    const {
+        labelTodo,
+        label,
+        valueSet,
+        controlledValueSet,
+        helpText,
+        log,
+    } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -57,7 +64,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -240,8 +247,8 @@ const ActivitiesComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Outline your activities')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {Object.keys(initiative?._activities)
@@ -295,8 +302,8 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         reflection[0] ?? false ? true : false,
                                     value: reflection[0]?.Description__c ?? '',
                                 }}
-                                inputLabel={labelTodo(
-                                    'Outline your reflection'
+                                inputLabel={label(
+                                    'custom.FA_ReportWizardActivitiesReflectionSubHeading'
                                 )}
                             />
                         );
@@ -308,7 +315,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add activity')}
+                    {label('custom.FA_ButtonAddActivity')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -320,27 +327,43 @@ const ActivitiesComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Text
                         name="Things_To_Do__c"
-                        label={labelTodo('Activity name')}
-                        placeholder={labelTodo('Enter name')}
+                        label={label(
+                            'objects.initiativeActivity.Things_To_Do__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeActivity.Things_To_Do__c'
+                        )}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         maxLength={200}
                         controller={control}
                         required
                     />
                     <SelectList
                         name="Activities"
-                        label={labelTodo('Activity tag')}
+                        label={label(
+                            'objects.initiativeActivity.Activity_Tag__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeActivity.Activity_Tag__c'
+                        )}
                         selectPlaceholder={labelTodo('Please select')}
                         options={controlledValueSet(
                             'initiativeActivity.Activity_Tag__c',
                             initiative?.Category__c
                         )}
+                        buttonLabel={label('custom.FA_ButtonAddActivityTag')}
                         listMaxLength={4}
                         controller={control}
                     />
 
                     <SelectList
                         name="Location"
-                        label={labelTodo('Where is it located?')}
+                        label={label(
+                            'objects.initiativeActivity.Initiative_Location__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeActivity.Initiative_Location__c'
+                        )}
                         listMaxLength={1}
                         options={valueSet(
                             'initiativeActivity.Initiative_Location__c'
@@ -355,7 +378,10 @@ const ActivitiesComponent = ({ pageProps }) => {
                     {Object.keys(initiative?._goals).length > 0 && (
                         <SelectList
                             name="Goals"
-                            label={labelTodo('Link to one of your goals')}
+                            label={label('objects.initiativeGoal.Goal__c')}
+                            subLabel={helpText(
+                                'objects.initiativeGoal.Goal__c'
+                            )}
                             listMaxLength={1}
                             options={Object.keys(initiative?._goals).map(
                                 goalKey => {

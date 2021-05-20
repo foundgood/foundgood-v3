@@ -8,7 +8,6 @@ import { useController } from 'react-hook-form';
 import { nanoid } from 'nanoid';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -32,10 +31,8 @@ const SelectListComponent = ({
     textLabel,
     required,
     disabled,
+    buttonLabel,
 }) => {
-    // Hook: Metadata
-    const { labelTodo } = useMetadata();
-
     // Local state
     const [list, setList] = useState(
         defaultValue.map(item => ({
@@ -251,7 +248,7 @@ const SelectListComponent = ({
                         className="self-start mt-16"
                         disabled={list.length >= listMaxLength}
                         action={addToList}>
-                        {labelTodo('Add another')}
+                        {buttonLabel}
                     </Button>
                 )}
             </div>
@@ -281,6 +278,7 @@ SelectListComponent.propTypes = {
     listMaxLength: t.number,
     selectPlaceholder: t.string,
     textPlaceholder: t.string,
+    buttonLabel: t.string,
     required: t.bool,
 };
 
@@ -292,6 +290,7 @@ SelectListComponent.defaultProps = {
     textLabel: null,
     listMaxLength: 5,
     required: false,
+    buttonLabel: 'Add',
 };
 
 export default SelectListComponent;

@@ -10,6 +10,7 @@ import t from 'prop-types';
 // Utilities
 import { useWizardNavigationStore } from 'utilities/store';
 import { createQuerystring } from 'utilities';
+import { useMetadata } from 'utilities/hooks';
 
 // Components
 
@@ -18,6 +19,9 @@ import { FiCircle, FiCheckCircle, FiMinusCircle } from 'react-icons/fi';
 
 const SubLevelItemComponent = ({ item }) => {
     const { url, title } = item;
+
+    // Hook: Metadata
+    const { label } = useMetadata();
 
     // Hook: Router
     const { asPath, push, query } = useRouter();
@@ -62,7 +66,7 @@ const SubLevelItemComponent = ({ item }) => {
                             <FiCircle />
                         )}
                     </i> */}
-                    {title}
+                    {label(title)}
                 </span>
             </button>
         </li>
