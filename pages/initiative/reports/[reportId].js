@@ -9,8 +9,8 @@ import { useRouter } from 'next/router';
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
+import { stripUndefined, isJson } from 'utilities';
 
-import { isJson } from 'utilities';
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 import ReportDetailCard from 'components/_initiative/reportDetailCard';
@@ -19,8 +19,6 @@ import TextCard from 'components/_report/textCard';
 import NumberCard from 'components/_initiative/numberCard';
 import DividerLine from 'components/_initiative/dividerLine';
 import ChartCard from 'components/_initiative/chartCard';
-
-// a101x000002pIiFAAU
 
 const ReportComponent = ({ pageProps }) => {
     const router = useRouter();
@@ -57,10 +55,10 @@ const ReportComponent = ({ pageProps }) => {
     const [funders, setFunders] = useState();
     const [applicants, setApplicants] = useState();
     const [collaborators, setCollaborators] = useState();
-    const [
-        employeesFundedReflection,
-        setEmployeesFundedReflection,
-    ] = useState();
+    const [employeesFunded, setEmployeesFunded] = useState();
+    // const [goals, setGoals] = useState();
+    const [activities, setActivities] = useState();
+    const [sharingResults, setSharingResults] = useState();
 
     const donutColors = [
         'bg-teal-60',
@@ -91,7 +89,9 @@ const ReportComponent = ({ pageProps }) => {
             initiative?._activities &&
             Object.keys(initiative?._activities).length !== 0 &&
             initiative?._reports &&
-            Object.keys(initiative?._reports).length !== 0
+            Object.keys(initiative?._reports).length !== 0 &&
+            initiative?._reportDetails &&
+            Object.keys(initiative?._reportDetails).length !== 0
         ) {
             console.log('initiative: ', initiative);
 
@@ -126,7 +126,6 @@ const ReportComponent = ({ pageProps }) => {
                 })
                 .map(item => {
                     // Get funder based on key
-
                     const collaborator =
                         initiative._collaborators[
                             item.Initiative_Collaborator__c
@@ -136,10 +135,10 @@ const ReportComponent = ({ pageProps }) => {
                     return collaborator;
                 });
             const applicants = allCollaborators.filter(
-                item => item.Translated_Type__c != 'Additional collaborator'
+                item => item.Type__c != 'Additional collaborator'
             );
             const collaborators = allCollaborators.filter(
-                item => item.Translated_Type__c == 'Additional collaborator'
+                item => item.Type__c == 'Additional collaborator'
             );
             setApplicants(applicants);
             setCollaborators(collaborators);
@@ -152,8 +151,92 @@ const ReportComponent = ({ pageProps }) => {
                         : false;
                 }
             );
-            // bajs
-            setEmployeesFundedReflection(employees[0].Description__c);
+            setEmployeesFunded(employees[0].Description__c);
+
+            // Get reports Activities
+            // Activies are split between:
+            // Activities == "Intervention"
+            // Sharing of results == "Dissimination"
+            const allActivities = Object.values(initiative._reportDetails)
+                .filter(item => {
+                    return item.Type__c == 'Activity Overview' ? true : false;
+                })
+                .map(item => {
+                    // Get Activity based on key
+                    const activity =
+                        initiative._activities[item.Initiative_Activity__c];
+                    // Add Report Reflection text to activities
+                    activity.reportReflection = item.Description__c;
+                    return activity;
+                });
+
+            // Create list of indicators per "Activity"
+            const activities = Object.values(allActivities).reduce(
+                (accumulator, activity) => {
+                    const title = activity.Things_To_Do__c;
+                    const description = activity.Things_To_Do_Description__c;
+                    const location = activity.Initiative_Location__c.split(
+                        ';'
+                    ).join(', ');
+
+                    // Loop indicators
+                    // Add indicators if it matches the activity ID
+                    const indicators = Object.values(
+                        initiative._activitySuccessMetrics
+                    ).map(item => {
+                        if (activity.Id == item.Initiative_Activity__c) {
+                            let title;
+                            let label;
+                            if (item.Type__c === 'People') {
+                                // If gender is "Other" -> use "Gender_Other__c" field
+                                const gender =
+                                    item.Gender__c == 'Other'
+                                        ? item.Gender_Other__c
+                                        : item.Gender__c;
+                                title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
+                                label = labelTodo('Reached so far');
+                            } else {
+                                title = item.Name;
+                                label = labelTodo('Total so far');
+                            }
+
+                            return {
+                                title: title,
+                                value: `${item.Progress__c} / ${item.Target__c}`,
+                                current: item.Progress__c,
+                                total: item.Target__c,
+                                label: label,
+                            };
+                        }
+                    });
+
+                    // Only add activities of type "intervention"
+                    // Only add activities - if they have indicators
+                    console.log('activity: ', activity);
+                    if (
+                        activity.Activity_Type__c == 'Intervention' &&
+                        stripUndefined(indicators).length > 0
+                    ) {
+                        accumulator.push({
+                            title: title,
+                            description: description,
+                            location: location,
+                            indicators: indicators,
+                        });
+                    }
+                    return accumulator;
+                },
+                []
+            );
+            setActivities(activities);
+            // const activities = allActivities.filter(
+            //     item => item.Activity_Type__c == 'Intervention'
+            // );
+            // const goals = allActivities.filter(
+            //     item => item.Activity_Type__c == 'Dissemination'
+            // );
+
+            // setGoals(goals);
 
             // const influence = Object.values(initiative._reportDetails).filter(
             //     item => {
@@ -163,11 +246,6 @@ const ReportComponent = ({ pageProps }) => {
             // const outcomes = Object.values(initiative._reportDetails).filter(
             //     item => {
             //         return item.Type__c == 'Outcome' ? true : false;
-            //     }
-            // );
-            // const activities = Object.values(initiative._reportDetails).filter(
-            //     item => {
-            //         return item.Type__c == 'Activity Overview' ? true : false;
             //     }
             // );
             // const achievements = Object.values(
@@ -308,13 +386,16 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper>
                         <SectionWrapper>
                             <div className="w-64 h-64 overflow-hidden rounded-4">
-                                🛑 Missing image
-                                {/* {initiativeData.Hero_Image_URL__c && (
-                                    <Image
+                                {initiativeData.Hero_Image_URL__c && (
+                                    // <Image
+                                    //     src={initiativeData.Hero_Image_URL__c}
+                                    //     width="64"
+                                    //     height="64"></Image>
+                                    <img
+                                        className="w-full h-full"
                                         src={initiativeData.Hero_Image_URL__c}
-                                        width="64"
-                                        height="64"></Image>
-                                )} */}
+                                    />
+                                )}
                             </div>
                             <div className="mt-16">
                                 {initiativeData.Lead_Grantee__r.Name}
@@ -355,7 +436,7 @@ const ReportComponent = ({ pageProps }) => {
                                     {labelTodo('Additional goals')}
                                 </div>
                                 <h3 className="t-h5">
-                                    {labelTodo('Missing data 🛑')}
+                                    {labelTodo('Missing data? 🛑')}
                                 </h3>
                                 <div className="mt-16 t-sh6 text-blue-60">
                                     {labelTodo('Sustainable development goals')}
@@ -629,7 +710,7 @@ const ReportComponent = ({ pageProps }) => {
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Employees funded by the grant */}
-                    {employeesFundedReflection && (
+                    {employeesFunded && (
                         <SectionWrapper>
                             <SectionWrapper>
                                 <h3 className="t-h4">
@@ -672,142 +753,83 @@ const ReportComponent = ({ pageProps }) => {
                             <TextCard
                                 hasBackground={true}
                                 headline={labelTodo('Updates from this year')}
-                                body={employeesFundedReflection}
+                                body={employeesFunded}
                             />
                         </SectionWrapper>
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
-                    <SectionWrapper>
+                    {/* {goals && (
                         <SectionWrapper>
-                            <h3 className="t-h4">{labelTodo('Goals')}</h3>
+                            <SectionWrapper>
+                                <h3 className="t-h4">{labelTodo('Goals')}</h3>
+                            </SectionWrapper>
+
+                            {goals.map((item, index) => {
+                                <>
+                                    <TextCard
+                                        hasBackground={false}
+                                        className="mt-32"
+                                        headline="🛑 A custom objective we’ve created"
+                                        label="Custom"
+                                    />
+
+                                    <TextCard
+                                        hasBackground={true}
+                                        className="mt-32"
+                                        headline="🛑 Updates from this year"
+                                        body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                                    />
+                                    {index < goals.index - 1 && <DividerLine />}
+                                </>;
+                            })}
                         </SectionWrapper>
-                        <TextCard
-                            hasBackground={false}
-                            className="mt-32"
-                            headline="Updates from this year"
-                            label="Custom"
-                        />
-
-                        <TextCard
-                            hasBackground={true}
-                            className="mt-32"
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
-                        <DividerLine />
-
-                        <TextCard
-                            hasBackground={false}
-                            className="mt-32"
-                            headline="Updates from this year"
-                            label="Custom"
-                        />
-
-                        <TextCard
-                            hasBackground={true}
-                            className="mt-32"
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
-                        <DividerLine />
-
-                        <TextCard
-                            hasBackground={false}
-                            className="mt-32"
-                            headline="Updates from this year"
-                            label="Custom"
-                        />
-
-                        <TextCard
-                            hasBackground={true}
-                            className="mt-32"
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
-                    </SectionWrapper>
+                    )} */}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Activities */}
-                    <SectionWrapper>
+                    {activities && (
                         <SectionWrapper>
-                            <h3 className="t-h4">{labelTodo('Activities')}</h3>
-                        </SectionWrapper>
+                            <SectionWrapper>
+                                <h3 className="t-h4">
+                                    {labelTodo('Activities')}
+                                </h3>
+                            </SectionWrapper>
 
-                        <SectionWrapper>
-                            <ReportDetailCard
-                                headline="Activity #1 name"
-                                description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                                items={[
-                                    {
-                                        label: 'Location',
-                                        text: 'Uganda, Denmark',
-                                    },
-                                ]}
-                            />
+                            {activities.map((item, index) => (
+                                <div key={`a-${index}`}>
+                                    <SectionWrapper>
+                                        <ReportDetailCard
+                                            headline={item.title}
+                                            description={item.description}
+                                            items={[
+                                                {
+                                                    label: 'Location',
+                                                    text: item.location,
+                                                },
+                                            ]}
+                                        />
+                                    </SectionWrapper>
+                                    <SectionWrapper>
+                                        <ChartCard
+                                            useBorder={true}
+                                            headline="Indicators"
+                                            items={item.indicators}
+                                        />
+                                    </SectionWrapper>
+                                    <TextCard
+                                        hasBackground={true}
+                                        className="mt-32"
+                                        headline="Updates from this year"
+                                        body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement. "
+                                    />
+                                    {index < activities.length - 1 && (
+                                        <DividerLine />
+                                    )}
+                                </div>
+                            ))}
                         </SectionWrapper>
-                        <SectionWrapper>
-                            <ChartCard
-                                useBorder={true}
-                                headline="Indicators"
-                                items={[
-                                    {
-                                        title: 'Schools built',
-                                        value: '256',
-                                        label: 'Reached so far',
-                                    },
-                                    {
-                                        title: 'Adults (24+)',
-                                        value: '384',
-                                        label: 'Reached so far',
-                                    },
-                                ]}
-                            />
-                        </SectionWrapper>
-                        <TextCard
-                            hasBackground={true}
-                            className="mt-32"
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement. "
-                        />
-                        <DividerLine />
+                    )}
 
-                        <SectionWrapper>
-                            <ReportDetailCard
-                                headline="Activity #2 name"
-                                description="Physiological respiration involves the mechanisms that ensure that the composition of the functional residual capacity is kept constant."
-                                items={[
-                                    {
-                                        label: 'Location',
-                                        text: 'Uganda, Denmark',
-                                    },
-                                ]}
-                            />
-                        </SectionWrapper>
-                        <SectionWrapper>
-                            <ChartCard
-                                useBorder={true}
-                                headline="Indicators"
-                                items={[
-                                    {
-                                        title: 'Schools built',
-                                        value: '12',
-                                        label: 'Reached so far',
-                                    },
-                                    {
-                                        title: 'Wells buil',
-                                        value: '24',
-                                        label: 'Reached so far',
-                                    },
-                                ]}
-                            />
-                        </SectionWrapper>
-                        <TextCard
-                            hasBackground={true}
-                            className="mt-32"
-                            headline="Updates from this year"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement. "
-                        />
-                    </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Sharing of results */}
                     <SectionWrapper>
