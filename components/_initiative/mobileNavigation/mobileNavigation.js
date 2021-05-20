@@ -58,7 +58,7 @@ const MobileNavigationComponent = () => {
 
     return (
         <div
-            className="absolute left-0 right-0 flex justify-end top-160 md:hidden page-px z-above"
+            className="absolute left-0 right-0 flex justify-end top-[176px] md:hidden page-px z-above"
             ref={mobileNavigationRef}>
             <IconButton
                 icon={FiAlignRight}

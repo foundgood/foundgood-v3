@@ -14,6 +14,8 @@ import { isJson } from 'utilities';
 import Button from 'components/button';
 import NumberCard from 'components/_initiative/numberCard';
 import SectionWrapper from 'components/sectionWrapper';
+import DividerLine from 'components/_initiative/dividerLine';
+import TextCard from 'components/_initiative/textCard';
 
 const ProjectComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -87,7 +89,9 @@ const ProjectComponent = ({ pageProps }) => {
 
             // Merge goal data, to signel array
             const goalAmounts = initiative?.Problem_Effect__c?.split(';');
-            const goalTitles = initiative?.Problem_Effect__c?.split(';');
+            const goalTitles = initiative?.Translated_Problem_Effect__c?.split(
+                ';'
+            );
             if (goalTitles && goalTitles.length > 0) {
                 const developmentGoals = goalTitles.map((title, index) => {
                     return { title: title, amount: goalAmounts[index] };
@@ -265,8 +269,8 @@ const ProjectComponent = ({ pageProps }) => {
                             </Button>
                         </div>
 
-                        <div className="flex items-center p-16">
-                            <div className="w-1/2 p-32">
+                        <div className="flex flex-col items-center p-16 md:flex-row">
+                            <div className="w-full p-32 md:w-1/2">
                                 {/* Donut chart */}
                                 <div className="pie" style={pieChartStyle}>
                                     <div className="absolute w-full -mt-16 text-center top-1/2">
@@ -282,7 +286,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="w-1/2">
+                            <div className="md:w-1/2">
                                 {/* Headline */}
                                 <div className="t-caption-bold">
                                     Funders and contributions overall
@@ -305,7 +309,8 @@ const ProjectComponent = ({ pageProps }) => {
                         </div>
 
                         <div className="mt-32 overflow-x-scroll md:overflow-hidden">
-                            <div className="mt-32 min-w-[680px]">
+                            {/* BUG: min-width breaks the margins on mobile! min-w-[680px] */}
+                            <div className="mt-32 min-w-[768px]">
                                 {/* Table header */}
                                 <div className="flex pb-8">
                                     <div className="w-full t-footnote-bold">
@@ -366,18 +371,23 @@ const ProjectComponent = ({ pageProps }) => {
                                 {labelTodo('Update')}
                             </Button>
                         </div>
-                        {/* initiativeData._goals.map((goal, index) => ( */}
                         {Object.values(initiativeData._goals).map(
-                            (goal, index) => (
-                                <div
-                                    key={`g-${index}`}
-                                    className="p-16 mt-24 border-4 border-blue-10 rounded-4">
-                                    <p className="t-preamble">{goal.Goal__c}</p>
-                                    <p className="t-sh6 text-blue-60">
-                                        {goal.Type__c}
-                                    </p>
-                                </div>
-                            )
+                            (item, index) => {
+                                const title =
+                                    item.Type__c == 'Custom'
+                                        ? item.Goal__c
+                                        : item.Funder_Objective__c;
+
+                                return (
+                                    <TextCard
+                                        key={`g-${index}`}
+                                        hasBackground={false}
+                                        className="mt-24"
+                                        headline={title}
+                                        label={item.Type__c}
+                                    />
+                                );
+                            }
                         )}
                     </SectionWrapper>
                     {/* Applicants */}
@@ -415,6 +425,9 @@ const ProjectComponent = ({ pageProps }) => {
                                     <p className="mt-16 t-body">
                                         {item.Description__c}
                                     </p>
+                                    {index < applicants.length - 1 && (
+                                        <DividerLine />
+                                    )}
                                 </div>
                             ))}
                     </SectionWrapper>
@@ -472,7 +485,7 @@ const ProjectComponent = ({ pageProps }) => {
                             <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
                                 {/* TODO - Decide on logic for these cards */}
 
-                                {/* <NumberCard
+                                <NumberCard
                                     useBackground={true}
                                     number="6"
                                     headline="Researchers"
@@ -507,7 +520,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     number="3"
                                     headline="Scientists"
                                     description="3 female"
-                                /> */}
+                                />
                             </div>
                             <div className="mt-32">
                                 {/* Table header */}
@@ -524,9 +537,8 @@ const ProjectComponent = ({ pageProps }) => {
                                         </div>
                                     )}
                                 </div>
-                                {/* Table Rows */}
 
-                                {/* initiativeData._employeesFunded?.length && */}
+                                {/* Table Rows */}
                                 {Object.values(
                                     initiativeData._employeesFunded
                                 ).map((item, index) => (
@@ -653,11 +665,11 @@ const ProjectComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+// export async function getStaticProps(context) {
+//     return {
+//         props: {}, // will be passed to the page component as props
+//     };
+// }
 
 ProjectComponent.propTypes = {
     pageProps: t.object,

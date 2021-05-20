@@ -12,6 +12,13 @@ const useInitiativeLayoutStore = create(set => ({
             mobileMenuActive: toggle,
         })),
 
+    // Store initiative ID (used for data fetching + navigation)
+    initiativeId: undefined,
+    updateInitiativeId: id =>
+        set(() => ({
+            initiativeId: id,
+        })),
+
     // Navigation object
     navigation: [
         { href: '/initiative/overview', label: labelTodo('Overview') },
@@ -23,23 +30,22 @@ const useInitiativeLayoutStore = create(set => ({
 
     // TODO!
     newNavigation: [
-        { href: '/initiative/overview', label: labelTodo('Overview') },
+        { slug: 'overview', label: labelTodo('Overview') },
         {
-            href: '/',
             label: labelTodo('Initiative details'),
-            subNavigation: [
+            subItems: [
                 {
-                    href: '/initiative/activities',
+                    slug: 'activities',
                     label: labelTodo('Activities'),
                 },
                 {
-                    href: '/initiative/developments',
+                    slug: 'developments',
                     label: labelTodo('Developments'),
                 },
-                { href: '/initiative/logbook', label: labelTodo('Logbook') },
+                { slug: 'logbook', label: labelTodo('Logbook') },
             ],
         },
-        { href: '/initiative/reports', label: labelTodo('Reports') },
+        { slug: 'reports', label: labelTodo('Reports') },
     ],
 }));
 

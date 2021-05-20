@@ -9,9 +9,6 @@ import t from 'prop-types';
 // Utilities
 import { useMetadata } from 'utilities/hooks';
 
-// Components
-import Button from 'components/button';
-
 // Icon
 import { FiFileText } from 'react-icons/fi';
 
@@ -20,11 +17,10 @@ const ReportCardComponent = ({
     date,
     status,
     useBackground = true,
-    actionUpdate,
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
-    const tempUrl = '/initiative/reports/a101x000002pIiFAAU';
+    const tempUrl = '/a0p1x00000EkTIwAAN/reports/a101x000002pIiFAAU';
 
     // Status:
     // - Published
@@ -33,7 +29,7 @@ const ReportCardComponent = ({
     // - In progress
     return (
         <Link href={tempUrl}>
-            <div
+            <a
                 className={cc([
                     'flex-none w-[220px] p-16 mt-16 mr-16 rounded-8 flex flex-col items-start cursor-pointer',
                     {
@@ -61,15 +57,7 @@ const ReportCardComponent = ({
                     {status == 'Published' ? 'Sent ' : 'Due '}
                     {labelTodo(date)}
                 </div>
-                <div className="self-end mt-16">
-                    <Button
-                        theme="teal"
-                        variant="quaternary"
-                        action={actionUpdate}>
-                        {labelTodo('Update')}
-                    </Button>
-                </div>
-            </div>
+            </a>
         </Link>
     );
 };

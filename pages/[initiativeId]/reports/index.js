@@ -59,7 +59,7 @@ const ReportsComponent = ({ pageProps }) => {
                         key={`r-${index}`}
                         className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
-                            <h2 className="t-h3">{item.Type__c}</h2>
+                            <h2 className="t-h3">{item.Account__r.Name}</h2>
                             <Button
                                 variant="secondary"
                                 action={() => {
@@ -86,12 +86,6 @@ const ReportsComponent = ({ pageProps }) => {
                                         headline={headline}
                                         date={date}
                                         status={item.Status__c}
-                                        actionUpdate={() => {
-                                            console.log(
-                                                'Update report: ',
-                                                item
-                                            );
-                                        }}
                                     />
                                 );
                             })}
@@ -102,11 +96,11 @@ const ReportsComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+// export async function getStaticProps(context) {
+//     return {
+//         props: {}, // will be passed to the page component as props
+//     };
+// }
 
 ReportsComponent.propTypes = {
     pageProps: t.object,

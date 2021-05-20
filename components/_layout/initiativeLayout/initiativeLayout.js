@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
+import { useRouter } from 'next/router';
 
 // Utilities
 import {
@@ -16,22 +17,30 @@ import { useMetadata } from 'utilities/hooks';
 import Footer from 'components/_layout/footer';
 import ActiveLink from 'components/activeLink';
 import MobileNavigation from 'components/_initiative/mobileNavigation';
+import TabNavigation from 'components/_initiative/tabNavigation';
 
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
+    const router = useRouter();
+    const { initiativeId } = router.query;
+
     // Store: InitiativeLayout
-    const { navigation } = useInitiativeLayoutStore();
+    const {
+        navigation,
+        newNavigation,
+        updateInitiativeId,
+    } = useInitiativeLayoutStore();
     const { populateInitiative } = useInitiativeDataStore();
+    // const { updateInitiativeId } = useInitiativeId();
 
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
     useEffect(() => {
-        // Fetch initiative data
-        // TODO - Get ID from URL or Store
-        const id = 'a0p1x00000EkTIwAAN'; // New one from Luke!
-        // const id = 'a0p1x00000Eh8COAAZ'; // Org test case from Hanne
-        populateInitiative(id);
-    }, []);
+        if (initiativeId) {
+            updateInitiativeId(initiativeId);
+            populateInitiative(initiativeId);
+        }
+    }, [initiativeId]);
 
     return (
         <>
@@ -48,18 +57,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                 </div>
 
                 {/* Initiative navigation */}
-                <div className="items-center justify-end hidden space-x-32 md:flex page-px bg-amber-10">
-                    {navigation.map((item, index) => (
-                        <ActiveLink
-                            href={item.href}
-                            key={index}
-                            active="text-blue-100 !border-blue-100">
-                            <a className="flex items-center h-56 text-blue-300 border-t-2 border-amber-10 t-h6 transition-default hover:text-blue-200">
-                                {item.label}
-                            </a>
-                        </ActiveLink>
-                    ))}
-                </div>
+                <TabNavigation />
             </div>
             {/* Mobile navigation */}
             <MobileNavigation />

@@ -10,8 +10,9 @@ import t from 'prop-types';
 // Icons
 import { FiFileText } from 'react-icons/fi';
 
-const InitiativeRowComponent = ({
+const ReportRowComponent = ({
     initiativeId,
+    reportId,
     type,
     funder,
     headline,
@@ -20,25 +21,21 @@ const InitiativeRowComponent = ({
     deadline,
 }) => {
     return (
-        <Link href={`/${initiativeId}/overview`}>
+        <Link href={`/${initiativeId}/reports/${reportId}`}>
             <a className="flex justify-between p-16 mt-24 bg-white cursor-pointer rounded-8">
                 <div className="flex">
-                    <div className="relative h-full mr-16 overflow-hidden w-128 rounded-8">
-                        <Image
-                            src="/images/fg-landscape-1.jpg"
-                            layout="fill"
-                            objectFit="cover"
-                            sizes="256px"
-                        />
+                    <div className="mr-16 p-46 bg-blue-10">
+                        <FiFileText className="w-48 h-48" />
                     </div>
+
                     <div>
-                        <div className="inline-block px-8 pt-3 pb-1 t-sh6 text-blue-60 bg-blue-20 rounded-4">
-                            {type}
-                        </div>
+                        <div className="t-sh6">{type}</div>
                         <div className="mt-8 t-h6 text-blue-60">{funder}</div>
                         <div className="mt-4 t-h5">{headline}</div>
                         <div className="mt-8 t-sh6 text-blue-60">
                             {leadFunder && leadFunder}
+                            {' • '}
+                            {reportId}
                         </div>
                     </div>
                 </div>
@@ -67,8 +64,9 @@ const InitiativeRowComponent = ({
     );
 };
 
-InitiativeRowComponent.propTypes = {
+ReportRowComponent.propTypes = {
     initiativeId: t.string.isRequired,
+    reportId: t.string.isRequired,
     type: t.string.isRequired,
     funder: t.string.isRequired,
     headline: t.string.isRequired,
@@ -77,6 +75,6 @@ InitiativeRowComponent.propTypes = {
     deadline: t.string.isRequired,
 };
 
-InitiativeRowComponent.defaultProps = {};
+ReportRowComponent.defaultProps = {};
 
-export default InitiativeRowComponent;
+export default ReportRowComponent;

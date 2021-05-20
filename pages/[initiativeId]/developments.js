@@ -80,11 +80,14 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                 label = labelTodo('Total so far');
                             }
 
+                            const value = item.Target__c
+                                ? `${item.Current_Status__c} / ${item.Target__c}`
+                                : item.Current_Status__c;
                             return {
                                 title: title,
-                                value: `${item.Progress__c} / ${item.Target__c}`,
-                                current: item.Progress__c,
-                                total: item.Target__c,
+                                value: value, //`${item.Progress__c} / ${item.Target__c}`,
+                                // current: item.Progress__c,
+                                // total: item.Target__c,
                                 label: label,
                             };
                         }
@@ -422,11 +425,11 @@ const DevelopmentsComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+// export async function getStaticProps(context) {
+//     return {
+//         props: {}, // will be passed to the page component as props
+//     };
+// }
 
 DevelopmentsComponent.propTypes = {
     pageProps: t.object,
