@@ -13,10 +13,7 @@ import { useSalesForce, useMetadata, useAuth } from 'utilities/hooks';
 import Button from 'components/button';
 import SectionWrapper from 'components/sectionWrapper';
 import Footer from 'components/_layout/footer';
-import ReportRow from 'components/_report/reportRow';
-
-// Icons
-import { FiFileText } from 'react-icons/fi';
+import InitiativeRow from 'components/_initiative/initiativeRow';
 
 const HomeComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -66,57 +63,36 @@ const HomeComponent = ({ pageProps }) => {
                 </SectionWrapper>
 
                 <SectionWrapper>
-                    <ReportRow
-                        type="Annual report"
-                        funder="UNHCR, The UN Refugee Agency" // Funder vs Collaborator ???
-                        headline="Displayment crisis in Tigray, Ethiopia"
-                        leadFunder="Novo Nordisk Foundation" // Funder vs Collaborator ???
+                    <InitiativeRow
+                        type="Humanitarian"
+                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
+                        headline="Example initiative title"
+                        leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         reportId="NN123456789AAS"
                         status="In progress"
                         deadline="17-05-2021"
                     />
 
-                    <ReportRow
-                        type="Annual report"
-                        funder="UNHCR, The UN Refugee Agency" // Funder vs Collaborator ???
-                        headline="Displayment crisis in Tigray, Ethiopia"
-                        leadFunder="Novo Nordisk Foundation" // Funder vs Collaborator ???
+                    <InitiativeRow
+                        type="Humanitarian"
+                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
+                        headline="Example initiative title"
+                        leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         reportId="NN123456789AAS"
                         status="In progress"
                         deadline="17-05-2021"
                     />
 
-                    <ReportRow
-                        type="Annual report"
-                        funder="UNHCR, The UN Refugee Agency" // Funder vs Collaborator ???
-                        headline="Displayment crisis in Tigray, Ethiopia"
-                        leadFunder="Novo Nordisk Foundation" // Funder vs Collaborator ???
+                    <InitiativeRow
+                        type="Humanitarian"
+                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
+                        headline="Example initiative title"
+                        leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         reportId="NN123456789AAS"
                         status="In progress"
                         deadline="17-05-2021"
                     />
                 </SectionWrapper>
-
-                {/* <div className="t-h1">
-                    <Link href="/wizard">Foundgood,</Link>
-                    <Button theme="amber" action={() => logout()}>
-                        Logout
-                    </Button>
-                    <div className="flex flex-col w-full px-32 mt-32">
-                        <h1 className="t-h3">
-                            Data from the server (only after login)
-                        </h1>
-                        {data?.records?.length > 0 &&
-                            data?.records?.map(item => (
-                                <p
-                                    key={item.Id}
-                                    className="flex justify-between t-body">
-                                    <span>{item.Name}</span>
-                                    <span>{item.Translated_Location__c}</span>
-                                </p>
-                            ))}
-                    </div>
-                </div> */}
                 <Footer />
             </div>
         </div>

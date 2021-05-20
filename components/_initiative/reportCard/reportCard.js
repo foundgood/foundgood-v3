@@ -2,6 +2,7 @@
 import React from 'react';
 
 // Packages
+import Link from 'next/link';
 import cc from 'classcat';
 import t from 'prop-types';
 
@@ -23,8 +24,7 @@ const ReportCardComponent = ({
 }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
-
-    // TODO - update to salesforece format
+    const tempUrl = '/initiative/reports/a101x000002pIiFAAU';
 
     // Status:
     // - Published
@@ -32,38 +32,45 @@ const ReportCardComponent = ({
     // - Not started
     // - In progress
     return (
-        <div
-            className={cc([
-                'flex-none w-[220px] p-16 mt-16 mr-16 rounded-8 flex flex-col items-start',
-                {
-                    'border-amber-20 border-4': !useBackground,
-                    'bg-white': useBackground,
-                },
-            ])}>
-            <div className="flex-none w-48 h-48 mb-64">
-                <FiFileText className="w-full h-full" />
-            </div>
+        <Link href={tempUrl}>
             <div
                 className={cc([
-                    'px-8 pt-3 pb-1 rounded-4',
-                    { 'bg-coral-20': status == 'Not started' },
-                    { 'bg-amber-20': status == 'In progress' },
-                    { 'bg-teal-20': status == 'In review' },
-                    { 'bg-blue-20': status == 'Published' },
+                    'flex-none w-[220px] p-16 mt-16 mr-16 rounded-8 flex flex-col items-start cursor-pointer',
+                    {
+                        'border-amber-20 border-4': !useBackground,
+                        'bg-white': useBackground,
+                    },
                 ])}>
-                {status}
+                <div className="flex-none w-48 h-48 mb-64">
+                    <FiFileText className="w-full h-full" />
+                </div>
+                <div
+                    className={cc([
+                        'px-8 pt-3 pb-1 rounded-4',
+                        { 'bg-coral-20': status == 'Not started' },
+                        { 'bg-amber-20': status == 'In progress' },
+                        { 'bg-teal-20': status == 'In review' },
+                        { 'bg-blue-20': status == 'Published' },
+                    ])}>
+                    {status}
+                </div>
+                <div className="mt-8 text-teal-100 t-h5">
+                    {labelTodo(headline)}
+                </div>
+                <div className="text-teal-60 t-sh6">
+                    {status == 'Published' ? 'Sent ' : 'Due '}
+                    {labelTodo(date)}
+                </div>
+                <div className="self-end mt-16">
+                    <Button
+                        theme="teal"
+                        variant="quaternary"
+                        action={actionUpdate}>
+                        {labelTodo('Update')}
+                    </Button>
+                </div>
             </div>
-            <div className="mt-8 text-teal-100 t-h5">{labelTodo(headline)}</div>
-            <div className="text-teal-60 t-sh6">
-                {status == 'Published' ? 'Sent ' : 'Due '}
-                {labelTodo(date)}
-            </div>
-            <div className="self-end mt-16">
-                <Button theme="teal" variant="quaternary" action={actionUpdate}>
-                    {labelTodo('Update')}
-                </Button>
-            </div>
-        </div>
+        </Link>
     );
 };
 
