@@ -44,7 +44,10 @@ const HomeComponent = ({ pageProps }) => {
                         <h2 className="t-h3">
                             {labelTodo('Your initiatives')}
                         </h2>
-                        <Button variant="secondary" theme="teal">
+                        <Button
+                            variant="secondary"
+                            theme="teal"
+                            action="/wizard/introduction">
                             {labelTodo('Create initiative')}
                         </Button>
                     </div>
