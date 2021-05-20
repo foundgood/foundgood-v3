@@ -53,15 +53,7 @@ const HomeComponent = ({ pageProps }) => {
             {/* Content */}
             <div className="w-full max-w-[900px] page-mx mt-80 md:mt-120 pb-64 lg:pb-96 rounded-8">
                 <SectionWrapper>
-                    <div className="flex justify-between">
-                        <h2 className="t-h3">{labelTodo('Your reports')}</h2>
-                        <Button
-                            variant="secondary"
-                            theme="teal"
-                            action="/wizard/introduction">
-                            {labelTodo('Create initiative')}
-                        </Button>
-                    </div>
+                    <h2 className="t-h3">{labelTodo('Your reports')}</h2>
                     <input
                         type="text"
                         placeholder={labelTodo(
