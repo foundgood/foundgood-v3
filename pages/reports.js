@@ -14,7 +14,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 import Button from 'components/button';
 import SectionWrapper from 'components/sectionWrapper';
 import Footer from 'components/_layout/footer';
-import InitiativeRow from 'components/_initiative/initiativeRow';
+import ReportRow from 'components/_report/reportRow';
 
 const HomeComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -48,15 +48,13 @@ const HomeComponent = ({ pageProps }) => {
     return (
         <div
             className={cc([
-                'bg-amber-10 absolute flex min-h-full justify-center left-0 right-0',
+                'bg-amber-10 absolute min-h-full flex justify-center left-0 right-0',
             ])}>
             {/* Content */}
             <div className="w-full max-w-[900px] page-mx mt-80 md:mt-120 pb-64 lg:pb-96 rounded-8">
                 <SectionWrapper>
                     <div className="flex justify-between">
-                        <h2 className="t-h3">
-                            {labelTodo('Your initiatives')}
-                        </h2>
+                        <h2 className="t-h3">{labelTodo('Your reports')}</h2>
                         <Button
                             variant="secondary"
                             theme="teal"
@@ -79,8 +77,9 @@ const HomeComponent = ({ pageProps }) => {
                 </SectionWrapper>
 
                 <SectionWrapper>
-                    <InitiativeRow
+                    <ReportRow
                         initiativeId="a0p1x00000EkTIwAAN"
+                        reportId="a101x000002pIiFAAU"
                         type="Humanitarian"
                         funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
                         headline="Example initiative title"
@@ -89,8 +88,10 @@ const HomeComponent = ({ pageProps }) => {
                         deadline="17-05-2021"
                     />
 
-                    <InitiativeRow
+                    {/* 
+                    <ReportRow
                         initiativeId="a0p1x00000Eh8COAAZ"
+                        reportId="a101x000002pIi5AAE"
                         type="Humanitarian"
                         funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
                         headline="Example initiative title"
@@ -98,6 +99,7 @@ const HomeComponent = ({ pageProps }) => {
                         status="In progress"
                         deadline="17-05-2021"
                     />
+                    */}
                 </SectionWrapper>
                 <Footer />
             </div>
