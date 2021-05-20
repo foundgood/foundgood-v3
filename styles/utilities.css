@@ -95,6 +95,13 @@
         /* FiSearch ??? */
     }
 
+    /* Tab navigation - Background */
+    .tab-nav-bg:before {
+        @apply absolute inset-0 bg-amber-10 h-[58px];
+        z-index: -1;
+        content: '';
+    }
+
     /* Next Image - width: 100%, height: auto */
     /* https://github.com/vercel/next.js/discussions/18739#discussioncomment-344932 */
     .imageContainer {

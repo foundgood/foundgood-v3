@@ -90,11 +90,11 @@ const LogbookComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+// export async function getStaticProps(context) {
+//     return {
+//         props: {}, // will be passed to the page component as props
+//     };
+// }
 
 LogbookComponent.propTypes = {
     pageProps: t.object,

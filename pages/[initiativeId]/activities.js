@@ -37,6 +37,8 @@ const ActivitiesComponent = ({ pageProps }) => {
             const descriptions = isJson(initiative.Problem_Resolutions__c)
                 ? JSON.parse(initiative.Problem_Resolutions__c)
                 : initiative.Problem_Resolutions__c;
+
+            // Get all activities and check if they have related goals
             let activities = Object.values(initiative._activities).map(
                 (item, index) => {
                     const title = item.Things_To_Do__c;
@@ -59,19 +61,25 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     // Return the original Goal description
                                     if (
                                         relatedGoal.Initiative_Goal__c ==
-                                        goal.Id
+                                            goal.Id &&
+                                        goal.Type__c == 'Foundation'
                                     ) {
                                         return {
                                             description:
                                                 goal.Funder_Objective__c,
                                         };
+                                    } else if (
+                                        relatedGoal.Initiative_Goal__c ==
+                                            goal.Id &&
+                                        goal.Type__c == 'Custom'
+                                    ) {
+                                        return { description: goal.Goal__c };
                                     }
                                 }
                             );
                         }
                     });
 
-                    // console.log('Goals: ', stripUndefined(relatedGoals));
                     return {
                         type: item.Activity_Type__c, // "Intervention" or "Dissemination"
                         title: title,
@@ -87,7 +95,6 @@ const ActivitiesComponent = ({ pageProps }) => {
             activities = activities.filter(item => {
                 return item.type === 'Intervention' ? true : false;
             });
-            // console.log('activities goal?: ', activities);
             setActivities(activities);
         }
     }, [initiative]);
@@ -104,7 +111,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                     <Button variant="secondary">{labelTodo('Update')}</Button>
                 </div>
 
-                {activities?.length &&
+                {activities?.length > 0 &&
                     activities.map((item, index) => (
                         <div key={`a-${index}`} className="mt-64">
                             <h3 className="t-h4">{item.title}</h3>
@@ -120,7 +127,7 @@ const ActivitiesComponent = ({ pageProps }) => {
 
                             {item.successIndicators && (
                                 <>
-                                    <div className="t-h5">
+                                    <div className="mt-16 t-h5">
                                         Success indicators
                                     </div>
 
@@ -172,11 +179,11 @@ const ActivitiesComponent = ({ pageProps }) => {
     );
 };
 
-export async function getStaticProps(context) {
-    return {
-        props: {}, // will be passed to the page component as props
-    };
-}
+// export async function getStaticProps(context) {
+//     return {
+//         props: {}, // will be passed to the page component as props
+//     };
+// }
 
 ActivitiesComponent.propTypes = {
     pageProps: t.object,

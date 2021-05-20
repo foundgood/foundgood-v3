@@ -15,7 +15,7 @@ import { stripUndefined, isJson } from 'utilities';
 import SectionWrapper from 'components/sectionWrapper';
 import ReportDetailCard from 'components/_initiative/reportDetailCard';
 import ReportSharingCard from 'components/_initiative/reportSharingCard';
-import TextCard from 'components/_report/textCard';
+import TextCard from 'components/_initiative/textCard';
 import NumberCard from 'components/_initiative/numberCard';
 import DividerLine from 'components/_initiative/dividerLine';
 import ChartCard from 'components/_initiative/chartCard';
@@ -30,6 +30,7 @@ const ReportComponent = ({ pageProps }) => {
 
     // Fetch initiative data
     const {
+        reset,
         initiative,
         populateReportDetails,
         // getReportDetails,
@@ -57,7 +58,11 @@ const ReportComponent = ({ pageProps }) => {
     const [funders, setFunders] = useState();
     const [applicants, setApplicants] = useState();
     const [collaborators, setCollaborators] = useState();
-    const [employeesFunded, setEmployeesFunded] = useState();
+    const [
+        employeesFundedReflection,
+        setEmployeesFundedReflection,
+    ] = useState();
+    const [employeesGroups, setEmployeesGroups] = useState();
     // const [goals, setGoals] = useState();
     const [activities, setActivities] = useState();
     const [results, setResults] = useState();
@@ -79,11 +84,15 @@ const ReportComponent = ({ pageProps }) => {
     ];
 
     useEffect(() => {
+        // Temporary fix! - Clear initiative data
+        // - User could be looking at hard coded link to another initiative
+        // - Opening the report needs to wait for loading correct initiative
+        reset();
+    }, []);
+
+    useEffect(() => {
         if (reportId) {
-            // console.log('reportId: ', reportId);
             populateReportDetails(reportId);
-            // const report = getReportDetails(reportId);
-            // console.log('report: ', report);
         }
     }, [reportId]);
 
@@ -102,7 +111,6 @@ const ReportComponent = ({ pageProps }) => {
 
             // Get Report version
             const currentReport = initiative._reports[reportId];
-            console.log('currentReport: ', currentReport);
             // const reportVersion = currentReport.version; // "1" or "1.1"
             setCurrentReport(currentReport);
 
@@ -151,14 +159,17 @@ const ReportComponent = ({ pageProps }) => {
             setCollaborators(collaborators);
 
             // Get reflection for employees funded
-            const employees = Object.values(initiative._reportDetails).filter(
-                item => {
-                    return item.Type__c == 'Employees Funded Overview'
-                        ? true
-                        : false;
-                }
-            );
-            setEmployeesFunded(employees[0].Description__c);
+            const employeesReflection = Object.values(
+                initiative._reportDetails
+            ).filter(item => {
+                return item.Type__c == 'Employees Funded Overview'
+                    ? true
+                    : false;
+            });
+            setEmployeesFundedReflection(employeesReflection[0].Description__c);
+
+            // TODO - Calculate male/female members of the team <Numbers />
+            // setEmployeesGroups
 
             // Get reports ALL Activities
             // Activies are split between:
@@ -186,6 +197,7 @@ const ReportComponent = ({ pageProps }) => {
                         ';'
                     ).join(', ');
                     const reportReflection = activity.reportReflection;
+                    const indicatorsTitle = 'People reached';
 
                     // Loop indicators
                     // Add indicators if it matches the activity ID
@@ -208,11 +220,14 @@ const ReportComponent = ({ pageProps }) => {
                                 label = labelTodo('Total so far');
                             }
 
+                            // Not all indicators have a "Target"
+                            const value = item.Target__c
+                                ? `${item.Current_Status__c} / ${item.Target__c}`
+                                : item.Current_Status__c;
+
                             return {
                                 title: title,
-                                value: `${item.Progress__c} / ${item.Target__c}`,
-                                current: item.Progress__c,
-                                total: item.Target__c,
+                                value: value,
                                 label: label,
                             };
                         }
@@ -228,6 +243,7 @@ const ReportComponent = ({ pageProps }) => {
                             title: title,
                             description: description,
                             location: location,
+                            indicatorsTitle: indicatorsTitle,
                             indicators: indicators,
                             reportReflection: reportReflection,
                         });
@@ -305,10 +321,7 @@ const ReportComponent = ({ pageProps }) => {
                     return item.Type__c == 'Influence On Policy' ? true : false;
                 })
                 .map(item => {
-                    return {
-                        description: item.Type_Of_Influence__c,
-                        reportReflection: item.Description__c,
-                    };
+                    return item.Description__c;
                 });
             setInfluences(influences);
 
@@ -318,10 +331,7 @@ const ReportComponent = ({ pageProps }) => {
                     return item.Type__c == 'Evaluation' ? true : false;
                 })
                 .map(item => {
-                    return {
-                        description: item.Who_Is_Evaluating__c,
-                        reportReflection: item.Description__c,
-                    };
+                    return item.Description__c;
                 });
             setEvaluations(evaluations);
 
@@ -489,12 +499,14 @@ const ReportComponent = ({ pageProps }) => {
                                 <h3 className="t-h5">
                                     {initiativeData.Category__c}
                                 </h3>
+                                {/* 
                                 <div className="mt-16 t-sh6 text-blue-60">
                                     {labelTodo('Additional goals')}
                                 </div>
                                 <h3 className="t-h5">
                                     {labelTodo('Missing data? 🛑')}
                                 </h3>
+                                */}
                                 <div className="mt-16 t-sh6 text-blue-60">
                                     {labelTodo('Sustainable development goals')}
                                 </div>
@@ -767,7 +779,7 @@ const ReportComponent = ({ pageProps }) => {
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Employees funded by the grant */}
-                    {employeesFunded && (
+                    {employeesFundedReflection && (
                         <SectionWrapper>
                             <SectionWrapper>
                                 <h3 className="t-h4">
@@ -775,7 +787,7 @@ const ReportComponent = ({ pageProps }) => {
                                 </h3>
                             </SectionWrapper>
 
-                            {/* <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 2xl:grid-cols-6">
+                            <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 2xl:grid-cols-6">
                                 <NumberCard
                                     number="6"
                                     headline="Researchers"
@@ -806,11 +818,13 @@ const ReportComponent = ({ pageProps }) => {
                                     headline="Scientists"
                                     description="3 female"
                                 />
-                            </div> */}
+                            </div>
+
                             <TextCard
+                                className="mt-32"
                                 hasBackground={true}
                                 headline={labelTodo('Updates from this year')}
-                                body={employeesFunded}
+                                body={employeesFundedReflection}
                             />
                         </SectionWrapper>
                     )}
@@ -822,27 +836,21 @@ const ReportComponent = ({ pageProps }) => {
                         </SectionWrapper>
 
                         {Object.values(initiativeData._goals).map(
-                            (item, index) => (
-                                <div key={`g-${index}`}>
+                            (item, index) => {
+                                const title =
+                                    item.Type__c == 'Custom'
+                                        ? item.Goal__c
+                                        : item.Funder_Objective__c;
+                                return (
                                     <TextCard
+                                        key={`g-${index}`}
                                         hasBackground={false}
                                         className="mt-32"
-                                        headline={item.Goal__c}
+                                        headline={title}
                                         label={item.Type__c}
                                     />
-
-                                    <TextCard
-                                        hasBackground={true}
-                                        className="mt-32"
-                                        headline="🛑 Updates from this year"
-                                        body="🛑 In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                                    />
-                                    {index <
-                                        Object.values(initiativeData._goals)
-                                            .length -
-                                            1 && <DividerLine />}
-                                </div>
-                            )
+                                );
+                            }
                         )}
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
@@ -960,23 +968,12 @@ const ReportComponent = ({ pageProps }) => {
                             </SectionWrapper>
                             {influences.map((item, index) => (
                                 <div key={`i-${index}`}>
-                                    <SectionWrapper>
-                                        <div className="t-h6">
-                                            {labelTodo(
-                                                `🛑 Influence on policy name #${index}`
-                                            )}
-                                        </div>
-                                        <div className="mt-8 t-small">
-                                            {item.description}
-                                        </div>
-                                    </SectionWrapper>
-
                                     <TextCard
                                         hasBackground={true}
                                         headline={labelTodo(
                                             'How the initiative had influence on policy or practice'
                                         )}
-                                        body={item.reportReflection}
+                                        body={item}
                                     />
 
                                     {index < influences.length - 1 && (
@@ -997,23 +994,12 @@ const ReportComponent = ({ pageProps }) => {
                             </SectionWrapper>
                             {evaluations.map((item, index) => (
                                 <div key={`i-${index}`}>
-                                    <SectionWrapper>
-                                        <div className=" t-small">
-                                            {item.description}
-                                        </div>
-                                        <div className="mt-8 t-h6">
-                                            {labelTodo(
-                                                `🛑 Evaluator name #${index}`
-                                            )}
-                                        </div>
-                                    </SectionWrapper>
-
                                     <TextCard
                                         hasBackground={true}
                                         headline={labelTodo(
                                             'Evaluation regarding this report'
                                         )}
-                                        body={item.reportReflection}
+                                        body={item}
                                     />
 
                                     {index < evaluations.length - 1 && (
@@ -1025,7 +1011,6 @@ const ReportComponent = ({ pageProps }) => {
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Reflections */}
-
                     <SectionWrapper>
                         <SectionWrapper>
                             <h3 className="t-h4">{labelTodo('Reflections')}</h3>
@@ -1059,6 +1044,17 @@ const ReportComponent = ({ pageProps }) => {
                             )}
                             body={currentReport.Post_Project_Activities__c}
                         />
+                    </SectionWrapper>
+                    <SectionWrapper>
+                        <SectionWrapper>
+                            <h3 className="t-h4">
+                                {labelTodo('Additional information')}
+                            </h3>
+                            <p className="mt-32 t-small">
+                                Additional information for this initiative can
+                                be found on the initiative page
+                            </p>
+                        </SectionWrapper>
                     </SectionWrapper>
                 </>
             )}

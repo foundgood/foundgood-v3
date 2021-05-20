@@ -35,7 +35,7 @@ ChartCardComponent.propTypes = {
     items: t.arrayOf(
         t.shape({
             title: t.string,
-            value: t.string,
+            value: t.oneOfType([t.string, t.number]),
             label: t.string,
         })
     ).isRequired,
