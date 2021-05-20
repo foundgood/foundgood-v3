@@ -202,7 +202,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     }, []);
 
     // Current report details
-    const [currentReportDetails] = useState(getReportDetails(REPORT_ID));
+    const currentReportDetails = getReportDetails(REPORT_ID);
 
     return (
         <>

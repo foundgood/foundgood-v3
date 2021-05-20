@@ -192,15 +192,10 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     }, []);
 
     // Current report details
-    const [currentReportDetails] = useState(getReportDetails(REPORT_ID));
-
-    const [currentReflection] = useState(
-        currentReportDetails.find(
-            detail =>
-                detail.Type__c === CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
-        )
+    const currentReportDetails = getReportDetails(REPORT_ID);
+    const currentReflection = currentReportDetails.find(
+        detail => detail.Type__c === CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
     );
-
     return (
         <>
             <TitlePreamble

@@ -97,7 +97,7 @@ const ReportDetailsComponent = () => {
     }, []);
 
     // Get current report
-    const [currentReport] = useState(getReport(REPORT_ID));
+    const currentReport = getReport(REPORT_ID);
 
     return (
         <>

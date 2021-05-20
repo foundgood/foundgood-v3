@@ -31,7 +31,8 @@ const IntroductionComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { labelTodo, log } = useMetadata();
+    log();
 
     // Hook: Salesforce setup
     const { sfCreate } = useSalesForce();
