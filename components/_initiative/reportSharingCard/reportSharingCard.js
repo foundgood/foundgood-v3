@@ -14,7 +14,7 @@ const ReportSharingCardComponent = ({ headline, label, tags, items }) => {
 
     return (
         <div className="flex items-start justify-between">
-            <div className="flex-auto mr-24">
+            <div className="flex-none w-2/3 mr-24">
                 <div className="t-h6">{headline}</div>
                 <p className="mt-16">{label}</p>
                 {items && items.length > 0 && (
