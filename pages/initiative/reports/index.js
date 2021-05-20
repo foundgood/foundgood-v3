@@ -59,7 +59,7 @@ const ReportsComponent = ({ pageProps }) => {
                         key={`r-${index}`}
                         className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
-                            <h2 className="t-h3">{item.Translated_Type__c}</h2>
+                            <h2 className="t-h3">{item.Type__c}</h2>
                             <Button
                                 variant="secondary"
                                 action={() => {
