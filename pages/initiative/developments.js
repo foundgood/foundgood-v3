@@ -7,6 +7,7 @@ import t from 'prop-types';
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
+import { stripUndefined } from 'utilities';
 
 // Components
 import Button from 'components/button';
@@ -22,8 +23,8 @@ const DevelopmentsComponent = ({ pageProps }) => {
 
     // Fetch initiative data
     const { initiative } = useInitiativeDataStore();
-    const [indicatorsPerActivity, setIndicatorsPerActivity] = useState();
     const [activities, setActivities] = useState();
+    const [results, setResults] = useState();
 
     // Hook: Metadata
     const { labelTodo, label, valueSet, log } = useMetadata();
@@ -54,114 +55,100 @@ const DevelopmentsComponent = ({ pageProps }) => {
             // ];
 
             // Create list of indicators per "Activity"
-            const indicatorsPerActivity = Object.values(
-                initiative._activities
-            ).reduce((accumulator, activity, currentIndex, array) => {
-                const title = activity.Things_To_Do__c;
+            const activities = Object.values(initiative._activities).reduce(
+                (accumulator, activity) => {
+                    const title = activity.Things_To_Do__c;
 
-                // Loop indicators
-                // Add indicators if it matches the activity ID
-                const indicators = Object.values(
-                    initiative._activitySuccessMetrics
-                ).map(item => {
-                    if (activity.Id == item.Initiative_Activity__c) {
-                        let title;
-                        let label;
-                        if (item.Type__c === 'People') {
-                            // If gender is "Other" -> use "Gender_Other__c" field
-                            const gender =
-                                item.Gender__c == 'Other'
-                                    ? item.Gender_Other__c
-                                    : item.Gender__c;
-                            title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
-                            label = labelTodo('Reached so far');
-                        } else {
-                            title = item.Name;
-                            label = labelTodo('Total so far');
+                    // Loop indicators
+                    // Add indicators if it matches the activity ID
+                    const indicators = Object.values(
+                        initiative._activitySuccessMetrics
+                    ).map(item => {
+                        if (activity.Id == item.Initiative_Activity__c) {
+                            let title;
+                            let label;
+                            if (item.Type__c === 'People') {
+                                // If gender is "Other" -> use "Gender_Other__c" field
+                                const gender =
+                                    item.Gender__c == 'Other'
+                                        ? item.Gender_Other__c
+                                        : item.Gender__c;
+                                title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
+                                label = labelTodo('Reached so far');
+                            } else {
+                                title = item.Name;
+                                label = labelTodo('Total so far');
+                            }
+
+                            return {
+                                title: title,
+                                value: `${item.Progress__c} / ${item.Target__c}`,
+                                current: item.Progress__c,
+                                total: item.Target__c,
+                                label: label,
+                            };
                         }
-
-                        return {
-                            title: title,
-                            value: `${item.Progress__c} / ${item.Target__c}`,
-                            current: item.Progress__c,
-                            total: item.Target__c,
-                            label: label,
-                        };
-                    }
-                });
-
-                // Only add activities - if they have indicators
-                if (stripUndefined(indicators).length > 0) {
-                    accumulator.push({
-                        title: title,
-                        indicators: indicators,
                     });
-                }
-                return accumulator;
-            }, []);
-            setIndicatorsPerActivity(indicatorsPerActivity);
+
+                    // Only add activities - if they have indicators
+                    if (stripUndefined(indicators).length > 0) {
+                        accumulator.push({
+                            title: title,
+                            indicators: indicators,
+                        });
+                    }
+                    return accumulator;
+                },
+                []
+            );
+            setActivities(activities);
 
             // Get all 'Dissemination' activities
-            let activities = Object.values(initiative._activities).filter(
-                item => {
+            const results = Object.values(initiative._activities)
+                .filter(item => {
                     // "Dissemination" or "Intervention"
                     return item.Activity_Type__c == 'Dissemination'
                         ? true
                         : false;
-                }
-            );
-            activities = activities.map(item => {
-                let items = [];
+                })
+                .map(item => {
+                    let items = [];
 
-                // If activity has publications
-                if (item.Publication_Type__c) {
-                    items = [
-                        {
-                            label: labelTodo('Publication type'),
-                            text: item.Publication_Type__c,
-                        },
-                        {
-                            label: labelTodo('Publication year'),
-                            text: item.Publication_Year__c,
-                        },
-                        {
-                            label: labelTodo('Publisher'),
-                            text: item.Publication_Publisher__c,
-                        },
-                        {
-                            label: labelTodo('Author'),
-                            text: item.Publication_Author__c,
-                        },
-                        {
-                            label: labelTodo('DOI'),
-                            text: item.Publication_DOI__c,
-                        },
-                    ];
-                }
-                return {
-                    headline: item.Things_To_Do__c,
-                    label: item.Dissemination_Method__c,
-                    tags: item.Audience_Tag__c?.split(';'),
-                    items: items,
-                };
-            });
-            setActivities(activities);
+                    // If activity has publications
+                    if (item.Publication_Type__c) {
+                        items = [
+                            {
+                                label: labelTodo('Publication type'),
+                                text: item.Publication_Type__c,
+                            },
+                            {
+                                label: labelTodo('Publication year'),
+                                text: item.Publication_Year__c,
+                            },
+                            {
+                                label: labelTodo('Publisher'),
+                                text: item.Publication_Publisher__c,
+                            },
+                            {
+                                label: labelTodo('Author'),
+                                text: item.Publication_Author__c,
+                            },
+                            {
+                                label: labelTodo('DOI'),
+                                text: item.Publication_DOI__c,
+                            },
+                        ];
+                    }
+                    return {
+                        headline: item.Things_To_Do__c,
+                        label: item.Dissemination_Method__c,
+                        tags: item.Audience_Tag__c?.split(';'),
+                        items: items,
+                    };
+                });
+            setResults(results);
         }
     }, [initiative]);
-
-    // Remove undefined values from array
-    const stripUndefined = array => {
-        var result = [];
-        array.forEach(function (item) {
-            if (Array.isArray(item) && item.length != 0) {
-                // Item is a nested array, go one level deeper recursively
-                result.push(stripUndefined(item));
-            } else if (typeof item !== 'undefined') {
-                result.push(item);
-            }
-        });
-        return result;
-    };
 
     return (
         <>
@@ -176,15 +163,13 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     <Button variant="secondary">{labelTodo('Update')}</Button>
                 </div>
                 {/* Loop - by activity */}
-                {indicatorsPerActivity &&
-                    indicatorsPerActivity.map((item, index) => (
+                {activities &&
+                    activities.map((item, index) => (
                         <div key={`i-${index}`} className="mt-32">
                             <h3 className="t-h4">{item.title}</h3>
                             {/* Loop by activity */}
                             <ChartCard items={item.indicators} />
-                            {index < indicatorsPerActivity.length - 1 && (
-                                <DividerLine />
-                            )}
+                            {index < activities.length - 1 && <DividerLine />}
                         </div>
                     ))}
             </SectionWrapper>
@@ -193,8 +178,8 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     <h2 className="t-h3">{labelTodo('Sharing of results')}</h2>
                     <Button variant="secondary">{labelTodo('Update')}</Button>
                 </div>
-                {activities &&
-                    activities.map((item, index) => (
+                {results &&
+                    results.map((item, index) => (
                         <div key={`a-${index}`} className="mt-24">
                             <ReportSharingCard
                                 key={`r-${index}`}
@@ -203,7 +188,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                 tags={item.tags}
                                 items={item.items}
                             />
-                            {index < activities.length - 1 && (
+                            {index < results.length - 1 && (
                                 <div className="py-24">
                                     <DividerLine />
                                 </div>

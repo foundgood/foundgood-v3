@@ -7,7 +7,7 @@ import t from 'prop-types';
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
-import { isJson } from 'utilities';
+import { isJson, stripUndefined } from 'utilities';
 
 // Components
 import Button from 'components/button';
@@ -91,21 +91,6 @@ const ActivitiesComponent = ({ pageProps }) => {
             setActivities(activities);
         }
     }, [initiative]);
-
-    // Remove undefined values from array
-    const stripUndefined = array => {
-        var result = [];
-
-        array.forEach(function (item) {
-            if (Array.isArray(item) && item.length != 0) {
-                // Item is a nested array, go one level deeper recursively
-                result.push(stripUndefined(item));
-            } else if (typeof item !== 'undefined') {
-                result.push(item);
-            }
-        });
-        return result;
-    };
 
     return (
         <>

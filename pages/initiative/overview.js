@@ -400,15 +400,16 @@ const ProjectComponent = ({ pageProps }) => {
                                     </h4>
                                     <h3 className="flex items-center leading-none t-h4">
                                         {/* TODO - Where does image come from? */}
+                                        {/*
                                         <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
-                                            🛑 Missing image
-                                            {/* <Image
+                                            <Image
                                                 src="/images/fg-landscape-1.jpg"
                                                 layout="fill"
                                                 objectFit="cover"
                                                 sizes="64px"
-                                            /> */}
+                                            />
                                         </div>
+                                        */}
                                         {item.Account__r.Name}
                                     </h3>
                                     <p className="mt-16 t-sh5 text-blue-60">
@@ -478,7 +479,7 @@ const ProjectComponent = ({ pageProps }) => {
 
                             <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
                                 {/* TODO - Decide on logic for these cards */}
-                                <h1>Employee cards - TBD</h1>
+
                                 {/* <NumberCard
                                     useBackground={true}
                                     number="6"
