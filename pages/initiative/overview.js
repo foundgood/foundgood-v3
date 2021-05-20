@@ -71,13 +71,13 @@ const ProjectComponent = ({ pageProps }) => {
             const collaborators = Object.values(
                 initiative._collaborators
             ).filter(item => {
-                if (item.Translated_Type__c == 'Additional collaborator') {
+                if (item.Type__c == 'Additional collaborator') {
                     return item;
                 }
             });
             const applicants = Object.values(initiative._collaborators).filter(
                 item => {
-                    if (item.Translated_Type__c != 'Additional collaborator') {
+                    if (item.Type__c != 'Additional collaborator') {
                         return item;
                     }
                 }
@@ -87,9 +87,7 @@ const ProjectComponent = ({ pageProps }) => {
 
             // Merge goal data, to signel array
             const goalAmounts = initiative?.Problem_Effect__c?.split(';');
-            const goalTitles = initiative?.Translated_Problem_Effect__c?.split(
-                ';'
-            );
+            const goalTitles = initiative?.Problem_Effect__c?.split(';');
             if (goalTitles && goalTitles.length > 0) {
                 const developmentGoals = goalTitles.map((title, index) => {
                     return { title: title, amount: goalAmounts[index] };
@@ -208,9 +206,7 @@ const ProjectComponent = ({ pageProps }) => {
                                             {labelTodo('Grant giving area')}
                                         </h4>
                                         <h3 className="t-h5">
-                                            {
-                                                initiativeData.Translated_Category__c
-                                            }
+                                            {initiativeData.Category__c}
                                         </h3>
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
@@ -339,7 +335,7 @@ const ProjectComponent = ({ pageProps }) => {
                                             </div>
                                             <div className="w-full">
                                                 <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
-                                                    {item.Translated_Type__c}
+                                                    {item.Type__c}
                                                 </span>
                                             </div>
                                             <div className="w-full t-caption">
@@ -395,9 +391,7 @@ const ProjectComponent = ({ pageProps }) => {
                         {applicants &&
                             applicants.map((item, index) => (
                                 <div key={item.Id} className="mt-32">
-                                    <h4 className="t-h5">
-                                        {item.Translated_Type__c}
-                                    </h4>
+                                    <h4 className="t-h5">{item.Type__c}</h4>
                                     <h3 className="flex items-center leading-none t-h4">
                                         {/* TODO - Where does image come from? */}
                                         {/*
@@ -437,9 +431,7 @@ const ProjectComponent = ({ pageProps }) => {
                         {collaborators &&
                             collaborators.map((item, index) => (
                                 <div key={item.Id} className="mt-32">
-                                    <h4 className="t-h5">
-                                        {item.Translated_Type__c}
-                                    </h4>
+                                    <h4 className="t-h5">{item.Type__c}</h4>
                                     <h3 className="flex items-center leading-none t-h4">
                                         {/* TODO - Where does image come from? */}
                                         {/* <div className="relative w-32 h-32 mr-8 overflow-hidden rounded-8">
@@ -546,7 +538,7 @@ const ProjectComponent = ({ pageProps }) => {
                                         </div>
                                         <div className="w-full">
                                             <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
-                                                {item.Translated_Role_Type__c}
+                                                {item.Role_Type__c}
                                             </span>
                                         </div>
                                         {largeBps.includes(bp) && (
