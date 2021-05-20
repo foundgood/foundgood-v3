@@ -65,7 +65,7 @@ const HeaderComponent = ({ showUserControls }) => {
                 {showUserControls && (
                     <ul className="flex space-x-20 t-aside-nav">
                         <li className="lg:cursor-pointer hover:text-blue-100">
-                            <Link href="/initiative/overview">
+                            <Link href="/">
                                 <a>
                                     <FiHeart className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
@@ -75,7 +75,7 @@ const HeaderComponent = ({ showUserControls }) => {
                             </Link>
                         </li>
                         <li className="lg:cursor-pointer hover:text-blue-100">
-                            <Link href="/initiative/reports">
+                            <Link href="/reports">
                                 <a>
                                     <FiInbox className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
