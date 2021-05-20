@@ -40,7 +40,7 @@ const FundersComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
 
     // Hook: Metadata
-    const { labelTodo, valueSet } = useMetadata();
+    const { labelTodo, label, helpText, valueSet } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -64,7 +64,7 @@ const FundersComponent = ({ pageProps }) => {
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Get data for form
     const { data: accountFoundations } = sfQuery(
@@ -235,8 +235,8 @@ const FundersComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Who is funding the initiative?')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {Object.keys(initiative?._funders).map(funderKey => {
@@ -268,7 +268,9 @@ const FundersComponent = ({ pageProps }) => {
                                 selected: reflection[0] ?? false ? true : false,
                                 value: reflection[0]?.Description__c ?? '',
                             }}
-                            inputLabel={labelTodo('Outline your reflection')}
+                            inputLabel={label(
+                                'custom.FA_ReportWizardFunderReflectionSubHeading'
+                            )}
                         />
                     );
                 })}
@@ -279,7 +281,7 @@ const FundersComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add funder')}
+                    {label('custom.FA_ButtonAddFunder')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -291,7 +293,10 @@ const FundersComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Account__c"
-                        label={labelTodo('Name of funder')}
+                        label={label('objects.initiativeFunder.Account__c')}
+                        subLabel={helpText(
+                            'objects.initiativeFunder.Account__c'
+                        )}
                         placeholder={labelTodo('Please select')}
                         options={
                             accountFoundations?.records?.map(item => ({
@@ -308,7 +313,8 @@ const FundersComponent = ({ pageProps }) => {
                     />
                     <Select
                         name="Type__c"
-                        label={labelTodo('Type of funder')}
+                        label={label('objects.initiativeFunder.Type__c')}
+                        subLabel={helpText('objects.initiativeFunder.Type__c')}
                         placeholder={labelTodo('Please select')}
                         options={valueSet('initiativeFunder.Type__c')}
                         disabled={
@@ -321,15 +327,16 @@ const FundersComponent = ({ pageProps }) => {
                     <SelectList
                         name="Contribution"
                         showText
+                        label={label('objects.initiativeFunder.Amount__c')}
+                        subLabel={helpText(
+                            'objects.initiativeFunder.Amount__c'
+                        )}
                         selectPlaceholder={labelTodo('Please select')}
-                        label={labelTodo('Contribution')}
                         listMaxLength={1}
                         options={[
                             { label: 'DKK', value: 'DKK' },
                             { label: 'EUR', value: 'EUR' },
                         ]}
-                        selectLabel={labelTodo('Currency')}
-                        textLabel={labelTodo('Amount granted')}
                         controller={control}
                         disabled={
                             isNovoLeadFunder() &&
@@ -337,13 +344,22 @@ const FundersComponent = ({ pageProps }) => {
                         }
                     />
                     <DatePicker
-                        name="Approval_date__c"
-                        label={labelTodo('Approval date')}
+                        name="Approval_Date__c"
+                        label={label(
+                            'objects.initiativeFunder.Approval_Date__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeFunder.Approval_Date__c'
+                        )}
                         controller={control}
                     />
                     <DateRange
                         name="GrantDate"
-                        label={labelTodo('Grant period')}
+                        label={`${label(
+                            'objects.initiativeFunder.Grant_Start_Date__c'
+                        )} / ${label(
+                            'objects.initiativeFunder.Grant_End_Date__c'
+                        )}`}
                         controller={control}
                         disabled={
                             isNovoLeadFunder() &&
@@ -352,8 +368,14 @@ const FundersComponent = ({ pageProps }) => {
                     />
                     <Text
                         name="Application_Id__c"
+                        label={label(
+                            'objects.initiativeFunder.Application_Id__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeFunder.Application_Id__c'
+                        )}
                         label={labelTodo('Application ID number')}
-                        placeholder={labelTodo('Enter ID')}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         maxLength={15}
                         disabled={
                             isNovoLeadFunder() &&

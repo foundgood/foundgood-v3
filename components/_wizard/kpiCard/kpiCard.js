@@ -12,7 +12,7 @@ import Button from 'components/button';
 
 const KpiCardComponent = ({ headline, items, actionCreate, actionUpdate }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     return (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100">
@@ -23,7 +23,7 @@ const KpiCardComponent = ({ headline, items, actionCreate, actionUpdate }) => {
                     </div>
                 )}
                 <Button theme="teal" variant="quaternary" action={actionCreate}>
-                    {labelTodo('Add indicator')}
+                    {label('custom.FA_ButtonAddIndicator')}
                 </Button>
             </div>
             {items?.length > 0 && (
@@ -44,7 +44,7 @@ const KpiCardComponent = ({ headline, items, actionCreate, actionUpdate }) => {
                                 theme="teal"
                                 variant="secondary"
                                 action={() => actionUpdate(item)}>
-                                {labelTodo('Update')}
+                                {label('custom.FA_ButtonUpdate')}
                             </Button>
                         </div>
                     ))}

@@ -102,8 +102,8 @@ const ReportDetailsComponent = () => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Report details')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 <Text

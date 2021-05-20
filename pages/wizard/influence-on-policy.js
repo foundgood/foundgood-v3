@@ -174,8 +174,8 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Influences on policy')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {getReportDetails(REPORT_ID)

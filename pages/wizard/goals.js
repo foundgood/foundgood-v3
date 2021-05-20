@@ -7,21 +7,16 @@ import _get from 'lodash.get';
 
 // Utilities
 import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
-import { useInitiativeDataStore } from 'utilities/store';
+import {
+    useInitiativeDataStore,
+    useWizardNavigationStore,
+} from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import {
-    InputWrapper,
-    Select,
-    LongText,
-    SelectList,
-    Text,
-    DateRange,
-    DatePicker,
-} from 'components/_inputs';
+import { InputWrapper, Select, LongText } from 'components/_inputs';
 import GoalCard from 'components/_wizard/goalCard';
 
 const GoalsComponent = ({ pageProps }) => {
@@ -30,7 +25,14 @@ const GoalsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, controlledValueSet, log } = useMetadata();
+    const {
+        labelTodo,
+        label,
+        valueSet,
+        log,
+        helpText,
+        controlledValueSet,
+    } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -39,6 +41,9 @@ const GoalsComponent = ({ pageProps }) => {
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+
+    // Store: Wizard navigation
+    const { currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
     const { initiative, updateGoal, CONSTANTS } = useInitiativeDataStore();
@@ -129,11 +134,11 @@ const GoalsComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('What are your project goals?')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
-                {/* {Object.keys(initiative?._goals).map(goalKey => {
+                {Object.keys(initiative?._goals).map(goalKey => {
                     const goal = initiative?._goals[goalKey];
                     return (
                         <GoalCard
@@ -150,7 +155,7 @@ const GoalsComponent = ({ pageProps }) => {
                             }}
                         />
                     );
-                })} */}
+                })}
                 <Button
                     theme="teal"
                     className="self-start"
@@ -158,7 +163,7 @@ const GoalsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add goal')}
+                    {label('custom.FA_ButtonAddGoal')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -170,7 +175,8 @@ const GoalsComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Type__c"
-                        label={labelTodo('Type of goal')}
+                        label={label('objects.initiativeGoal.Type__c')}
+                        subLabel={helpText('objects.initiativeGoal.Type__c')}
                         placeholder={labelTodo('Please select')}
                         options={valueSet('initiativeGoal.Type__c')}
                         controller={control}
@@ -181,8 +187,11 @@ const GoalsComponent = ({ pageProps }) => {
                     {goalType === CONSTANTS.TYPES.GOAL_CUSTOM && (
                         <LongText
                             name="Goal__c"
-                            label={labelTodo('Goal title')}
-                            placeholder={labelTodo('Enter goal')}
+                            label={label('objects.initiativeGoal.Goal__c')}
+                            subLabel={helpText(
+                                'objects.initiativeGoal.Goal__c'
+                            )}
+                            placeholder={labelTodo('TEXT_PLACEHOLDER')}
                             maxLength={200}
                             controller={control}
                         />
@@ -193,7 +202,12 @@ const GoalsComponent = ({ pageProps }) => {
                     {goalType === CONSTANTS.TYPES.GOAL_PREDEFINED && (
                         <Select
                             name="Funder_Objective__c"
-                            label={labelTodo('Goal')}
+                            label={label(
+                                'objects.initiativeGoal.Funder_Objective__c'
+                            )}
+                            subLabel={helpText(
+                                'objects.initiativeGoal.Funder_Objective__c'
+                            )}
                             placeholder={labelTodo('Please select')}
                             options={controlledValueSet(
                                 'initiativeGoal.Funder_Objective__c',
