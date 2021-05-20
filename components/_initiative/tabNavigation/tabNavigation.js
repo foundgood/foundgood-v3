@@ -45,7 +45,7 @@ const TabNavigationComponent = () => {
                                     onMouseEnter={toggleMenu}
                                     onMouseLeave={toggleMenu}
                                     className={cc([
-                                        'flex flex-col p-16 items-start rounded-8 text-blue-300 mt-3 t-h6 hover:text-blue-200',
+                                        'flex flex-col px-16 pb-16 pt-[14px] mt-4 items-start rounded-8 text-blue-300 t-h6 hover:text-blue-200',
                                         {
                                             'text-blue-100 ': subMenuIsActive,
                                             'bg-blue-20': menuActive,
@@ -90,7 +90,7 @@ const TabNavigationComponent = () => {
                                     href={`/${initiativeId}/${item.slug}`}
                                     key={index}
                                     active="text-blue-100 !border-blue-100">
-                                    <a className="flex items-center h-56 text-blue-300 border-t-2 border-amber-10 t-h6 transition-default hover:text-blue-200">
+                                    <a className="flex items-center py-16 text-blue-300 border-t-2 border-amber-10 t-h6 transition-default hover:text-blue-200">
                                         {item.label}
                                     </a>
                                 </ActiveLink>
