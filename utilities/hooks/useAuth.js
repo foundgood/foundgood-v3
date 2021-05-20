@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 // Packages
 import { createLocalStorageStateHook } from 'use-local-storage-state';
 import { useRouter } from 'next/router';
-import dayjs from 'dayjs';
 
 // Utilities
 import CryptoJS from 'crypto-js';
@@ -24,20 +23,12 @@ const useAuth = () => {
         loggedIn,
         user,
         reset,
-        setUserSessionTimeout,
+        updateUserTimeout: updateUserTimeoutStore,
     } = useAuthStore();
 
     // Hook: Persist user and user session timeout with localstorage
     const useLsUserData = createLocalStorageStateHook('fg_lsUserData', null);
-    const useLsUserSessionTimeout = createLocalStorageStateHook(
-        'fg_lsUserSessionTimeout',
-        null
-    );
     const [lsUserData, setLsUserData] = useLsUserData();
-    const [
-        lsUserSessionTimeout,
-        setLsUserSessionTimeout,
-    ] = useLsUserSessionTimeout();
 
     // Helper: Extracts login url
     function _getLoginUrl() {
@@ -59,7 +50,10 @@ const useAuth = () => {
             console.log('Auth: Verify user');
 
             // Check for lsUser and timestamp
-            if (!lsUserData || lsUserSessionTimeout < Date.now()) {
+            if (
+                !lsUserData ||
+                localStorage.getItem('fg_lsUserSessionTimeout') < Date.now()
+            ) {
                 console.log('Auth: Session has timed out or does not exist');
                 setUser(null);
                 setLoggedIn(false);
@@ -98,7 +92,8 @@ const useAuth = () => {
                     const { access_token, instance_url } = params;
 
                     // Update localstorage timeout
-                    setLsUserSessionTimeout(
+                    localStorage.setItem(
+                        'fg_lsUserSessionTimeout',
                         Date.now() + process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS
                     );
 
@@ -125,7 +120,7 @@ const useAuth = () => {
 
                             // Update localstorage
                             setLsUserData(null);
-                            setLsUserSessionTimeout(null);
+                            localStorage.removeItem('fg_lsUserSessionTimeout');
                         });
                 }
             }
@@ -147,20 +142,7 @@ const useAuth = () => {
 
     // Update user timeout
     function updateUserTimeout() {
-        if (lsUserSessionTimeout > Date.now()) {
-            // Update logout timeout
-            const newTimeout = dayjs().add(
-                process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS,
-                'ms'
-            );
-            setLsUserSessionTimeout(newTimeout.valueOf());
-
-            console.info(
-                `You will be logged out with ${
-                    process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS / 1000 / 60
-                } minutes of inactivity (${newTimeout.format('HH:mm:ss')})`
-            );
-        } else {
+        if (!updateUserTimeoutStore()) {
             logout();
         }
     }
@@ -178,11 +160,6 @@ const useAuth = () => {
         }
     }, [lsUserData]);
 
-    // Effect: Update store timeout to be consumed from loginTimeoutComponent
-    useEffect(() => {
-        setUserSessionTimeout(lsUserSessionTimeout);
-    }, [lsUserSessionTimeout]);
-
     return {
         handleLoginCallback,
         logout,
@@ -190,7 +167,6 @@ const useAuth = () => {
         user,
         verifyLoggedIn,
         updateUserTimeout,
-        useLsUserSessionTimeout,
     };
 };
 

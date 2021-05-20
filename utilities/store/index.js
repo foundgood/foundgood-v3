@@ -4,13 +4,14 @@ import { useReportLayoutStore } from './reportLayout';
 import { useWizardNavigationStore } from './wizardNavigation';
 import { useReportNavigationStore } from './reportNavigation';
 import { useInitiativeDataStore } from './initiativeData';
-import { useAuthStore } from './auth';
+import { useAuthStore, authStore } from './auth';
 
 export {
     useWizardLayoutStore,
     useReportLayoutStore,
     useInitiativeLayoutStore,
     useAuthStore,
+    authStore,
     useWizardNavigationStore,
     useReportNavigationStore,
     useInitiativeDataStore,

@@ -2,6 +2,7 @@ import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import { query } from 'utilities/api/salesForce/fetchers';
 import { queries } from 'utilities/api/salesForce/queries';
+import { authStore } from 'utilities/store';
 
 // Wrapper for sales force query
 async function sfQuery(q) {
@@ -26,6 +27,11 @@ function _returnAsKeys(data) {
         return keyedData;
     }
     return {};
+}
+
+function _updateAuth() {
+    const { getState } = authStore;
+    getState().updateUserTimeout();
 }
 
 const defaultInitiative = {
@@ -56,6 +62,8 @@ const constants = {
         ACTIVITY_DISSEMINATION: 'Dissemination',
         ACTIVITY_JOURNAL: 'Journal publication',
         EMPLOYEES_FUNDED_OVERVIEW: 'Employees Funded Overview',
+        INFLUENCE_ON_POLICY: 'Influence On Policy',
+        EVALUATION: 'Evaluation',
     },
     IDS: {
         NNF_ACCOUNT: '0011x000002rJb4AAE',
@@ -104,6 +112,9 @@ const useInitiativeDataStore = create(
                     initiative: { ...state.initiative, ...data },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         // Update single item
@@ -120,6 +131,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         async updateCollaborator(id) {
@@ -135,6 +149,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         async updateEmployeeFunded(id) {
@@ -152,6 +169,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         async updateReport(id) {
@@ -167,6 +187,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         async updateGoal(id) {
@@ -182,6 +205,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         async updateActivity(id) {
@@ -197,6 +223,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         async updateActivitySuccessMetric(id) {
@@ -214,6 +243,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         // Bulk update multiple ids
@@ -232,6 +264,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         async updateActivitySuccessMetrics(ids) {
@@ -249,6 +284,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         async updateReportDetails(ids) {
@@ -267,6 +305,9 @@ const useInitiativeDataStore = create(
                     },
                 }));
             }
+
+            // Update auth
+            _updateAuth();
         },
 
         // Custom data updaters
@@ -285,6 +326,9 @@ const useInitiativeDataStore = create(
                     },
                 },
             }));
+
+            // Update auth
+            _updateAuth();
         },
 
         // Get initiative and all sub data based on initiative ID
@@ -316,6 +360,7 @@ const useInitiativeDataStore = create(
             const activitySuccessMetricsData = await sfQuery(
                 queries.initiativeActivitySuccessMetric.getAll(id)
             );
+
             // Update state
             set(state => ({
                 initiative: {
@@ -333,6 +378,9 @@ const useInitiativeDataStore = create(
                     _activityGoals: _returnAsKeys(activityGoalsData),
                 },
             }));
+
+            // Update auth
+            _updateAuth();
         },
 
         reset() {

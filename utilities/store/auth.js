@@ -1,7 +1,9 @@
 // Packages
 import create from 'zustand';
+import createVanilla from 'zustand/vanilla';
+import dayjs from 'dayjs';
 
-const useAuthStore = create(set => ({
+const authStore = createVanilla((set, get) => ({
     accessToken: null,
     setAccessToken: accessToken =>
         set(() => ({
@@ -38,6 +40,35 @@ const useAuthStore = create(set => ({
             loggedIn: false,
             initialized: false,
         })),
+
+    updateUserTimeout() {
+        if (localStorage.getItem('fg_lsUserSessionTimeout') ?? 0 > Date.now()) {
+            // Update logout timeout
+            const newTimeout = dayjs().add(
+                process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS,
+                'ms'
+            );
+
+            // Update timeout
+            localStorage.setItem(
+                'fg_lsUserSessionTimeout',
+                newTimeout.valueOf()
+            );
+            get().setUserSessionTimeout(newTimeout.valueOf());
+
+            console.info(
+                `You will be logged out with ${
+                    process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS / 1000 / 60
+                } minutes of inactivity (${newTimeout.format('HH:mm:ss')})`
+            );
+
+            return true;
+        } else {
+            return false;
+        }
+    },
 }));
 
-export { useAuthStore };
+const useAuthStore = create(authStore);
+
+export { useAuthStore, authStore };
