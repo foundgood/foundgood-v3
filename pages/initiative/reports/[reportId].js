@@ -52,13 +52,18 @@ const ReportComponent = ({ pageProps }) => {
     const [novoFunder, setNovoFunder] = useState();
 
     // Specific data for this report
+
+    const [currentReport, setCurrentReport] = useState();
     const [funders, setFunders] = useState();
     const [applicants, setApplicants] = useState();
     const [collaborators, setCollaborators] = useState();
     const [employeesFunded, setEmployeesFunded] = useState();
     // const [goals, setGoals] = useState();
     const [activities, setActivities] = useState();
-    const [sharingResults, setSharingResults] = useState();
+    const [results, setResults] = useState();
+    const [outcomes, setOutcomes] = useState();
+    const [influences, setInfluences] = useState();
+    const [evaluations, setEvaluations] = useState();
 
     const donutColors = [
         'bg-teal-60',
@@ -96,8 +101,10 @@ const ReportComponent = ({ pageProps }) => {
             console.log('initiative: ', initiative);
 
             // Get Report version
-            // const currentReport = initiative._reports[reportId]
+            const currentReport = initiative._reports[reportId];
+            console.log('currentReport: ', currentReport);
             // const reportVersion = currentReport.version; // "1" or "1.1"
+            setCurrentReport(currentReport);
 
             // Get list of funders
             const funders = Object.values(initiative._reportDetails)
@@ -153,7 +160,7 @@ const ReportComponent = ({ pageProps }) => {
             );
             setEmployeesFunded(employees[0].Description__c);
 
-            // Get reports Activities
+            // Get reports ALL Activities
             // Activies are split between:
             // Activities == "Intervention"
             // Sharing of results == "Dissimination"
@@ -178,6 +185,7 @@ const ReportComponent = ({ pageProps }) => {
                     const location = activity.Initiative_Location__c.split(
                         ';'
                     ).join(', ');
+                    const reportReflection = activity.reportReflection;
 
                     // Loop indicators
                     // Add indicators if it matches the activity ID
@@ -212,7 +220,6 @@ const ReportComponent = ({ pageProps }) => {
 
                     // Only add activities of type "intervention"
                     // Only add activities - if they have indicators
-                    console.log('activity: ', activity);
                     if (
                         activity.Activity_Type__c == 'Intervention' &&
                         stripUndefined(indicators).length > 0
@@ -222,6 +229,7 @@ const ReportComponent = ({ pageProps }) => {
                             description: description,
                             location: location,
                             indicators: indicators,
+                            reportReflection: reportReflection,
                         });
                     }
                     return accumulator;
@@ -229,25 +237,94 @@ const ReportComponent = ({ pageProps }) => {
                 []
             );
             setActivities(activities);
-            // const activities = allActivities.filter(
-            //     item => item.Activity_Type__c == 'Intervention'
-            // );
-            // const goals = allActivities.filter(
-            //     item => item.Activity_Type__c == 'Dissemination'
-            // );
 
-            // setGoals(goals);
+            const results = Object.values(allActivities)
+                .filter(item => {
+                    // "Dissemination" or "Intervention"
+                    return item.Activity_Type__c == 'Dissemination'
+                        ? true
+                        : false;
+                })
+                .map(item => {
+                    let items = [];
 
-            // const influence = Object.values(initiative._reportDetails).filter(
-            //     item => {
-            //         return item.Type__c == 'Influence On Policy' ? true : false;
-            //     }
-            // );
-            // const outcomes = Object.values(initiative._reportDetails).filter(
-            //     item => {
-            //         return item.Type__c == 'Outcome' ? true : false;
-            //     }
-            // );
+                    // If activity has publications
+                    if (item.Publication_Type__c) {
+                        items = [
+                            {
+                                label: labelTodo('Publication type'),
+                                text: item.Publication_Type__c,
+                            },
+                            {
+                                label: labelTodo('Publication year'),
+                                text: item.Publication_Year__c,
+                            },
+                            {
+                                label: labelTodo('Publisher'),
+                                text: item.Publication_Publisher__c,
+                            },
+                            {
+                                label: labelTodo('Author'),
+                                text: item.Publication_Author__c,
+                            },
+                            {
+                                label: labelTodo('DOI'),
+                                text: item.Publication_DOI__c,
+                            },
+                        ];
+                    }
+                    return {
+                        headline: item.Things_To_Do__c,
+                        label: item.Dissemination_Method__c,
+                        tags: item.Audience_Tag__c?.split(';'),
+                        reportReflection: item.reportReflection,
+                        items: items,
+                    };
+                });
+            setResults(results);
+
+            // Report outcomes
+            const outcomes = Object.values(initiative._reportDetails)
+                .filter(item => {
+                    return item.Type__c == 'Outcome' ? true : false;
+                })
+                .map(item => {
+                    // console.log('goal: ', item);
+                    // // Get Goal based on key
+                    // const goal =
+                    //     initiative._goals[item.Initiative_Activity__c];
+                    // // Add Report Reflection text to activities
+                    // goal.reportReflection = item.Description__c;
+                    // return goal;
+                });
+            setOutcomes(outcomes);
+
+            // Influence on policy
+            const influences = Object.values(initiative._reportDetails)
+                .filter(item => {
+                    return item.Type__c == 'Influence On Policy' ? true : false;
+                })
+                .map(item => {
+                    return {
+                        description: item.Type_Of_Influence__c,
+                        reportReflection: item.Description__c,
+                    };
+                });
+            setInfluences(influences);
+
+            // Evaluations
+            const evaluations = Object.values(initiative._reportDetails)
+                .filter(item => {
+                    return item.Type__c == 'Evaluation' ? true : false;
+                })
+                .map(item => {
+                    return {
+                        description: item.Who_Is_Evaluating__c,
+                        reportReflection: item.Description__c,
+                    };
+                });
+            setEvaluations(evaluations);
+
             // const achievements = Object.values(
             //     initiative._reportDetails
             // ).filter(item => {
@@ -267,8 +344,8 @@ const ReportComponent = ({ pageProps }) => {
             setCoApplicants(coApplicants);
 
             // Header - Merge goal data, to signel array
-            const goalAmounts = initiative?.Problem_Effect__c?.split(';');
-            const goalTitles = initiative?.Translated_Problem_Effect__c?.split(
+            const goalAmounts = initiative.Problem_Effect__c?.split(';');
+            const goalTitles = initiative.Translated_Problem_Effect__c?.split(
                 ';'
             );
             if (goalTitles && goalTitles.length > 0) {
@@ -277,26 +354,6 @@ const ReportComponent = ({ pageProps }) => {
                 });
                 setDevelopmentGoals(developmentGoals);
             }
-
-            // // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
-            // // Split them up depending on the type.
-            // // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
-            // let collaborators = Object.values(initiative._collaborators).filter(
-            //     item => {
-            //         return item.Translated_Type__c == 'Additional collaborator'
-            //             ? true
-            //             : false;
-            //     }
-            // );
-            // let applicants = Object.values(initiative._collaborators).filter(
-            //     item => {
-            //         return item.Translated_Type__c != 'Additional collaborator'
-            //             ? true
-            //             : false;
-            //     }
-            // );
-            // setApplicants(applicants);
-            // setCollaborators(collaborators);
 
             // 🍩 Donut data 🍩
             // Build donut slices using color gradient
@@ -410,7 +467,7 @@ const ReportComponent = ({ pageProps }) => {
                             <div className="flex mt-16 t-caption text-blue-60">
                                 {initiativeData.Application_Id__c}
                                 <div className="mx-4">•</div>
-                                {initiativeData.Translated_Stage__c}
+                                {initiativeData.Stage__c}
                             </div>
                         </SectionWrapper>
                     </SectionWrapper>
@@ -430,7 +487,7 @@ const ReportComponent = ({ pageProps }) => {
                                     {labelTodo('Grant giving area')}
                                 </div>
                                 <h3 className="t-h5">
-                                    {initiativeData.Translated_Category__c}
+                                    {initiativeData.Category__c}
                                 </h3>
                                 <div className="mt-16 t-sh6 text-blue-60">
                                     {labelTodo('Additional goals')}
@@ -759,32 +816,35 @@ const ReportComponent = ({ pageProps }) => {
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
-                    {/* {goals && (
+                    <SectionWrapper>
                         <SectionWrapper>
-                            <SectionWrapper>
-                                <h3 className="t-h4">{labelTodo('Goals')}</h3>
-                            </SectionWrapper>
+                            <h3 className="t-h4">{labelTodo('Goals')}</h3>
+                        </SectionWrapper>
 
-                            {goals.map((item, index) => {
-                                <>
+                        {Object.values(initiativeData._goals).map(
+                            (item, index) => (
+                                <div key={`g-${index}`}>
                                     <TextCard
                                         hasBackground={false}
                                         className="mt-32"
-                                        headline="🛑 A custom objective we’ve created"
-                                        label="Custom"
+                                        headline={item.Goal__c}
+                                        label={item.Type__c}
                                     />
 
                                     <TextCard
                                         hasBackground={true}
                                         className="mt-32"
                                         headline="🛑 Updates from this year"
-                                        body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
+                                        body="🛑 In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
                                     />
-                                    {index < goals.index - 1 && <DividerLine />}
-                                </>;
-                            })}
-                        </SectionWrapper>
-                    )} */}
+                                    {index <
+                                        Object.values(initiativeData._goals)
+                                            .length -
+                                            1 && <DividerLine />}
+                                </div>
+                            )
+                        )}
+                    </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Activities */}
                     {activities && (
@@ -812,15 +872,17 @@ const ReportComponent = ({ pageProps }) => {
                                     <SectionWrapper>
                                         <ChartCard
                                             useBorder={true}
-                                            headline="Indicators"
+                                            headline={labelTodo('Indicators')}
                                             items={item.indicators}
                                         />
                                     </SectionWrapper>
                                     <TextCard
                                         hasBackground={true}
                                         className="mt-32"
-                                        headline="Updates from this year"
-                                        body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement. "
+                                        headline={labelTodo(
+                                            'Updates from this year'
+                                        )}
+                                        body={item.reportReflection}
                                     />
                                     {index < activities.length - 1 && (
                                         <DividerLine />
@@ -829,69 +891,44 @@ const ReportComponent = ({ pageProps }) => {
                             ))}
                         </SectionWrapper>
                     )}
-
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Sharing of results */}
-                    <SectionWrapper>
+                    {results && (
                         <SectionWrapper>
-                            <h3 className="t-h4">
-                                {labelTodo('Sharing of results')}
-                            </h3>
+                            <SectionWrapper>
+                                <h3 className="t-h4">
+                                    {labelTodo('Sharing of results')}
+                                </h3>
+                            </SectionWrapper>
+                            {results.map((item, index) => (
+                                <div key={`r-${index}`}>
+                                    <SectionWrapper>
+                                        <ReportSharingCard
+                                            headline={item.headline}
+                                            label={item.label}
+                                            tags={item.tags}
+                                            items={item.items}
+                                        />
+                                    </SectionWrapper>
 
-                            <ReportSharingCard
-                                headline="Science Weekly 🔬"
-                                label="Journal publication"
-                                tags={[
-                                    'Policymakers',
-                                    'Politicians',
-                                    'Professional practitioners',
-                                ]}
-                                items={[
-                                    {
-                                        label: 'Publication type',
-                                        text: 'Industry magazine',
-                                    },
-                                    { label: 'Publication year', text: '2021' },
-                                    {
-                                        label: 'Publisher',
-                                        text:
-                                            'Media company publishing international',
-                                    },
-                                    {
-                                        label: 'Author',
-                                        text: 'Uganda, Denmark',
-                                    },
-                                    { label: 'DOI', text: 'Uganda, Denmark' },
-                                ]}
-                            />
+                                    <TextCard
+                                        hasBackground={true}
+                                        headline={labelTodo(
+                                            'Updates from this year'
+                                        )}
+                                        body={item.reportReflection}
+                                    />
+
+                                    {index < activities.length - 1 && (
+                                        <DividerLine />
+                                    )}
+                                </div>
+                            ))}
                         </SectionWrapper>
-
-                        <TextCard
-                            hasBackground={true}
-                            headline="Description for this report"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
-
-                        <DividerLine />
-
-                        <SectionWrapper>
-                            <ReportSharingCard
-                                headline="The Joe Rogan Podcast 💪"
-                                label="TV/radio/film/podcast"
-                                tags={[
-                                    'Policymakers',
-                                    'Politicians',
-                                    'Professional practitioners',
-                                ]}
-                            />
-                        </SectionWrapper>
-
-                        <TextCard
-                            hasBackground={true}
-                            headline="Description for this report"
-                            body="In the eighteenth century the German philosopher Immanuel Kant developed a theory of knowledge in which knowledge about space can be both a priori and synthetic. According to Kant, knowledge about space is synthetic, in that statements about space are not simply true by virtue of the meaning of the words in the statement."
-                        />
-                    </SectionWrapper>
+                    )}
+                    {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Logbook entries */}
+                    {/*
                     <SectionWrapper>
                         <SectionWrapper>
                             <h3 className="t-h4">
@@ -899,6 +936,129 @@ const ReportComponent = ({ pageProps }) => {
                             </h3>
                         </SectionWrapper>
                         entries...
+                    </SectionWrapper>
+                    */}
+                    {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Headline: "Key results" */}
+                    <SectionWrapper paddingY={false}>
+                        <SectionWrapper paddingY={false}>
+                            <h2 className="t-h3 mt-96">
+                                {labelTodo('Key results')}
+                            </h2>
+                        </SectionWrapper>
+                    </SectionWrapper>
+                    {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Outcomes */}
+                    {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Influences on policy */}
+                    {influences && (
+                        <SectionWrapper>
+                            <SectionWrapper>
+                                <h3 className="t-h4">
+                                    {labelTodo('Influences on policy')}
+                                </h3>
+                            </SectionWrapper>
+                            {influences.map((item, index) => (
+                                <div key={`i-${index}`}>
+                                    <SectionWrapper>
+                                        <div className="t-h6">
+                                            {labelTodo(
+                                                `🛑 Influence on policy name #${index}`
+                                            )}
+                                        </div>
+                                        <div className="mt-8 t-small">
+                                            {item.description}
+                                        </div>
+                                    </SectionWrapper>
+
+                                    <TextCard
+                                        hasBackground={true}
+                                        headline={labelTodo(
+                                            'How the initiative had influence on policy or practice'
+                                        )}
+                                        body={item.reportReflection}
+                                    />
+
+                                    {index < influences.length - 1 && (
+                                        <DividerLine />
+                                    )}
+                                </div>
+                            ))}
+                        </SectionWrapper>
+                    )}
+                    {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Evaluations */}
+                    {evaluations && (
+                        <SectionWrapper>
+                            <SectionWrapper>
+                                <h3 className="t-h4">
+                                    {labelTodo('Evaluations')}
+                                </h3>
+                            </SectionWrapper>
+                            {evaluations.map((item, index) => (
+                                <div key={`i-${index}`}>
+                                    <SectionWrapper>
+                                        <div className=" t-small">
+                                            {item.description}
+                                        </div>
+                                        <div className="mt-8 t-h6">
+                                            {labelTodo(
+                                                `🛑 Evaluator name #${index}`
+                                            )}
+                                        </div>
+                                    </SectionWrapper>
+
+                                    <TextCard
+                                        hasBackground={true}
+                                        headline={labelTodo(
+                                            'Evaluation regarding this report'
+                                        )}
+                                        body={item.reportReflection}
+                                    />
+
+                                    {index < evaluations.length - 1 && (
+                                        <DividerLine />
+                                    )}
+                                </div>
+                            ))}
+                        </SectionWrapper>
+                    )}
+                    {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Reflections */}
+
+                    <SectionWrapper>
+                        <SectionWrapper>
+                            <h3 className="t-h4">{labelTodo('Reflections')}</h3>
+                        </SectionWrapper>
+                        <TextCard
+                            hasBackground={true}
+                            headline={labelTodo('Project purpose')}
+                            body={currentReport.Project_Purpose__c}
+                        />
+                        <TextCard
+                            className="mt-32"
+                            hasBackground={true}
+                            headline={labelTodo(
+                                'Progress towards achieving the goals'
+                            )}
+                            body={
+                                currentReport.Progress_Towards_Grant_Area_Themes__c
+                            }
+                        />
+                        <TextCard
+                            className="mt-32"
+                            hasBackground={true}
+                            headline={labelTodo('Important results')}
+                            body={currentReport.Important_Results__c}
+                        />
+                        <TextCard
+                            className="mt-32"
+                            hasBackground={true}
+                            headline={labelTodo(
+                                'Post grant activities or results'
+                            )}
+                            body={currentReport.Post_Project_Activities__c}
+                        />
                     </SectionWrapper>
                 </>
             )}
