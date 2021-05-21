@@ -992,7 +992,7 @@ const ReportComponent = ({ pageProps }) => {
                                     <SectionWrapper>
                                         <ReportSharingCard
                                             headline={item.headline}
-                                            label={item.label}
+                                            description={item.label}
                                             tags={item.tags}
                                             items={item.items}
                                         />

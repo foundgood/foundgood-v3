@@ -55,14 +55,14 @@ const ReportCardComponent = ({
                     {status == 'Published' ? 'Sent ' : 'Due '}
                     {date}
                 </div>
-                <div className="self-end mt-16">
+                {/* <div className="self-end mt-16">
                     <Button
                         theme="teal"
                         variant="quaternary"
                         action={actionUpdate}>
                         {label('custom.FA_ButtonUpdate')}
                     </Button>
-                </div>
+                </div> */}
             </a>
         </Link>
     );

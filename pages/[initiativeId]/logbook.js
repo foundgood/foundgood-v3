@@ -21,13 +21,15 @@ const LogbookComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log } = useMetadata();
+    const { labelTodo, label } = useMetadata();
 
     return (
         <>
             <SectionWrapper>
                 <div className="flex justify-between mr-48 md:mr-0">
-                    <h1 className="t-h1">Logbook</h1>
+                    <h1 className="t-h1">
+                        {label('custom.FA_InitiativeViewLogEntryHeading')}
+                    </h1>
                     <Button variant="secondary" theme="teal">
                         {labelTodo('Update')}
                     </Button>

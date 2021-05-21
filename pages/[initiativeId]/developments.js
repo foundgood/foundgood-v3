@@ -22,12 +22,12 @@ const DevelopmentsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Fetch initiative data
-    const { initiative } = useInitiativeDataStore();
+    const { initiative, CONSTANTS } = useInitiativeDataStore();
     const [activities, setActivities] = useState();
     const [results, setResults] = useState();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log } = useMetadata();
+    const { labelTodo, label } = useMetadata();
 
     useEffect(() => {
         // Make sure data it loaded
@@ -67,10 +67,15 @@ const DevelopmentsComponent = ({ pageProps }) => {
                         if (activity.Id == item.Initiative_Activity__c) {
                             let title;
                             let label;
-                            if (item.Type__c === 'People') {
+
+                            if (
+                                item.Type__c ===
+                                CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                            ) {
                                 // If gender is "Other" -> use "Gender_Other__c" field
                                 const gender =
-                                    item.Gender__c == 'Other'
+                                    item.Gender__c ==
+                                    CONSTANTS.TYPES.INDICATOR_GENDER_OTHER
                                         ? item.Gender_Other__c
                                         : item.Gender__c;
                                 title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
@@ -108,7 +113,8 @@ const DevelopmentsComponent = ({ pageProps }) => {
             const results = Object.values(initiative._activities)
                 .filter(item => {
                     // "Dissemination" or "Intervention"
-                    return item.Activity_Type__c == 'Dissemination'
+                    return item.Activity_Type__c ==
+                        CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
                         ? true
                         : false;
                 })
@@ -159,7 +165,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
             <SectionWrapper className="mt-32 bg-white rounded-8">
                 <div className="flex justify-between">
                     <h2 className="t-h3">
-                        {labelTodo('Indicators by activity')}
+                        {label('custom.FA_InitiativeViewIndicatorsHeading')}
                     </h2>
                     <Button variant="secondary">{labelTodo('Update')}</Button>
                 </div>
@@ -168,7 +174,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     activities.map((item, index) => (
                         <div key={`i-${index}`} className="mt-32">
                             <h3 className="t-h4">{item.title}</h3>
-                            {/* Loop by activity */}
+                            {/* Split by type "People" && "Custom"*/}
                             <ChartCard items={item.indicators} />
                             {index < activities.length - 1 && <DividerLine />}
                         </div>
@@ -176,7 +182,9 @@ const DevelopmentsComponent = ({ pageProps }) => {
             </SectionWrapper>
             <SectionWrapper className="mt-32 bg-white rounded-8">
                 <div className="flex justify-between">
-                    <h2 className="t-h3">{labelTodo('Sharing of results')}</h2>
+                    <h2 className="t-h3">
+                        {label('custom.FA_ReportViewSubHeadingSharingOverall')}
+                    </h2>
                     <Button variant="secondary">{labelTodo('Update')}</Button>
                 </div>
                 {results &&
@@ -185,7 +193,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                             <ReportSharingCard
                                 key={`r-${index}`}
                                 headline={item.headline}
-                                label={item.label}
+                                description={item.label}
                                 tags={item.tags}
                                 items={item.items}
                             />
@@ -199,6 +207,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
             </SectionWrapper>
 
             {/* 
+            STATIC VERSION!!!
             <SectionWrapper className="mt-32 bg-white rounded-8">
                 <div className="flex justify-between">
                     <h2 className="t-h3">{labelTodo('Sharing of results')}</h2>
@@ -207,7 +216,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                 <div className="mt-24">
                     <ReportSharingCard
                         headline="Science Weekly 🔬"
-                        label="Journal publication"
+                        description="Journal publication"
                         tags={[
                             'Policymakers',
                             'Politicians',
@@ -235,7 +244,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                 <div className="mt-24">
                     <ReportSharingCard
                         headline="The Joe Rogan Podcast 💪"
-                        label="TV/radio/film/podcast"
+                        description="TV/radio/film/podcast"
                         tags={[
                             'Policymakers',
                             'Politicians',
@@ -250,7 +259,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                 <div className="mt-24">
                     <ReportSharingCard
                         headline="Elsewhere Essence Workhop 👯🤯🥴"
-                        label="Workshop or similar"
+                        description="Workshop or similar"
                         tags={[
                             'Policymakers',
                             'Politicians',

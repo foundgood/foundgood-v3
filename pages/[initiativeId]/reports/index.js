@@ -50,7 +50,9 @@ const ReportsComponent = ({ pageProps }) => {
     return (
         <>
             <SectionWrapper>
-                <h1 className="t-h1">Reports</h1>
+                <h1 className="t-h1">
+                    {label('custom.FA_InitiativeViewReportsScheduleHeading')}
+                </h1>
             </SectionWrapper>
 
             {reportGroups &&
@@ -71,7 +73,7 @@ const ReportsComponent = ({ pageProps }) => {
                             {item.reports.map((item, index) => {
                                 const headline =
                                     item.Report_Viewer_Version__c == '1'
-                                        ? labelTodo('Report')
+                                        ? 'Report'
                                         : item.Report_Type__c;
                                 const date = item.Due_Date__c;
                                 return (

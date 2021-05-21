@@ -8,15 +8,15 @@ import Image from 'next/image';
 // Utilities
 import { useMetadata } from 'utilities/hooks';
 
-const ReportSharingCardComponent = ({ headline, label, tags, items }) => {
+const ReportSharingCardComponent = ({ headline, description, tags, items }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    // const { label } = useMetadata();
 
     return (
         <div className="flex items-start justify-between">
             <div className="flex-none w-2/3 mr-24">
                 <div className="t-h6">{headline}</div>
-                <p className="mt-16">{label}</p>
+                <p className="mt-16">{description}</p>
                 {items && items.length > 0 && (
                     <div className="px-16 pt-8 pb-16 mt-8 bg-blue-10 rounded-8">
                         {items.map((item, index) => (
@@ -36,7 +36,7 @@ const ReportSharingCardComponent = ({ headline, label, tags, items }) => {
             {tags && (
                 <div className="flex flex-col items-start w-1/3 p-16 border-4 border-blue-10 rounded-8">
                     <div className="text-blue-60 t-sh7">
-                        {labelTodo('Primary audiences')}
+                        {/* {label('custom.FA_ReportViewSharingAudience')} */}
                     </div>
                     {tags.map((tag, index) => (
                         <div

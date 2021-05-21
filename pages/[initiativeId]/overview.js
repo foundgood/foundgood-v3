@@ -23,10 +23,10 @@ const ProjectComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Fetch initiative data
-    const { initiative } = useInitiativeDataStore();
+    const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { labelTodo, log } = useMetadata();
+    const { labelTodo, label } = useMetadata();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -108,13 +108,13 @@ const ProjectComponent = ({ pageProps }) => {
             const collaborators = Object.values(
                 initiative._collaborators
             ).filter(item => {
-                if (item.Type__c == 'Additional collaborator') {
+                if (CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)) {
                     return item;
                 }
             });
             const applicants = Object.values(initiative._collaborators).filter(
                 item => {
-                    if (item.Type__c != 'Additional collaborator') {
+                    if (!CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)) {
                         return item;
                     }
                 }
@@ -200,7 +200,9 @@ const ProjectComponent = ({ pageProps }) => {
             {initiativeData && (
                 <>
                     <SectionWrapper>
-                        <h1 className="t-h1">{labelTodo('Overview')}</h1>
+                        <h1 className="t-h1">
+                            {label('custom.FA_InitiativeViewOverviewHeading')}
+                        </h1>
                     </SectionWrapper>
                     {/* Overview */}
                     <SectionWrapper className="bg-white rounded-8">
@@ -298,7 +300,11 @@ const ProjectComponent = ({ pageProps }) => {
                     {/* Funding */}
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
-                            <h2 className="t-h3">{labelTodo('Funding')}</h2>
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewFundersGrantsHeading'
+                                )}
+                            </h2>
                             <Button variant="secondary">
                                 {labelTodo('Update')}
                             </Button>
@@ -310,7 +316,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 <div className="pie" style={pieChartStyle}>
                                     <div className="absolute w-full -mt-16 text-center top-1/2">
                                         <p className="t-sh7 text-blue-60">
-                                            Total
+                                            {labelTodo('Total')}
                                         </p>
                                         <p className="t-h6">
                                             {currency}{' '}
@@ -324,7 +330,9 @@ const ProjectComponent = ({ pageProps }) => {
                             <div className="md:w-1/2">
                                 {/* Headline */}
                                 <div className="t-caption-bold">
-                                    Funders and contributions overall
+                                    {labelTodo(
+                                        'Funders and contributions overall'
+                                    )}
                                 </div>
                                 {/* List of funders */}
                                 {donutData.map((item, index) => (
@@ -401,7 +409,9 @@ const ProjectComponent = ({ pageProps }) => {
                     {/* Goals */}
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
-                            <h2 className="t-h3">{labelTodo('Goals')}</h2>
+                            <h2 className="t-h3">
+                                {label('custom.FA_InitiativeViewGoalsHeading')}
+                            </h2>
                             <Button variant="secondary">
                                 {labelTodo('Update')}
                             </Button>
@@ -428,7 +438,11 @@ const ProjectComponent = ({ pageProps }) => {
                     {/* Applicants */}
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
-                            <h2 className="t-h3">{labelTodo('Applicants')}</h2>
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewApplicantsHeading'
+                                )}
+                            </h2>
                             <Button variant="secondary">
                                 {labelTodo('Update')}
                             </Button>
@@ -470,7 +484,9 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {labelTodo('Collaborators')}
+                                {label(
+                                    'custom.FA_InitiativeViewCollaboratorsHeading'
+                                )}
                             </h2>
                             <Button variant="secondary">
                                 {labelTodo('Update')}
@@ -510,7 +526,9 @@ const ProjectComponent = ({ pageProps }) => {
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
-                                    {labelTodo('Employees funded')}
+                                    {label(
+                                        'custom.FA_InitiativeViewEmployeesFundedHeading'
+                                    )}
                                 </h2>
                                 <Button variant="secondary">
                                     {labelTodo('Update')}
@@ -594,7 +612,9 @@ const ProjectComponent = ({ pageProps }) => {
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
-                                    {labelTodo('Causes of the problem')}
+                                    {label(
+                                        'custom.FA_InitiativeViewCausesHeading'
+                                    )}
                                 </h2>
                                 <Button variant="secondary">
                                     {labelTodo('Update')}
@@ -622,7 +642,9 @@ const ProjectComponent = ({ pageProps }) => {
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
-                                    {labelTodo('Our vision')}
+                                    {label(
+                                        'custom.FA_InitiativeViewVisionHeading'
+                                    )}
                                 </h2>
                                 <Button variant="secondary">
                                     {labelTodo('Update')}
@@ -639,7 +661,9 @@ const ProjectComponent = ({ pageProps }) => {
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
-                                    {labelTodo('Organisational focus')}
+                                    {label(
+                                        'custom.FA_InitiativeViewOrgFocusHeading'
+                                    )}
                                 </h2>
                                 <Button variant="secondary">
                                     {labelTodo('Update')}
@@ -656,7 +680,9 @@ const ProjectComponent = ({ pageProps }) => {
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
-                                    {labelTodo('The problem to be solved')}
+                                    {label(
+                                        'custom.FA_InitiativeViewProblemsHeading'
+                                    )}
                                 </h2>
                                 <Button variant="secondary">
                                     {labelTodo('Update')}
@@ -673,7 +699,9 @@ const ProjectComponent = ({ pageProps }) => {
                         <SectionWrapper className="mt-32 bg-white rounded-8">
                             <div className="flex justify-between">
                                 <h2 className="t-h3">
-                                    {labelTodo('Reason for approach')}
+                                    {label(
+                                        'custom.FA_InitiativeViewReasonsHeading'
+                                    )}
                                 </h2>
                                 <Button variant="secondary">
                                     {labelTodo('Update')}

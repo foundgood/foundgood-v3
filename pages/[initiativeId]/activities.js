@@ -24,7 +24,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log } = useMetadata();
+    const { labelTodo, label } = useMetadata();
 
     const [activities, setActivities] = useState();
 
@@ -51,9 +51,12 @@ const ActivitiesComponent = ({ pageProps }) => {
             // Check if they have related goals
             activities = activities.map((item, index) => {
                 const title = item.Things_To_Do__c;
-                const location = item.Initiative_Location__c
-                    ? item.Initiative_Location__c.split(';').join(', ')
-                    : labelTodo('Location not available');
+                const location = item.Initiative_Location__c?.split(';').join(
+                    ', '
+                );
+                // const location = item.Initiative_Location__c
+                //     ? item.Initiative_Location__c.split(';').join(', ')
+                //     : labelTodo('Location not available');
                 const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
                     success => {
                         return success.Name;
@@ -97,7 +100,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                     relatedGoals: stripUndefined(relatedGoals),
                 };
             });
-            console.log('activities: ', activities);
             setActivities(activities);
         }
     }, [initiative]);
@@ -105,12 +107,14 @@ const ActivitiesComponent = ({ pageProps }) => {
     return (
         <>
             <SectionWrapper>
-                <div className="t-h1">Activities</div>
+                <div className="t-h1">{label('Activities')}</div>
             </SectionWrapper>
 
             <SectionWrapper className="bg-white mb-128 rounded-8">
                 <div className="flex justify-between">
-                    <h2 className="t-h3">{labelTodo('Activities')}</h2>
+                    <h2 className="t-h3">
+                        {label('custom.FA_InitiativeViewActivitiesHeading')}
+                    </h2>
                     <Button variant="secondary">{labelTodo('Update')}</Button>
                 </div>
 
@@ -122,7 +126,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 description={item.description}
                                 items={[
                                     {
-                                        label: 'Location',
+                                        label: labelTodo('Location'),
                                         text: item.location,
                                     },
                                 ]}
@@ -131,7 +135,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                             {item.successIndicators && (
                                 <>
                                     <div className="mt-16 t-h5">
-                                        Success indicators
+                                        {labelTodo('Success indicators')}
                                     </div>
 
                                     {item.successIndicators.map(
@@ -147,7 +151,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                             )}
 
                             <SectionWrapper>
-                                <div className="t-h5">Related goals</div>
+                                <div className="t-h5">
+                                    {labelTodo('Related goals')}
+                                </div>
                                 {item.relatedGoals.map((goal, index) => (
                                     <div
                                         key={`g-${index}`}
@@ -160,7 +166,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                     ))}
             </SectionWrapper>
 
-            {/* Indicators */}
+            {/* Indicators ?? */}
             {/* <div className="mt-32 bg-white rounded-8">
                 <SectionWrapper>
                     <div className="flex justify-between">
