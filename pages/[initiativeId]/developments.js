@@ -85,9 +85,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                 : item.Current_Status__c;
                             return {
                                 title: title,
-                                value: value, //`${item.Progress__c} / ${item.Target__c}`,
-                                // current: item.Progress__c,
-                                // total: item.Target__c,
+                                value: value,
                                 label: label,
                             };
                         }
