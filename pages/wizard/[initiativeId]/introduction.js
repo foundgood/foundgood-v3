@@ -25,7 +25,7 @@ const IntroductionComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    const { MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
     const { label, log } = useMetadata();
@@ -72,6 +72,7 @@ const IntroductionComponent = ({ pageProps }) => {
         // Reset navigation store in localstorage
         resetWizardNavigationStore();
 
+        // Aside is not present here, so build stuff
         if (MODE === CONTEXTS.REPORT) {
             // Report wizard mode
             buildReportWizardItems();

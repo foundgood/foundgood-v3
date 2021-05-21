@@ -42,15 +42,24 @@ const AsideNavigationComponent = () => {
     return (
         <>
             <header>
-                <p className="mt-8 t-footnote">
-                    {labelTodo(
-                        'Wizard: Global coastal disaster prevention & recovery project'
-                    )}
-                </p>
-                <h2 className="mt-16 t-h5">{labelTodo('Foundation Name')}</h2>
-                <h3 className="mt-16 t-sh6">
-                    {labelTodo('Annual Report: 2021')}
-                </h3>
+                {MODE === CONTEXTS.REPORT ? (
+                    <>
+                        <p className="mt-8 t-footnote">{initiative.Name}</p>
+                        <h2 className="mt-16 t-h5">
+                            {
+                                initiative._reports[REPORT_ID]?.Funder_Report__r
+                                    .Account__r.Name
+                            }
+                        </h2>
+                        <h3 className="mt-16 t-sh6">
+                            {initiative._reports[REPORT_ID]?.Due_Date__c}
+                        </h3>
+                    </>
+                ) : (
+                    <h2 className="mt-8 t-h5">
+                        {labelTodo('Create your initiative')}
+                    </h2>
+                )}
             </header>
 
             <ul className="mt-48">

@@ -6,8 +6,8 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 // Utilities
-import { useWizardLayoutStore } from 'utilities/store';
-import { useResponsive, useMetadata } from 'utilities/hooks';
+import { useWizardLayoutStore, useInitiativeDataStore } from 'utilities/store';
+import { useResponsive, useMetadata, useContext } from 'utilities/hooks';
 
 // Components
 import IconButton from 'components/iconButton';
@@ -20,6 +20,9 @@ import AsideHelp from 'components/_wizard/asideHelp';
 import { FiAlignLeft, FiChevronsLeft } from 'react-icons/fi';
 
 const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
+    // Context for wizard pages
+    const { MODE, CONTEXTS, REPORT_ID, INITIATIVE_ID } = useContext();
+
     // Store: wizardLayout
     const {
         rightMenuActive,
@@ -28,9 +31,16 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
         toggleLeftMenu,
     } = useWizardLayoutStore();
 
+    // Store: Initiaitive Data
+    const {
+        populateReport,
+        populateInitiative,
+        initiative,
+    } = useInitiativeDataStore();
+
     // Hook: Metadata
     const { label, log } = useMetadata();
-    log();
+
     // Hook: Get breakpoint
     const bp = useResponsive();
 
@@ -47,6 +57,32 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
             toggleRightMenu(true);
         }
     }, [bp]);
+
+    // Fill report with data
+    useEffect(() => {
+        // Report mode - check to populate both report and initiative
+        if (MODE === CONTEXTS.REPORT && REPORT_ID && INITIATIVE_ID) {
+            populateInitiative(INITIATIVE_ID);
+            populateReport(REPORT_ID);
+        }
+
+        // Initiative mode - check to populate initiative
+        if (
+            MODE === CONTEXTS.INITIATIVE &&
+            INITIATIVE_ID !== 'new' &&
+            INITIATIVE_ID
+        ) {
+            populateInitiative(INITIATIVE_ID);
+        }
+    }, [MODE, REPORT_ID, INITIATIVE_ID]);
+
+    useEffect(() => {
+        log();
+    }, []);
+
+    useEffect(() => {
+        console.log({ initiative });
+    }, [initiative]);
 
     return (
         <>

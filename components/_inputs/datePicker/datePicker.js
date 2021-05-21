@@ -74,8 +74,7 @@ const DatePickerComponent = ({
                                 container: cc([
                                     'input-defaults-date ',
                                     {
-                                        'input-defaults-date-error':
-                                            error?.type === 'isDate',
+                                        'input-defaults-date-error': error,
                                     },
                                 ]),
                                 overlay: 'absolute bg-white mt-12 z-above',

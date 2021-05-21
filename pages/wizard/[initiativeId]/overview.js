@@ -111,12 +111,10 @@ const OverviewComponent = () => {
     }, []);
 
     // Main collaborator
-    const [mainCollaborator] = useState(
+    const mainCollaborator =
         Object.values(initiative?._collaborators).find(
             item => item.Type__c === CONSTANTS.TYPES.MAIN_COLLABORATOR
-        ) || {}
-    );
-
+        ) || {};
     return (
         <>
             <TitlePreamble

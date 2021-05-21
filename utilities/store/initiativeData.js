@@ -346,56 +346,83 @@ const useInitiativeDataStore = create(
             _updateAuth();
         },
 
+        // Populate report data
+        async populateReport(id) {
+            if (!get().initiative._reports[id]) {
+                const data = await sfQuery(queries.initiativeReport.get(id));
+                if (data) {
+                    set(state => ({
+                        initiative: {
+                            ...state.initiative,
+                            _reports: {
+                                ...state.initiative._reports,
+                                [id]: data,
+                            },
+                        },
+                    }));
+                }
+
+                // Update auth
+                _updateAuth();
+            }
+        },
+
         // Get initiative and all sub data based on initiative ID
         async populateInitiative(id) {
-            // Get initiative
-            const initiativeData = await sfQuery(queries.initiative.get(id));
+            if (get().initiative.Id !== id && id) {
+                // Get initiative
+                const initiativeData = await sfQuery(
+                    queries.initiative.get(id)
+                );
 
-            // Populate dependent data based on same id
-            const collaboratorsData = await sfQuery(
-                queries.initiativeCollaborator.getAll(id)
-            );
-            const fundersData = await sfQuery(
-                queries.initiativeFunder.getAll(id)
-            );
-            const employeesFundedData = await sfQuery(
-                queries.initiativeEmployeeFunded.getAll(id)
-            );
-            const reportsData = await sfQuery(
-                queries.initiativeReport.getAll(id)
-            );
-            const goalsData = await sfQuery(queries.initiativeGoal.getAll(id));
+                // Populate dependent data based on same id
+                const collaboratorsData = await sfQuery(
+                    queries.initiativeCollaborator.getAll(id)
+                );
+                const fundersData = await sfQuery(
+                    queries.initiativeFunder.getAll(id)
+                );
+                const employeesFundedData = await sfQuery(
+                    queries.initiativeEmployeeFunded.getAll(id)
+                );
+                const reportsData = await sfQuery(
+                    queries.initiativeReport.getAll(id)
+                );
+                const goalsData = await sfQuery(
+                    queries.initiativeGoal.getAll(id)
+                );
 
-            const activitiesData = await sfQuery(
-                queries.initiativeActivity.getAll(id)
-            );
-            const activityGoalsData = await sfQuery(
-                queries.initiativeActivityGoal.getAll(id)
-            );
-            const activitySuccessMetricsData = await sfQuery(
-                queries.initiativeActivitySuccessMetric.getAll(id)
-            );
+                const activitiesData = await sfQuery(
+                    queries.initiativeActivity.getAll(id)
+                );
+                const activityGoalsData = await sfQuery(
+                    queries.initiativeActivityGoal.getAll(id)
+                );
+                const activitySuccessMetricsData = await sfQuery(
+                    queries.initiativeActivitySuccessMetric.getAll(id)
+                );
 
-            // Update state
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    ...initiativeData,
-                    _collaborators: _returnAsKeys(collaboratorsData),
-                    _funders: _returnAsKeys(fundersData),
-                    _employeesFunded: _returnAsKeys(employeesFundedData),
-                    _reports: _returnAsKeys(reportsData),
-                    _goals: _returnAsKeys(goalsData),
-                    _activities: _returnAsKeys(activitiesData),
-                    _activitySuccessMetrics: _returnAsKeys(
-                        activitySuccessMetricsData
-                    ),
-                    _activityGoals: _returnAsKeys(activityGoalsData),
-                },
-            }));
+                // Update state
+                set(state => ({
+                    initiative: {
+                        ...state.initiative,
+                        ...initiativeData,
+                        _collaborators: _returnAsKeys(collaboratorsData),
+                        _funders: _returnAsKeys(fundersData),
+                        _employeesFunded: _returnAsKeys(employeesFundedData),
+                        _reports: _returnAsKeys(reportsData),
+                        _goals: _returnAsKeys(goalsData),
+                        _activities: _returnAsKeys(activitiesData),
+                        _activitySuccessMetrics: _returnAsKeys(
+                            activitySuccessMetricsData
+                        ),
+                        _activityGoals: _returnAsKeys(activityGoalsData),
+                    },
+                }));
 
-            // Update auth
-            _updateAuth();
+                // Update auth
+                _updateAuth();
+            }
         },
 
         reset() {

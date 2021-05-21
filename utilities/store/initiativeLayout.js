@@ -12,13 +12,6 @@ const useInitiativeLayoutStore = create(set => ({
             mobileMenuActive: toggle,
         })),
 
-    // Store initiative ID (used for data fetching + navigation)
-    initiativeId: undefined,
-    updateInitiativeId: id =>
-        set(() => ({
-            initiativeId: id,
-        })),
-
     // Navigation object
     navigation: [
         { href: '/initiative/overview', label: labelTodo('Overview') },

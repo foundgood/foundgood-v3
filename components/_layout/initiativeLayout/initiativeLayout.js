@@ -6,10 +6,7 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 // Utilities
-import {
-    useInitiativeLayoutStore,
-    useInitiativeDataStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 import { useMetadata, useContext } from 'utilities/hooks';
 
 // Components
@@ -19,14 +16,7 @@ import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
 
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
-    // Store: InitiativeLayout
-    const {
-        navigation,
-        newNavigation,
-        updateInitiativeId,
-    } = useInitiativeLayoutStore();
     const { populateInitiative } = useInitiativeDataStore();
-    // const { updateInitiativeId } = useInitiativeId();
 
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -36,7 +26,6 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
 
     useEffect(() => {
         if (INITIATIVE_ID) {
-            updateInitiativeId(INITIATIVE_ID);
             populateInitiative(INITIATIVE_ID);
         }
     }, [INITIATIVE_ID]);
