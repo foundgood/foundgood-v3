@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 // Packages
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useMetadata, useContext } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -16,9 +16,16 @@ const WizardStatusComponent = () => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
-    // TODO - Get dynamic reportId - Which store?
+    // TODO - Get dynamic ids
+    // /wizard/[initiativeId]/introduction/[reportId]
+
+    // Hook: Context
+    const { INITIATIVE_ID, REPORT_ID } = useContext();
+
     const reportId = 'a101x000002pIiFAAU';
-    const url = `/wizard/introduction?context=report&id=${reportId}`;
+    const initiativeId = 'a0p1x00000EkTIwAAN';
+    // const url = `/wizard/${INITIATIVE_ID}/introduction/${REPORT_ID}`;
+    const url = `/wizard/${initiativeId}/introduction?context=report&id=${reportId}`;
 
     return (
         <div className="flex flex-col py-12 md:items-center md:justify-end md:flex-row bg-teal-20 page-px">
