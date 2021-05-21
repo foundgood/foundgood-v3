@@ -7,6 +7,9 @@ import Image from 'next/image';
 import cc from 'classcat';
 import t from 'prop-types';
 
+// Utilities
+import { useMetadata } from 'utilities/hooks';
+
 // Icons
 import { FiFileText } from 'react-icons/fi';
 
@@ -18,8 +21,11 @@ const ReportRowComponent = ({
     headline,
     leadFunder,
     status,
-    dueData,
+    dueDate,
 }) => {
+    // Hook: Metadata
+    const { labelTodo, label } = useMetadata();
+
     return (
         <Link href={`/${initiativeId}/reports/${reportId}`}>
             <a className="flex justify-between p-16 mt-24 bg-white cursor-pointer rounded-8">
@@ -43,7 +49,7 @@ const ReportRowComponent = ({
                     <div className="p-8 border-4 border-blue-10 rounded-4">
                         <div className="t-sh7">Next Report deadline</div>
                         <div className="t-caption-bold">
-                            <span className="mr-8">{dueData}</span>
+                            <span className="mr-8">{dueDate}</span>
                             {/* Tag name ?? */}
                             <div className="inline-block px-8 pt-3 pb-1 mt-8 text-white t-sh7 bg-teal-80 rounded-4">
                                 Upcoming
@@ -51,7 +57,9 @@ const ReportRowComponent = ({
                         </div>
                     </div>
                     <div className="p-8 mt-8 border-4 border-blue-10 rounded-4">
-                        <div className="t-sh7">Initiative period</div>
+                        <div className="t-sh7">
+                            {labelTodo('Initiative period')}
+                        </div>
                         <div className="t-caption-bold">
                             <div className="inline-block px-8 pt-3 pb-1 mt-8 t-sh7 bg-blue-20 rounded-4">
                                 {status}
@@ -72,7 +80,7 @@ ReportRowComponent.propTypes = {
     headline: t.string.isRequired,
     leadFunder: t.string,
     status: t.string.isRequired,
-    deadline: t.string.isRequired,
+    dueDate: t.string.isRequired,
 };
 
 ReportRowComponent.defaultProps = {};

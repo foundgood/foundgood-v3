@@ -86,7 +86,7 @@ const HomeComponent = ({ pageProps }) => {
                         funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
                         leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         status="In progress"
-                        dueData="17-05-2021"
+                        dueDate="17-05-2021"
                     />
 
                     <InitiativeRow
@@ -96,7 +96,7 @@ const HomeComponent = ({ pageProps }) => {
                         headline="Example initiative title"
                         leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         status="In progress"
-                        dueData="17-05-2021"
+                        dueDate="17-05-2021"
                     />
                 </SectionWrapper>
                 <Footer />
