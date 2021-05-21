@@ -82,11 +82,11 @@ const HomeComponent = ({ pageProps }) => {
                     <InitiativeRow
                         initiativeId="a0p1x00000EkTIwAAN"
                         type="Humanitarian"
-                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
                         headline="Example initiative title"
+                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
                         leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         status="In progress"
-                        deadline="17-05-2021"
+                        dueData="17-05-2021"
                     />
 
                     <InitiativeRow
@@ -96,7 +96,7 @@ const HomeComponent = ({ pageProps }) => {
                         headline="Example initiative title"
                         leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         status="In progress"
-                        deadline="17-05-2021"
+                        dueData="17-05-2021"
                     />
                 </SectionWrapper>
                 <Footer />
