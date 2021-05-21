@@ -16,6 +16,10 @@ const WizardStatusComponent = () => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
+    // TODO - Get dynamic reportId - Which store?
+    const reportId = 'a101x000002pIiFAAU';
+    const url = `/wizard/introduction?context=report&id=${reportId}`;
+
     return (
         <div className="flex flex-col py-12 md:items-center md:justify-end md:flex-row bg-teal-20 page-px">
             <p className="mb-12 mr-12 lg:mr-24 t-small text-teal-60 md:flex md:mb-0 line-clamp-2">
@@ -39,7 +43,9 @@ const WizardStatusComponent = () => {
                     iconPosition="center"
                     iconType="stroke"
                 />
-                <Button theme="teal">{labelTodo('Run wizard')}</Button>
+                <Button theme="teal" action={url}>
+                    {labelTodo('Run wizard')}
+                </Button>
             </div>
         </div>
     );
