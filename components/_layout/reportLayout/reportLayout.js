@@ -7,7 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useReportLayoutStore } from 'utilities/store';
-import { useResponsive, useMetadata } from 'utilities/hooks';
+import { useResponsive, useMetadata, useContext } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -28,15 +28,14 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
+    // Hook: Context
+    const { INITIATIVE_ID } = useContext();
+
     // Hook: Get breakpoint
     const bp = useResponsive();
 
     useEffect(() => {
-        // TODO - Get data from report!
-        // Fetch initiative data
-        const id = 'a0p1x00000EkTIwAAN'; // New one from Luke!
-        // const id = 'a0p1x00000Eh8COAAZ'; // Org test case from Hanne
-        populateInitiative(id);
+        populateInitiative(INITIATIVE_ID);
     }, []);
 
     // Effect: Listen to breakpoint and toggle menu accordingly
@@ -74,7 +73,8 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
                     />
                     <Button
                         variant="secondary"
-                        className="self-start hidden xl:flex">
+                        className="self-start hidden xl:flex"
+                        action={`/${INITIATIVE_ID}/reports`}>
                         {labelTodo('Back to reports')}
                     </Button>
                 </div>
