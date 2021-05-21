@@ -90,6 +90,20 @@ const useInitiativeDataStore = create(
             return funders?.length > 0;
         },
 
+        // Setter for initiative Id
+        setInitiativeId(id) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    Id: id,
+                },
+            }));
+        },
+
+        getInitiativeId() {
+            return get().initiative.Id;
+        },
+
         // Getter for report based on ID
         getReport(id) {
             return id ? get().initiative?._reports[id] ?? {} : {};

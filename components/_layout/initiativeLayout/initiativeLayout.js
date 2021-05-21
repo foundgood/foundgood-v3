@@ -4,14 +4,13 @@ import React, { useEffect } from 'react';
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
-import { useRouter } from 'next/router';
 
 // Utilities
 import {
     useInitiativeLayoutStore,
     useInitiativeDataStore,
 } from 'utilities/store';
-import { useMetadata } from 'utilities/hooks';
+import { useMetadata, useContext } from 'utilities/hooks';
 
 // Components
 import Footer from 'components/_layout/footer';
@@ -20,9 +19,6 @@ import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
 
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
-    const router = useRouter();
-    const { initiativeId } = router.query;
-
     // Store: InitiativeLayout
     const {
         navigation,
@@ -35,12 +31,15 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
     // Hook: Metadata
     const { labelTodo } = useMetadata();
 
+    // Hook: Context
+    const { INITIATIVE_ID } = useContext();
+
     useEffect(() => {
-        if (initiativeId) {
-            updateInitiativeId(initiativeId);
-            populateInitiative(initiativeId);
+        if (INITIATIVE_ID) {
+            updateInitiativeId(INITIATIVE_ID);
+            populateInitiative(INITIATIVE_ID);
         }
-    }, [initiativeId]);
+    }, [INITIATIVE_ID]);
 
     return (
         <>

@@ -10,7 +10,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
@@ -37,7 +37,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
     const { labelTodo, label, valueSet, log, helpText } = useMetadata();
@@ -193,9 +193,11 @@ const EmployeesFundedComponent = ({ pageProps }) => {
 
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);
-    const currentReflection = currentReportDetails.find(
-        detail => detail.Type__c === CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
-    );
+    const currentReflection =
+        currentReportDetails.find(
+            detail =>
+                detail.Type__c === CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
+        ) || {};
     return (
         <>
             <TitlePreamble

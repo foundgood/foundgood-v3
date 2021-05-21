@@ -1,7 +1,10 @@
 const reportItems = () => [
     {
         title: 'Introduction',
-        url: '/wizard/introduction',
+        baseUrl: 'introduction',
+        url(initiativeId, reportId) {
+            return `/wizard/${initiativeId}/introduction/${reportId}`;
+        },
         visible: false,
         hideBack: true,
     },
@@ -23,7 +26,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardReportDetailsHelpGuide',
                     },
                 },
-                url: '/wizard/report-details',
+                baseUrl: 'report-details',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/report-details/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuFunders',
@@ -38,7 +44,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardFundersHelpGuide',
                     },
                 },
-                url: '/wizard/funders',
+                baseUrl: 'funders',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/funders/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuOverview',
@@ -53,7 +62,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardOverviewHelpGuide',
                     },
                 },
-                url: '/wizard/overview',
+                baseUrl: 'overview',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/overview/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuSummary',
@@ -69,7 +81,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardReportSummaryHelpGuide',
                     },
                 },
-                url: '/wizard/report-summary',
+                baseUrl: 'report-summary',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/report-summary/${reportId}`;
+                },
             },
         ],
     },
@@ -90,7 +105,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardApplicantsHelpGuide',
                     },
                 },
-                url: '/wizard/applicants',
+                baseUrl: 'applicants',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/applicants/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuCollaborations',
@@ -106,7 +124,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardCollaboratorsHelpGuide',
                     },
                 },
-                url: '/wizard/collaborators',
+                baseUrl: 'collaborators',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/collaborators/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuEmployees',
@@ -121,7 +142,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardEmployeesHelpGuide',
                     },
                 },
-                url: '/wizard/employees-funded',
+                baseUrl: 'employees-funded',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/employees-funded/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuGoals',
@@ -136,7 +160,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardGoalsHelpGuide',
                     },
                 },
-                url: '/wizard/goals',
+                baseUrl: 'goals',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/goals/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuActivities',
@@ -151,7 +178,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardActivitiesHelpGuide',
                     },
                 },
-                url: '/wizard/activities',
+                baseUrl: 'activities',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/activities/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuIndicators',
@@ -166,7 +196,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardIndicatorsHelpGuide',
                     },
                 },
-                url: '/wizard/indicators',
+                baseUrl: 'indicators',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/indicators/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuProgress',
@@ -181,7 +214,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardProgressHelpGuide',
                     },
                 },
-                url: '/wizard/progress-so-far',
+                baseUrl: 'progress-so-far',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/progress-so-far/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuSharing',
@@ -196,7 +232,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardSharingHelpGuide',
                     },
                 },
-                url: '/wizard/sharing-results',
+                baseUrl: 'sharing-results',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/sharing-results/${reportId}`;
+                },
             },
         ],
     },
@@ -217,7 +256,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardInfluenceHelpGuide',
                     },
                 },
-                url: '/wizard/influence-on-policy',
+                baseUrl: 'influence-on-policy',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/influence-on-policy/${reportId}`;
+                },
             },
             {
                 title: 'custom.FA_ReportWizardMenuEvaluations',
@@ -232,7 +274,10 @@ const reportItems = () => [
                         guide: 'custom.FA_ReportWizardEvaluationsHelpGuide',
                     },
                 },
-                url: '/wizard/evaluations',
+                baseUrl: 'evaluations',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/evaluations/${reportId}`;
+                },
             },
         ],
     },

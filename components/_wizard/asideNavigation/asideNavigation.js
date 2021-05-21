@@ -8,14 +8,14 @@ import {
     useWizardNavigationStore,
     useInitiativeDataStore,
 } from 'utilities/store';
-import { useMetadata, useContextMode } from 'utilities/hooks';
+import { useMetadata, useContext } from 'utilities/hooks';
 
 // Components
 import { TopLevelItem } from 'components/_wizard/asideNavigation';
 
 const AsideNavigationComponent = () => {
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE } = useContextMode();
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
 
     // Hook: Metadata
     const { labelTodo } = useMetadata();
@@ -37,7 +37,7 @@ const AsideNavigationComponent = () => {
         } else {
             buildInitiativeWizardItems(initiative.Configuration_Type__c);
         }
-    }, []);
+    }, [MODE]);
 
     return (
         <>

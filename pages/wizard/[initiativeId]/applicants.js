@@ -10,7 +10,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
@@ -24,13 +24,13 @@ import Modal from 'components/modal';
 import { InputWrapper, Select, DateRange, LongText } from 'components/_inputs';
 import CollaboratorCard from 'components/_wizard/collaboratorCard';
 
-const CollaboratorsComponent = ({ pageProps }) => {
+const ApplicantsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
     const { labelTodo, label, valueSet, log, helpText } = useMetadata();
@@ -59,9 +59,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Get data for form
-    const { data: accountOrganisations } = sfQuery(
-        queries.account.allOrganisations()
-    );
+    const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -220,7 +218,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         item =>
                             item.Initiative_Collaborator__c === collaboratorKey
                     );
-                    return CONSTANTS.TYPES.COLLABORATORS.includes(
+                    return CONSTANTS.TYPES.APPLICANTS_ALL.includes(
                         collaborator.Type__c
                     ) ? (
                         <CollaboratorCard
@@ -243,7 +241,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                                 value: reflection[0]?.Description__c ?? '',
                             }}
                             inputLabel={label(
-                                'custom.FA_ReportWizardCollaboratorReflectionSubHeading'
+                                'custom.FA_ReportWizardCoApplicantReflectionSubHeading'
                             )}
                         />
                     ) : null;
@@ -255,12 +253,12 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddCollaborator')}
+                    {label('custom.FA_ButtonAddApplicant')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new collaborator')}
+                title={labelTodo('Add new applicant')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
@@ -275,7 +273,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         )}
                         placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={
-                            accountOrganisations?.records?.map(item => ({
+                            accountGrantees?.records?.map(item => ({
                                 label: item.Name,
                                 value: item.Id,
                             })) ?? []
@@ -283,21 +281,29 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         required
                         controller={control}
                     />
-                    <Select
-                        name="Type__c"
-                        label={label('objects.initiativeCollaborator.Type__c')}
-                        subLabel={helpText(
-                            'objects.initiativeCollaborator.Type__c'
-                        )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
-                        options={valueSet(
-                            'initiativeCollaborator.Type__c'
-                        ).filter(item =>
-                            CONSTANTS.TYPES.COLLABORATORS.includes(item.value)
-                        )}
-                        required
-                        controller={control}
-                    />
+                    {/* Hide if main applicant */}
+                    {initiative?._collaborators[updateId]?.Type__c !==
+                        CONSTANTS.TYPES.MAIN_COLLABORATOR && (
+                        <Select
+                            name="Type__c"
+                            label={label(
+                                'objects.initiativeCollaborator.Type__c'
+                            )}
+                            subLabel={helpText(
+                                'objects.initiativeCollaborator.Type__c'
+                            )}
+                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                            options={valueSet(
+                                'initiativeCollaborator.Type__c'
+                            ).filter(item =>
+                                CONSTANTS.TYPES.APPLICANTS_CREATE.includes(
+                                    item.value
+                                )
+                            )}
+                            required
+                            controller={control}
+                        />
+                    )}
                     <LongText
                         name="Description__c"
                         label={label(
@@ -306,9 +312,9 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeCollaborator.Description__c'
                         )}
+                        label={labelTodo('Description of collaboration')}
                         placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         controller={control}
-                        required
                     />
                     <DateRange
                         name="Dates"
@@ -325,10 +331,10 @@ const CollaboratorsComponent = ({ pageProps }) => {
     );
 };
 
-CollaboratorsComponent.propTypes = {};
+ApplicantsComponent.propTypes = {};
 
-CollaboratorsComponent.defaultProps = {};
+ApplicantsComponent.defaultProps = {};
 
-CollaboratorsComponent.layout = 'wizard';
+ApplicantsComponent.layout = 'wizard';
 
-export default CollaboratorsComponent;
+export default ApplicantsComponent;

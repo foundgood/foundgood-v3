@@ -10,7 +10,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
@@ -39,7 +39,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     const { labelTodo, valueSet, log, label, helpText } = useMetadata();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();

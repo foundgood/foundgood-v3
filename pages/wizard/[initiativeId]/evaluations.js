@@ -10,7 +10,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
@@ -21,8 +21,8 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import { InputWrapper, Text, LongText } from 'components/_inputs';
-import ListCard from 'components/_wizard/listCard';
+import { InputWrapper, Select } from 'components/_inputs';
+import EvaluationCard from 'components/_wizard/evaluationCard';
 
 const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -30,10 +30,10 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, helpText } = useMetadata();
+    const { labelTodo, valueSet, label, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -72,15 +72,15 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
-            const { Type_Of_Influence__c } = formData;
+            const { Who_Is_Evaluating__c } = formData;
 
             // Object name
             const object = 'Initiative_Report_Detail__c';
 
             // Data for sf
             const data = {
-                Type__c: CONSTANTS.TYPES.INFLUENCE_ON_POLICY,
-                Type_Of_Influence__c,
+                Type__c: CONSTANTS.TYPES.EVALUATION,
+                Who_Is_Evaluating__c,
             };
 
             // Update / Save
@@ -154,10 +154,10 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        const { Type_Of_Influence__c } =
+        const { Who_Is_Evaluating__c } =
             initiative?._reportDetails[updateId] ?? {};
 
-        setValue('Type_Of_Influence__c', Type_Of_Influence__c);
+        setValue('Who_Is_Evaluating__c', Who_Is_Evaluating__c);
     }, [updateId, modalIsOpen]);
 
     // Add submit handler to wizard navigation store
@@ -179,16 +179,13 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
             />
             <InputWrapper>
                 {getReportDetails(REPORT_ID)
-                    .filter(
-                        item =>
-                            item.Type__c === CONSTANTS.TYPES.INFLUENCE_ON_POLICY
-                    )
+                    .filter(item => item.Type__c === CONSTANTS.TYPES.EVALUATION)
                     .map(item => {
                         return (
-                            <ListCard
+                            <EvaluationCard
                                 key={item.Id}
-                                headline={
-                                    _get(item, 'Type_Of_Influence__c') || ''
+                                evaluator={
+                                    _get(item, 'Who_Is_Evaluating__c') || ''
                                 }
                                 action={() => {
                                     setUpdateId(item.Id);
@@ -207,7 +204,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                     value: item.Description__c ?? '',
                                 }}
                                 inputLabel={label(
-                                    'custom.FA_ReportWizardInfluencesReflectionSubHeading'
+                                    'custom.FA_ReportWizardEvaluationsReflectionSubHeading'
                                 )}
                             />
                         );
@@ -219,7 +216,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddInfluence')}
+                    {label('custom.FA_ButtonAddEvaluation')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -229,18 +226,20 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
-                    <Text
-                        name="Type_Of_Influence__c"
+                    <Select
+                        name="Who_Is_Evaluating__c"
                         label={label(
-                            'objects.initiativeReportDetail.Type_Of_Influence__c'
+                            'objects.initiativeReportDetail.Who_Is_Evaluating__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeReportDetail.Type_Of_Influence__c'
+                            'objects.initiativeReportDetail.Who_Is_Evaluating__c'
                         )}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
-                        maxLength={80}
-                        controller={control}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        options={valueSet(
+                            'initiativeReportDetail.Who_Is_Evaluating__c'
+                        )}
                         required
+                        controller={control}
                     />
                 </InputWrapper>
             </Modal>

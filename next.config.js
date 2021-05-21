@@ -17,4 +17,22 @@ module.exports = {
         domains: ['foundgood-initiative-update-content-media.s3.amazonaws.com'],
     },
     target: 'serverless',
+    async rewrites() {
+        return [
+            {
+                source: '/wizard/:inititiativeId/:page/:reportId',
+                destination:
+                    '/wizard/:inititiativeId/:page?reportId=:reportId&initiativeId=:inititiativeId',
+            },
+            {
+                source: '/wizard/introduction/:rest*',
+                destination: '/wizard/new/introduction/:rest*',
+            },
+            {
+                source: '/:inititiativeId/:rest*',
+                destination:
+                    '/:inititiativeId/:rest*?initiativeId=:inititiativeId',
+            },
+        ];
+    },
 };

@@ -10,7 +10,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
@@ -21,19 +21,26 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import { InputWrapper, Select, DateRange, LongText } from 'components/_inputs';
-import CollaboratorCard from 'components/_wizard/collaboratorCard';
+import {
+    InputWrapper,
+    Select,
+    SelectList,
+    Text,
+    DateRange,
+    DatePicker,
+} from 'components/_inputs';
+import FunderCard from 'components/_wizard/founderCard';
 
-const ApplicantsComponent = ({ pageProps }) => {
+const FundersComponent = ({ pageProps }) => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log, helpText } = useMetadata();
+    const { labelTodo, label, helpText, valueSet } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -50,8 +57,9 @@ const ApplicantsComponent = ({ pageProps }) => {
     const {
         initiative,
         getReportDetails,
-        updateCollaborator,
+        updateFunder,
         updateReportDetails,
+        isNovoLeadFunder,
         CONSTANTS,
     } = useInitiativeDataStore();
 
@@ -59,7 +67,9 @@ const ApplicantsComponent = ({ pageProps }) => {
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Get data for form
-    const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
+    const { data: accountFoundations } = sfQuery(
+        queries.account.allFoundations()
+    );
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -76,27 +86,37 @@ const ApplicantsComponent = ({ pageProps }) => {
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
-            const { Dates, Account__c, Type__c, Description__c } = formData;
+            const {
+                Contribution,
+                GrantDate,
+                Account__c,
+                Type__c,
+                Approval_date__c,
+                Application_Id__c,
+            } = formData;
 
             // Object name
-            const object = 'Initiative_Collaborator__c';
+            const object = 'Initiative_Funder__c';
 
             // Data for sf
             const data = {
                 Account__c,
                 Type__c,
-                Description__c,
-                Start_Date__c: Dates.from,
-                End_Date__c: Dates.to,
+                Amount__c: Contribution[0]?.textValue,
+                CurrencyIsoCode: Contribution[0]?.selectValue,
+                Approval_date__c,
+                Grant_Start_Date__c: GrantDate.from,
+                Grant_End_Date__c: GrantDate.to,
+                Application_Id__c,
             };
 
             // Update / Save
-            const collaboratorId = updateId
+            const funderId = updateId
                 ? await update(object, data, updateId)
                 : await save(object, { ...data, Initiative__c: initiative.Id });
 
             // Update store
-            await updateCollaborator(collaboratorId);
+            await updateFunder(funderId);
 
             // Close modal
             setModalIsOpen(false);
@@ -111,11 +131,11 @@ const ApplicantsComponent = ({ pageProps }) => {
     // Method: Adds reflections
     async function submitReflections(formData) {
         // Reformat form data based on topic keys
-        const reportDetails = Object.keys(initiative?._collaborators)
+        const reportDetails = Object.keys(initiative?._funders)
             .reduce((acc, key) => {
                 // Does the reflection relation exist already?
                 const currentReflection = currentReportDetails.filter(
-                    item => item.Initiative_Collaborator__c === key
+                    item => item.Initiative_Funder__c === key
                 );
                 return [
                     ...acc,
@@ -147,7 +167,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                     : sfCreate({
                           object,
                           data: {
-                              Initiative_Collaborator__c: item.relationId,
+                              Initiative_Funder__c: item.relationId,
                               Description__c: item.value,
                               Initiative_Report__c: REPORT_ID,
                           },
@@ -170,24 +190,32 @@ const ApplicantsComponent = ({ pageProps }) => {
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
+    const [funder, setFunder] = useState(null);
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
         const {
-            Start_Date__c,
-            End_Date__c,
-            Account__c,
             Type__c,
-            Description__c,
-        } = initiative?._collaborators[updateId] ?? {};
+            Account__c,
+            CurrencyIsoCode,
+            Amount__c,
+            Approval_date__c,
+            Application_Id__c,
+            Grant_Start_Date__c,
+            Grant_End_Date__c,
+        } = initiative?._funders[updateId] ?? {};
 
         setValue('Type__c', Type__c);
         setValue('Account__c', Account__c);
-        setValue('Dates', {
-            from: Start_Date__c,
-            to: End_Date__c,
+        setValue('Contribution', [
+            { selectValue: CurrencyIsoCode, textValue: Amount__c },
+        ]);
+        setValue('Approval_date__c', Approval_date__c);
+        setValue('GrantDate', {
+            from: Grant_Start_Date__c,
+            to: Grant_End_Date__c,
         });
-        setValue('Description__c', Description__c);
+        setValue('Application_Id__c', Application_Id__c);
     }, [updateId, modalIsOpen]);
 
     // Add submit handler to wizard navigation store
@@ -211,40 +239,40 @@ const ApplicantsComponent = ({ pageProps }) => {
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
-                {Object.keys(initiative._collaborators).map(collaboratorKey => {
-                    const collaborator =
-                        initiative._collaborators[collaboratorKey];
+                {Object.keys(initiative?._funders).map(funderKey => {
+                    const funder = initiative?._funders[funderKey];
                     const reflection = currentReportDetails.filter(
-                        item =>
-                            item.Initiative_Collaborator__c === collaboratorKey
+                        item => item.Initiative_Funder__c === funderKey
                     );
-                    return CONSTANTS.TYPES.APPLICANTS_ALL.includes(
-                        collaborator.Type__c
-                    ) ? (
-                        <CollaboratorCard
-                            key={collaboratorKey}
-                            headline={
-                                _get(collaborator, 'Account__r.Name') || ''
-                            }
-                            label={_get(collaborator, 'Type__c') || ''}
-                            body={_get(collaborator, 'Description__c') || ''}
+                    return (
+                        <FunderCard
+                            key={funderKey}
+                            headline={_get(funder, 'Account__r.Name') || ''}
+                            label={_get(funder, 'Type__c') || ''}
+                            subHeadline={`${
+                                _get(funder, 'CurrencyIsoCode') || ''
+                            } ${_get(funder, 'Amount__c') || ''}`}
+                            footnote={`${
+                                _get(funder, 'Grant_Start_Date__c') || ''
+                            } - ${_get(funder, 'Grant_End_Date__c') || ''}`}
                             action={() => {
-                                setUpdateId(collaboratorKey);
+                                setUpdateId(funderKey);
+                                setFunder(funder);
                                 setModalIsOpen(true);
                             }}
                             controller={
                                 MODE === CONTEXTS.REPORT && controlReflections
                             }
-                            name={collaboratorKey}
+                            name={funderKey}
                             defaultValue={{
                                 selected: reflection[0] ?? false ? true : false,
                                 value: reflection[0]?.Description__c ?? '',
                             }}
                             inputLabel={label(
-                                'custom.FA_ReportWizardCoApplicantReflectionSubHeading'
+                                'custom.FA_ReportWizardFunderReflectionSubHeading'
                             )}
                         />
-                    ) : null;
+                    );
                 })}
                 <Button
                     theme="teal"
@@ -253,76 +281,106 @@ const ApplicantsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddApplicant')}
+                    {label('custom.FA_ButtonAddFunder')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new applicant')}
+                title={labelTodo('Add new funder')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
                         name="Account__c"
-                        label={label(
-                            'objects.initiativeCollaborator.Account__c'
-                        )}
+                        label={label('objects.initiativeFunder.Account__c')}
                         subLabel={helpText(
-                            'objects.initiativeCollaborator.Account__c'
+                            'objects.initiativeFunder.Account__c'
                         )}
                         placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={
-                            accountGrantees?.records?.map(item => ({
+                            accountFoundations?.records?.map(item => ({
                                 label: item.Name,
                                 value: item.Id,
                             })) ?? []
                         }
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                         required
                         controller={control}
                     />
-                    {/* Hide if main applicant */}
-                    {initiative?._collaborators[updateId]?.Type__c !==
-                        CONSTANTS.TYPES.MAIN_COLLABORATOR && (
-                        <Select
-                            name="Type__c"
-                            label={label(
-                                'objects.initiativeCollaborator.Type__c'
-                            )}
-                            subLabel={helpText(
-                                'objects.initiativeCollaborator.Type__c'
-                            )}
-                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
-                            options={valueSet(
-                                'initiativeCollaborator.Type__c'
-                            ).filter(item =>
-                                CONSTANTS.TYPES.APPLICANTS_CREATE.includes(
-                                    item.value
-                                )
-                            )}
-                            required
-                            controller={control}
-                        />
-                    )}
-                    <LongText
-                        name="Description__c"
+                    <Select
+                        name="Type__c"
+                        label={label('objects.initiativeFunder.Type__c')}
+                        subLabel={helpText('objects.initiativeFunder.Type__c')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        options={valueSet('initiativeFunder.Type__c')}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
+                        controller={control}
+                        required
+                    />
+                    <SelectList
+                        name="Contribution"
+                        showText
+                        label={label('objects.initiativeFunder.Amount__c')}
+                        subLabel={helpText(
+                            'objects.initiativeFunder.Amount__c'
+                        )}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                        listMaxLength={1}
+                        options={[
+                            { label: 'DKK', value: 'DKK' },
+                            { label: 'EUR', value: 'EUR' },
+                        ]}
+                        controller={control}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
+                    />
+                    <DatePicker
+                        name="Approval_Date__c"
                         label={label(
-                            'objects.initiativeCollaborator.Description__c'
+                            'objects.initiativeFunder.Approval_Date__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeCollaborator.Description__c'
+                            'objects.initiativeFunder.Approval_Date__c'
                         )}
-                        label={labelTodo('Description of collaboration')}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         controller={control}
                     />
                     <DateRange
-                        name="Dates"
+                        name="GrantDate"
                         label={`${label(
-                            'objects.initiativeCollaborator.Start_Date__c'
+                            'objects.initiativeFunder.Grant_Start_Date__c'
                         )} / ${label(
-                            'objects.initiativeCollaborator.End_Date__c'
+                            'objects.initiativeFunder.Grant_End_Date__c'
                         )}`}
+                        controller={control}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
+                    />
+                    <Text
+                        name="Application_Id__c"
+                        label={label(
+                            'objects.initiativeFunder.Application_Id__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeFunder.Application_Id__c'
+                        )}
+                        label={labelTodo('Application ID number')}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        maxLength={15}
+                        disabled={
+                            isNovoLeadFunder() &&
+                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        }
                         controller={control}
                     />
                 </InputWrapper>
@@ -331,10 +389,10 @@ const ApplicantsComponent = ({ pageProps }) => {
     );
 };
 
-ApplicantsComponent.propTypes = {};
+FundersComponent.propTypes = {};
 
-ApplicantsComponent.defaultProps = {};
+FundersComponent.defaultProps = {};
 
-ApplicantsComponent.layout = 'wizard';
+FundersComponent.layout = 'wizard';
 
-export default ApplicantsComponent;
+export default FundersComponent;

@@ -6,9 +6,11 @@ import cc from 'classcat';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
-import { useWizardNavigationStore } from 'utilities/store';
-import { createQuerystring } from 'utilities';
+import { useMetadata, useContext } from 'utilities/hooks';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 
 // Components
 import Button from 'components/button';
@@ -19,8 +21,16 @@ const BottomNavigationComponent = () => {
     // Local state for showing status
     const [loading, setLoading] = useState(false);
 
+    // Hook: Context
+    const { INITIATIVE_ID, REPORT_ID } = useContext();
+
     // Hook: Metadata
     const { label } = useMetadata();
+
+    // Store: Initiaitive Data
+    const { getInitiativeId } = useInitiativeDataStore();
+
+    // Store: Wizard navigation
     const {
         nextItemUrl,
         onUrlOrContextChange,
@@ -30,7 +40,8 @@ const BottomNavigationComponent = () => {
 
     // Effect: Handle path change
     useEffect(() => {
-        onUrlOrContextChange(router.pathname);
+        const splitRoute = router.pathname.split('/');
+        onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
     }, [router.pathname]);
 
     async function onHandleContinue() {
@@ -40,7 +51,12 @@ const BottomNavigationComponent = () => {
             await handleSubmit();
 
             // Go to next in flow
-            router.push(nextItemUrl + createQuerystring(router.query));
+            router.push(
+                nextItemUrl(
+                    INITIATIVE_ID === 'new' ? getInitiativeId() : INITIATIVE_ID,
+                    REPORT_ID
+                )
+            );
 
             // Stop loading indicator
             setLoading(false);
@@ -70,9 +86,9 @@ const BottomNavigationComponent = () => {
                             'transition-default',
                             {
                                 'opacity-100 pointer-events-auto': !currentItem
-                                    ?.item.hideBack,
+                                    ?.item?.hideBack,
                                 'opacity-0 pointer-events-none':
-                                    currentItem?.item.hideBack,
+                                    currentItem?.item?.hideBack,
                             },
                         ])}
                         theme="coral"
