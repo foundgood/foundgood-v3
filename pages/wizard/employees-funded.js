@@ -276,7 +276,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeEmployeeFunded.Role_Type__c'
                         )}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet(
                             'initiativeEmployeeFunded.Role_Type__c'
                         )}
@@ -291,7 +291,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeEmployeeFunded.Gender__c'
                         )}
-                        selectPlaceholder={labelTodo('Please select')}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                         textPlaceholder={label(
                             'objects.initiativeEmployeeFunded.Gender_Other__c'
                         )}

@@ -189,7 +189,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeReport.Report_Type__c'
                         )}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiativeReport.Report_Type__c')}
                         controller={control}
                         disabled={
@@ -226,7 +226,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeReport.Status__c'
                         )}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiativeReport.Status__c')}
                         controller={control}
                     />

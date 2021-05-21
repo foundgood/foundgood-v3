@@ -254,7 +254,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivitySuccessMetric.Type__c'
                         )}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet(
                             'initiativeActivitySuccessMetric.Type__c'
                         )}
@@ -285,7 +285,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivitySuccessMetric.KPI__c'
                                 )}
-                                placeholder={labelTodo('Please select')}
+                                placeholder={labelTodo('SELECT_PLACEHOLDER')}
                                 options={controlledValueSet(
                                     'initiativeActivitySuccessMetric.KPI__c',
                                     initiative?.Category__c
@@ -304,7 +304,9 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivitySuccessMetric.Gender__c'
                                 )}
-                                selectPlaceholder={labelTodo('Please select')}
+                                selectPlaceholder={labelTodo(
+                                    'SELECT_PLACEHOLDER'
+                                )}
                                 textPlaceholder={label(
                                     'objects.initiativeActivitySuccessMetric.Gender_Other__c'
                                 )}

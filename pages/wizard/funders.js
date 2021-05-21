@@ -297,7 +297,7 @@ const FundersComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeFunder.Account__c'
                         )}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={
                             accountFoundations?.records?.map(item => ({
                                 label: item.Name,
@@ -315,7 +315,7 @@ const FundersComponent = ({ pageProps }) => {
                         name="Type__c"
                         label={label('objects.initiativeFunder.Type__c')}
                         subLabel={helpText('objects.initiativeFunder.Type__c')}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiativeFunder.Type__c')}
                         disabled={
                             isNovoLeadFunder() &&
@@ -331,7 +331,7 @@ const FundersComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeFunder.Amount__c'
                         )}
-                        selectPlaceholder={labelTodo('Please select')}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                         listMaxLength={1}
                         options={[
                             { label: 'DKK', value: 'DKK' },

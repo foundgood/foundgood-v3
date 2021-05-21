@@ -29,7 +29,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     } = useWizardLayoutStore();
 
     // Hook: Metadata
-    const { labelTodo, log } = useMetadata();
+    const { label, log } = useMetadata();
     log();
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -94,7 +94,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                         action={() => {
                             toggleRightMenu(false);
                         }}>
-                        {labelTodo('Close')}
+                        {label('custom.FA_ButtonCloseHelp')}
                     </Button>
                     {/* Help content */}
                     <div className="mt-32 overflow-y-auto scrolling-touch">
@@ -134,7 +134,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                                 toggleRightMenu(true);
                             }
                         }}>
-                        {labelTodo('Help')}
+                        {label('custom.FA_ButtonHelp')}
                     </Button>
                 )}
             </div>

@@ -33,7 +33,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { labelTodo, label, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -55,7 +55,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -206,8 +206,8 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                             : false,
                                     value: item.Description__c ?? '',
                                 }}
-                                inputLabel={labelTodo(
-                                    'Outline your reflection'
+                                inputLabel={label(
+                                    'custom.FA_ReportWizardInfluencesReflectionSubHeading'
                                 )}
                             />
                         );
@@ -219,7 +219,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add influence')}
+                    {label('custom.FA_ButtonAddInfluence')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -231,10 +231,13 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Text
                         name="Type_Of_Influence__c"
-                        label={labelTodo('Name')}
-                        placeholder={labelTodo(
-                            'Enter influence on policy name'
+                        label={label(
+                            'objects.initiativeReportDetail.Type_Of_Influence__c'
                         )}
+                        subLabel={helpText(
+                            'objects.initiativeReportDetail.Type_Of_Influence__c'
+                        )}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         maxLength={80}
                         controller={control}
                         required

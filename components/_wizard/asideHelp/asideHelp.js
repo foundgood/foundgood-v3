@@ -1,5 +1,5 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
 
@@ -23,7 +23,7 @@ const AsideHelpComponent = ({ data }) => {
         <div className="flex flex-col">
             <div className="flex items-center space-x-8 text-blue-300">
                 <FiHelpCircle />
-                <p className="pt-4">Help with this section</p>
+                <p className="pt-4">{label('custom.FA_TitleHelp')}</p>
             </div>
             <div className="flex flex-col mt-32 space-y-16">
                 {label(currentItem?.item?.labels?.help?.why) && (

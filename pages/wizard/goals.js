@@ -177,7 +177,7 @@ const GoalsComponent = ({ pageProps }) => {
                         name="Type__c"
                         label={label('objects.initiativeGoal.Type__c')}
                         subLabel={helpText('objects.initiativeGoal.Type__c')}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiativeGoal.Type__c')}
                         controller={control}
                         required
@@ -208,7 +208,7 @@ const GoalsComponent = ({ pageProps }) => {
                             subLabel={helpText(
                                 'objects.initiativeGoal.Funder_Objective__c'
                             )}
-                            placeholder={labelTodo('Please select')}
+                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
                             options={controlledValueSet(
                                 'initiativeGoal.Funder_Objective__c',
                                 initiative?.Category__c

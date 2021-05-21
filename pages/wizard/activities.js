@@ -346,7 +346,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivity.Activity_Tag__c'
                         )}
-                        selectPlaceholder={labelTodo('Please select')}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={controlledValueSet(
                             'initiativeActivity.Activity_Tag__c',
                             initiative?.Category__c
@@ -369,7 +369,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                             'initiativeActivity.Initiative_Location__c'
                         )}
                         showText
-                        selectPlaceholder={labelTodo('Please select')}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                         selectLabel={labelTodo('Country')}
                         textLabel={labelTodo('Region')}
                         controller={control}
@@ -392,7 +392,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     };
                                 }
                             )}
-                            selectPlaceholder={labelTodo('Please select')}
+                            selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                             controller={control}
                         />
                     )}

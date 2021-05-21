@@ -21,7 +21,7 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import { InputWrapper, Select, LongText } from 'components/_inputs';
+import { InputWrapper, Select } from 'components/_inputs';
 import EvaluationCard from 'components/_wizard/evaluationCard';
 
 const InfluenceOnPolicyComponent = ({ pageProps }) => {
@@ -33,7 +33,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, controlledValueSet, log } = useMetadata();
+    const { labelTodo, valueSet, label, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -55,7 +55,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -203,8 +203,8 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                             : false,
                                     value: item.Description__c ?? '',
                                 }}
-                                inputLabel={labelTodo(
-                                    'Outline your reflection'
+                                inputLabel={label(
+                                    'custom.FA_ReportWizardEvaluationsReflectionSubHeading'
                                 )}
                             />
                         );
@@ -216,7 +216,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add evaluation')}
+                    {label('custom.FA_ButtonAddEvaluation')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -228,8 +228,13 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Who_Is_Evaluating__c"
-                        label={labelTodo('Who is evaluating')}
-                        placeholder={labelTodo('Please select')}
+                        label={label(
+                            'objects.initiativeReportDetail.Who_Is_Evaluating__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeReportDetail.Who_Is_Evaluating__c'
+                        )}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet(
                             'initiativeReportDetail.Who_Is_Evaluating__c'
                         )}

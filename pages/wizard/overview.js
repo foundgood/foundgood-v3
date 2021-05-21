@@ -156,7 +156,7 @@ const OverviewComponent = () => {
                         defaultValue={initiative?.Category__c}
                         label={label('objects.initiative.Category__c')}
                         subLabel={helpText('objects.initiative.Category__c')}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiative.Category__c')}
                         controller={control}
                         disabled={initiative.Category__c || isNovoLeadFunder()}
@@ -167,9 +167,7 @@ const OverviewComponent = () => {
                         defaultValue={initiative?.Summary__c}
                         label={label('objects.initiative.Summary__c')}
                         subLabel={helpText('objects.initiative.Summary__c')}
-                        placeholder={labelTodo(
-                            "Brief description of initiative that details why it's important"
-                        )}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         maxLength={400}
                         controller={control}
                     />
@@ -199,7 +197,7 @@ const OverviewComponent = () => {
                         )}
                         listMaxLength={3}
                         options={valueSet('account.Location__c')}
-                        selectPlaceholder={labelTodo('Please select')}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                         controller={control}
                         buttonLabel={label('custom.FA_ButtonAddLocation')}
                     />

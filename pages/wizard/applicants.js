@@ -271,7 +271,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeCollaborator.Account__c'
                         )}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={
                             accountGrantees?.records?.map(item => ({
                                 label: item.Name,
@@ -292,7 +292,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                             subLabel={helpText(
                                 'objects.initiativeCollaborator.Type__c'
                             )}
-                            placeholder={labelTodo('Please select')}
+                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
                             options={valueSet(
                                 'initiativeCollaborator.Type__c'
                             ).filter(item =>

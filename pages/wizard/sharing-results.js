@@ -376,7 +376,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivity.Dissemination_Method__c'
                         )}
-                        placeholder={labelTodo('Please select')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet(
                             'initiativeActivity.Dissemination_Method__c'
                         )}
@@ -392,7 +392,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivity.Audience_Tag__c'
                         )}
-                        selectPlaceholder={labelTodo('Please select')}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiativeActivity.Audience_Tag__c')}
                         listMaxLength={4}
                         controller={control}
