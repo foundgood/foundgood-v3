@@ -6,7 +6,7 @@ import cc from 'classcat';
 
 // Utilities
 import { useInitiativeLayoutStore } from 'utilities/store';
-import { useResponsive } from 'utilities/hooks';
+import { useResponsive, useContext } from 'utilities/hooks';
 
 // Components
 import ActiveLink from 'components/activeLink';
@@ -22,6 +22,9 @@ const TabNavigationComponent = () => {
     //     console.log('initiativeId: ', initiativeId);
     // }, [initiativeId]);
 
+    // Hook: Context
+    const { INITIATIVE_ID } = useContext();
+
     // Store: InitiativeLayout
     const { newNavigation, navigation } = useInitiativeLayoutStore();
 
@@ -32,9 +35,11 @@ const TabNavigationComponent = () => {
         setMenuActive(!menuActive);
     };
 
+    console.log('newNavigation: ', newNavigation);
+
     return (
         <>
-            {initiativeId && (
+            {INITIATIVE_ID && (
                 <div className="relative items-start justify-end hidden space-x-16 md:flex page-px tab-nav-bg">
                     {newNavigation.map((item, index) => {
                         // Submenu
@@ -70,7 +75,7 @@ const TabNavigationComponent = () => {
                                         {item.subItems.map((subItem, i) => (
                                             <div key={`sub-${i}`} className="">
                                                 <ActiveLink
-                                                    href={`/${initiativeId}/${subItem.slug}`}
+                                                    href={`/${INITIATIVE_ID}/${subItem.slug}`}
                                                     key={i}
                                                     active="text-blue-100">
                                                     <a className="flex flex-col pt-12 text-blue-300 t-h6 transition-default hover:text-blue-200">
@@ -87,7 +92,7 @@ const TabNavigationComponent = () => {
                         else {
                             return (
                                 <ActiveLink
-                                    href={`/${initiativeId}/${item.slug}`}
+                                    href={`/${INITIATIVE_ID}/${item.slug}`}
                                     key={index}
                                     active="text-blue-100 !border-blue-100">
                                     <a className="flex items-center py-16 text-blue-300 border-t-2 border-amber-10 t-h6 transition-default hover:text-blue-200">
