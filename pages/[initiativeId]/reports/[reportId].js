@@ -62,7 +62,8 @@ const ReportComponent = ({ pageProps }) => {
         employeesFundedReflection,
         setEmployeesFundedReflection,
     ] = useState();
-    const [employeesGroups, setEmployeesGroups] = useState();
+    const [employeeGroups, setEmployeeGroups] = useState();
+
     // const [goals, setGoals] = useState();
     const [activities, setActivities] = useState();
     const [results, setResults] = useState();
@@ -168,8 +169,38 @@ const ReportComponent = ({ pageProps }) => {
             });
             setEmployeesFundedReflection(employeesReflection[0].Description__c);
 
-            // TODO - Calculate male/female members of the team <Numbers />
-            // setEmployeesGroups
+            // Employee funded - Data for Number cards
+            // Group empoyees per role
+            // EX Data:
+            // {
+            //     { role: 'Project manager', total: 2, male: 1, female: 1 },
+            //     { role: 'Scientists', total: 4, male: 1, female: 3 },
+            // };
+            let employeeGroups = Object.values(
+                initiative._employeesFunded
+            ).reduce((result, employee) => {
+                result[employee.Role_Type__c] =
+                    result[employee.Role_Type__c] || {};
+                // Ref
+                const group = result[employee.Role_Type__c];
+
+                // Role
+                group.role = employee.Role_Type__c;
+
+                // Total employees
+                group.total = group.total ? group.total + 1 : 1;
+
+                // Calculate how many are male/female/other in each group
+                if (employee.Gender__c == 'Male') {
+                    group.male = group.male ? group.male + 1 : 1;
+                } else if (employee.Gender__c == 'Female') {
+                    group.female = group.female ? group.female + 1 : 1;
+                } else if (employee.Gender__c == 'Other') {
+                    group.other = group.other ? group.other + 1 : 1;
+                }
+                return result;
+            }, {});
+            setEmployeeGroups(employeeGroups);
 
             // Get reports ALL Activities
             // Activies are split between:
@@ -787,37 +818,35 @@ const ReportComponent = ({ pageProps }) => {
                                 </h3>
                             </SectionWrapper>
 
-                            <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 2xl:grid-cols-6">
-                                <NumberCard
-                                    number="6"
-                                    headline="Researchers"
-                                    description="4 female, 2 male"
-                                />
-                                <NumberCard
-                                    number="2"
-                                    headline="Project managers"
-                                    description="2 male"
-                                />
-                                <NumberCard
-                                    number="5"
-                                    headline="Administrative staff"
-                                    description="3 female, 2 male"
-                                />
-                                <NumberCard
-                                    number="6"
-                                    headline="Technical staff"
-                                    description="4 female, 2 male"
-                                />
-                                <NumberCard
-                                    number="20"
-                                    headline="Other"
-                                    description="10 female, 10 male"
-                                />
-                                <NumberCard
-                                    number="3"
-                                    headline="Scientists"
-                                    description="3 female"
-                                />
+                            <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
+                                {Object.values(employeeGroups).map(
+                                    (group, index) => {
+                                        const males = group.male
+                                            ? `${group.male} Male`
+                                            : null;
+                                        const females = group.female
+                                            ? `${group.female} Female`
+                                            : null;
+                                        const other = group.other
+                                            ? `${group.other} Other`
+                                            : null;
+                                        const description = [
+                                            males,
+                                            females,
+                                            other,
+                                        ]
+                                            .filter(item => item)
+                                            .join(', ');
+                                        return (
+                                            <NumberCard
+                                                key={`e-${index}`}
+                                                number={group.total}
+                                                headline={group.role}
+                                                description={description}
+                                            />
+                                        );
+                                    }
+                                )}
                             </div>
 
                             <TextCard

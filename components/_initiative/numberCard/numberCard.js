@@ -30,7 +30,7 @@ const NumberCardComponent = ({
 
 NumberCardComponent.propTypes = {
     // Number
-    number: t.string.isRequired,
+    number: t.oneOfType([t.string, t.number]).isRequired,
     // Card title
     headline: t.string,
     // Card description

@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 // Utilities
 import { useMetadata, useAuth, useResponsive } from 'utilities/hooks';
-import { useInitiativeDataStore } from 'utilities/store';
+import { useInitiativeDataStore, constants } from 'utilities/store';
 import { isJson } from 'utilities';
 
 // Components
@@ -26,7 +26,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { labelTodo, log } = useMetadata();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -44,6 +44,7 @@ const ProjectComponent = ({ pageProps }) => {
 
     const [applicants, setApplicants] = useState();
     const [collaborators, setCollaborators] = useState();
+    const [employeeGroups, setEmployeeGroups] = useState();
 
     const donutColors = [
         'bg-teal-60',
@@ -51,6 +52,7 @@ const ProjectComponent = ({ pageProps }) => {
         'bg-coral-60',
         'bg-amber-60',
     ];
+
     const donutHex = [
         '#507C93', // bg-teal-60
         '#545E92', // bg-blue-60
@@ -67,6 +69,39 @@ const ProjectComponent = ({ pageProps }) => {
             initiative?._funders &&
             Object.keys(initiative?._funders).length !== 0
         ) {
+            // Employee funded - Data for Number cards
+            // Group empoyees per role
+            // EX Data:
+            // {
+            //     { role: 'Project manager', total: 2, male: 1, female: 1 },
+            //     { role: 'Scientists', total: 4, male: 1, female: 3 },
+            // };
+            let employeeGroups = Object.values(
+                initiative._employeesFunded
+            ).reduce((result, employee) => {
+                result[employee.Role_Type__c] =
+                    result[employee.Role_Type__c] || {};
+                // Ref
+                const group = result[employee.Role_Type__c];
+
+                // Role
+                group.role = employee.Role_Type__c;
+
+                // Total employees
+                group.total = group.total ? group.total + 1 : 1;
+
+                // Calculate how many are male/female/other in each group
+                if (employee.Gender__c == 'Male') {
+                    group.male = group.male ? group.male + 1 : 1;
+                } else if (employee.Gender__c == 'Female') {
+                    group.female = group.female ? group.female + 1 : 1;
+                } else if (employee.Gender__c == 'Other') {
+                    group.other = group.other ? group.other + 1 : 1;
+                }
+                return result;
+            }, {});
+            setEmployeeGroups(employeeGroups);
+
             // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
             // Split them up depending on the type.
             // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
@@ -418,9 +453,9 @@ const ProjectComponent = ({ pageProps }) => {
                                     </h3>
                                     <p className="mt-16 t-sh5 text-blue-60">
                                         {/* Display year, not full date */}
-                                        {item.Start_Date__c.substring(0, 4)}
+                                        {item.Start_Date__c?.substring(0, 4)}
                                         {' - '}
-                                        {item.End_Date__c.substring(0, 4)}
+                                        {item.End_Date__c?.substring(0, 4)}
                                     </p>
                                     <p className="mt-16 t-body">
                                         {item.Description__c}
@@ -459,9 +494,9 @@ const ProjectComponent = ({ pageProps }) => {
                                     </h3>
                                     <p className="mt-16 t-sh5 text-blue-60">
                                         {/* Display year, not full date */}
-                                        {item.Start_Date__c.substring(0, 4)}
+                                        {item.Start_Date__c?.substring(0, 4)}
                                         {' - '}
-                                        {item.End_Date__c.substring(0, 4)}
+                                        {item.End_Date__c?.substring(0, 4)}
                                     </p>
                                     <p className="mt-16 t-body">
                                         {item.Description__c}
@@ -483,44 +518,35 @@ const ProjectComponent = ({ pageProps }) => {
                             </div>
 
                             <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
-                                {/* TODO - Decide on logic for these cards */}
-
-                                <NumberCard
-                                    useBackground={true}
-                                    number="6"
-                                    headline="Researchers"
-                                    description="4 female, 2 male"
-                                />
-                                <NumberCard
-                                    useBackground={true}
-                                    number="2"
-                                    headline="Project managers"
-                                    description="2 male"
-                                />
-                                <NumberCard
-                                    useBackground={true}
-                                    number="5"
-                                    headline="Administrative staff"
-                                    description="3 female, 2 male"
-                                />
-                                <NumberCard
-                                    useBackground={true}
-                                    number="6"
-                                    headline="Technical staff"
-                                    description="4 female, 2 male"
-                                />
-                                <NumberCard
-                                    useBackground={true}
-                                    number="20"
-                                    headline="Other"
-                                    description="10 female, 10 male"
-                                />
-                                <NumberCard
-                                    useBackground={true}
-                                    number="3"
-                                    headline="Scientists"
-                                    description="3 female"
-                                />
+                                {Object.values(employeeGroups).map(
+                                    (group, index) => {
+                                        const males = group.male
+                                            ? `${group.male} Male`
+                                            : null;
+                                        const females = group.female
+                                            ? `${group.female} Female`
+                                            : null;
+                                        const other = group.other
+                                            ? `${group.other} Other`
+                                            : null;
+                                        const description = [
+                                            males,
+                                            females,
+                                            other,
+                                        ]
+                                            .filter(item => item)
+                                            .join(', ');
+                                        return (
+                                            <NumberCard
+                                                key={`e-${index}`}
+                                                useBackground={true}
+                                                number={group.total}
+                                                headline={group.role}
+                                                description={description}
+                                            />
+                                        );
+                                    }
+                                )}
                             </div>
                             <div className="mt-32">
                                 {/* Table header */}
