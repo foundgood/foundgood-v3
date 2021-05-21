@@ -58,6 +58,7 @@ const constants = {
         GOAL_PREDEFINED: 'Foundation',
         INDICATOR_CUSTOM: 'Custom',
         INDICATOR_PREDEFINED: 'People',
+        INDICATOR_GENDER_OTHER: 'Other',
         ACTIVITY_INTERVENTION: 'Intervention',
         ACTIVITY_DISSEMINATION: 'Dissemination',
         ACTIVITY_JOURNAL: 'Journal publication',

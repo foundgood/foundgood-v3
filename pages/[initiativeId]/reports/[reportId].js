@@ -30,7 +30,8 @@ const ReportComponent = ({ pageProps }) => {
 
     // Fetch initiative data
     const {
-        reset,
+        CONSTANTS,
+        // reset,
         initiative,
         populateReportDetails,
         // getReportDetails,
@@ -88,7 +89,7 @@ const ReportComponent = ({ pageProps }) => {
         // Temporary fix! - Clear initiative data
         // - User could be looking at hard coded link to another initiative
         // - Opening the report needs to wait for loading correct initiative
-        reset();
+        // reset();
     }, []);
 
     useEffect(() => {
@@ -220,6 +221,7 @@ const ReportComponent = ({ pageProps }) => {
                 });
 
             // Create list of indicators per "Activity"
+            // Type == "Intervention"
             const activities = Object.values(allActivities).reduce(
                 (accumulator, activity) => {
                     const title = activity.Things_To_Do__c;
@@ -228,7 +230,6 @@ const ReportComponent = ({ pageProps }) => {
                         ';'
                     ).join(', ');
                     const reportReflection = activity.reportReflection;
-                    const indicatorsTitle = 'People reached';
 
                     // Loop indicators
                     // Add indicators if it matches the activity ID
@@ -238,17 +239,27 @@ const ReportComponent = ({ pageProps }) => {
                         if (activity.Id == item.Initiative_Activity__c) {
                             let title;
                             let label;
-                            if (item.Type__c === 'People') {
+                            let groupTitle;
+
+                            if (
+                                item.Type__c ===
+                                CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                            ) {
                                 // If gender is "Other" -> use "Gender_Other__c" field
                                 const gender =
-                                    item.Gender__c == 'Other'
+                                    item.Gender__c ==
+                                    CONSTANTS.TYPES.INDICATOR_GENDER_OTHER
                                         ? item.Gender_Other__c
                                         : item.Gender__c;
                                 title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
                                 label = labelTodo('Reached so far');
-                            } else {
+                                groupTitle = labelTodo('People reached');
+                            }
+                            // Custom indicators - CONSTANTS.TYPES.INDICATOR_CUSTOM
+                            else {
                                 title = item.Name;
                                 label = labelTodo('Total so far');
+                                groupTitle = labelTodo('Indicator');
                             }
 
                             // Not all indicators have a "Target"
@@ -257,12 +268,26 @@ const ReportComponent = ({ pageProps }) => {
                                 : item.Current_Status__c;
 
                             return {
+                                type: item.Type__c,
+                                groupTitle: groupTitle,
                                 title: title,
                                 value: value,
                                 label: label,
                             };
                         }
                     });
+                    // Split indicators into Two groups 'People' & 'Custom'
+                    const peopleIndicators = indicators.filter(
+                        indicator =>
+                            indicator &&
+                            indicator.type ==
+                                CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                    );
+                    const customIndicators = indicators.filter(
+                        indicator =>
+                            indicator &&
+                            indicator.type == CONSTANTS.TYPES.INDICATOR_CUSTOM
+                    );
 
                     // Only add activities of type "intervention"
                     // Only add activities - if they have indicators
@@ -274,8 +299,8 @@ const ReportComponent = ({ pageProps }) => {
                             title: title,
                             description: description,
                             location: location,
-                            indicatorsTitle: indicatorsTitle,
-                            indicators: indicators,
+                            peopleIndicators: peopleIndicators,
+                            customIndicators: customIndicators,
                             reportReflection: reportReflection,
                         });
                     }
@@ -285,6 +310,7 @@ const ReportComponent = ({ pageProps }) => {
             );
             setActivities(activities);
 
+            // Sharing of results == "Dissimination"
             const results = Object.values(allActivities)
                 .filter(item => {
                     // "Dissemination" or "Intervention"
@@ -336,7 +362,7 @@ const ReportComponent = ({ pageProps }) => {
                     return item.Type__c == 'Outcome' ? true : false;
                 })
                 .map(item => {
-                    // console.log('goal: ', item);
+                    console.log('outcome: ', item);
                     // // Get Goal based on key
                     // const goal =
                     //     initiative._goals[item.Initiative_Activity__c];
@@ -344,6 +370,7 @@ const ReportComponent = ({ pageProps }) => {
                     // goal.reportReflection = item.Description__c;
                     // return goal;
                 });
+            // console.log('Outcomes: ', outcomes);
             setOutcomes(outcomes);
 
             // Influence on policy
@@ -907,11 +934,34 @@ const ReportComponent = ({ pageProps }) => {
                                         />
                                     </SectionWrapper>
                                     <SectionWrapper>
-                                        <ChartCard
+                                        {item.peopleIndicators && (
+                                            <ChartCard
+                                                useBorder={true}
+                                                headline={
+                                                    item.peopleIndicators[0]
+                                                        .groupTitle
+                                                }
+                                                items={item.peopleIndicators}
+                                            />
+                                        )}
+                                    </SectionWrapper>
+                                    <SectionWrapper>
+                                        {item.customIndicators && (
+                                            <ChartCard
+                                                className="mt-24"
+                                                useBorder={true}
+                                                headline={
+                                                    item.customIndicators[0]
+                                                        .groupTitle
+                                                }
+                                                items={item.customIndicators}
+                                            />
+                                        )}
+                                        {/* <ChartCard
                                             useBorder={true}
                                             headline={labelTodo('Indicators')}
                                             items={item.indicators}
-                                        />
+                                        /> */}
                                     </SectionWrapper>
                                     <TextCard
                                         hasBackground={true}
