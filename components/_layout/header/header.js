@@ -65,7 +65,7 @@ const HeaderComponent = ({ showUserControls }) => {
                 className={cc([
                     'fixed left-0 flex items-center justify-end w-full text-blue-300 z-header header-h page-px',
                     {
-                        'bg-white': !showUserControls,
+                        'bg-white': showUserControls,
                     },
                 ])}>
                 {showUserControls && (
