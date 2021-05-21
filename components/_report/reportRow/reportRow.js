@@ -18,7 +18,7 @@ const ReportRowComponent = ({
     headline,
     leadFunder,
     status,
-    deadline,
+    dueData,
 }) => {
     return (
         <Link href={`/${initiativeId}/reports/${reportId}`}>
@@ -43,7 +43,7 @@ const ReportRowComponent = ({
                     <div className="p-8 border-4 border-blue-10 rounded-4">
                         <div className="t-sh7">Next Report deadline</div>
                         <div className="t-caption-bold">
-                            <span className="mr-8">{deadline}</span>
+                            <span className="mr-8">{dueData}</span>
                             {/* Tag name ?? */}
                             <div className="inline-block px-8 pt-3 pb-1 mt-8 text-white t-sh7 bg-teal-80 rounded-4">
                                 Upcoming

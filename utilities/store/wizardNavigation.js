@@ -25,12 +25,12 @@ function _goToNextSection(sectionIndex, items) {
 const useWizardNavigationStore = create(
     persist((set, get) => ({
         // Handles url change in bottom navigation
-        async onUrlOrContextChange(url) {
+        async onUrlOrContextChange(baseUrl) {
             // Reset submitHandler
             get().setCurrentSubmitHandler(null);
 
             // Set current item
-            const currentItem = await get().setCurrentItem(url);
+            const currentItem = await get().setCurrentItem(baseUrl);
 
             // Set sections based on location
             currentItem.parentItem
@@ -41,7 +41,7 @@ const useWizardNavigationStore = create(
             get().setNextItemUrl(currentItem);
 
             // Add to completed
-            get().addToCompleted(url);
+            get().addToCompleted(baseUrl);
         },
 
         // Handles submit from wizard pages
@@ -129,25 +129,31 @@ const useWizardNavigationStore = create(
             let parentItemIndex = null;
 
             // Search parent items
-            item = items.find(parentItem => parentItem.url === url);
-            itemIndex = items.findIndex(parentItem => parentItem.url === url);
+            item = items.find(parentItem => parentItem.baseUrl === url);
+            itemIndex = items.findIndex(
+                parentItem => parentItem.baseUrl === url
+            );
 
             // If no top level check for nested
             if (!item) {
                 // Check for nested
                 parentItem = items.find(parentItem =>
-                    parentItem.items?.some(childItem => childItem.url === url)
+                    parentItem.items?.some(
+                        childItem => childItem.baseUrl === url
+                    )
                 );
                 parentItemIndex = items.findIndex(parentItem =>
-                    parentItem.items?.some(childItem => childItem.url === url)
+                    parentItem.items?.some(
+                        childItem => childItem.baseUrl === url
+                    )
                 );
 
                 // Look through children
-                item = parentItem.items?.find(
-                    childItem => childItem.url === url
+                item = parentItem?.items?.find(
+                    childItem => childItem.baseUrl === url
                 );
-                itemIndex = parentItem.items?.findIndex(
-                    childItem => childItem.url === url
+                itemIndex = parentItem?.items?.findIndex(
+                    childItem => childItem.baseUrl === url
                 );
             }
 
@@ -169,7 +175,7 @@ const useWizardNavigationStore = create(
 
         // Toggles section in navigation
         toggleSection(section) {
-            set(() => ({ openSection: section.title }));
+            set(() => ({ openSection: section?.title }));
         },
 
         // Sets the url of the next item

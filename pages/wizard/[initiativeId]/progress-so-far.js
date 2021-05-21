@@ -23,7 +23,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { labelTodo, label } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -32,7 +32,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     const { sfUpdate } = useSalesForce();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -94,10 +94,8 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo(
-                    'What are the indicators for your activities?'
-                )}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {activities.length > 0 ? (

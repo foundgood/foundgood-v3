@@ -7,7 +7,10 @@ import _get from 'lodash.get';
 
 // Utilities
 import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
-import { useInitiativeDataStore } from 'utilities/store';
+import {
+    useInitiativeDataStore,
+    useWizardNavigationStore,
+} from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -19,8 +22,6 @@ import {
     SelectList,
     Text,
     Number,
-    DateRange,
-    DatePicker,
 } from 'components/_inputs';
 import KpiCard from 'components/_wizard/kpiCard';
 
@@ -30,7 +31,14 @@ const IndicatorsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log, controlledValueSet } = useMetadata();
+    const {
+        labelTodo,
+        label,
+        valueSet,
+        helpText,
+        log,
+        controlledValueSet,
+    } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset, unregister } = useForm();
@@ -39,6 +47,9 @@ const IndicatorsComponent = ({ pageProps }) => {
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+
+    // Store: Wizard navigation
+    const { currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -175,10 +186,8 @@ const IndicatorsComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo(
-                    'What are the indicators for your activities?'
-                )}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {activities.length > 0 ? (
@@ -239,8 +248,13 @@ const IndicatorsComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Type__c"
-                        label={labelTodo('Type of KPI')}
-                        placeholder={labelTodo('Please select')}
+                        label={label(
+                            'objects.initiativeActivitySuccessMetric.Type__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeActivitySuccessMetric.Type__c'
+                        )}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet(
                             'initiativeActivitySuccessMetric.Type__c'
                         )}
@@ -252,10 +266,10 @@ const IndicatorsComponent = ({ pageProps }) => {
                     {indicatorType === CONSTANTS.TYPES.INDICATOR_CUSTOM && (
                         <Text
                             name="Name"
-                            label={labelTodo('Metric name')}
-                            placeholder={labelTodo(
-                                'Enter name - e.g. schools built'
+                            label={label(
+                                'custom.FA_InitiativeActivitySuccessMetricName'
                             )}
+                            placeholder={labelTodo('TEXT_PLACEHOLDER')}
                             maxLength={80}
                             controller={control}
                         />
@@ -265,8 +279,13 @@ const IndicatorsComponent = ({ pageProps }) => {
                         <>
                             <Select
                                 name="KPI__c"
-                                label={labelTodo('Tag')}
-                                placeholder={labelTodo('Please select')}
+                                label={label(
+                                    'objects.initiativeActivitySuccessMetric.KPI__c'
+                                )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivitySuccessMetric.KPI__c'
+                                )}
+                                placeholder={labelTodo('SELECT_PLACEHOLDER')}
                                 options={controlledValueSet(
                                     'initiativeActivitySuccessMetric.KPI__c',
                                     initiative?.Category__c
@@ -279,10 +298,17 @@ const IndicatorsComponent = ({ pageProps }) => {
                             />
                             <SelectList
                                 name="Gender"
-                                label={labelTodo('Gender')}
-                                selectPlaceholder={labelTodo('Please select')}
-                                textPlaceholder={labelTodo(
-                                    'If "other" feel free to specify'
+                                label={label(
+                                    'objects.initiativeActivitySuccessMetric.Gender__c'
+                                )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivitySuccessMetric.Gender__c'
+                                )}
+                                selectPlaceholder={labelTodo(
+                                    'SELECT_PLACEHOLDER'
+                                )}
+                                textPlaceholder={label(
+                                    'objects.initiativeActivitySuccessMetric.Gender_Other__c'
                                 )}
                                 options={valueSet(
                                     'initiativeActivitySuccessMetric.Gender__c'
@@ -297,8 +323,13 @@ const IndicatorsComponent = ({ pageProps }) => {
                             />
                             <Number
                                 name="Lowest_Age__c"
-                                label={labelTodo('Lowest age')}
-                                placeholder={labelTodo('Enter age')}
+                                label={label(
+                                    'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
+                                )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
+                                )}
+                                placeholder={labelTodo('NUMBER_PLACEHOLDER')}
                                 minValue={0}
                                 maxValue={150}
                                 controller={control}
@@ -309,8 +340,13 @@ const IndicatorsComponent = ({ pageProps }) => {
                             />
                             <Number
                                 name="Highest_Age__c"
-                                label={labelTodo('Highest age')}
-                                placeholder={labelTodo('Enter age')}
+                                label={label(
+                                    'objects.initiativeActivitySuccessMetric.Highest_Age__c'
+                                )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivitySuccessMetric.Highest_Age__c'
+                                )}
+                                placeholder={labelTodo('NUMBER_PLACEHOLDER')}
                                 minValue={0}
                                 maxValue={150}
                                 controller={control}

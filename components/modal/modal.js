@@ -22,7 +22,7 @@ const ModalComponent = ({
     title,
 }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     // Local state and effect for handling delay in content animation
     const [showContent, setShowContent] = useState(false);
@@ -72,13 +72,13 @@ const ModalComponent = ({
                             variant="tertiary"
                             theme="coral"
                             action={onCancel}>
-                            {labelTodo('Cancel')}
+                            {label('custom.FA_ButtonCancel')}
                         </Button>
                         <Button
                             theme="coral"
                             action={onSave}
                             disabled={disabledSave}>
-                            {labelTodo('Save')}
+                            {label('custom.FA_ButtonSave')}
                         </Button>
                     </div>
                 </div>

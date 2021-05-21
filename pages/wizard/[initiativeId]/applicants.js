@@ -10,7 +10,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
@@ -30,10 +30,10 @@ const ApplicantsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, label, valueSet, log, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -56,7 +56,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Get data for form
     const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
@@ -202,13 +202,13 @@ const ApplicantsComponent = ({ pageProps }) => {
     }, []);
 
     // Current report details
-    const [currentReportDetails] = useState(getReportDetails(REPORT_ID));
+    const currentReportDetails = getReportDetails(REPORT_ID);
 
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Who are the applicants of this initiative?')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {Object.keys(initiative._collaborators).map(collaboratorKey => {
@@ -240,7 +240,9 @@ const ApplicantsComponent = ({ pageProps }) => {
                                 selected: reflection[0] ?? false ? true : false,
                                 value: reflection[0]?.Description__c ?? '',
                             }}
-                            inputLabel={labelTodo('Outline your reflection')}
+                            inputLabel={label(
+                                'custom.FA_ReportWizardCoApplicantReflectionSubHeading'
+                            )}
                         />
                     ) : null;
                 })}
@@ -251,7 +253,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add applicant')}
+                    {label('custom.FA_ButtonAddApplicant')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -263,8 +265,13 @@ const ApplicantsComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Account__c"
-                        label={labelTodo('Name of applicant')}
-                        placeholder={labelTodo('Please select')}
+                        label={label(
+                            'objects.initiativeCollaborator.Account__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeCollaborator.Account__c'
+                        )}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={
                             accountGrantees?.records?.map(item => ({
                                 label: item.Name,
@@ -279,8 +286,13 @@ const ApplicantsComponent = ({ pageProps }) => {
                         CONSTANTS.TYPES.MAIN_COLLABORATOR && (
                         <Select
                             name="Type__c"
-                            label={labelTodo('Type of applicant')}
-                            placeholder={labelTodo('Please select')}
+                            label={label(
+                                'objects.initiativeCollaborator.Type__c'
+                            )}
+                            subLabel={helpText(
+                                'objects.initiativeCollaborator.Type__c'
+                            )}
+                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
                             options={valueSet(
                                 'initiativeCollaborator.Type__c'
                             ).filter(item =>
@@ -294,13 +306,23 @@ const ApplicantsComponent = ({ pageProps }) => {
                     )}
                     <LongText
                         name="Description__c"
+                        label={label(
+                            'objects.initiativeCollaborator.Description__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeCollaborator.Description__c'
+                        )}
                         label={labelTodo('Description of collaboration')}
-                        placeholder={labelTodo('Enter your description')}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         controller={control}
                     />
                     <DateRange
                         name="Dates"
-                        label={labelTodo('Collaboration period')}
+                        label={`${label(
+                            'objects.initiativeCollaborator.Start_Date__c'
+                        )} / ${label(
+                            'objects.initiativeCollaborator.End_Date__c'
+                        )}`}
                         controller={control}
                     />
                 </InputWrapper>

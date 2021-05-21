@@ -61,7 +61,13 @@ const HeaderComponent = ({ showUserControls }) => {
                     </a>
                 </Link>
             </div>
-            <div className="fixed left-0 flex items-center justify-end w-full text-blue-300 bg-white z-header header-h page-px">
+            <div
+                className={cc([
+                    'fixed left-0 flex items-center justify-end w-full text-blue-300 z-header header-h page-px',
+                    {
+                        'bg-white': !showUserControls,
+                    },
+                ])}>
                 {showUserControls && (
                     <ul className="flex space-x-20 t-aside-nav">
                         <li className="lg:cursor-pointer hover:text-blue-100">

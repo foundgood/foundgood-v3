@@ -21,7 +21,7 @@ const InformationCaptureComponent = () => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label, labelTodo, log, valueSet } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -65,8 +65,10 @@ const InformationCaptureComponent = () => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Capture the information you want')}
-                preamble={labelTodo('Choose the way you want to use foundgood')}
+                title={label('custom.FA_InitiativeWizardConfigureHeading')}
+                preamble={label(
+                    'custom.FA_InitiativeWizardConfigureSubHeading'
+                )}
             />
             <InputWrapper>
                 <SelectionCards
@@ -79,23 +81,29 @@ const InformationCaptureComponent = () => {
                     name="Configuration_Type__c"
                     options={[
                         {
-                            label: 'Reporting',
+                            label: valueSet(
+                                'initiative.Configuration_Type__c'
+                            ).find(item => item.value === 'Reporting').label,
                             value: 'Reporting',
-                            details:
-                                'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
+                            details: label(
+                                'custom.FA_InitiativeWizardConfigureReportingText'
+                            ),
                             required: true,
                         },
                         // {
-                        //     label: 'Planning',
+                        //     label: valueSet(
+                        //         'initiative.Configuration_Type__c'
+                        //     ).find(item => item.value === 'Planning').label,
                         //     value: 'Planning',
                         //     details:
-                        //         'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
+                        //         label('custom.FA_InitiativeWizardConfigurePlanningText'),
                         // },
                         // {
-                        //     label: 'Detailing',
+                        //     label: valueSet(
+                        //         'initiative.Configuration_Type__c'
+                        //     ).find(item => item.value === 'Explain').label,
                         //     value: 'Explain',
-                        //     details:
-                        //         'Use Foundgood to capture all the neccessary required information to help you structure reports to your grant givers.',
+                        //     details: label('custom.FA_InitiativeWizardConfigureExplainText'),
                         // },
                     ]}
                 />

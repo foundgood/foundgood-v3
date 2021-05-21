@@ -62,12 +62,7 @@ const ReportsComponent = ({ pageProps }) => {
                             <h2 className="t-h3">{item.Account__r.Name}</h2>
                             <Button
                                 variant="secondary"
-                                action={() => {
-                                    console.log('Update reports');
-                                    // TODO!
-                                    // setModalIsOpen(true);
-                                    // setFunder(funder);
-                                }}>
+                                action="/wizard/report-schedule">
                                 {labelTodo('Update')}
                             </Button>
                         </div>

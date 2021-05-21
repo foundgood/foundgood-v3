@@ -40,11 +40,6 @@ const HomeComponent = ({ pageProps }) => {
         // Update search!
     }, [searchValue]);
 
-    // Initiative IDs
-
-    // a0p1x00000EkTIwAAN // New one from Luke!
-    // a0p1x00000Eh8COAAZ // Test case from Hanne
-
     return (
         <div
             className={cc([
@@ -53,15 +48,7 @@ const HomeComponent = ({ pageProps }) => {
             {/* Content */}
             <div className="w-full max-w-[900px] page-mx mt-80 md:mt-120 pb-64 lg:pb-96 rounded-8">
                 <SectionWrapper>
-                    <div className="flex justify-between">
-                        <h2 className="t-h3">{labelTodo('Your reports')}</h2>
-                        <Button
-                            variant="secondary"
-                            theme="teal"
-                            action="/wizard/introduction">
-                            {labelTodo('Create initiative')}
-                        </Button>
-                    </div>
+                    <h2 className="t-h3">{labelTodo('Your reports')}</h2>
                     <input
                         type="text"
                         placeholder={labelTodo(
@@ -81,11 +68,11 @@ const HomeComponent = ({ pageProps }) => {
                         initiativeId="a0p1x00000EkTIwAAN"
                         reportId="a101x000002pIiFAAU"
                         type="Humanitarian"
-                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
                         headline="Example initiative title"
+                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
                         leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         status="In progress"
-                        deadline="17-05-2021"
+                        dueData="17-05-2021"
                     />
 
                     {/* 
@@ -97,7 +84,7 @@ const HomeComponent = ({ pageProps }) => {
                         headline="Example initiative title"
                         leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
                         status="In progress"
-                        deadline="17-05-2021"
+                        dueData="17-05-2021"
                     />
                     */}
                 </SectionWrapper>

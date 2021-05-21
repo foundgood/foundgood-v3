@@ -13,7 +13,6 @@ import Button from 'components/button';
 
 // Icon
 import { FiFileText } from 'react-icons/fi';
-import { clearConfigCache } from 'prettier';
 
 const ReportCardComponent = ({
     headline,
@@ -22,18 +21,21 @@ const ReportCardComponent = ({
     actionUpdate,
 }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     return (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100">
             <div className="flex justify-between mb-32">
                 {headline && (
                     <div className="flex items-center">
-                        <h4 className="t-sh4">{headline}</h4>
+                        <h4 className="t-sh4">
+                            {label('custom.FA_InitiativeViewReportsText')}{' '}
+                            {headline}
+                        </h4>
                     </div>
                 )}
                 <Button theme="teal" variant="primary" action={actionCreate}>
-                    {labelTodo('Add report')}
+                    {label('custom.FA_ButtonAddReport')}
                 </Button>
             </div>
             {items?.length > 0 && (
@@ -56,7 +58,7 @@ const ReportCardComponent = ({
                                     theme="teal"
                                     variant="quaternary"
                                     action={() => actionUpdate(item)}>
-                                    {labelTodo('Update')}
+                                    {label('custom.FA_ButtonUpdate')}
                                 </Button>
                             </div>
                         </div>

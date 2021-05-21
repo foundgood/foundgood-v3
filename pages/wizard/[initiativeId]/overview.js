@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 // Utilities
 import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
@@ -28,7 +28,7 @@ const OverviewComponent = () => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, label, valueSet, log, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -37,7 +37,7 @@ const OverviewComponent = () => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -120,15 +120,18 @@ const OverviewComponent = () => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Overview')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             {accountGrantees && (
                 <InputWrapper>
                     <Select
                         name="Account__c"
                         defaultValue={mainCollaborator?.Account__c}
-                        label={labelTodo('Responsible organisation')}
+                        label={label('objects.initiative.Lead_Grantee__c')}
+                        subLabel={helpText(
+                            'objects.initiative.Lead_Grantee__c'
+                        )}
                         placeholder={labelTodo('Grantee name')}
                         options={accountGrantees?.records?.map(item => ({
                             label: item.Name,
@@ -141,10 +144,8 @@ const OverviewComponent = () => {
                     <Text
                         name="Name"
                         defaultValue={initiative?.Name?.replace('___', '')}
-                        label={labelTodo(
-                            'What is the name of your initiative?'
-                        )}
-                        placeholder={labelTodo('Title of initiative')}
+                        label={label('custom.FA_InitiativeName')}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         maxLength={80}
                         required
                         disabled={isNovoLeadFunder()}
@@ -153,8 +154,9 @@ const OverviewComponent = () => {
                     <Select
                         name="Category__c"
                         defaultValue={initiative?.Category__c}
-                        label={labelTodo('Grant giving area')}
-                        placeholder={labelTodo('Please select')}
+                        label={label('objects.initiative.Category__c')}
+                        subLabel={helpText('objects.initiative.Category__c')}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiative.Category__c')}
                         controller={control}
                         disabled={initiative.Category__c || isNovoLeadFunder()}
@@ -163,16 +165,18 @@ const OverviewComponent = () => {
                     <LongText
                         name="Summary__c"
                         defaultValue={initiative?.Summary__c}
-                        label={labelTodo('What are your initiative about')}
-                        placeholder={labelTodo(
-                            "Brief description of initiative that details why it's important"
-                        )}
+                        label={label('objects.initiative.Summary__c')}
+                        subLabel={helpText('objects.initiative.Summary__c')}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         maxLength={400}
                         controller={control}
                     />
                     <DateRange
                         name="GrantDate"
                         label={labelTodo('Initiative period')}
+                        label={`${label(
+                            'objects.initiative.Grant_Start_Date__c'
+                        )} / ${label('objects.initiative.Grant_End_Date__c')}`}
                         defaultValue={{
                             from: initiative?.Grant_Start_Date__c,
                             to: initiative?.Grant_End_Date__c,
@@ -187,12 +191,15 @@ const OverviewComponent = () => {
                         ).map(value => ({
                             selectValue: value,
                         }))}
-                        label={labelTodo('Where is it located?')}
+                        label={label('objects.initiative.Where_Is_Problem__c')}
+                        subLabel={helpText(
+                            'objects.initiative.Where_Is_Problem__c'
+                        )}
                         listMaxLength={3}
                         options={valueSet('account.Location__c')}
-                        selectPlaceholder={labelTodo('Please select')}
-                        selectLabel={labelTodo('Country')}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                         controller={control}
+                        buttonLabel={label('custom.FA_ButtonAddLocation')}
                     />
                 </InputWrapper>
             )}

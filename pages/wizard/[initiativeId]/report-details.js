@@ -9,7 +9,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
@@ -23,8 +23,6 @@ import {
     Select,
     Text,
     DatePicker,
-    LongText,
-    SelectList,
     DateRange,
 } from 'components/_inputs';
 
@@ -34,10 +32,10 @@ const ReportDetailsComponent = () => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, label, helpText, valueSet, log } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -46,7 +44,7 @@ const ReportDetailsComponent = () => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -97,20 +95,20 @@ const ReportDetailsComponent = () => {
     }, []);
 
     // Get current report
-    const [currentReport] = useState(getReport(REPORT_ID));
+    const currentReport = getReport(REPORT_ID);
 
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Report details')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 <Text
                     name="Name"
                     defaultValue={currentReport.Name}
-                    label={labelTodo('Report title')}
-                    placeholder={labelTodo('Title of report')}
+                    label={label('custom.FA_ReportName')}
+                    placeholder={labelTodo('TEXT_PLACEHOLDER')}
                     maxLength={80}
                     disabled={isNovoLeadFunder()}
                     required={!isNovoLeadFunder()}
@@ -119,7 +117,10 @@ const ReportDetailsComponent = () => {
                 <Select
                     name="Report_Type__c"
                     defaultValue={currentReport.Report_Type__c}
-                    label={labelTodo('Report type')}
+                    label={label('objects.initiativeReport.Report_Type__c')}
+                    subLabel={helpText(
+                        'objects.initiativeReport.Report_Type__c'
+                    )}
                     placeholder={labelTodo('Type')}
                     options={valueSet('initiativeReport.Report_Type__c')}
                     disabled={isNovoLeadFunder()}
@@ -128,8 +129,9 @@ const ReportDetailsComponent = () => {
                 />
                 <DatePicker
                     name="Due_Date__c"
+                    label={label('objects.initiativeReport.Due_Date__c')}
+                    subLabel={helpText('objects.initiativeReport.Due_Date__c')}
                     defaultValue={currentReport.Due_Date__c}
-                    label={labelTodo('Report deadline')}
                     controller={control}
                     disabled={isNovoLeadFunder()}
                     required={!isNovoLeadFunder()}
@@ -141,7 +143,11 @@ const ReportDetailsComponent = () => {
                         to: currentReport.Report_Period_End_Date__c,
                     }}
                     disabled={isNovoLeadFunder()}
-                    label={labelTodo('Report duration')}
+                    label={`${label(
+                        'objects.initiativeReport.Report_Period_Start_Date__c'
+                    )} / ${label(
+                        'objects.initiativeReport.Report_Period_End_Date__c'
+                    )}`}
                     controller={control}
                     required={!isNovoLeadFunder()}
                 />

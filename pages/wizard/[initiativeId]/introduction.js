@@ -3,14 +3,13 @@ import React, { useEffect } from 'react';
 
 // Packages
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 
 // Utilities
 import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
@@ -21,17 +20,15 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 
 const IntroductionComponent = ({ pageProps }) => {
-    const router = useRouter();
-
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label, log } = useMetadata();
 
     // Hook: Salesforce setup
     const { sfCreate } = useSalesForce();
@@ -42,16 +39,14 @@ const IntroductionComponent = ({ pageProps }) => {
         reset: resetWizardNavigationStore,
         buildReportWizardItems,
         buildInitiativeWizardItems,
-        onUrlOrContextChange,
     } = useWizardNavigationStore();
 
     // Store: Initiative data / Wizard navigation
     const {
         updateInitiative,
         initiative,
+        setInitiativeId,
         reset: resetInitiativeStore,
-        populateInitiative,
-        populateReportDetails,
     } = useInitiativeDataStore();
 
     // Method: Submit page content
@@ -66,6 +61,8 @@ const IntroductionComponent = ({ pageProps }) => {
                 },
             });
 
+            setInitiativeId(initiativeId);
+
             await updateInitiative(initiativeId);
         }
     }
@@ -76,20 +73,13 @@ const IntroductionComponent = ({ pageProps }) => {
         resetWizardNavigationStore();
 
         if (MODE === CONTEXTS.REPORT) {
+            // Report wizard mode
             buildReportWizardItems();
-            // TEMP JUST FOR DEV
-            // Initiative ID a0p1x00000EkU9OAAV
-            // Report ID a101x000002pKetAAE
-            populateInitiative('a0p1x00000EkU9OAAV');
-            populateReportDetails(REPORT_ID);
         } else {
             // New initiative - reset store
             resetInitiativeStore();
             buildInitiativeWizardItems(initiative.Configuration_Type__c);
         }
-
-        // Update urls etc.
-        onUrlOrContextChange(router.pathname);
 
         setTimeout(() => {
             setCurrentSubmitHandler(submit);
@@ -99,29 +89,21 @@ const IntroductionComponent = ({ pageProps }) => {
     return MODE === CONTEXTS.REPORT ? (
         <>
             <TitlePreamble
-                title={labelTodo('Let’s run through your Annual Report: 2021')}
-                preamble={labelTodo(
-                    'Foundgood will guide you through each section. Be sure to do the following:'
-                )}
+                title={label('custom.FA_ReportWizardWelcomeHeading')}
+                preamble={label('custom.FA_ReportWizardWelcomeSubHeading')}
             />
             <div className="flex justify-center">
                 <Image src="/images/new-report.png" width="600" height="471" />
             </div>
             <p className="t-body">
-                - Check all of your details are accurate and up to date
-                <br />
-                - Add any additional missing information that is outstanding
-                <br />- Follow the help text for guidance on how to complete
-                each section
+                {label('custom.FA_ReportWizardWelcomeMain')}
             </p>
         </>
     ) : (
         <>
             <TitlePreamble
-                title={labelTodo('Welcome to your new initiative')}
-                preamble={labelTodo(
-                    'A new way to structure your project and report on your impact'
-                )}
+                title={label('custom.FA_InitiativeWizardWelcomeHeading')}
+                preamble={label('custom.FA_InitiativeWizardWelcomeSubHeading')}
             />
             <div className="flex justify-center my-64">
                 <Image
@@ -131,13 +113,7 @@ const IntroductionComponent = ({ pageProps }) => {
                 />
             </div>
             <p className="t-body">
-                Maxwell's equations – the foundation of classical
-                electromagnetism – describe light as a wave that moves with a
-                characteristic velocity. The modern view is that light needs no
-                medium of transmission, but Maxwell and his contemporaries were
-                convinced that light waves were propagated in a medium,
-                analogous to sound propagating in air, and ripples propagating
-                on the surface of a pond
+                {label('custom.FA_InitiativeWizardWelcomeMain')}
             </p>
         </>
     );

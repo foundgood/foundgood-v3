@@ -58,7 +58,7 @@ const ActivityCardComponent = ({
 
 const ActivityCard = ({ headline, tags, locations, goals, action }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { labelTodo, label } = useMetadata();
 
     return (
         <div className="p-16 max-w-[600px] border-4 border-teal-20 rounded-8 text-teal-100">
@@ -122,7 +122,7 @@ const ActivityCard = ({ headline, tags, locations, goals, action }) => {
 
                 <div className="self-center">
                     <Button theme="teal" variant="secondary" action={action}>
-                        {labelTodo('Update')}
+                        {label('custom.FA_ButtonUpdate')}
                     </Button>
                 </div>
             </div>

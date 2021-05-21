@@ -10,7 +10,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
@@ -36,10 +36,10 @@ const SharingResultsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, valueSet, log, label, helpText } = useMetadata();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -66,7 +66,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Method: Save new item, returns id
     async function save(object, data) {
@@ -251,13 +251,13 @@ const SharingResultsComponent = ({ pageProps }) => {
     }, []);
 
     // Current report details
-    const [currentReportDetails] = useState(getReportDetails(REPORT_ID));
+    const currentReportDetails = getReportDetails(REPORT_ID);
 
     return (
         <>
             <TitlePreamble
-                title={labelTodo('How are your results being shared?')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {Object.keys(initiative?._activities)
@@ -331,8 +331,8 @@ const SharingResultsComponent = ({ pageProps }) => {
                                           }
                                         : null
                                 }
-                                inputLabel={labelTodo(
-                                    'Outline your reflection'
+                                input={label(
+                                    'custom.FA_ReportWizardSharingReflectionSubHeading'
                                 )}
                             />
                         );
@@ -344,7 +344,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add activity')}
+                    {label('custom.FA_ButtonAddResult')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -356,8 +356,13 @@ const SharingResultsComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Text
                         name="Things_To_Do__c"
-                        label={labelTodo('Name')}
-                        placeholder={labelTodo('Enter sharing name')}
+                        label={label(
+                            'objects.initiativeActivity.Things_To_Do__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeActivity.Things_To_Do__c'
+                        )}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         maxLength={200}
                         controller={control}
                         required
@@ -365,8 +370,13 @@ const SharingResultsComponent = ({ pageProps }) => {
 
                     <Select
                         name="Dissemination_Method__c"
-                        label={labelTodo('Sharing method')}
-                        placeholder={labelTodo('Please select')}
+                        label={label(
+                            'objects.initiativeActivity.Dissemination_Method__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeActivity.Dissemination_Method__c'
+                        )}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet(
                             'initiativeActivity.Dissemination_Method__c'
                         )}
@@ -376,11 +386,17 @@ const SharingResultsComponent = ({ pageProps }) => {
 
                     <SelectList
                         name="Audience_Tag__c"
-                        label={labelTodo('Audience tag')}
-                        selectPlaceholder={labelTodo('Please select')}
+                        label={label(
+                            'objects.initiativeActivity.Audience_Tag__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeActivity.Audience_Tag__c'
+                        )}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiativeActivity.Audience_Tag__c')}
                         listMaxLength={4}
                         controller={control}
+                        buttonLabel={label('custom.FA_ButtonAddAudienceTag')}
                         required
                     />
 
@@ -389,49 +405,71 @@ const SharingResultsComponent = ({ pageProps }) => {
                         <>
                             <Text
                                 name="Publication_Type__c"
-                                label={labelTodo('Publication type')}
-                                placeholder={labelTodo(
-                                    'Enter publication type'
+                                label={label(
+                                    'objects.initiativeActivity.Publication_Type__c'
                                 )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivity.Publication_Type__c'
+                                )}
+                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
                                 maxLength={30}
                                 controller={control}
                             />
                             <DatePicker
                                 name="Publication_Year__c"
-                                label={labelTodo('Publication year')}
+                                label={label(
+                                    'objects.initiativeActivity.Publication_Year__c'
+                                )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivity.Publication_Year__c'
+                                )}
                                 controller={control}
                             />
                             <Text
                                 name="Publication_Title__c"
-                                label={labelTodo('Publication title')}
-                                placeholder={labelTodo(
-                                    'Enter publication type'
+                                label={label(
+                                    'objects.initiativeActivity.Publication_Title__c'
                                 )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivity.Publication_Title__c'
+                                )}
+                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
                                 maxLength={200}
                                 controller={control}
                             />
                             <Text
                                 name="Publication_Publisher__c"
-                                label={labelTodo('Publication publisher')}
-                                placeholder={labelTodo(
-                                    'Enter publication type'
+                                label={label(
+                                    'objects.initiativeActivity.Publication_Publisher__c'
                                 )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivity.Publication_Publisher__c'
+                                )}
+                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
                                 maxLength={200}
                                 controller={control}
                             />
                             <Text
                                 name="Publication_Author__c"
-                                label={labelTodo('Publication author')}
-                                placeholder={labelTodo(
-                                    'Enter publication author'
+                                label={label(
+                                    'objects.initiativeActivity.Publication_Author__c'
                                 )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivity.Publication_Author__c'
+                                )}
+                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
                                 maxLength={80}
                                 controller={control}
                             />
                             <Text
                                 name="Publication_DOI__c"
-                                label={labelTodo('Publication DOI')}
-                                placeholder={labelTodo('Enter publication DOI')}
+                                label={label(
+                                    'objects.initiativeActivity.Publication_DOI__c'
+                                )}
+                                subLabel={helpText(
+                                    'objects.initiativeActivity.Publication_DOI__c'
+                                )}
+                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
                                 maxLength={30}
                                 controller={control}
                             />

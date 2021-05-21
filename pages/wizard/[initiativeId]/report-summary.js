@@ -9,7 +9,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
@@ -26,10 +26,10 @@ const ReportSummaryComponent = () => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, valueSet, label, helpText, log } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -38,7 +38,7 @@ const ReportSummaryComponent = () => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
     const { updateReport, getReport } = useInitiativeDataStore();
@@ -80,21 +80,20 @@ const ReportSummaryComponent = () => {
     }, []);
 
     // Get current report
-    const [currentReport] = useState(getReport(REPORT_ID));
+    const currentReport = getReport(REPORT_ID);
 
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Report summary')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 <Reflection
                     name="Summary_Of_Activities__c"
                     defaultValue={currentReport.Summary_Of_Activities__c}
-                    label={labelTodo('Summary of activities')}
-                    subLabel={labelTodo(
-                        'Descriptive text that explains what to write and what the foundation is looking for.'
+                    label={label(
+                        'custom.FA_ReportWizardActivitySummaryReflectionSubHeading'
                     )}
                     placeholder={labelTodo('Enter summary')}
                     maxLength={750}
@@ -106,9 +105,8 @@ const ReportSummaryComponent = () => {
                     defaultValue={
                         currentReport.Summary_Of_Challenges_And_Learnings__c
                     }
-                    label={labelTodo('Summary of  challenges and learnings')}
-                    subLabel={labelTodo(
-                        'Descriptive text that explains what to write and what the foundation is looking for.'
+                    label={label(
+                        'custom.FA_ReportWizardChallengesReflectionSubHeading'
                     )}
                     placeholder={labelTodo('Enter summary')}
                     maxLength={750}

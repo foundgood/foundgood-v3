@@ -1,7 +1,10 @@
 const reportItems = () => [
     {
         title: 'Introduction',
-        url: '/wizard/introduction',
+        baseUrl: 'introduction',
+        url(initiativeId, reportId) {
+            return `/wizard/${initiativeId}/introduction/${reportId}`;
+        },
         visible: false,
         hideBack: true,
     },
@@ -10,48 +13,78 @@ const reportItems = () => [
         visible: true,
         items: [
             {
-                title: 'Report details',
+                title: 'custom.FA_ReportWizardMenuReportDetails',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardReportDetailsHeading',
+                        preamble:
+                            'custom.FA_ReportWizardReportDetailsSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardReportDetailsHelpWhy',
+                        what: 'custom.FA_ReportWizardReportDetailsHelpWhat',
+                        guide: 'custom.FA_ReportWizardReportDetailsHelpGuide',
+                    },
                 },
-                url: '/wizard/report-details',
+                baseUrl: 'report-details',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/report-details/${reportId}`;
+                },
             },
             {
-                title: 'Funders',
+                title: 'custom.FA_ReportWizardMenuFunders',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardFundersHeading',
+                        preamble: 'custom.FA_ReportWizardFundersSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardFundersHelpWhy',
+                        what: 'custom.FA_ReportWizardFundersHelpWhat',
+                        guide: 'custom.FA_ReportWizardFundersHelpGuide',
+                    },
                 },
-                url: '/wizard/funders',
+                baseUrl: 'funders',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/funders/${reportId}`;
+                },
             },
             {
-                title: 'Overview',
+                title: 'custom.FA_ReportWizardMenuOverview',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardOverviewHeading',
+                        preamble: 'custom.FA_ReportWizardOverviewSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardOverviewHelpWhy',
+                        what: 'custom.FA_ReportWizardOverviewHelpWhat',
+                        guide: 'custom.FA_ReportWizardOverviewHelpGuide',
+                    },
                 },
-                url: '/wizard/overview',
+                baseUrl: 'overview',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/overview/${reportId}`;
+                },
             },
             {
-                title: 'Report Summary',
+                title: 'custom.FA_ReportWizardMenuSummary',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardReportSummaryHeading',
+                        preamble:
+                            'custom.FA_ReportWizardReportSummarySubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardReportSummaryHelpWhy',
+                        what: 'custom.FA_ReportWizardReportSummaryHelpWhat',
+                        guide: 'custom.FA_ReportWizardReportSummaryHelpGuide',
+                    },
                 },
-                url: '/wizard/report-summary',
+                baseUrl: 'report-summary',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/report-summary/${reportId}`;
+                },
             },
         ],
     },
@@ -60,92 +93,149 @@ const reportItems = () => [
         visible: true,
         items: [
             {
-                title: 'Applicants',
+                title: 'custom.FA_ReportWizardMenuApplicants',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardApplicantsHeading',
+                        preamble: 'custom.FA_ReportWizardApplicantsSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardApplicantsHelpWhy',
+                        what: 'custom.FA_ReportWizardApplicantsHelpWhat',
+                        guide: 'custom.FA_ReportWizardApplicantsHelpGuide',
+                    },
                 },
-                url: '/wizard/applicants',
+                baseUrl: 'applicants',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/applicants/${reportId}`;
+                },
             },
             {
-                title: 'Collaborators',
+                title: 'custom.FA_ReportWizardMenuCollaborations',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardCollaboratorsHeading',
+                        preamble:
+                            'custom.FA_ReportWizardCollaboratorsSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardCollaboratorsHelpWhy',
+                        what: 'custom.FA_ReportWizardCollaboratorsHelpWhat',
+                        guide: 'custom.FA_ReportWizardCollaboratorsHelpGuide',
+                    },
                 },
-                url: '/wizard/collaborators',
+                baseUrl: 'collaborators',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/collaborators/${reportId}`;
+                },
             },
             {
-                title: 'Employees funded',
+                title: 'custom.FA_ReportWizardMenuEmployees',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardEmployeesHeading',
+                        preamble: 'custom.FA_ReportWizardEmployeesSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardEmployeesHelpWhy',
+                        what: 'custom.FA_ReportWizardEmployeesHelpWhat',
+                        guide: 'custom.FA_ReportWizardEmployeesHelpGuide',
+                    },
                 },
-                url: '/wizard/employees-funded',
+                baseUrl: 'employees-funded',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/employees-funded/${reportId}`;
+                },
             },
             {
-                title: 'Goals',
+                title: 'custom.FA_ReportWizardMenuGoals',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardGoalsHeading',
+                        preamble: 'custom.FA_ReportWizardGoalsSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardGoalsHelpWhy',
+                        what: 'custom.FA_ReportWizardGoalsHelpWhat',
+                        guide: 'custom.FA_ReportWizardGoalsHelpGuide',
+                    },
                 },
-                url: '/wizard/goals',
+                baseUrl: 'goals',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/goals/${reportId}`;
+                },
             },
             {
-                title: 'Activities',
+                title: 'custom.FA_ReportWizardMenuActivities',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardActivitiesHeading',
+                        preamble: 'custom.FA_ReportWizardActivitiesSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardActivitiesHelpWhy',
+                        what: 'custom.FA_ReportWizardActivitiesHelpWhat',
+                        guide: 'custom.FA_ReportWizardActivitiesHelpGuide',
+                    },
                 },
-                url: '/wizard/activities',
+                baseUrl: 'activities',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/activities/${reportId}`;
+                },
             },
             {
-                title: 'Indicators',
+                title: 'custom.FA_ReportWizardMenuIndicators',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardIndicatorsHeading',
+                        preamble: 'custom.FA_ReportWizardIndicatorsSubheading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardIndicatorsHelpWhy',
+                        what: 'custom.FA_ReportWizardIndicatorsHelpWhat',
+                        guide: 'custom.FA_ReportWizardIndicatorsHelpGuide',
+                    },
                 },
-                url: '/wizard/indicators',
+                baseUrl: 'indicators',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/indicators/${reportId}`;
+                },
             },
             {
-                title: 'Progress so far',
+                title: 'custom.FA_ReportWizardMenuProgress',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardProgressHeading',
+                        preamble: 'custom.FA_ReportWizardProgressSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardProgressHelpWhy',
+                        what: 'custom.FA_ReportWizardProgressHelpWhat',
+                        guide: 'custom.FA_ReportWizardProgressHelpGuide',
+                    },
                 },
-                url: '/wizard/progress-so-far',
+                baseUrl: 'progress-so-far',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/progress-so-far/${reportId}`;
+                },
             },
             {
-                title: 'Sharing results',
+                title: 'custom.FA_ReportWizardMenuSharing',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardSharingHeading',
+                        preamble: 'custom.FA_ReportWizardSharingSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardSharingHelpWhy',
+                        what: 'custom.FA_ReportWizardSharingHelpWhat',
+                        guide: 'custom.FA_ReportWizardSharingHelpGuide',
+                    },
                 },
-                url: '/wizard/sharing-results',
+                baseUrl: 'sharing-results',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/sharing-results/${reportId}`;
+                },
             },
         ],
     },
@@ -154,26 +244,40 @@ const reportItems = () => [
         visible: true,
         items: [
             {
-                title: 'Influence on policy',
+                title: 'custom.FA_ReportWizardMenuInfluence',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardInfluenceHeading',
+                        preamble: 'custom.FA_ReportWizardInfluenceSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardInfluenceHelpWhy',
+                        what: 'custom.FA_ReportWizardInfluenceHelpWhat',
+                        guide: 'custom.FA_ReportWizardInfluenceHelpGuide',
+                    },
                 },
-                url: '/wizard/influence-on-policy',
+                baseUrl: 'influence-on-policy',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/influence-on-policy/${reportId}`;
+                },
             },
             {
-                title: 'Evaluations',
+                title: 'custom.FA_ReportWizardMenuEvaluations',
                 labels: {
                     form: {
-                        title: '',
-                        preamble: '',
+                        title: 'custom.FA_ReportWizardEvaluationsHeading',
+                        preamble: 'custom.FA_ReportWizardEvaluationsSubHeading',
                     },
-                    help: { title: '', why: '', what: '', guide: '' },
+                    help: {
+                        why: 'custom.FA_ReportWizardEvaluationsHelpWhy',
+                        what: 'custom.FA_ReportWizardEvaluationsHelpWhat',
+                        guide: 'custom.FA_ReportWizardEvaluationsHelpGuide',
+                    },
                 },
-                url: '/wizard/evaluations',
+                baseUrl: 'evaluations',
+                url(initiativeId, reportId) {
+                    return `/wizard/${initiativeId}/evaluations/${reportId}`;
+                },
             },
         ],
     },

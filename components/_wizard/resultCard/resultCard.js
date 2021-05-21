@@ -62,13 +62,15 @@ const ResultCardComponent = ({
 
 const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, label } = useMetadata();
     return (
         <div className="p-16 my-16 space-y-8 rounded t-sh7 bg-teal-10">
             {title && (
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
-                        {labelTodo('Publication Title')}
+                        {label(
+                            'objects.initiativeActivity.Publication_Title__c'
+                        )}
                     </span>
                     <span className="text-teal-100">{title}</span>
                 </div>
@@ -77,7 +79,9 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
             {type && (
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
-                        {labelTodo('Publication Type')}
+                        {label(
+                            'objects.initiativeActivity.Publication_Type__c'
+                        )}
                     </span>
                     <span className="text-teal-100">{type}</span>
                 </div>
@@ -86,7 +90,9 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
             {year && (
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
-                        {labelTodo('Publication year')}
+                        {label(
+                            'objects.initiativeActivity.Publication_Year__c'
+                        )}
                     </span>
                     <span className="text-teal-100">{year}</span>
                 </div>
@@ -95,7 +101,9 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
             {publisher && (
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
-                        {labelTodo('Publisher')}
+                        {label(
+                            'objects.initiativeActivity.Publication_Publisher__c'
+                        )}
                     </span>
                     <span className="text-teal-100">{publisher}</span>
                 </div>
@@ -104,7 +112,9 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
             {author && (
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
-                        {labelTodo('Author')}
+                        {label(
+                            'objects.initiativeActivity.Publication_Author__c'
+                        )}
                     </span>
                     <span className="text-teal-100">{author}</span>
                 </div>
@@ -113,7 +123,7 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
             {doi && (
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
-                        {labelTodo('DOI')}
+                        {label('objects.initiativeActivity.Publication_DOI__c')}
                     </span>
                     <span className="text-teal-100">{doi}</span>
                 </div>

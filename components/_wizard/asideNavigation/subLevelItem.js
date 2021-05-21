@@ -9,7 +9,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useWizardNavigationStore } from 'utilities/store';
-import { createQuerystring } from 'utilities';
+import { useMetadata, useContext } from 'utilities/hooks';
 
 // Components
 
@@ -17,19 +17,25 @@ import { createQuerystring } from 'utilities';
 import { FiCircle, FiCheckCircle, FiMinusCircle } from 'react-icons/fi';
 
 const SubLevelItemComponent = ({ item }) => {
-    const { url, title } = item;
+    const { baseUrl, title, url } = item;
+
+    // Hook: Metadata
+    const { label } = useMetadata();
+
+    // Hook: Context
+    const { INITIATIVE_ID, REPORT_ID } = useContext();
 
     // Hook: Router
-    const { asPath, push, query } = useRouter();
+    const { asPath, push } = useRouter();
 
     // Store: Wizard navigation
     const { completedItems, handleSubmit } = useWizardNavigationStore();
 
     // Checking current page or not
-    const inProgress = asPath === url || asPath.indexOf(url) > -1;
+    const inProgress = asPath === baseUrl || asPath.indexOf(baseUrl) > -1;
 
     // Checking completed or not
-    const completed = completedItems.includes(url);
+    const completed = completedItems.includes(baseUrl);
 
     async function onHandleNavigate() {
         try {
@@ -37,7 +43,7 @@ const SubLevelItemComponent = ({ item }) => {
             await handleSubmit();
 
             // Go to next in flow
-            push(url + createQuerystring(query));
+            push(url(INITIATIVE_ID, REPORT_ID));
         } catch (error) {
             console.log(error);
         }
@@ -62,7 +68,7 @@ const SubLevelItemComponent = ({ item }) => {
                             <FiCircle />
                         )}
                     </i> */}
-                    {title}
+                    {label(title)}
                 </span>
             </button>
         </li>

@@ -7,7 +7,10 @@ import _get from 'lodash.get';
 
 // Utilities
 import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
-import { useInitiativeDataStore } from 'utilities/store';
+import {
+    useInitiativeDataStore,
+    useWizardNavigationStore,
+} from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -15,8 +18,6 @@ import Modal from 'components/modal';
 import {
     InputWrapper,
     Select,
-    SelectList,
-    Text,
     DateRange,
     DatePicker,
 } from 'components/_inputs';
@@ -28,11 +29,14 @@ const ReportScheduleComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, valueSet, label, helpText, log } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
     const { isDirty } = useFormState({ control });
+
+    // Store: Wizard navigation
+    const { currentItem } = useWizardNavigationStore();
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
@@ -130,8 +134,8 @@ const ReportScheduleComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Add reports for your funders')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {funders.length > 0 ? (
@@ -181,8 +185,11 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Report_Type__c"
-                        label={labelTodo('Type of report')}
-                        placeholder={labelTodo('Please select')}
+                        label={label('objects.initiativeReport.Report_Type__c')}
+                        subLabel={helpText(
+                            'objects.initiativeReport.Report_Type__c'
+                        )}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiativeReport.Report_Type__c')}
                         controller={control}
                         disabled={
@@ -193,7 +200,10 @@ const ReportScheduleComponent = ({ pageProps }) => {
                     />
                     <DatePicker
                         name="Due_Date__c"
-                        label={labelTodo('Report deadline')}
+                        label={label('objects.initiativeReport.Due_Date__c')}
+                        subLabel={helpText(
+                            'objects.initiativeReport.Due_Date__c'
+                        )}
                         controller={control}
                         required
                         disabled={
@@ -203,13 +213,20 @@ const ReportScheduleComponent = ({ pageProps }) => {
                     />
                     <DateRange
                         name="ReportDates"
-                        label={labelTodo('Report start / end date')}
+                        label={`${label(
+                            'objects.initiativeReport.Report_Period_Start_Date__c'
+                        )} / ${label(
+                            'objects.initiativeReport.Report_Period_End_Date__c'
+                        )}`}
                         controller={control}
                     />
                     <Select
                         name="Status__c"
-                        label={labelTodo('Report status')}
-                        placeholder={labelTodo('Please select')}
+                        label={label('objects.initiativeReport.Status__c')}
+                        subLabel={helpText(
+                            'objects.initiativeReport.Status__c'
+                        )}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet('initiativeReport.Status__c')}
                         controller={control}
                     />

@@ -6,9 +6,11 @@ import cc from 'classcat';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
-import { useWizardNavigationStore } from 'utilities/store';
-import { createQuerystring } from 'utilities';
+import { useMetadata, useContext } from 'utilities/hooks';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 
 // Components
 import Button from 'components/button';
@@ -19,8 +21,16 @@ const BottomNavigationComponent = () => {
     // Local state for showing status
     const [loading, setLoading] = useState(false);
 
+    // Hook: Context
+    const { INITIATIVE_ID, REPORT_ID } = useContext();
+
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
+
+    // Store: Initiaitive Data
+    const { getInitiativeId } = useInitiativeDataStore();
+
+    // Store: Wizard navigation
     const {
         nextItemUrl,
         onUrlOrContextChange,
@@ -30,7 +40,8 @@ const BottomNavigationComponent = () => {
 
     // Effect: Handle path change
     useEffect(() => {
-        onUrlOrContextChange(router.pathname);
+        const splitRoute = router.pathname.split('/');
+        onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
     }, [router.pathname]);
 
     async function onHandleContinue() {
@@ -40,7 +51,12 @@ const BottomNavigationComponent = () => {
             await handleSubmit();
 
             // Go to next in flow
-            router.push(nextItemUrl + createQuerystring(router.query));
+            router.push(
+                nextItemUrl(
+                    INITIATIVE_ID === 'new' ? getInitiativeId() : INITIATIVE_ID,
+                    REPORT_ID
+                )
+            );
 
             // Stop loading indicator
             setLoading(false);
@@ -53,7 +69,7 @@ const BottomNavigationComponent = () => {
         <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
             <div className="flex items-center justify-between w-full">
                 <Button theme="coral" variant="secondary" action="/">
-                    {labelTodo('Exit')}
+                    {label('custom.FA_ButtonExit')}
                 </Button>
                 <p
                     className={cc([
@@ -62,7 +78,7 @@ const BottomNavigationComponent = () => {
                             'opacity-100': loading,
                         },
                     ])}>
-                    {labelTodo('Saving updates...')}
+                    {label('custom.FA_MessageSaved')}
                 </p>
                 <div className="flex space-x-12">
                     <Button
@@ -70,19 +86,19 @@ const BottomNavigationComponent = () => {
                             'transition-default',
                             {
                                 'opacity-100 pointer-events-auto': !currentItem
-                                    ?.item.hideBack,
+                                    ?.item?.hideBack,
                                 'opacity-0 pointer-events-none':
-                                    currentItem?.item.hideBack,
+                                    currentItem?.item?.hideBack,
                             },
                         ])}
                         theme="coral"
                         variant="secondary"
                         action={router.back}>
-                        {labelTodo('Back')}
+                        {label('custom.FA_ButtonBack')}
                     </Button>
 
                     <Button theme="coral" action={onHandleContinue}>
-                        {labelTodo('Continue')}
+                        {label('custom.FA_ButtonContinue')}
                     </Button>
                 </div>
             </div>

@@ -10,7 +10,7 @@ import {
     useAuth,
     useMetadata,
     useSalesForce,
-    useContextMode,
+    useContext,
 } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
@@ -37,10 +37,10 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContextMode();
+    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log } = useMetadata();
+    const { labelTodo, label, valueSet, log, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -54,7 +54,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -192,20 +192,17 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     }, []);
 
     // Current report details
-    const [currentReportDetails] = useState(getReportDetails(REPORT_ID));
-
-    const [currentReflection] = useState(
+    const currentReportDetails = getReportDetails(REPORT_ID);
+    const currentReflection =
         currentReportDetails.find(
             detail =>
                 detail.Type__c === CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
-        )
-    );
-
+        ) || {};
     return (
         <>
             <TitlePreamble
-                title={labelTodo('Which employees are funded by your grants?')}
-                preamble={labelTodo('Preamble')}
+                title={label(currentItem?.item?.labels?.form?.title)}
+                preamble={label(currentItem?.item?.labels?.form?.preamble)}
             />
             <InputWrapper>
                 {Object.keys(initiative._employeesFunded).map(employeeKey => {
@@ -237,15 +234,14 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {labelTodo('Add employee')}
+                    {label('custom.FA_ButtonAddEmployee')}
                 </Button>
                 {MODE === CONTEXTS.REPORT && (
                     <Reflection
                         name="Employees_Funded_Overview"
                         defaultValue={currentReflection.Description__c}
-                        label={labelTodo('Add your reflections')}
-                        subLabel={labelTodo(
-                            'Descriptive text that explains what to write and what the foundation is looking for.'
+                        label={label(
+                            'custom.FA_ReportWizardEmployeesReflectionSubHeading'
                         )}
                         placeholder={labelTodo('Enter reflections')}
                         maxLength={750}
@@ -263,16 +259,26 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Text
                         name="Job_Title__c"
-                        label={labelTodo('Job title')}
-                        placeholder={labelTodo('Enter job title')}
+                        label={label(
+                            'objects.initiativeEmployeeFunded.Job_Title__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeEmployeeFunded.Job_Title__c'
+                        )}
+                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
                         maxLength={80}
                         required
                         controller={control}
                     />
                     <Select
                         name="Role_Type__c"
-                        label={labelTodo('Role')}
-                        placeholder={labelTodo('Please select')}
+                        label={label(
+                            'objects.initiativeEmployeeFunded.Role_Type__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeEmployeeFunded.Role_Type__c'
+                        )}
+                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
                         options={valueSet(
                             'initiativeEmployeeFunded.Role_Type__c'
                         )}
@@ -281,10 +287,15 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     />
                     <SelectList
                         name="Gender"
-                        label={labelTodo('Gender')}
-                        selectPlaceholder={labelTodo('Please select')}
-                        textPlaceholder={labelTodo(
-                            'If "other" feel free to specify'
+                        label={label(
+                            'objects.initiativeEmployeeFunded.Gender__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeEmployeeFunded.Gender__c'
+                        )}
+                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                        textPlaceholder={label(
+                            'objects.initiativeEmployeeFunded.Gender_Other__c'
                         )}
                         options={valueSet('initiativeEmployeeFunded.Gender__c')}
                         showText
@@ -293,8 +304,13 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     />
                     <Number
                         name="Percent_Involvement__c"
-                        label={labelTodo('Involvement')}
-                        placeholder={labelTodo('Enter percentage')}
+                        label={label(
+                            'objects.initiativeEmployeeFunded.Percent_Involvement__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeEmployeeFunded.Percent_Involvement__c'
+                        )}
+                        placeholder={labelTodo('NUMBER_PLACEHOLDER')}
                         minValue={0}
                         maxValue={100}
                         controller={control}
