@@ -21,7 +21,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Fetch initiative data
-    const { initiative } = useInitiativeDataStore();
+    const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { labelTodo, label, valueSet, log } = useMetadata();
@@ -38,63 +38,66 @@ const ActivitiesComponent = ({ pageProps }) => {
                 ? JSON.parse(initiative.Problem_Resolutions__c)
                 : initiative.Problem_Resolutions__c;
 
-            // Get all activities and check if they have related goals
-            let activities = Object.values(initiative._activities).map(
-                (item, index) => {
-                    const title = item.Things_To_Do__c;
-                    const location = item.Initiative_Location__c
-                        ? item.Initiative_Location__c.split(';').join(', ')
-                        : labelTodo('Location not available');
-                    const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
-                        success => {
-                            return success.Name;
-                        }
-                    );
-                    const relatedGoals = Object.values(
-                        initiative._activityGoals
-                    ).map(relatedGoal => {
-                        // This activity has a RelatedGoal
-                        if (relatedGoal.Initiative_Activity__c == item.Id) {
-                            // Compare RelatedGoals ID -> with Goal Ids
-                            return Object.values(initiative._goals).map(
-                                (goal, index) => {
-                                    // Return the original Goal description
-                                    if (
-                                        relatedGoal.Initiative_Goal__c ==
-                                            goal.Id &&
-                                        goal.Type__c == 'Foundation'
-                                    ) {
-                                        return {
-                                            description:
-                                                goal.Funder_Objective__c,
-                                        };
-                                    } else if (
-                                        relatedGoal.Initiative_Goal__c ==
-                                            goal.Id &&
-                                        goal.Type__c == 'Custom'
-                                    ) {
-                                        return { description: goal.Goal__c };
-                                    }
-                                }
-                            );
-                        }
-                    });
-
-                    return {
-                        type: item.Activity_Type__c, // "Intervention" or "Dissemination"
-                        title: title,
-                        description: item.Things_To_Do_Description__c,
-                        location: location,
-                        successIndicators: successIndicators,
-                        goals: descriptions,
-                        relatedGoals: stripUndefined(relatedGoals),
-                    };
+            // Only show activities with type "Intervention"
+            let activities = Object.values(initiative._activities).filter(
+                item => {
+                    console.log(item);
+                    return item.Activity_Type__c ===
+                        CONSTANTS.TYPES.ACTIVITY_INTERVENTION
+                        ? true
+                        : false;
                 }
             );
-            // Only show activities with type "Intervention"
-            activities = activities.filter(item => {
-                return item.type === 'Intervention' ? true : false;
+            // Check if they have related goals
+            activities = activities.map((item, index) => {
+                const title = item.Things_To_Do__c;
+                const location = item.Initiative_Location__c
+                    ? item.Initiative_Location__c.split(';').join(', ')
+                    : labelTodo('Location not available');
+                const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
+                    success => {
+                        return success.Name;
+                    }
+                );
+                const relatedGoals = Object.values(
+                    initiative._activityGoals
+                ).map(relatedGoal => {
+                    // This activity has a RelatedGoal
+                    if (relatedGoal.Initiative_Activity__c == item.Id) {
+                        // Compare RelatedGoals ID -> with Goal Ids
+                        return Object.values(initiative._goals).map(
+                            (goal, index) => {
+                                // Return the original Goal description
+                                if (
+                                    relatedGoal.Initiative_Goal__c == goal.Id &&
+                                    goal.Type__c ==
+                                        CONSTANTS.TYPES.GOAL_PREDEFINED
+                                ) {
+                                    return {
+                                        description: goal.Funder_Objective__c,
+                                    };
+                                } else if (
+                                    relatedGoal.Initiative_Goal__c == goal.Id &&
+                                    goal.Type__c == CONSTANTS.TYPES.GOAL_CUSTOM
+                                ) {
+                                    return { description: goal.Goal__c };
+                                }
+                            }
+                        );
+                    }
+                });
+
+                return {
+                    // type: item.Activity_Type__c, // "Intervention" or "Dissemination"
+                    title: title,
+                    description: item.Things_To_Do_Description__c,
+                    location: location,
+                    successIndicators: successIndicators,
+                    goals: descriptions,
+                    relatedGoals: stripUndefined(relatedGoals),
+                };
             });
+            console.log('activities: ', activities);
             setActivities(activities);
         }
     }, [initiative]);
