@@ -22,233 +22,222 @@ function _goToNextSection(sectionIndex, items) {
         : null;
 }
 
-const useWizardNavigationStore = create(
-    persist((set, get) => ({
-        // Handles url change in bottom navigation
-        async onUrlOrContextChange(baseUrl) {
-            console.log('Check for discrepancy', {
-                baseUrl,
-                items: get().items,
-            });
-            // Reset submitHandler
-            get().setCurrentSubmitHandler(null);
+const useWizardNavigationStore = create((set, get) => ({
+    // Handles url change in bottom navigation
+    async onUrlOrContextChange(baseUrl) {
+        console.log('Check for discrepancy', {
+            baseUrl,
+            items: get().items,
+        });
+        // Reset submitHandler
+        get().setCurrentSubmitHandler(null);
 
-            // Set current item
-            const currentItem = await get().setCurrentItem(baseUrl);
+        // Set current item
+        const currentItem = await get().setCurrentItem(baseUrl);
 
-            // Set sections based on location
-            currentItem.parentItem
-                ? get().toggleSection(currentItem.parentItem, true)
-                : get().toggleSection(currentItem.item, true);
+        // Set sections based on location
+        currentItem.parentItem
+            ? get().toggleSection(currentItem.parentItem, true)
+            : get().toggleSection(currentItem.item, true);
 
-            // Set next item url
-            get().setNextItemUrl(currentItem);
+        // Set next item url
+        get().setNextItemUrl(currentItem);
 
-            // Add to completed
-            get().addToCompleted(baseUrl);
-        },
+        // Add to completed
+        get().addToCompleted(baseUrl);
+    },
 
-        // Handles submit from wizard pages
-        async handleSubmit() {
-            const currentSubmitHandler = get().currentSubmitHandler;
-            return currentSubmitHandler ? currentSubmitHandler() : true;
-        },
+    // Handles submit from wizard pages
+    async handleSubmit() {
+        const currentSubmitHandler = get().currentSubmitHandler;
+        return currentSubmitHandler ? currentSubmitHandler() : true;
+    },
 
-        // Rebuilds initiative wizard items
-        buildInitiativeWizardItems(configurationType = []) {
-            set(state => {
-                // What types
-                const planning = configurationType.includes('Planning');
-                const detailing = configurationType.includes('Explain');
+    // Rebuilds initiative wizard items
+    buildInitiativeWizardItems(configurationType = []) {
+        set(state => {
+            // What types
+            const planning = configurationType.includes('Planning');
+            const detailing = configurationType.includes('Explain');
 
-                // Baseline for items = reporting items
-                let items = initiativeItems();
+            // Baseline for items = reporting items
+            let items = initiativeItems();
 
-                // Add planning if needed
-                if (planning) {
-                    items[4] = {
-                        ...items[4],
-                        items: [
-                            planningItems()[0],
-                            ...items[4].items,
-                            planningItems()[1],
-                        ],
-                    };
-                }
+            // Add planning if needed
+            if (planning) {
+                items[4] = {
+                    ...items[4],
+                    items: [
+                        planningItems()[0],
+                        ...items[4].items,
+                        planningItems()[1],
+                    ],
+                };
+            }
 
-                // Add detailing if selected
-                if (detailing) {
-                    items = [
-                        ...items.slice(0, 3),
-                        ...detailingItems(),
-                        ...items.slice(3, items.length),
-                    ];
-                }
+            // Add detailing if selected
+            if (detailing) {
+                items = [
+                    ...items.slice(0, 3),
+                    ...detailingItems(),
+                    ...items.slice(3, items.length),
+                ];
+            }
 
-                state.items = items;
-            });
-        },
+            state.items = items;
+        });
+    },
 
-        // Rebuilds report wizard items
-        buildReportWizardItems(configurationType = []) {
-            set(state => {
-                // What types
-                const planning = configurationType.includes('Planning');
-                const detailing = configurationType.includes('Explain');
+    // Rebuilds report wizard items
+    buildReportWizardItems(configurationType = []) {
+        set(state => {
+            // What types
+            const planning = configurationType.includes('Planning');
+            const detailing = configurationType.includes('Explain');
 
-                // Baseline for items = reporting items
-                let items = reportItems();
+            // Baseline for items = reporting items
+            let items = reportItems();
 
-                // // Add planning if needed
-                // if (planning) {
-                //     items[4] = {
-                //         ...items[4],
-                //         items: [
-                //             planningItems()[0],
-                //             ...items[4].items,
-                //             planningItems()[1],
-                //         ],
-                //     };
-                // }
+            // // Add planning if needed
+            // if (planning) {
+            //     items[4] = {
+            //         ...items[4],
+            //         items: [
+            //             planningItems()[0],
+            //             ...items[4].items,
+            //             planningItems()[1],
+            //         ],
+            //     };
+            // }
 
-                // // Add detailing if selected
-                // if (detailing) {
-                //     items = [
-                //         ...items.slice(0, 3),
-                //         ...detailingItems(),
-                //         ...items.slice(3, items.length),
-                //     ];
-                // }
+            // // Add detailing if selected
+            // if (detailing) {
+            //     items = [
+            //         ...items.slice(0, 3),
+            //         ...detailingItems(),
+            //         ...items.slice(3, items.length),
+            //     ];
+            // }
 
-                state.items = items;
-            });
-        },
+            state.items = items;
+        });
+    },
 
-        // Sets the current item and parent item if any
-        async setCurrentItem(url) {
-            const items = get().items;
-            let item;
-            let itemIndex;
-            let parentItem = null;
-            let parentItemIndex = null;
+    // Sets the current item and parent item if any
+    async setCurrentItem(url) {
+        const items = get().items;
+        let item;
+        let itemIndex;
+        let parentItem = null;
+        let parentItemIndex = null;
 
-            // Search parent items
-            item = items.find(parentItem => parentItem.baseUrl === url);
-            itemIndex = items.findIndex(
-                parentItem => parentItem.baseUrl === url
+        // Search parent items
+        item = items.find(parentItem => parentItem.baseUrl === url);
+        itemIndex = items.findIndex(parentItem => parentItem.baseUrl === url);
+
+        // If no top level check for nested
+        if (!item) {
+            // Check for nested
+            parentItem = items.find(parentItem =>
+                parentItem.items?.some(childItem => childItem.baseUrl === url)
+            );
+            parentItemIndex = items.findIndex(parentItem =>
+                parentItem.items?.some(childItem => childItem.baseUrl === url)
             );
 
-            // If no top level check for nested
-            if (!item) {
-                // Check for nested
-                parentItem = items.find(parentItem =>
-                    parentItem.items?.some(
-                        childItem => childItem.baseUrl === url
-                    )
-                );
-                parentItemIndex = items.findIndex(parentItem =>
-                    parentItem.items?.some(
-                        childItem => childItem.baseUrl === url
-                    )
-                );
+            // Look through children
+            item = parentItem?.items?.find(
+                childItem => childItem.baseUrl === url
+            );
+            itemIndex = parentItem?.items?.findIndex(
+                childItem => childItem.baseUrl === url
+            );
+        }
 
-                // Look through children
-                item = parentItem?.items?.find(
-                    childItem => childItem.baseUrl === url
-                );
-                itemIndex = parentItem?.items?.findIndex(
-                    childItem => childItem.baseUrl === url
-                );
+        const currentItem = {
+            item,
+            itemIndex,
+            parentItem,
+            parentItemIndex,
+        };
+
+        // Update state
+        set(() => ({
+            currentItem,
+        }));
+
+        // Return
+        return currentItem;
+    },
+
+    // Toggles section in navigation
+    toggleSection(section) {
+        set(() => ({ openSection: section?.title }));
+    },
+
+    // Sets the url of the next item
+    setNextItemUrl(currentItem) {
+        const { itemIndex, parentItem, parentItemIndex } = currentItem;
+        const items = get().items;
+
+        // Wait for iiiit
+        let nextItemUrl;
+
+        // Child next url
+        if (parentItem) {
+            // Is the current item the last item?
+            nextItemUrl =
+                itemIndex + 1 === parentItem.items?.length ?? 0
+                    ? _goToNextSection(parentItemIndex, items)
+                    : parentItem.items[itemIndex + 1].url;
+        }
+
+        // Parent/section level
+        else {
+            nextItemUrl = _goToNextSection(itemIndex, items);
+        }
+
+        // Update state
+        set(() => ({
+            nextItemUrl,
+        }));
+    },
+
+    // Set the submit handler for the current view
+    setCurrentSubmitHandler(currentSubmitHandler) {
+        set(() => ({
+            currentSubmitHandler,
+        }));
+    },
+
+    // Adds navigation item to completed
+    addToCompleted(url) {
+        set(state => {
+            if (state.completedItems.includes(url)) {
+                return;
+            } else {
+                state.completedItems = [...state.completedItems, url];
             }
+        });
+    },
 
-            const currentItem = {
-                item,
-                itemIndex,
-                parentItem,
-                parentItemIndex,
-            };
+    items: [],
+    completedItems: [],
+    openSection: null,
+    currentItem: null,
+    currentSubmitHandler: null,
+    nextItemUrl: null,
 
-            // Update state
-            set(() => ({
-                currentItem,
-            }));
-
-            // Return
-            return currentItem;
-        },
-
-        // Toggles section in navigation
-        toggleSection(section) {
-            set(() => ({ openSection: section?.title }));
-        },
-
-        // Sets the url of the next item
-        setNextItemUrl(currentItem) {
-            const { itemIndex, parentItem, parentItemIndex } = currentItem;
-            const items = get().items;
-
-            // Wait for iiiit
-            let nextItemUrl;
-
-            // Child next url
-            if (parentItem) {
-                // Is the current item the last item?
-                nextItemUrl =
-                    itemIndex + 1 === parentItem.items?.length ?? 0
-                        ? _goToNextSection(parentItemIndex, items)
-                        : parentItem.items[itemIndex + 1].url;
-            }
-
-            // Parent/section level
-            else {
-                nextItemUrl = _goToNextSection(itemIndex, items);
-            }
-
-            // Update state
-            set(() => ({
-                nextItemUrl,
-            }));
-        },
-
-        // Set the submit handler for the current view
-        setCurrentSubmitHandler(currentSubmitHandler) {
-            set(() => ({
-                currentSubmitHandler,
-            }));
-        },
-
-        // Adds navigation item to completed
-        addToCompleted(url) {
-            set(state => {
-                if (state.completedItems.includes(url)) {
-                    return;
-                } else {
-                    state.completedItems = [...state.completedItems, url];
-                }
-            });
-        },
-
-        items: [],
-        completedItems: [],
-        openSection: null,
-        currentItem: null,
-        currentSubmitHandler: null,
-        nextItemUrl: null,
-
-        reset() {
-            set(() => ({
-                items: [],
-                completedItems: [],
-                openSection: null,
-                currentItem: null,
-                currentSubmitHandler: null,
-                nextItemUrl: null,
-            }));
-        },
-    })),
-    {
-        name: 'wizardNavigation',
-    }
-);
+    reset() {
+        set(() => ({
+            items: [],
+            completedItems: [],
+            openSection: null,
+            currentItem: null,
+            currentSubmitHandler: null,
+            nextItemUrl: null,
+        }));
+    },
+}));
 
 export { useWizardNavigationStore };

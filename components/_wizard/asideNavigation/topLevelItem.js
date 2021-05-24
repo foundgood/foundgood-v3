@@ -20,7 +20,7 @@ const TopLevelItemComponent = ({ item }) => {
     const { title, items } = item;
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     // Store: wizardNavigation
     const { toggleSection, openSection } = useWizardNavigationStore();
@@ -37,7 +37,7 @@ const TopLevelItemComponent = ({ item }) => {
                     {sectionToggled && <FiChevronUp />}
                     {!sectionToggled && <FiChevronDown />}
                 </i>
-                {labelTodo(title)}
+                {label(title)}
             </span>
 
             {/* Sub-level items */}

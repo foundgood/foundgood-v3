@@ -40,15 +40,18 @@ const BottomNavigationComponent = () => {
 
     // Effect: Handle path change
     useEffect(() => {
-        const splitRoute = router.pathname.split('/');
-        onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
+        setTimeout(() => {
+            const splitRoute = router.pathname.split('/');
+            onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
+        }, 100);
     }, [router.pathname]);
 
     async function onHandleContinue() {
         setLoading(true);
         try {
             // Submit throws if there is any validation errors
-            await handleSubmit();
+            const a = await handleSubmit();
+            console.log(a);
 
             // Go to next in flow
             router.push(
