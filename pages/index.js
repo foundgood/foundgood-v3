@@ -24,7 +24,7 @@ const HomeComponent = () => {
     verifyLoggedIn();
 
     // Reset initiative data
-    const { reset: resetInitiativeData } = useInitiativeDataStore();
+    const { reset: resetInitiativeData, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { label, valueSet } = useMetadata();
@@ -206,12 +206,16 @@ const HomeComponent = () => {
                             headline={item.Name}
                             leadFunder={
                                 item.Initiative_Funders__r?.records?.filter(
-                                    item => item.Type__c === 'Lead funder'
+                                    item =>
+                                        item.Type__c ===
+                                        CONSTANTS.TYPES.LEAD_FUNDER
                                 )[0]?.Account__r.Name
                             }
                             otherFunders={
                                 item.Initiative_Funders__r?.records?.filter(
-                                    item => item.Type__c !== 'Lead funder'
+                                    item =>
+                                        item.Type__c !==
+                                        CONSTANTS.TYPES.LEAD_FUNDER
                                 ).length
                             }
                             dueDate={
