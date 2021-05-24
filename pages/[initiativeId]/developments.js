@@ -61,43 +61,48 @@ const DevelopmentsComponent = ({ pageProps }) => {
 
                     // Loop indicators
                     // Add indicators if it matches the activity ID
-                    const indicators = Object.values(
-                        initiative._activitySuccessMetrics
-                    ).map(item => {
-                        if (activity.Id == item.Initiative_Activity__c) {
-                            let title;
-                            let label;
+                    const indicators = stripUndefined(
+                        Object.values(initiative._activitySuccessMetrics).map(
+                            item => {
+                                if (
+                                    activity.Id == item.Initiative_Activity__c
+                                ) {
+                                    let title;
+                                    let label;
 
-                            if (
-                                item.Type__c ===
-                                CONSTANTS.TYPES.INDICATOR_PREDEFINED
-                            ) {
-                                // If gender is "Other" -> use "Gender_Other__c" field
-                                const gender =
-                                    item.Gender__c ==
-                                    CONSTANTS.TYPES.INDICATOR_GENDER_OTHER
-                                        ? item.Gender_Other__c
-                                        : item.Gender__c;
-                                title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
-                                label = labelTodo('Reached so far');
-                            } else {
-                                title = item.Name;
-                                label = labelTodo('Total so far');
+                                    if (
+                                        item.Type__c ===
+                                        CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                                    ) {
+                                        // If gender is "Other" -> use "Gender_Other__c" field
+                                        const gender =
+                                            item.Gender__c ==
+                                            CONSTANTS.TYPES
+                                                .INDICATOR_GENDER_OTHER
+                                                ? item.Gender_Other__c
+                                                : item.Gender__c;
+                                        title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
+                                        label = labelTodo('Reached so far');
+                                    } else {
+                                        title = item.Name;
+                                        label = labelTodo('Total so far');
+                                    }
+
+                                    const value = item.Target__c
+                                        ? `${item.Current_Status__c} / ${item.Target__c}`
+                                        : item.Current_Status__c;
+                                    return {
+                                        title: title,
+                                        value: value,
+                                        label: label,
+                                    };
+                                }
                             }
-
-                            const value = item.Target__c
-                                ? `${item.Current_Status__c} / ${item.Target__c}`
-                                : item.Current_Status__c;
-                            return {
-                                title: title,
-                                value: value,
-                                label: label,
-                            };
-                        }
-                    });
+                        )
+                    );
 
                     // Only add activities - if they have indicators
-                    if (stripUndefined(indicators).length > 0) {
+                    if (indicators.length > 0) {
                         accumulator.push({
                             title: title,
                             indicators: indicators,
