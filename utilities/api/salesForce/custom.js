@@ -8,9 +8,6 @@ import { useAuthStore } from 'utilities/store';
 const accessToken = () => useAuthStore.getState().accessToken ?? null;
 const instanceUrl = () => useAuthStore.getState().instanceUrl ?? null;
 
-// Default limit
-const limit = 100;
-
 async function setExportResults(
     results,
     token = accessToken(),
@@ -72,14 +69,18 @@ async function setUserLanguage({ language }) {
     }
 }
 
-async function getUserInitiativeRights({ initiativeId }) {
+async function getUserInitiativeRights(
+    initiativeId,
+    token = accessToken(),
+    url = instanceUrl()
+) {
     try {
         const response = await axios.get(
-            `${instanceUrl()}/services/apexrest/Initiative/getCurrentUserInitiativeRights?initiativeId=${initiativeId}`,
+            `${url}/services/apexrest/Initiative/getCurrentUserInitiativeRights?initiativeId=${initiativeId}`,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken()}`,
+                    Authorization: `Bearer ${token}`,
                 },
             }
         );

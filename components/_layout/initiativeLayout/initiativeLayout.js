@@ -7,22 +7,30 @@ import t from 'prop-types';
 
 // Utilities
 import { useInitiativeDataStore } from 'utilities/store';
-import { useContext } from 'utilities/hooks';
+import { useContext, useAuth } from 'utilities/hooks';
 
 // Components
 import Footer from 'components/_layout/footer';
-import ActiveLink from 'components/activeLink';
 import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
 
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
+    // Store: Initiative data store
     const { populateInitiative, initiative } = useInitiativeDataStore();
 
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
 
+    // Hook: Auth
+    const { getUserInitiativeRights } = useAuth();
+
     useEffect(() => {
         populateInitiative(INITIATIVE_ID);
+
+        // Get user rights for current initiative
+        if (INITIATIVE_ID) {
+            getUserInitiativeRights(INITIATIVE_ID);
+        }
     }, [INITIATIVE_ID]);
 
     return (

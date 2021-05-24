@@ -16,6 +16,12 @@ const authStore = createVanilla((set, get) => ({
             instanceUrl,
         })),
 
+    userInitiativeRights: null,
+    setUserInitiativeRights: userInitiativeRights =>
+        set(() => ({
+            userInitiativeRights,
+        })),
+
     user: null,
     setUser: user =>
         set(() => ({

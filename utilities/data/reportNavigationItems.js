@@ -284,7 +284,9 @@ const reportItems = () => [
     {
         title: 'Done',
         visible: false,
-        url: '/',
+        url(initiativeId, reportId) {
+            return `/${initiativeId}/reports/${reportId}`;
+        },
     },
 ];
 

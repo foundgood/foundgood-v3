@@ -114,7 +114,7 @@ const OverviewComponent = () => {
     const mainCollaborator =
         Object.values(initiative?._collaborators).find(
             item => item.Type__c === CONSTANTS.TYPES.MAIN_COLLABORATOR
-        ) || null;
+        ) || {};
 
     return (
         <>
@@ -124,20 +124,20 @@ const OverviewComponent = () => {
             />
 
             <InputWrapper>
-                {mainCollaborator ? (
+                {mainCollaborator.Id ? (
                     <>
-                        <Select
+                        <Text
                             name="Account__c"
-                            defaultValue={mainCollaborator.Account__c}
+                            defaultValue={
+                                accountGrantees?.records.find(
+                                    ag => ag.Id === mainCollaborator.Account__c
+                                ).Name
+                            }
                             label={label('objects.initiative.Lead_Grantee__c')}
                             subLabel={helpText(
                                 'objects.initiative.Lead_Grantee__c'
                             )}
                             placeholder={labelTodo('SELECT_PLACEHOLDER')}
-                            options={accountGrantees?.records.map(item => ({
-                                label: item.Name,
-                                value: item.Id,
-                            }))}
                             disabled
                             required
                             controller={control}

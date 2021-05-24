@@ -25,10 +25,6 @@ function _goToNextSection(sectionIndex, items) {
 const useWizardNavigationStore = create((set, get) => ({
     // Handles url change in bottom navigation
     async onUrlOrContextChange(baseUrl) {
-        console.log('Check for discrepancy', {
-            baseUrl,
-            items: get().items,
-        });
         // Reset submitHandler
         get().setCurrentSubmitHandler(null);
 
