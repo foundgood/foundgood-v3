@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import cc from 'classcat';
 import t from 'prop-types';
+import dayjs from 'dayjs';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
@@ -16,61 +17,80 @@ import { FiFileText } from 'react-icons/fi';
 const InitiativeRowComponent = ({
     initiativeId,
     type,
-    funder,
+    grantee,
     headline,
     leadFunder,
-    status,
-    dueData,
+    otherFunders,
+    dueDate,
+    image,
+    startDate,
+    endDate,
 }) => {
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { label } = useMetadata();
 
     return (
         <Link href={`/${initiativeId}/overview`}>
-            <a className="flex justify-between p-16 mt-24 bg-white cursor-pointer rounded-8">
-                <div className="flex">
-                    <div className="relative h-full mr-16 overflow-hidden w-128 rounded-8">
-                        <Image
-                            src="/images/fg-landscape-1.jpg"
-                            layout="fill"
-                            objectFit="cover"
-                            sizes="256px"
-                        />
-                    </div>
+            <a className="flex flex-col justify-between p-16 mt-24 bg-white cursor-pointer md:flex-row rounded-8">
+                <div className="flex justify-start">
+                    {image && (
+                        <div className="relative hidden mr-16 overflow-hidden w-128 h-128 rounded-8 sm:flex">
+                            <Image
+                                src="/images/fg-landscape-1.jpg"
+                                layout="fill"
+                                objectFit="cover"
+                                sizes="256px"
+                            />
+                        </div>
+                    )}
                     <div>
-                        <div className="inline-block px-8 pt-3 pb-1 t-sh6 text-blue-60 bg-blue-20 rounded-4">
+                        <div className="inline-block px-8 pt-3 pb-1 t-sh7 text-blue-60 bg-blue-20 rounded-4">
                             {type}
                         </div>
-                        <div className="mt-8 t-h6 text-blue-60">{funder}</div>
+                        <div className="mt-8 t-h6 text-blue-60">{grantee}</div>
                         <div className="mt-4 t-h5">{headline}</div>
                         <div className="mt-8 t-sh6 text-blue-60">
-                            {leadFunder && leadFunder}
+                            {leadFunder}{' '}
+                            {otherFunders && (
+                                <span>
+                                    + {otherFunders}{' '}
+                                    {label('custom.FA_ReportManagerCardOthers')}
+                                </span>
+                            )}
                         </div>
                     </div>
                 </div>
-                <div className="flex flex-col flex-none w-1/4">
-                    <div className="p-8 border-4 border-blue-10 rounded-4">
-                        <div className="t-sh7">
-                            {labelTodo('Next Report deadline')}
-                        </div>
-                        <div className="t-caption-bold">
-                            <span className="mr-8">{dueData}</span>
-                            {/* Tag name ?? */}
-                            <div className="inline-block px-8 pt-3 pb-1 mt-8 text-white t-sh7 bg-teal-80 rounded-4">
-                                {labelTodo('Upcoming')}
+                <div className="flex justify-end mt-24 space-x-12 md:justify-start md:w-1/4 md:space-y-12 md:flex-col md:space-x-0 md:mt-0">
+                    {dueDate && (
+                        <div className="p-8 space-y-4 border-4 sm:w-2/5 md:w-auto border-amber-20 rounded-4">
+                            <div className="t-sh7 text-teal-60">
+                                {label(
+                                    'custom.FA_InitiativeManagerCardDeadline'
+                                )}
+                            </div>
+                            <div className="text-teal-100 t-caption-bold">
+                                <span className="mr-8">
+                                    {dayjs(dueDate).format('DD.MM.YYYY')}
+                                </span>
                             </div>
                         </div>
-                    </div>
-                    <div className="p-8 mt-8 border-4 border-blue-10 rounded-4">
-                        <div className="t-sh7">
-                            {labelTodo('Initiative period')}
-                        </div>
-                        <div className="t-caption-bold">
-                            <div className="inline-block px-8 pt-3 pb-1 mt-8 t-sh7 bg-blue-20 rounded-4">
-                                {status}
+                    )}
+                    {startDate && endDate && (
+                        <div className="p-8 space-y-4 border-4 sm:w-2/5 md:w-auto border-amber-20 rounded-4">
+                            <div className="t-sh7 text-blue-60">
+                                {label('custom.FA_InitiativeManagerCardPeriod')}
+                            </div>
+                            <div className="text-blue-100 t-caption-bold">
+                                <span className="mr-8">
+                                    {`${dayjs(startDate).format(
+                                        'DD.MM.YYYY'
+                                    )} - ${dayjs(endDate).format(
+                                        'DD.MM.YYYY'
+                                    )}`}
+                                </span>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </a>
         </Link>
@@ -78,15 +98,21 @@ const InitiativeRowComponent = ({
 };
 
 InitiativeRowComponent.propTypes = {
-    initiativeId: t.string.isRequired,
-    type: t.string.isRequired,
-    funder: t.string.isRequired,
-    headline: t.string.isRequired,
+    initiativeId: t.string,
+    type: t.string,
+    grantee: t.string,
+    headline: t.string,
     leadFunder: t.string,
-    status: t.string.isRequired,
-    dueDate: t.string.isRequired,
+    otherFunders: t.number,
+    status: t.string,
+    dueDate: t.string,
+    image: t.string,
+    startDate: t.string,
+    endDate: t.string,
 };
 
-InitiativeRowComponent.defaultProps = {};
+InitiativeRowComponent.defaultProps = {
+    image: null,
+};
 
 export default InitiativeRowComponent;

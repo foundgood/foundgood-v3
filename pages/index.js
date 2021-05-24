@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
-import Link from 'next/link';
+import { useForm, useWatch } from 'react-hook-form';
 
 // Utilities
 import { useSalesForce, useMetadata, useAuth } from 'utilities/hooks';
@@ -15,35 +15,126 @@ import Button from 'components/button';
 import SectionWrapper from 'components/sectionWrapper';
 import Footer from 'components/_layout/footer';
 import InitiativeRow from 'components/_initiative/initiativeRow';
+import { SearchFilterMultiselect, SearchFilterDate } from 'components/_inputs';
+import dayjs from 'dayjs';
 
-const HomeComponent = ({ pageProps }) => {
+const HomeComponent = () => {
     // Hook: Verify logged in
-    const { verifyLoggedIn, logout } = useAuth();
+    const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Reset initiative data
-    const { reset } = useInitiativeDataStore();
+    const { reset: resetInitiativeData } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log } = useMetadata();
+    const { label, valueSet } = useMetadata();
 
-    const { sfQuery, queries } = useSalesForce();
-    const { data, error } = sfQuery(queries.getObjectList.account());
+    // Hook: Get sales force data methods
+    const { sfGetInitiativeList } = useSalesForce();
+    const { data } = sfGetInitiativeList();
 
-    const [searchValue, setSearchValue] = useState('');
+    // Hook: useForm setup
+    const { handleSubmit, control, register, getValues } = useForm({
+        mode: 'onChange',
+    });
+    const filterCategory = useWatch({
+        control,
+        name: 'filter.category',
+    });
+    const filterText = useWatch({
+        control,
+        name: 'filter.text',
+    });
+    const filterStage = useWatch({
+        control,
+        name: 'filter.stage',
+    });
+    const filterStartDate = useWatch({
+        control,
+        name: 'filter.startDate',
+    });
+    const filterEndDate = useWatch({
+        control,
+        name: 'filter.endDate',
+    });
 
+    // Search results data
+    const [initial, setInitial] = useState(null);
+    const [filtered, setFiltered] = useState(null);
+
+    // Reset initiative data on page load
     useEffect(() => {
-        reset();
+        resetInitiativeData();
     }, []);
 
+    // Add data results to initial data set
     useEffect(() => {
-        // Update search!
-    }, [searchValue]);
+        setInitial(data);
+        setFiltered(data);
+    }, [data]);
 
-    // Initiative IDs
+    function onFilter(data) {
+        if (initial) {
+            const {
+                filter: { text, category, stage, startDate, endDate },
+            } = data;
 
-    // a0p1x00000EkTIwAAN // New one from Luke!
-    // a0p1x00000Eh8COAAZ // Test case from Hanne
+            let nextFiltered;
+
+            // Optional text
+            nextFiltered = text
+                ? initial.filter(
+                      item =>
+                          item.Name.toLowerCase().includes(text) ||
+                          item.Application_Id__c?.includes(text)
+                  )
+                : initial;
+
+            // Optional category
+            nextFiltered =
+                category.length > 0
+                    ? nextFiltered.filter(item =>
+                          category.includes(item.Category__c)
+                      )
+                    : nextFiltered;
+
+            // Optional stage
+            nextFiltered =
+                stage.length > 0
+                    ? nextFiltered.filter(item => stage.includes(item.Stage__c))
+                    : nextFiltered;
+
+            // Optional start date
+            nextFiltered = startDate
+                ? nextFiltered.filter(
+                      item =>
+                          dayjs(startDate).format('YYYY-MM-DD') ===
+                          item.Grant_Start_Date__c
+                  )
+                : nextFiltered;
+
+            // Optional end date
+            nextFiltered = endDate
+                ? nextFiltered.filter(
+                      item =>
+                          dayjs(endDate).format('YYYY-MM-DD') ===
+                          item.Grant_End_Date__c
+                  )
+                : nextFiltered;
+
+            setFiltered(nextFiltered);
+        }
+    }
+
+    useEffect(() => {
+        onFilter(getValues());
+    }, [
+        filterCategory,
+        filterText,
+        filterStage,
+        filterStartDate,
+        filterEndDate,
+    ]);
 
     return (
         <div
@@ -54,50 +145,84 @@ const HomeComponent = ({ pageProps }) => {
             <div className="w-full max-w-[900px] page-mx mt-80 md:mt-120 pb-64 lg:pb-96 rounded-8">
                 <SectionWrapper>
                     <div className="flex justify-between">
-                        <h2 className="t-h3">
-                            {labelTodo('Your initiatives')}
+                        <h2 className="t-h2">
+                            {label('custom.FA_InitiativeManagerHeading')}
                         </h2>
-                        <Button
-                            variant="secondary"
-                            theme="teal"
-                            action="/wizard/introduction">
-                            {labelTodo('Create initiative')}
+                        <Button theme="teal" action="/wizard/introduction">
+                            {label('custom.FA_InitiativeManagerCreate')}
                         </Button>
                     </div>
-                    <input
-                        type="text"
-                        placeholder={labelTodo(
-                            'Search by initiative name or application ID'
-                        )}
-                        onChange={event => {
-                            // Local value state
-                            setSearchValue(event.target.value);
-                        }}
-                        className="input-search"
-                    />
-                    {/* TODO - Search filters - Dropdowns or custom multiselects ? */}
+                    <div className="flex flex-col">
+                        <input
+                            {...register('filter.text')}
+                            type="text"
+                            placeholder={label(
+                                'custom.FA_InitiativeManagerSearchBoxText'
+                            )}
+                            className="input-search"
+                        />
+                        <div className="flex flex-wrap mt-16 -m-8">
+                            <SearchFilterMultiselect
+                                name="filter.category"
+                                label={label(
+                                    'custom.FA_InitiativeManagerFilterFilterGrantGivingArea'
+                                )}
+                                controller={control}
+                                options={valueSet('initiative.Category__c')}
+                            />
+                            <SearchFilterMultiselect
+                                name="filter.stage"
+                                label={label(
+                                    'custom.FA_InitiativeManagerInitiativeStatus'
+                                )}
+                                controller={control}
+                                options={valueSet('initiative.Stage__c')}
+                            />
+                            <SearchFilterDate
+                                name="filter.startDate"
+                                label={label(
+                                    'custom.FA_InitiativeManagerFilterGrantStartDate'
+                                )}
+                                controller={control}
+                            />
+                            <SearchFilterDate
+                                name="filter.endDate"
+                                label={label(
+                                    'custom.FA_InitiativeManagerFilterGrantEndDate'
+                                )}
+                                controller={control}
+                            />
+                        </div>
+                    </div>
                 </SectionWrapper>
 
                 <SectionWrapper>
-                    <InitiativeRow
-                        initiativeId="a0p1x00000EkTIwAAN"
-                        type="Humanitarian"
-                        headline="Example initiative title"
-                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
-                        leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
-                        status="In progress"
-                        dueDate="17-05-2021"
-                    />
-
-                    <InitiativeRow
-                        initiativeId="a0p1x00000Eh8COAAZ"
-                        type="Humanitarian"
-                        funder="Ole Kirk´s, Leo Foundation" // Funder vs Collaborator ???
-                        headline="Example initiative title"
-                        leadFunder="Novo Nordisk Fonden" // Funder vs Collaborator ???
-                        status="In progress"
-                        dueDate="17-05-2021"
-                    />
+                    {filtered?.map(item => (
+                        <InitiativeRow
+                            key={item.Id}
+                            initiativeId={item.Id}
+                            type={item.Category__c}
+                            grantee={item.Lead_Grantee__r?.Name}
+                            headline={item.Name}
+                            leadFunder={
+                                item.Initiative_Funders__r?.records?.filter(
+                                    item => item.Type__c === 'Lead funder'
+                                )[0]?.Account__r.Name
+                            }
+                            otherFunders={
+                                item.Initiative_Funders__r?.records?.filter(
+                                    item => item.Type__c !== 'Lead funder'
+                                ).length
+                            }
+                            dueDate={
+                                item.Initiative_Reports__r?.records[0]
+                                    ?.Due_Date__c
+                            }
+                            startDate={item.Grant_Start_Date__c}
+                            endDate={item.Grant_End_Date__c}
+                            image={item.Hero_Image_URL__c}
+                        />
+                    ))}
                 </SectionWrapper>
                 <Footer />
             </div>

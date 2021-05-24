@@ -83,10 +83,10 @@ const useSalesForce = () => {
 
     // Method for getting intiatives list of the SalesForce API
     // Returns normal swr object ({ data, error, isValidating, mutate })
-    function sfGetInitiativeList(offset) {
+    function sfGetInitiativeList() {
         return useSWR(
             loggedIn ? 'custom/getInitiativeList' : null,
-            salesForce.custom.getInitiativeList({ offset }),
+            salesForce.custom.getInitiativeList,
             {
                 revalidateOnFocus: false,
                 onSuccess: updateUserTimeout,

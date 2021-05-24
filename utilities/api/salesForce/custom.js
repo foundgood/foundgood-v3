@@ -99,17 +99,23 @@ async function getUserInitiativeRights({ initiativeId }) {
     }
 }
 
-async function getInitiativeList({ offset = 0 }) {
+async function getInitiativeList(
+    swrParam,
+    token = accessToken(),
+    url = instanceUrl()
+) {
     try {
         const response = await axios.get(
-            `${instanceUrl()}/services/apexrest/Initiative/getInitiativeList?SOQLLimit=${limit}&SOQLOffset=${offset}`,
+            `${url}/services/apexrest/Initiative/getInitiativeList`,
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken()}`,
+                    Authorization: `Bearer ${token}`,
                 },
             }
         );
+
+        console.log(response);
 
         // Convert non-ok HTTP responses into errors:
         if (response.status !== 200) {
@@ -119,7 +125,7 @@ async function getInitiativeList({ offset = 0 }) {
             };
         }
 
-        return response;
+        return response.data;
     } catch (error) {
         console.warn(error);
         return error;
