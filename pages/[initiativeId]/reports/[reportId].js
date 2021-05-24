@@ -38,7 +38,7 @@ const ReportComponent = ({ pageProps }) => {
     } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log } = useMetadata();
+    const { labelTodo, label } = useMetadata();
 
     // Data manipulation
     const [developmentGoals, setDevelopmentGoals] = useState();
@@ -109,7 +109,7 @@ const ReportComponent = ({ pageProps }) => {
             initiative?._reportDetails &&
             Object.keys(initiative?._reportDetails).length !== 0
         ) {
-            console.log('initiative: ', initiative);
+            // console.log('initiative: ', initiative);
 
             // Get Report version
             const currentReport = initiative._reports[reportId];
@@ -119,7 +119,9 @@ const ReportComponent = ({ pageProps }) => {
             // Get list of funders
             const funders = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == 'Funder Overview' ? true : false;
+                    return item.Type__c == CONSTANTS.TYPES.FUNDER_OVERVIEW
+                        ? true
+                        : false;
                 })
                 .map(item => {
                     // Get funder based on key
@@ -137,7 +139,7 @@ const ReportComponent = ({ pageProps }) => {
             // Get all and then split them
             const allCollaborators = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == 'Collaborator Overview'
+                    return item.Type__c == CONSTANTS.TYPES.COLLABORATOR_OVERVIEW
                         ? true
                         : false;
                 })
@@ -152,10 +154,14 @@ const ReportComponent = ({ pageProps }) => {
                     return collaborator;
                 });
             const applicants = allCollaborators.filter(
-                item => item.Type__c != 'Additional collaborator'
+                item =>
+                    item.Type__c !=
+                    CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)
             );
             const collaborators = allCollaborators.filter(
-                item => item.Type__c == 'Additional collaborator'
+                item =>
+                    item.Type__c ==
+                    CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)
             );
             setApplicants(applicants);
             setCollaborators(collaborators);
@@ -164,7 +170,7 @@ const ReportComponent = ({ pageProps }) => {
             const employeesReflection = Object.values(
                 initiative._reportDetails
             ).filter(item => {
-                return item.Type__c == 'Employees Funded Overview'
+                return item.Type__c == CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
                     ? true
                     : false;
             });
@@ -192,11 +198,13 @@ const ReportComponent = ({ pageProps }) => {
                 group.total = group.total ? group.total + 1 : 1;
 
                 // Calculate how many are male/female/other in each group
-                if (employee.Gender__c == 'Male') {
+                if (employee.Gender__c == CONSTANTS.TYPES.GENDER_MALE) {
                     group.male = group.male ? group.male + 1 : 1;
-                } else if (employee.Gender__c == 'Female') {
+                } else if (
+                    employee.Gender__c == CONSTANTS.TYPES.GENDER_FEMALE
+                ) {
                     group.female = group.female ? group.female + 1 : 1;
-                } else if (employee.Gender__c == 'Other') {
+                } else if (employee.Gender__c == CONSTANTS.TYPES.GENDER_OTHER) {
                     group.other = group.other ? group.other + 1 : 1;
                 }
                 return result;
@@ -209,7 +217,9 @@ const ReportComponent = ({ pageProps }) => {
             // Sharing of results == "Dissimination"
             const allActivities = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == 'Activity Overview' ? true : false;
+                    return item.Type__c == CONSTANTS.TYPES.ACTIVITY_OVERVIEW
+                        ? true
+                        : false;
                 })
                 .map(item => {
                     // Get Activity based on key
@@ -251,7 +261,9 @@ const ReportComponent = ({ pageProps }) => {
                                     CONSTANTS.TYPES.INDICATOR_GENDER_OTHER
                                         ? item.Gender_Other__c
                                         : item.Gender__c;
-                                title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
+                                title = `${gender} (${labelTodo('age')} ${
+                                    item.Lowest_Age__c
+                                }-${item.Highest_Age__c})`;
                                 label = labelTodo('Reached so far');
                                 groupTitle = labelTodo('People reached');
                             }
@@ -292,7 +304,8 @@ const ReportComponent = ({ pageProps }) => {
                     // Only add activities of type "intervention"
                     // Only add activities - if they have indicators
                     if (
-                        activity.Activity_Type__c == 'Intervention' &&
+                        activity.Activity_Type__c ==
+                            CONSTANTS.TYPES.ACTIVITY_INTERVENTION &&
                         stripUndefined(indicators).length > 0
                     ) {
                         accumulator.push({
@@ -314,7 +327,8 @@ const ReportComponent = ({ pageProps }) => {
             const results = Object.values(allActivities)
                 .filter(item => {
                     // "Dissemination" or "Intervention"
-                    return item.Activity_Type__c == 'Dissemination'
+                    return item.Activity_Type__c ==
+                        CONSTANTS.TYPES.ACTIVITY_INTERVENTION
                         ? true
                         : false;
                 })
@@ -359,15 +373,17 @@ const ReportComponent = ({ pageProps }) => {
             // Report outcomes
             const outcomes = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == 'Outcome' ? true : false;
+                    return item.Type__c == CONSTANTS.TYPES.OUTCOME_OVERVIEW
+                        ? true
+                        : false;
                 })
                 .map(item => {
-                    console.log('outcome: ', item);
+                    // console.log('outcome: ', item);
                     // // Get Goal based on key
                     // const goal =
                     //     initiative._goals[item.Initiative_Activity__c];
                     // // Add Report Reflection text to activities
-                    // goal.reportReflection = item.Description__c;
+                    // goal.rep ortReflection = item.Description__c;
                     // return goal;
                 });
             // console.log('Outcomes: ', outcomes);
@@ -540,8 +556,8 @@ const ReportComponent = ({ pageProps }) => {
                         </SectionWrapper>
                     </SectionWrapper>
                     {/* Overview */}
-                    <SectionWrapper>
-                        {/* <div className="p-16 md:p-32 xl:px-64"> */}
+                    <SectionWrapper
+                        id={label('custom.FA_ReportWizardMenuOverview')}>
                         <SectionWrapper>
                             <h2 className="t-h4">{labelTodo('Overview')}</h2>
                             <h3 className="mt-24 t-preamble">
@@ -643,7 +659,8 @@ const ReportComponent = ({ pageProps }) => {
                         </div>
                     </SectionWrapper>
                     {/* Funders */}
-                    <SectionWrapper>
+                    <SectionWrapper
+                        id={label('custom.FA_ReportWizardMenuFunders')}>
                         <SectionWrapper>
                             <h3 className="t-h4">{labelTodo('Funders')}</h3>
                         </SectionWrapper>
@@ -758,7 +775,8 @@ const ReportComponent = ({ pageProps }) => {
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Applicants */}
                     {applicants && (
-                        <SectionWrapper>
+                        <SectionWrapper
+                            id={label('custom.FA_ReportWizardMenuApplicants')}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo(
@@ -799,7 +817,10 @@ const ReportComponent = ({ pageProps }) => {
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Collaborators */}
                     {collaborators && (
-                        <SectionWrapper>
+                        <SectionWrapper
+                            id={label(
+                                'custom.FA_ReportWizardMenuCollaborations'
+                            )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Overview of collaborations')}
@@ -838,7 +859,8 @@ const ReportComponent = ({ pageProps }) => {
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Employees funded by the grant */}
                     {employeesFundedReflection && (
-                        <SectionWrapper>
+                        <SectionWrapper
+                            id={label('custom.FA_ReportWizardMenuEmployees')}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Employees funded by the grant')}
@@ -886,7 +908,8 @@ const ReportComponent = ({ pageProps }) => {
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
-                    <SectionWrapper>
+                    <SectionWrapper
+                        id={label('custom.FA_ReportWizardMenuGoals')}>
                         <SectionWrapper>
                             <h3 className="t-h4">{labelTodo('Goals')}</h3>
                         </SectionWrapper>
@@ -912,7 +935,8 @@ const ReportComponent = ({ pageProps }) => {
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Activities */}
                     {activities && (
-                        <SectionWrapper>
+                        <SectionWrapper
+                            id={label('custom.FA_ReportWizardMenuActivities')}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Activities')}
@@ -981,7 +1005,8 @@ const ReportComponent = ({ pageProps }) => {
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Sharing of results */}
                     {results && (
-                        <SectionWrapper>
+                        <SectionWrapper
+                            id={label('custom.FA_ReportWizardMenuSharing')}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Sharing of results')}
@@ -1014,7 +1039,7 @@ const ReportComponent = ({ pageProps }) => {
                         </SectionWrapper>
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Logbook entries */}
+                    {/* Logbook entries - TBD */}
                     {/*
                     <SectionWrapper>
                         <SectionWrapper>
@@ -1036,10 +1061,23 @@ const ReportComponent = ({ pageProps }) => {
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Outcomes */}
+                    {outcomes && (
+                        <SectionWrapper>
+                            <SectionWrapper>
+                                <h3 className="t-h4">
+                                    {labelTodo('Outcomes')}
+                                </h3>
+                            </SectionWrapper>
+                            {outcomes.map((item, index) => (
+                                <p key={`o-${index}`}>Outcome {index}</p>
+                            ))}
+                        </SectionWrapper>
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Influences on policy */}
                     {influences && (
-                        <SectionWrapper>
+                        <SectionWrapper
+                            id={label('custom.FA_ReportWizardMenuInfluence')}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Influences on policy')}
@@ -1065,7 +1103,8 @@ const ReportComponent = ({ pageProps }) => {
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Evaluations */}
                     {evaluations && (
-                        <SectionWrapper>
+                        <SectionWrapper
+                            id={label('custom.FA_ReportWizardMenuEvaluations')}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Evaluations')}
