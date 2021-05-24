@@ -75,12 +75,20 @@ const ReportComponent = ({ pageProps }) => {
         'bg-blue-60',
         'bg-coral-60',
         'bg-amber-60',
+        'bg-teal-300',
+        'bg-blue-300',
+        'bg-coral-300',
+        'bg-amber-300',
     ];
     const donutHex = [
         '#507C93', // bg-teal-60
         '#545E92', // bg-blue-60
         '#995B57', // bg-coral-60
         '#977958', // bg-amber-60
+        '#548DBB', // bg-teal-300
+        '#4355B8', // bg-blue-300
+        '#B15446', // bg-coral-300
+        '#B7894D', // bg-amber-300
     ];
 
     useEffect(() => {
@@ -559,14 +567,6 @@ const ReportComponent = ({ pageProps }) => {
                                 <h3 className="t-h5">
                                     {initiativeData.Category__c}
                                 </h3>
-                                {/* 
-                                <div className="mt-16 t-sh6 text-blue-60">
-                                    {labelTodo('Additional goals')}
-                                </div>
-                                <h3 className="t-h5">
-                                    {labelTodo('Missing data? 🛑')}
-                                </h3>
-                                */}
                                 <div className="mt-16 t-sh6 text-blue-60">
                                     {labelTodo('Sustainable development goals')}
                                 </div>
