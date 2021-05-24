@@ -64,13 +64,11 @@ const ReportComponent = ({ pageProps }) => {
         setEmployeesFundedReflection,
     ] = useState();
     const [employeeGroups, setEmployeeGroups] = useState();
-
-    // const [goals, setGoals] = useState();
     const [activities, setActivities] = useState();
     const [results, setResults] = useState();
-    const [outcomes, setOutcomes] = useState();
     const [influences, setInfluences] = useState();
     const [evaluations, setEvaluations] = useState();
+    // const [outcomes, setOutcomes] = useState(); // TBD
 
     const donutColors = [
         'bg-teal-60',
@@ -84,13 +82,6 @@ const ReportComponent = ({ pageProps }) => {
         '#995B57', // bg-coral-60
         '#977958', // bg-amber-60
     ];
-
-    useEffect(() => {
-        // Temporary fix! - Clear initiative data
-        // - User could be looking at hard coded link to another initiative
-        // - Opening the report needs to wait for loading correct initiative
-        // reset();
-    }, []);
 
     useEffect(() => {
         if (reportId) {
@@ -370,24 +361,17 @@ const ReportComponent = ({ pageProps }) => {
                 });
             setResults(results);
 
-            // Report outcomes
-            const outcomes = Object.values(initiative._reportDetails)
-                .filter(item => {
-                    return item.Type__c == CONSTANTS.TYPES.OUTCOME_OVERVIEW
-                        ? true
-                        : false;
-                })
-                .map(item => {
-                    // console.log('outcome: ', item);
-                    // // Get Goal based on key
-                    // const goal =
-                    //     initiative._goals[item.Initiative_Activity__c];
-                    // // Add Report Reflection text to activities
-                    // goal.rep ortReflection = item.Description__c;
-                    // return goal;
-                });
-            // console.log('Outcomes: ', outcomes);
-            setOutcomes(outcomes);
+            // // Report outcomes - TBD
+            // const outcomes = Object.values(initiative._reportDetails)
+            //     .filter(item => {
+            //         return item.Type__c == CONSTANTS.TYPES.OUTCOME_OVERVIEW
+            //             ? true
+            //             : false;
+            //     })
+            //     .map(item => {
+            //         // console.log('outcome: ', item);
+            //     });
+            // setOutcomes(outcomes);
 
             // Influence on policy
             const influences = Object.values(initiative._reportDetails)
@@ -409,6 +393,7 @@ const ReportComponent = ({ pageProps }) => {
                 });
             setEvaluations(evaluations);
 
+            // NOT USED
             // const achievements = Object.values(
             //     initiative._reportDetails
             // ).filter(item => {
@@ -546,7 +531,8 @@ const ReportComponent = ({ pageProps }) => {
                                 {initiativeData.Name}
                             </div>
                             <div className="mt-16 t-sh2">
-                                {labelTodo('Annual report 2021')}
+                                {currentReport.Report_Type__c}{' '}
+                                {currentReport.Due_Date__c?.substring(0, 4)}
                             </div>
                             <div className="flex mt-16 t-caption text-blue-60">
                                 {initiativeData.Application_Id__c}
@@ -1060,8 +1046,8 @@ const ReportComponent = ({ pageProps }) => {
                         </SectionWrapper>
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Outcomes */}
-                    {outcomes && (
+                    {/* Outcomes TBD */}
+                    {/* {outcomes && (
                         <SectionWrapper>
                             <SectionWrapper>
                                 <h3 className="t-h4">
@@ -1072,7 +1058,7 @@ const ReportComponent = ({ pageProps }) => {
                                 <p key={`o-${index}`}>Outcome {index}</p>
                             ))}
                         </SectionWrapper>
-                    )}
+                    )} */}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Influences on policy */}
                     {influences && (
