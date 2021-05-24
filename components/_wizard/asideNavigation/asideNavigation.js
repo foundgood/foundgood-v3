@@ -19,7 +19,7 @@ const AsideNavigationComponent = () => {
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label, labelTodo } = useMetadata();
 
     // Store: wizardNavigation
     const {
@@ -54,7 +54,7 @@ const AsideNavigationComponent = () => {
                         </h2>
                         <h3 className="mt-16 t-sh6">
                             {`${
-                                initiative._reports[REPORT_ID].Report_Type__c
+                                initiative._reports[REPORT_ID]?.Report_Type__c
                             } ${label('custom.FA_TitleReport')} ${dayjs(
                                 initiative._reports[REPORT_ID]?.Due_Date__c
                             ).format('YYYY')}`}

@@ -19,7 +19,7 @@ import FGLogo from 'assets/images/fg-logo.svg';
 
 const HeaderComponent = ({ showUserControls }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     // Hook: Auth
     const { user, logout } = useAuth();
@@ -75,7 +75,7 @@ const HeaderComponent = ({ showUserControls }) => {
                                 <a>
                                     <FiHeart className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
-                                        {labelTodo('Initiatives')}
+                                        {label('custom.FA_MenuInitiatives')}
                                     </span>
                                 </a>
                             </Link>
@@ -85,7 +85,7 @@ const HeaderComponent = ({ showUserControls }) => {
                                 <a>
                                     <FiInbox className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
-                                        {labelTodo('Reports')}
+                                        {label('custom.FA_MenuReports')}
                                     </span>
                                 </a>
                             </Link>
@@ -117,23 +117,25 @@ const HeaderComponent = ({ showUserControls }) => {
                     ,
                 ])}>
                 <span className="flex items-center space-x-6 text-blue-300 t-h6">
-                    <Link href={router.pathname} locale="en">
+                    <Link href={router.asPath} locale="en">
                         <a
+                            onClick={() => setUserNavActive(false)}
                             className={cc([
                                 't-h6 transition-default hover:text-blue-200',
                                 { 'text-blue-100': router.locale === 'en' },
                             ])}>
-                            {labelTodo('English')}
+                            {label('custom.FA_MenuLanguageEN')}
                         </a>
                     </Link>
                     <span>/</span>
-                    <Link href={router.pathname} locale="da">
+                    <Link href={router.asPath} locale="da">
                         <a
+                            onClick={() => setUserNavActive(false)}
                             className={cc([
                                 't-h6 transition-default hover:text-blue-200',
                                 { 'text-blue-100': router.locale === 'da' },
                             ])}>
-                            {labelTodo('Danish')}
+                            {label('custom.FA_MenuLanguageDK')}
                         </a>
                     </Link>
                 </span>
@@ -142,7 +144,7 @@ const HeaderComponent = ({ showUserControls }) => {
                         logout();
                     }}
                     className="flex items-center text-blue-300 t-h6 transition-default hover:text-blue-200">
-                    {labelTodo('Logout')}
+                    {label('custom.FA_LogOut')}
                 </button>
             </div>
         </>

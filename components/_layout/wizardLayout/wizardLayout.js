@@ -77,10 +77,6 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     }, [MODE, REPORT_ID, INITIATIVE_ID]);
 
     useEffect(() => {
-        log();
-    }, []);
-
-    useEffect(() => {
         console.log({ initiative });
     }, [initiative]);
 

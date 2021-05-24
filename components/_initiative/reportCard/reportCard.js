@@ -60,7 +60,7 @@ const ReportCardComponent = ({
                         theme="teal"
                         variant="quaternary"
                         action={actionUpdate}>
-                        {label('custom.FA_ButtonUpdate')}
+                        {label('custom.FA_Update')}
                     </Button>
                 </div> */}
             </a>

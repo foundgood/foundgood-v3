@@ -7,7 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useInitiativeDataStore } from 'utilities/store';
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useContext } from 'utilities/hooks';
 
 // Components
 import Footer from 'components/_layout/footer';
@@ -16,18 +16,13 @@ import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
 
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
-    const { populateInitiative } = useInitiativeDataStore();
-
-    // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { populateInitiative, initiative } = useInitiativeDataStore();
 
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
 
     useEffect(() => {
-        if (INITIATIVE_ID) {
-            populateInitiative(INITIATIVE_ID);
-        }
+        populateInitiative(INITIATIVE_ID);
     }, [INITIATIVE_ID]);
 
     return (
@@ -38,9 +33,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                 {/* Iniative title */}
                 <div className="flex items-center justify-start py-16 bg-blue-20 page-px">
                     <p className="font-medium text-blue-100 t-sh5 md:flex line-clamp-3">
-                        {labelTodo(
-                            'Coastal Hazard Wheel: Global coastal disaster prevention & recovery project'
-                        )}
+                        {initiative.Name}
                     </p>
                 </div>
 

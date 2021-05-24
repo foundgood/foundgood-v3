@@ -4,10 +4,9 @@ import React, { useEffect, useState } from 'react';
 // Packages
 import Image from 'next/image';
 import t from 'prop-types';
-import { useRouter } from 'next/router';
 
 // Utilities
-import { useMetadata, useAuth } from 'utilities/hooks';
+import { useMetadata, useAuth, useContext } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { stripUndefined, isJson, asId } from 'utilities';
 
@@ -21,8 +20,8 @@ import DividerLine from 'components/_initiative/dividerLine';
 import ChartCard from 'components/_initiative/chartCard';
 
 const ReportComponent = ({ pageProps }) => {
-    const router = useRouter();
-    const { reportId } = router.query;
+    // Hook: Context
+    const { REPORT_ID } = useContext();
 
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
@@ -31,10 +30,9 @@ const ReportComponent = ({ pageProps }) => {
     // Fetch initiative data
     const {
         CONSTANTS,
-        // reset,
         initiative,
         populateReportDetails,
-        // getReportDetails,
+        populateReport,
     } = useInitiativeDataStore();
 
     // Hook: Metadata
@@ -92,15 +90,14 @@ const ReportComponent = ({ pageProps }) => {
     ];
 
     useEffect(() => {
-        if (reportId) {
-            populateReportDetails(reportId);
-        }
-    }, [reportId]);
+        populateReport(REPORT_ID);
+        populateReportDetails(REPORT_ID);
+    }, [REPORT_ID]);
 
     useEffect(() => {
         // Initial Load - Handle empty object state?
         if (
-            reportId &&
+            REPORT_ID &&
             initiative?._activities &&
             Object.keys(initiative?._activities).length !== 0 &&
             initiative?._reports &&
@@ -111,7 +108,7 @@ const ReportComponent = ({ pageProps }) => {
             // console.log('initiative: ', initiative);
 
             // Get Report version
-            const currentReport = initiative._reports[reportId];
+            const currentReport = initiative._reports[REPORT_ID];
             // const reportVersion = currentReport.version; // "1" or "1.1"
             setCurrentReport(currentReport);
 
@@ -735,7 +732,7 @@ const ReportComponent = ({ pageProps }) => {
                             hasBackground={true}
                             headline="Overall perfomance"
                             body={
-                                initiativeData._reports[reportId]
+                                initiativeData._reports[REPORT_ID]
                                     ?.Summary_Of_Activities__c
                             }
                         />
@@ -744,7 +741,7 @@ const ReportComponent = ({ pageProps }) => {
                             className="mt-32"
                             headline="Challenges & Learnings"
                             body={
-                                initiativeData._reports[reportId]
+                                initiativeData._reports[REPORT_ID]
                                     ?.Summary_Of_Challenges_And_Learnings__c
                             }
                         />

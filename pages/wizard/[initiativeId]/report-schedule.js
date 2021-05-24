@@ -172,13 +172,13 @@ const ReportScheduleComponent = ({ pageProps }) => {
                     })
                 ) : (
                     <p className="t-h5">
-                        {labelTodo('No funders added to the initiative yet')}
+                        {label('custom.FA_WizardEmptyStatesReports')}
                     </p>
                 )}
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo(`New report for ${funder?.Account__r.Name}`)}
+                title={label('custom.FA_WizardModalHeadingReports')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>

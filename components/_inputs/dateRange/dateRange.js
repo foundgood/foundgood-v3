@@ -15,14 +15,14 @@ import { useMetadata } from 'utilities/hooks';
 const DateRangeComponent = ({
     controller,
     defaultValue,
-    label,
+    label: inputLabel,
     name,
     subLabel,
     required,
     disabled,
 }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     // Local state for handling dates
     const [from, setFrom] = useState(defaultValue.from);
@@ -56,14 +56,20 @@ const DateRangeComponent = ({
     return (
         <>
             <label className="flex flex-col" htmlFor={name}>
-                {label && <span className="input-label">{label}</span>}
+                {inputLabel && (
+                    <span className="input-label">{inputLabel}</span>
+                )}
                 {subLabel && (
                     <span className="mt-8 input-sublabel">{subLabel}</span>
                 )}
-                <div className={cc(['space-x-12 flex', { 'mt-16': label }])}>
+                <div
+                    className={cc([
+                        'space-x-12 flex',
+                        { 'mt-16': inputLabel },
+                    ])}>
                     <div className="flex flex-col flex-grow">
                         <span className="mb-4 input-utility-text">
-                            {labelTodo('From')}
+                            {label('custom.FA_FormCaptureDateRangeFrom')}
                         </span>
                         <DayPickerInput
                             inputProps={{ disabled }}
@@ -95,7 +101,7 @@ const DateRangeComponent = ({
                     </div>
                     <div className="flex flex-col flex-grow">
                         <span className="mb-4 input-utility-text">
-                            {labelTodo('To')}
+                            {label('custom.FA_FormCaptureDateRangeTo')}
                         </span>
                         <DayPickerInput
                             inputProps={{ disabled: disabled || !from }}

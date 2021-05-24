@@ -36,7 +36,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
 
     useEffect(() => {
         populateInitiative(INITIATIVE_ID);
-    }, []);
+    }, [INITIATIVE_ID]);
 
     // Effect: Listen to breakpoint and toggle menu accordingly
     const smallBps = ['2xs', 'xs', 'sm', 'md', 'lg'];
