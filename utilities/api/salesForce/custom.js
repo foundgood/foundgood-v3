@@ -115,8 +115,6 @@ async function getInitiativeList(
             }
         );
 
-        console.log(response);
-
         // Convert non-ok HTTP responses into errors:
         if (response.status !== 200) {
             throw {

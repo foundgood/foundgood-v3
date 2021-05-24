@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import { useMetadata } from 'utilities/hooks';
 
 // Icons
-import { FiFileText } from 'react-icons/fi';
+import { FiActivity } from 'react-icons/fi';
 
 const InitiativeRowComponent = ({
     initiativeId,
@@ -33,8 +33,8 @@ const InitiativeRowComponent = ({
         <Link href={`/${initiativeId}/overview`}>
             <a className="flex flex-col justify-between p-16 mt-24 bg-white cursor-pointer md:flex-row rounded-8">
                 <div className="flex justify-start">
-                    {image && (
-                        <div className="relative hidden mr-16 overflow-hidden w-128 h-128 rounded-8 sm:flex">
+                    {image ? (
+                        <div className="relative flex-shrink-0 hidden overflow-hidden w-128 h-128 rounded-8 sm:flex">
                             <Image
                                 src="/images/fg-landscape-1.jpg"
                                 layout="fill"
@@ -42,8 +42,12 @@ const InitiativeRowComponent = ({
                                 sizes="256px"
                             />
                         </div>
+                    ) : (
+                        <div className="items-center justify-center flex-shrink-0 hidden w-128 h-128 bg-blue-10 rounded-8 sm:flex">
+                            <FiActivity className="w-48 h-48" />
+                        </div>
                     )}
-                    <div>
+                    <div className="ml-16">
                         <div className="inline-block px-8 pt-3 pb-1 t-sh7 text-blue-60 bg-blue-20 rounded-4">
                             {type}
                         </div>
@@ -60,7 +64,7 @@ const InitiativeRowComponent = ({
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-end mt-24 space-x-12 md:justify-start md:w-1/4 md:space-y-12 md:flex-col md:space-x-0 md:mt-0">
+                <div className="flex justify-end flex-shrink-0 mt-24 space-x-12 md:justify-start md:w-1/4 md:space-y-12 md:flex-col md:space-x-0 md:mt-0">
                     {dueDate && (
                         <div className="p-8 space-y-4 border-4 sm:w-2/5 md:w-auto border-amber-20 rounded-4">
                             <div className="t-sh7 text-teal-60">

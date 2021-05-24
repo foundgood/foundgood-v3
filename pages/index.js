@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import cc from 'classcat';
 import t from 'prop-types';
 import { useForm, useWatch } from 'react-hook-form';
+import dayjs from 'dayjs';
 
 // Utilities
 import { useSalesForce, useMetadata, useAuth } from 'utilities/hooks';
@@ -16,7 +17,6 @@ import SectionWrapper from 'components/sectionWrapper';
 import Footer from 'components/_layout/footer';
 import InitiativeRow from 'components/_initiative/initiativeRow';
 import { SearchFilterMultiselect, SearchFilterDate } from 'components/_inputs';
-import dayjs from 'dayjs';
 
 const HomeComponent = () => {
     // Hook: Verify logged in
@@ -34,16 +34,16 @@ const HomeComponent = () => {
     const { data } = sfGetInitiativeList();
 
     // Hook: useForm setup
-    const { handleSubmit, control, register, getValues } = useForm({
+    const { control, register, getValues } = useForm({
         mode: 'onChange',
-    });
-    const filterCategory = useWatch({
-        control,
-        name: 'filter.category',
     });
     const filterText = useWatch({
         control,
         name: 'filter.text',
+    });
+    const filterCategory = useWatch({
+        control,
+        name: 'filter.category',
     });
     const filterStage = useWatch({
         control,
@@ -69,8 +69,27 @@ const HomeComponent = () => {
 
     // Add data results to initial data set
     useEffect(() => {
-        setInitial(data);
-        setFiltered(data);
+        // Remap data so reports are the main item and initiative is the child
+        const initiativeData = data?.reduce((acc, item) => {
+            acc = [
+                ...acc,
+                {
+                    ...item,
+                    reports:
+                        item.Initiative_Reports__r?.records.map(
+                            report => report
+                        ) ?? [],
+                    funders:
+                        item.Initiative_Funders__r?.records?.map(
+                            funder => funder
+                        ) ?? [],
+                },
+            ];
+            return acc;
+        }, []);
+
+        setInitial(initiativeData);
+        setFiltered(initiativeData);
     }, [data]);
 
     function onFilter(data) {
@@ -205,29 +224,27 @@ const HomeComponent = () => {
                             grantee={item.Lead_Grantee__r?.Name}
                             headline={item.Name}
                             leadFunder={
-                                item.Initiative_Funders__r?.records?.filter(
+                                item.funders?.filter(
                                     item =>
                                         item.Type__c ===
                                         CONSTANTS.TYPES.LEAD_FUNDER
                                 )[0]?.Account__r.Name
                             }
                             otherFunders={
-                                item.Initiative_Funders__r?.records?.filter(
+                                item.funders?.filter(
                                     item =>
                                         item.Type__c !==
                                         CONSTANTS.TYPES.LEAD_FUNDER
                                 ).length
                             }
-                            dueDate={
-                                item.Initiative_Reports__r?.records[0]
-                                    ?.Due_Date__c
-                            }
+                            dueDate={item.reports[0]?.Due_Date__c}
                             startDate={item.Grant_Start_Date__c}
                             endDate={item.Grant_End_Date__c}
                             image={item.Hero_Image_URL__c}
                         />
                     ))}
                 </SectionWrapper>
+
                 <Footer />
             </div>
         </div>

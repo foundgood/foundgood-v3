@@ -83,7 +83,11 @@ const SearchFilterMultiselectComponent = ({
                 }}>
                 {`${label} `}
                 <span className="font-bold">
-                    {value.length > 0 ? value.join(', ') : '...'}
+                    {value.length > 0
+                        ? value
+                              .map(v => options.find(o => v === o.value).label)
+                              .join(', ')
+                        : '...'}
                 </span>
             </button>
             {value.length > 0 && (
