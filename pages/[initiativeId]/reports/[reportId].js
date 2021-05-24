@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
-import { stripUndefined, isJson } from 'utilities';
+import { stripUndefined, isJson, asId } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -551,7 +551,7 @@ const ReportComponent = ({ pageProps }) => {
                     </SectionWrapper>
                     {/* Overview */}
                     <SectionWrapper
-                        id={label('custom.FA_ReportWizardMenuOverview')}>
+                        id={asId(label('custom.FA_ReportWizardMenuOverview'))}>
                         <SectionWrapper>
                             <h2 className="t-h4">{labelTodo('Overview')}</h2>
                             <h3 className="mt-24 t-preamble">
@@ -646,7 +646,7 @@ const ReportComponent = ({ pageProps }) => {
                     </SectionWrapper>
                     {/* Funders */}
                     <SectionWrapper
-                        id={label('custom.FA_ReportWizardMenuFunders')}>
+                        id={asId(label('custom.FA_ReportWizardMenuFunders'))}>
                         <SectionWrapper>
                             <h3 className="t-h4">{labelTodo('Funders')}</h3>
                         </SectionWrapper>
@@ -762,7 +762,9 @@ const ReportComponent = ({ pageProps }) => {
                     {/* Applicants */}
                     {applicants && (
                         <SectionWrapper
-                            id={label('custom.FA_ReportWizardMenuApplicants')}>
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuApplicants')
+                            )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo(
@@ -804,8 +806,10 @@ const ReportComponent = ({ pageProps }) => {
                     {/* Collaborators */}
                     {collaborators && (
                         <SectionWrapper
-                            id={label(
-                                'custom.FA_ReportWizardMenuCollaborations'
+                            id={asId(
+                                label(
+                                    'custom.FA_ReportWizardMenuCollaborations'
+                                )
                             )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
@@ -846,7 +850,9 @@ const ReportComponent = ({ pageProps }) => {
                     {/* Employees funded by the grant */}
                     {employeesFundedReflection && (
                         <SectionWrapper
-                            id={label('custom.FA_ReportWizardMenuEmployees')}>
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuEmployees')
+                            )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Employees funded by the grant')}
@@ -895,7 +901,7 @@ const ReportComponent = ({ pageProps }) => {
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
                     <SectionWrapper
-                        id={label('custom.FA_ReportWizardMenuGoals')}>
+                        id={asId(label('custom.FA_ReportWizardMenuGoals'))}>
                         <SectionWrapper>
                             <h3 className="t-h4">{labelTodo('Goals')}</h3>
                         </SectionWrapper>
@@ -922,7 +928,9 @@ const ReportComponent = ({ pageProps }) => {
                     {/* Activities */}
                     {activities && (
                         <SectionWrapper
-                            id={label('custom.FA_ReportWizardMenuActivities')}>
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuActivities')
+                            )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Activities')}
@@ -992,7 +1000,9 @@ const ReportComponent = ({ pageProps }) => {
                     {/* Sharing of results */}
                     {results && (
                         <SectionWrapper
-                            id={label('custom.FA_ReportWizardMenuSharing')}>
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuSharing')
+                            )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Sharing of results')}
@@ -1063,7 +1073,9 @@ const ReportComponent = ({ pageProps }) => {
                     {/* Influences on policy */}
                     {influences && (
                         <SectionWrapper
-                            id={label('custom.FA_ReportWizardMenuInfluence')}>
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuInfluence')
+                            )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Influences on policy')}
@@ -1090,7 +1102,9 @@ const ReportComponent = ({ pageProps }) => {
                     {/* Evaluations */}
                     {evaluations && (
                         <SectionWrapper
-                            id={label('custom.FA_ReportWizardMenuEvaluations')}>
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuEvaluations')
+                            )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo('Evaluations')}

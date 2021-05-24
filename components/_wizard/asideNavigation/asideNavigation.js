@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 
 // Packages
+import dayjs from 'dayjs';
 
 // Utilities
 import {
@@ -52,7 +53,11 @@ const AsideNavigationComponent = () => {
                             }
                         </h2>
                         <h3 className="mt-16 t-sh6">
-                            {initiative._reports[REPORT_ID]?.Due_Date__c}
+                            {`${
+                                initiative._reports[REPORT_ID].Report_Type__c
+                            } ${label('custom.FA_TitleReport')} ${dayjs(
+                                initiative._reports[REPORT_ID]?.Due_Date__c
+                            ).format('YYYY')}`}
                         </h3>
                     </>
                 ) : (

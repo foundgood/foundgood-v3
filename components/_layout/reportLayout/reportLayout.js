@@ -12,7 +12,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WizardStatus from 'components/_report/wizardStatus';
-import { AsideNavigation } from 'components/_report/asideNavigation';
+import AsideNavigation from 'components/_report/asideNavigation';
 import IconButton from 'components/iconButton';
 import Button from 'components/button';
 import Footer from 'components/_layout/footer';

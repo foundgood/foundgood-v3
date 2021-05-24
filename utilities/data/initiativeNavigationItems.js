@@ -15,7 +15,7 @@ const initiativeItems = () => [
         hideBack: true,
     },
     {
-        title: 'Projects details',
+        title: 'custom.FA_MenuContext',
         visible: true,
         items: [
             {
@@ -116,7 +116,7 @@ const initiativeItems = () => [
         ],
     },
     {
-        title: 'Activities',
+        title: 'custom.FA_MenuActivities',
         visible: true,
         items: [
             {
@@ -196,7 +196,7 @@ const initiativeItems = () => [
         ],
     },
     {
-        title: 'Progress',
+        title: 'custom.FA_MenuDevelopments',
         visible: true,
         items: [
             {
@@ -245,7 +245,7 @@ const initiativeItems = () => [
         ],
     },
     // {
-    //     title: 'Logbook',
+    //     title: 'custom.FA_MenuLogbook',
     //     visible: true,
     //     items: [
     //         {
@@ -263,7 +263,7 @@ const initiativeItems = () => [
     //     ],
     // },
     {
-        title: 'Reports',
+        title: 'custom.FA_MenuReports',
         visible: true,
         items: [
             {
@@ -302,11 +302,11 @@ const initiativeItems = () => [
 
 const initiativeDetailingItems = () => [
     {
-        title: 'Background',
+        title: 'custom.FA_MenuInitiativeDetails',
         visible: true,
         items: [
             {
-                title: 'Problems to be solved',
+                title: 'custom.FA_InitiativeViewProblemsHeading',
                 baseUrl: 'problems-to-be-solved',
                 url(initiativeId) {
                     return `/wizard/${initiativeId}/problems-to-be-solved`;
@@ -325,7 +325,7 @@ const initiativeDetailingItems = () => [
                 },
             },
             {
-                title: 'Causes of the problem',
+                title: 'custom.FA_InitiativeViewCausesHeading',
                 baseUrl: 'causes-of-the-problem',
                 url(initiativeId) {
                     return `/wizard/${initiativeId}/causes-of-the-problem`;
@@ -343,7 +343,7 @@ const initiativeDetailingItems = () => [
                 },
             },
             {
-                title: 'Organisational focus',
+                title: 'custom.FA_InitiativeViewOrgFocusHeading',
                 baseUrl: 'organisational-focus',
                 url(initiativeId) {
                     return `/wizard/${initiativeId}/organisational-focus`;
@@ -362,7 +362,7 @@ const initiativeDetailingItems = () => [
                 },
             },
             {
-                title: 'Our vision',
+                title: 'custom.FA_InitiativeViewVisionHeading',
                 baseUrl: 'our-vision',
                 url(initiativeId) {
                     return `/wizard/${initiativeId}/our-vision`;
@@ -380,7 +380,7 @@ const initiativeDetailingItems = () => [
                 },
             },
             {
-                title: 'Reasons for this solve',
+                title: 'custom.FA_InitiativeViewReasonsHeading',
                 baseUrl: 'reasons-for-this-solve',
                 url(initiativeId) {
                     return `/wizard/${initiativeId}/reasons-for-this-solve`;
@@ -403,7 +403,7 @@ const initiativeDetailingItems = () => [
 
 const initiativePlanningItems = () => [
     {
-        title: 'Targets',
+        title: 'custom.FA_InitiativeViewTargetsHeading',
         baseUrl: 'targets',
         url(initiativeId) {
             return `/wizard/${initiativeId}/targets`;
@@ -421,7 +421,7 @@ const initiativePlanningItems = () => [
         },
     },
     {
-        title: 'Outcomes',
+        title: 'custom.FA_InitiativeViewOutcomesHeading',
         baseUrl: 'outcomes',
         url(initiativeId) {
             return `/wizard/${initiativeId}/outcomes`;

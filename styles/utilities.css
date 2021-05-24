@@ -87,6 +87,12 @@
         font-weight: 400;
     }
 
+    /* Offset anchors for header height */
+    .offset-anchor:target {
+        content: '';
+        @apply block lg:pt-[128px] lg:mt-[-128px] pt-[176px] mt-[-176px];
+    }
+
     /* Used on homepage */
     .input-search {
         @apply w-full px-24 pt-16 pb-10 mt-24 text-blue-100 bg-white outline-none t-sh3 placeholder-blue-60 transition-default focus:outline-none focus:ring-blue-100 focus:ring-2 rounded-8;
@@ -130,7 +136,7 @@
         15%                         234 degrees      (start of segment 3)
         15%   (45 + 20 + 15) * 3.6 = 288 degrees     (end of segment 3)
         20%     last stop is always 360 degrees      (start of segment 4)
-        
+
         background-image: conic-gradient(
             #ff0000 72deg,
             #ff00ff 72deg,
