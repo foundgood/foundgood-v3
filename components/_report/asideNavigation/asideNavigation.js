@@ -1,55 +1,82 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
+import cc from 'classcat';
+import dayjs from 'dayjs';
+import Scrollspy from 'react-scrollspy';
 
 // Utilities
-import { useReportNavigationStore } from 'utilities/store';
+import { useMetadata, useContext } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
+import { asId } from 'utilities';
 
-import { useMetadata } from 'utilities/hooks';
-
-// Components
-import { SubLevelItem } from 'components/_report/asideNavigation';
+// Data
+import { reportItems } from 'utilities/data/reportNavigationItems';
 
 const AsideNavigationComponent = () => {
-    // Store: reportNavigation
-    const { navItems } = useReportNavigationStore();
+    // Context for wizard pages
+    const { REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
+
+    // Store: Initiative data
+    const { initiative } = useInitiativeDataStore();
 
     return (
         <>
             <header>
-                <p className="mt-8 t-footnote">
-                    {labelTodo(
-                        'Report: Global coastal disaster prevention & recovery project'
-                    )}
-                </p>
-                <h2 className="mt-16 t-h5">{labelTodo('Foundation Name')}</h2>
+                <p className="mt-8 t-footnote">{initiative.Name}</p>
+                <h2 className="mt-16 t-h5">
+                    {`${initiative._reports[REPORT_ID]?.Report_Type__c} ${label(
+                        'custom.FA_TitleReport'
+                    )} ${dayjs(
+                        initiative._reports[REPORT_ID]?.Due_Date__c
+                    ).format('YYYY')}`}
+                </h2>
                 <h3 className="mt-16 t-sh6">
-                    {labelTodo('Annual Report: 2021')}
+                    {
+                        initiative._reports[REPORT_ID]?.Funder_Report__r
+                            .Account__r.Name
+                    }
                 </h3>
             </header>
-
-            <ul className="mt-48">
-                {navItems.map((item, index) => (
-                    <SubLevelItem
-                        key={`nav-${index}`}
-                        // parentIndex={index}
-                        index={index}
-                        title={item.title}
-                        inProgress={item.inProgress}
-                        completed={item.completed}
-                    />
-                    // <TopLevelItem
-                    //     key={`nav-${index}`}
-                    //     index={index}
-                    //     title={item.title}
-                    //     collapsed={item.collapsed}
-                    //     items={item.items}
-                    // />
-                ))}
+            {/* Parent items */}
+            <ul className="mt-48 space-y-48">
+                {reportItems().map(item => {
+                    if (item.visible) {
+                        return (
+                            <li key={item.title}>
+                                <span className="flex t-caption-bold">
+                                    {label(item.title)}
+                                </span>
+                                {/* Sub-level items */}
+                                <ul className="block">
+                                    <Scrollspy
+                                        componentTag={'nav'}
+                                        className="flex flex-col"
+                                        items={item.items.map(childItem =>
+                                            asId(label(childItem.title))
+                                        )}
+                                        offset={-200}
+                                        currentClassName="!t-caption-bold text-teal-300">
+                                        {item.items.map(childItem => (
+                                            <a
+                                                key={childItem.title}
+                                                className="mt-24 md:cursor-pointers t-caption transition-default"
+                                                href={`#${asId(
+                                                    label(childItem.title)
+                                                )}`}>
+                                                {label(childItem.title)}
+                                            </a>
+                                        ))}
+                                    </Scrollspy>
+                                </ul>
+                            </li>
+                        );
+                    }
+                })}
             </ul>
         </>
     );

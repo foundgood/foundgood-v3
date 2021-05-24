@@ -9,7 +9,7 @@ const reportItems = () => [
         hideBack: true,
     },
     {
-        title: 'Initiative information',
+        title: 'custom.FA_ReportWizardMenuHeading1',
         visible: true,
         items: [
             {
@@ -89,7 +89,7 @@ const reportItems = () => [
         ],
     },
     {
-        title: 'Key changes',
+        title: 'custom.FA_ReportWizardMenuHeading2',
         visible: true,
         items: [
             {
@@ -240,7 +240,7 @@ const reportItems = () => [
         ],
     },
     {
-        title: 'Key results',
+        title: 'custom.FA_ReportWizardMenuHeading3',
         visible: true,
         items: [
             {

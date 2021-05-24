@@ -1,6 +1,6 @@
 import hasWindow from './hasWindow';
 import isJson from './isJson';
-import createQuerystring from './createQuerytring';
+import asId from './asId';
 import stripUndefined from './stripUndefined';
 
-export { hasWindow, isJson, createQuerystring, stripUndefined };
+export { hasWindow, isJson, asId, stripUndefined };

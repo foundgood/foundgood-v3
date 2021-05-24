@@ -29,7 +29,7 @@ const TopLevelItemComponent = ({ item }) => {
     const sectionToggled = openSection === item.title;
 
     return (
-        <li className={cc(['mt-32'])}>
+        <li className="mt-32">
             <span
                 className="flex t-caption-bold md:cursor-pointer"
                 onClick={() => toggleSection(item)}>
