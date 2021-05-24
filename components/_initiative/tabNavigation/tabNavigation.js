@@ -5,37 +5,30 @@ import React, { useEffect, useState } from 'react';
 import cc from 'classcat';
 
 // Utilities
+import { useMetadata, useContext } from 'utilities/hooks';
 import { useInitiativeLayoutStore } from 'utilities/store';
-import { useResponsive, useContext } from 'utilities/hooks';
 
 // Components
 import ActiveLink from 'components/activeLink';
-import IconButton from 'components/iconButton';
 
 // Icons
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 const TabNavigationComponent = () => {
-    const { initiativeId } = useInitiativeLayoutStore();
-
-    // useEffect(() => {
-    //     console.log('initiativeId: ', initiativeId);
-    // }, [initiativeId]);
-
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
 
     // Store: InitiativeLayout
-    const { newNavigation, navigation } = useInitiativeLayoutStore();
+    const { newNavigation } = useInitiativeLayoutStore();
+
+    // Hook: Metadata
+    const { label } = useMetadata();
 
     const [menuActive, setMenuActive] = useState(false);
-    const [subMenuIsActive, setSubMenuIsActive] = useState(false);
+    // const [subMenuIsActive, setSubMenuIsActive] = useState(false);
     const toggleMenu = () => {
-        console.log('menuOpen: ', menuActive);
         setMenuActive(!menuActive);
     };
-
-    console.log('newNavigation: ', newNavigation);
 
     return (
         <>
@@ -52,12 +45,12 @@ const TabNavigationComponent = () => {
                                     className={cc([
                                         'flex flex-col px-16 pb-16 pt-[14px] mt-4 items-start rounded-8 text-blue-300 t-h6 hover:text-blue-200',
                                         {
-                                            'text-blue-100 ': subMenuIsActive,
+                                            // 'text-blue-100 ': subMenuIsActive,
                                             'bg-blue-20': menuActive,
                                         },
                                     ])}>
                                     <div className="flex">
-                                        {item.label}
+                                        {label(item.label)}
                                         {menuActive && (
                                             <FiChevronUp className="ml-4" />
                                         )}
@@ -79,7 +72,7 @@ const TabNavigationComponent = () => {
                                                     key={i}
                                                     active="text-blue-100">
                                                     <a className="flex flex-col pt-12 text-blue-300 t-h6 transition-default hover:text-blue-200">
-                                                        {subItem.label}
+                                                        {label(subItem.label)}
                                                     </a>
                                                 </ActiveLink>
                                             </div>
@@ -96,7 +89,7 @@ const TabNavigationComponent = () => {
                                     key={index}
                                     active="text-blue-100 !border-blue-100">
                                     <a className="flex items-center py-16 text-blue-300 border-t-2 border-amber-10 t-h6 transition-default hover:text-blue-200">
-                                        {item.label}
+                                        {label(item.label)}
                                     </a>
                                 </ActiveLink>
                             );
