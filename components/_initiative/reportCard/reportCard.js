@@ -52,7 +52,9 @@ const ReportCardComponent = ({
                 </div>
                 <div className="mt-8 text-teal-100 t-h5">{headline}</div>
                 <div className="text-teal-60 t-sh6">
-                    {status == 'Published' ? 'Sent ' : 'Due '}
+                    {status == 'Published'
+                        ? label('custom.FA_InitiativeViewReportSubmitted')
+                        : label('custom.FA_InitiativeViewReportDue')}{' '}
                     {date}
                 </div>
                 {/* <div className="self-end mt-16">

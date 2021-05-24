@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
-import { stripUndefined, isJson, asId } from 'utilities';
+import { stripUndefined, asId } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -264,13 +264,19 @@ const ReportComponent = ({ pageProps }) => {
                                     item.Lowest_Age__c
                                 }-${item.Highest_Age__c})`;
                                 label = labelTodo('Reached so far');
-                                groupTitle = labelTodo('People reached');
+                                groupTitle = 'labelTodo';
+                                // label(
+                                //     'custom.FA_InitiativeViewIndicatorsPeopleReached'
+                                // );
                             }
                             // Custom indicators - CONSTANTS.TYPES.INDICATOR_CUSTOM
                             else {
                                 title = item.Name;
                                 label = labelTodo('Total so far');
-                                groupTitle = labelTodo('Indicator');
+                                groupTitle = 'labelTodo';
+                                // label(
+                                //     'custom.FA_InitiativeViewIndicatorsMetrics'
+                                // );
                             }
 
                             // Not all indicators have a "Target"
@@ -338,23 +344,33 @@ const ReportComponent = ({ pageProps }) => {
                     if (item.Publication_Type__c) {
                         items = [
                             {
-                                label: labelTodo('Publication type'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingPublicationType'
+                                ),
                                 text: item.Publication_Type__c,
                             },
                             {
-                                label: labelTodo('Publication year'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingPublicationYear'
+                                ),
                                 text: item.Publication_Year__c,
                             },
                             {
-                                label: labelTodo('Publisher'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingPublisher'
+                                ),
                                 text: item.Publication_Publisher__c,
                             },
                             {
-                                label: labelTodo('Author'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingAuthor'
+                                ),
                                 text: item.Publication_Author__c,
                             },
                             {
-                                label: labelTodo('DOI'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingPublicationDOI'
+                                ),
                                 text: item.Publication_DOI__c,
                             },
                         ];
@@ -562,13 +578,15 @@ const ReportComponent = ({ pageProps }) => {
                         <div className="inline-grid items-start w-full grid-cols-1 md:grid-cols-2 md:gap-24">
                             <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                                 <div className="t-sh6 text-blue-60">
-                                    {labelTodo('Grant giving area')}
+                                    {label(
+                                        'custom.FA_InitiativeViewGrantGivingArea'
+                                    )}
                                 </div>
                                 <h3 className="t-h5">
                                     {initiativeData.Category__c}
                                 </h3>
                                 <div className="mt-16 t-sh6 text-blue-60">
-                                    {labelTodo('Sustainable development goals')}
+                                    {label('custom.FA_InitiativeViewSDGSs')}
                                 </div>
                                 <div className="flex flex-col">
                                     {developmentGoals &&
@@ -598,7 +616,9 @@ const ReportComponent = ({ pageProps }) => {
                                     {initiativeData.Grant_End_Date__c}
                                 </h3>
                                 <div className="mt-16 t-sh6 text-blue-60">
-                                    {labelTodo('Initiative location')}
+                                    {label(
+                                        'custom.FA_InitiativeViewInitiativeLocation'
+                                    )}
                                 </div>
                                 <h3 className="t-h5">
                                     {initiativeData.Translated_Where_Is_Problem__c?.split(
@@ -657,7 +677,9 @@ const ReportComponent = ({ pageProps }) => {
                                 <div className="pie" style={pieChartStyle}>
                                     <div className="absolute w-full -mt-16 text-center top-1/2">
                                         <p className="t-sh7 text-blue-60">
-                                            Total
+                                            {label(
+                                                'custom.FA_InitiativeViewTotalFunded'
+                                            )}
                                         </p>
                                         <p className="t-h6">
                                             {currency}{' '}
@@ -671,7 +693,9 @@ const ReportComponent = ({ pageProps }) => {
                             <div className="w-1/2">
                                 {/* Headline */}
                                 <div className="t-caption-bold">
-                                    Funders and contributions overall
+                                    {label(
+                                        'custom.FA_InitiativeViewFundingOverview'
+                                    )}
                                 </div>
                                 {/* List of funders */}
                                 {donutData.map((item, index) => (
@@ -945,7 +969,9 @@ const ReportComponent = ({ pageProps }) => {
                                             description={item.description}
                                             items={[
                                                 {
-                                                    label: 'Location',
+                                                    label: label(
+                                                        'custom.FA_InitiativeViewActivityLocation'
+                                                    ),
                                                     text: item.location,
                                                 },
                                             ]}

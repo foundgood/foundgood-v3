@@ -54,9 +54,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                 const location = item.Initiative_Location__c?.split(';').join(
                     ', '
                 );
-                // const location = item.Initiative_Location__c
-                //     ? item.Initiative_Location__c.split(';').join(', ')
-                //     : labelTodo('Location not available');
                 const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
                     success => {
                         return success.Name;
@@ -115,7 +112,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                     <h2 className="t-h3">
                         {label('custom.FA_InitiativeViewActivitiesHeading')}
                     </h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
+                    <Button variant="secondary">
+                        {label('custom.FA_ButtonUpdate')}
+                    </Button>
                 </div>
 
                 {activities?.length > 0 &&
@@ -126,7 +125,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 description={item.description}
                                 items={[
                                     {
-                                        label: labelTodo('Location'),
+                                        label: label(
+                                            'custom.FA_InitiativeViewActivityLocation'
+                                        ),
                                         text: item.location,
                                     },
                                 ]}
@@ -135,7 +136,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                             {item.successIndicators && (
                                 <>
                                     <div className="mt-16 t-h5">
-                                        {labelTodo('Success indicators')}
+                                        {label(
+                                            'custom.FA_InitiativeViewActivityIndicators'
+                                        )}
                                     </div>
 
                                     {item.successIndicators.map(
@@ -152,7 +155,9 @@ const ActivitiesComponent = ({ pageProps }) => {
 
                             <SectionWrapper>
                                 <div className="t-h5">
-                                    {labelTodo('Related goals')}
+                                    {label(
+                                        'custom.FA_InitiativeViewActivityRelatedGoals'
+                                    )}
                                 </div>
                                 {item.relatedGoals.map((goal, index) => (
                                     <div

@@ -214,9 +214,13 @@ const ProjectComponent = ({ pageProps }) => {
                     {/* Overview */}
                     <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
-                            <h2 className="t-h3">{labelTodo('Summary')}</h2>
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewOverviewHeading'
+                                )}
+                            </h2>
                             <Button variant="secondary">
-                                {labelTodo('Update')}
+                                {label('custom.FA_ButtonUpdate')}
                             </Button>
                         </div>
 
@@ -251,7 +255,9 @@ const ProjectComponent = ({ pageProps }) => {
                                 <div className="mt-48 lg:mt-32 lg:flex lg:items-start">
                                     <div className="p-16 mb-20 border-4 lg:mr-12 lg:w-1/2 border-gray-10 rounded-8">
                                         <h4 className="t-sh6 text-blue-60">
-                                            {labelTodo('Grant giving area')}
+                                            {label(
+                                                'custom.FA_InitiativeViewGrantGivingArea'
+                                            )}
                                         </h4>
                                         <h3 className="t-h5">
                                             {initiativeData.Category__c}
@@ -269,7 +275,9 @@ const ProjectComponent = ({ pageProps }) => {
 
                                     <div className="p-16 border-4 lg:ml-12 lg:w-1/2 border-gray-10 rounded-8">
                                         <h4 className="t-sh6 text-blue-60">
-                                            {labelTodo('Initiative location')}
+                                            {label(
+                                                'custom.FA_InitiativeViewInitiativeLocation'
+                                            )}
                                         </h4>
                                         <h3 className="t-h5">
                                             {initiativeData.Translated_Where_Is_Problem__c?.split(
@@ -278,8 +286,8 @@ const ProjectComponent = ({ pageProps }) => {
                                         </h3>
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
-                                            {labelTodo(
-                                                'Sustainable development goals'
+                                            {label(
+                                                'custom.FA_InitiativeViewSDGSs'
                                             )}
                                         </h4>
                                         <div className="flex flex-col">
@@ -313,7 +321,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 )}
                             </h2>
                             <Button variant="secondary">
-                                {labelTodo('Update')}
+                                {label('custom.FA_ButtonUpdate')}
                             </Button>
                         </div>
 
@@ -323,7 +331,9 @@ const ProjectComponent = ({ pageProps }) => {
                                 <div className="pie" style={pieChartStyle}>
                                     <div className="absolute w-full -mt-16 text-center top-1/2">
                                         <p className="t-sh7 text-blue-60">
-                                            {labelTodo('Total')}
+                                            {label(
+                                                'custom.FA_InitiativeViewTotalFunded'
+                                            )}
                                         </p>
                                         <p className="t-h6">
                                             {currency}{' '}
@@ -337,8 +347,8 @@ const ProjectComponent = ({ pageProps }) => {
                             <div className="md:w-1/2">
                                 {/* Headline */}
                                 <div className="t-caption-bold">
-                                    {labelTodo(
-                                        'Funders and contributions overall'
+                                    {label(
+                                        'custom.FA_InitiativeViewFundingOverview'
                                     )}
                                 </div>
                                 {/* List of funders */}
@@ -364,19 +374,29 @@ const ProjectComponent = ({ pageProps }) => {
                                 {/* Table header */}
                                 <div className="flex pb-8">
                                     <div className="w-full t-footnote-bold">
-                                        {labelTodo('Funder')}
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersFunder'
+                                        )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
-                                        {labelTodo('Type')}
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersType'
+                                        )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
-                                        {labelTodo('Amount')}
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersAmount'
+                                        )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
-                                        {labelTodo('Approval date')}
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersApprovalDate'
+                                        )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
-                                        {labelTodo('Grant period')}
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersGrantPeriod'
+                                        )}
                                     </div>
                                 </div>
                                 {/* Table Rows */}
@@ -420,7 +440,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('custom.FA_InitiativeViewGoalsHeading')}
                             </h2>
                             <Button variant="secondary">
-                                {labelTodo('Update')}
+                                {label('custom.FA_ButtonUpdate')}
                             </Button>
                         </div>
                         {Object.values(initiativeData._goals).map(
@@ -451,7 +471,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 )}
                             </h2>
                             <Button variant="secondary">
-                                {labelTodo('Update')}
+                                {label('custom.FA_ButtonUpdate')}
                             </Button>
                         </div>
                         {applicants &&
@@ -496,7 +516,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 )}
                             </h2>
                             <Button variant="secondary">
-                                {labelTodo('Update')}
+                                {label('custom.FA_ButtonUpdate')}
                             </Button>
                         </div>
                         {collaborators &&
@@ -538,7 +558,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </h2>
                                 <Button variant="secondary">
-                                    {labelTodo('Update')}
+                                    {label('custom.FA_ButtonUpdate')}
                                 </Button>
                             </div>
 
@@ -577,14 +597,20 @@ const ProjectComponent = ({ pageProps }) => {
                                 {/* Table header */}
                                 <div className="flex pb-8">
                                     <div className="w-full t-footnote-bold">
-                                        {labelTodo('Title')}
+                                        {label(
+                                            'custom.FA_InitiativeViewEmployeesTableColumnHeadersTitle'
+                                        )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
-                                        {labelTodo('Role')}
+                                        {label(
+                                            'custom.FA_InitiativeViewEmployeesTableColumnHeadersRole'
+                                        )}
                                     </div>
                                     {largeBps.includes(bp) && (
                                         <div className="w-full t-footnote-bold">
-                                            {labelTodo('Utilisation')}
+                                            {label(
+                                                'custom.FA_InitiativeViewEmployeesTableColumnHeadersUtilisation'
+                                            )}
                                         </div>
                                     )}
                                 </div>
@@ -624,7 +650,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </h2>
                                 <Button variant="secondary">
-                                    {labelTodo('Update')}
+                                    {label('custom.FA_ButtonUpdate')}
                                 </Button>
                             </div>
 
@@ -654,7 +680,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </h2>
                                 <Button variant="secondary">
-                                    {labelTodo('Update')}
+                                    {label('custom.FA_ButtonUpdate')}
                                 </Button>
                             </div>
 
@@ -673,7 +699,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </h2>
                                 <Button variant="secondary">
-                                    {labelTodo('Update')}
+                                    {label('custom.FA_ButtonUpdate')}
                                 </Button>
                             </div>
 
@@ -692,7 +718,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </h2>
                                 <Button variant="secondary">
-                                    {labelTodo('Update')}
+                                    {label('custom.FA_ButtonUpdate')}
                                 </Button>
                             </div>
 
@@ -711,7 +737,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </h2>
                                 <Button variant="secondary">
-                                    {labelTodo('Update')}
+                                    {label('custom.FA_ButtonUpdate')}
                                 </Button>
                             </div>
 

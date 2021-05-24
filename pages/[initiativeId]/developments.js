@@ -130,23 +130,33 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     if (item.Publication_Type__c) {
                         items = [
                             {
-                                label: labelTodo('Publication type'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingPublicationType'
+                                ),
                                 text: item.Publication_Type__c,
                             },
                             {
-                                label: labelTodo('Publication year'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingPublicationYear'
+                                ),
                                 text: item.Publication_Year__c,
                             },
                             {
-                                label: labelTodo('Publisher'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingPublisher'
+                                ),
                                 text: item.Publication_Publisher__c,
                             },
                             {
-                                label: labelTodo('Author'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingAuthor'
+                                ),
                                 text: item.Publication_Author__c,
                             },
                             {
-                                label: labelTodo('DOI'),
+                                label: label(
+                                    'custom.FA_InitiativeViewSharingPublicationDOI'
+                                ),
                                 text: item.Publication_DOI__c,
                             },
                         ];
