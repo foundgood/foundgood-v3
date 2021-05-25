@@ -398,7 +398,9 @@ const ReportComponent = ({ pageProps }) => {
             // Influence on policy
             const influences = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == 'Influence On Policy' ? true : false;
+                    return item.Type__c == CONSTANTS.TYPES.INFLUENCE_ON_POLICY
+                        ? true
+                        : false;
                 })
                 .map(item => {
                     return item.Description__c;
@@ -408,7 +410,9 @@ const ReportComponent = ({ pageProps }) => {
             // Evaluations
             const evaluations = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == 'Evaluation' ? true : false;
+                    return item.Type__c == CONSTANTS.TYPES.EVALUATION
+                        ? true
+                        : false;
                 })
                 .map(item => {
                     return item.Description__c;
@@ -465,7 +469,7 @@ const ReportComponent = ({ pageProps }) => {
             const novoFunder = Object.values(initiative._funders)
                 .filter(
                     item =>
-                        item.Type__c == 'Lead funder' &&
+                        item.Type__c == CONSTANTS.TYPES.LEAD_FUNDER &&
                         item.Account__r.Name == 'Novo Nordisk Fonden'
                 )
                 .map(item => ({
@@ -727,7 +731,9 @@ const ReportComponent = ({ pageProps }) => {
                                         description="" // Funders don't have a description
                                         items={[
                                             {
-                                                label: 'Amount',
+                                                label: label(
+                                                    'custom.FA_InitiativeViewFunderTableColumnHeadersAmount'
+                                                ),
                                                 text: `${
                                                     item.CurrencyIsoCode
                                                 } ${item.Amount__c.toLocaleString(
@@ -735,7 +741,9 @@ const ReportComponent = ({ pageProps }) => {
                                                 )}`,
                                             },
                                             {
-                                                label: 'Approval date',
+                                                label: label(
+                                                    'custom.FA_InitiativeViewFunderTableColumnHeadersApprovalDate'
+                                                ),
                                                 text: item.Grant_Start_Date__c,
                                             },
                                         ]}
@@ -758,7 +766,7 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper>
                         <SectionWrapper>
                             <h2 className="t-h4">
-                                {labelTodo('Report summary')}
+                                {label('custom.FA_ReportViewHeadingSummary')}
                             </h2>
                         </SectionWrapper>
                         <TextCard
@@ -784,7 +792,7 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper paddingY={false}>
                         <SectionWrapper paddingY={false}>
                             <h2 className="t-h3 mt-96">
-                                {labelTodo('Key changes')}
+                                {label('custom.FA_ReportViewHeadingKeyChanges')}
                             </h2>
                         </SectionWrapper>
                     </SectionWrapper>
@@ -798,7 +806,7 @@ const ReportComponent = ({ pageProps }) => {
                             <SectionWrapper>
                                 <h3 className="t-h4">
                                     {labelTodo(
-                                        'New co-applicant relationships this year'
+                                        'labelTodo: New co-applicant relationships this year'
                                     )}
                                 </h3>
                             </SectionWrapper>
@@ -811,11 +819,15 @@ const ReportComponent = ({ pageProps }) => {
                                             description="" // Collaborators don't have a description
                                             items={[
                                                 {
-                                                    label: labelTodo('Type'),
+                                                    label: labelTodo(
+                                                        'labelTodo: Type'
+                                                    ),
                                                     text: item.Type__c,
                                                 },
                                                 {
-                                                    label: labelTodo('Period'),
+                                                    label: labelTodo(
+                                                        'labelTodo: Period'
+                                                    ),
                                                     text: `${item.Start_Date__c} - ${item.End_Date__c}`,
                                                 },
                                             ]}
@@ -824,7 +836,7 @@ const ReportComponent = ({ pageProps }) => {
                                     <TextCard
                                         hasBackground={true}
                                         headline={labelTodo(
-                                            'Updates from this year'
+                                            'labelTodo: Updates from this year'
                                         )}
                                         body={item.reportReflection}
                                     />
@@ -843,7 +855,9 @@ const ReportComponent = ({ pageProps }) => {
                             )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
-                                    {labelTodo('Overview of collaborations')}
+                                    {label(
+                                        'custom.FA_InitiativeViewCollaboratorsHeading'
+                                    )}
                                 </h3>
                             </SectionWrapper>
                             {collaborators.map((item, index) => (
@@ -885,7 +899,9 @@ const ReportComponent = ({ pageProps }) => {
                             )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
-                                    {labelTodo('Employees funded by the grant')}
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingEmployeesOverall'
+                                    )}
                                 </h3>
                             </SectionWrapper>
 
@@ -923,7 +939,9 @@ const ReportComponent = ({ pageProps }) => {
                             <TextCard
                                 className="mt-32"
                                 hasBackground={true}
-                                headline={labelTodo('Updates from this year')}
+                                headline={label(
+                                    'custom.FA_ReportViewSubHeadingEmployeesReflections'
+                                )}
                                 body={employeesFundedReflection}
                             />
                         </SectionWrapper>
@@ -933,13 +951,15 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuGoals'))}>
                         <SectionWrapper>
-                            <h3 className="t-h4">{labelTodo('Goals')}</h3>
+                            <h3 className="t-h4">
+                                {labelTodo('Label todo: Goals')}
+                            </h3>
                         </SectionWrapper>
 
                         {Object.values(initiativeData._goals).map(
                             (item, index) => {
                                 const title =
-                                    item.Type__c == 'Custom'
+                                    item.Type__c == CONSTANTS.TYPES.GOAL_CUSTOM
                                         ? item.Goal__c
                                         : item.Funder_Objective__c;
                                 return (
@@ -963,7 +983,9 @@ const ReportComponent = ({ pageProps }) => {
                             )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
-                                    {labelTodo('Activities')}
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingActivitiesOverall'
+                                    )}
                                 </h3>
                             </SectionWrapper>
 
@@ -1016,8 +1038,8 @@ const ReportComponent = ({ pageProps }) => {
                                     <TextCard
                                         hasBackground={true}
                                         className="mt-32"
-                                        headline={labelTodo(
-                                            'Updates from this year'
+                                        headline={label(
+                                            'custom.FA_ReportViewSubHeadingActivityReflections'
                                         )}
                                         body={item.reportReflection}
                                     />
@@ -1037,7 +1059,9 @@ const ReportComponent = ({ pageProps }) => {
                             )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
-                                    {labelTodo('Sharing of results')}
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingSharingOverall'
+                                    )}
                                 </h3>
                             </SectionWrapper>
                             {results.map((item, index) => (
@@ -1053,8 +1077,8 @@ const ReportComponent = ({ pageProps }) => {
 
                                     <TextCard
                                         hasBackground={true}
-                                        headline={labelTodo(
-                                            'Updates from this year'
+                                        headline={label(
+                                            'custom.FA_ReportViewSubHeadingSharingReflections'
                                         )}
                                         body={item.reportReflection}
                                     />
@@ -1083,7 +1107,7 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper paddingY={false}>
                         <SectionWrapper paddingY={false}>
                             <h2 className="t-h3 mt-96">
-                                {labelTodo('Key results')}
+                                {label('custom.FA_ReportViewHeadingKeyResults')}
                             </h2>
                         </SectionWrapper>
                     </SectionWrapper>
@@ -1110,15 +1134,17 @@ const ReportComponent = ({ pageProps }) => {
                             )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
-                                    {labelTodo('Influences on policy')}
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingInfluencesOverall'
+                                    )}
                                 </h3>
                             </SectionWrapper>
                             {influences.map((item, index) => (
                                 <div key={`i-${index}`}>
                                     <TextCard
                                         hasBackground={true}
-                                        headline={labelTodo(
-                                            'How the initiative had influence on policy or practice'
+                                        headline={label(
+                                            'custom.FA_ReportViewSubHeadingInfluencesReflections'
                                         )}
                                         body={item}
                                     />
@@ -1139,15 +1165,17 @@ const ReportComponent = ({ pageProps }) => {
                             )}>
                             <SectionWrapper>
                                 <h3 className="t-h4">
-                                    {labelTodo('Evaluations')}
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingEvaluationsOverall'
+                                    )}
                                 </h3>
                             </SectionWrapper>
                             {evaluations.map((item, index) => (
                                 <div key={`i-${index}`}>
                                     <TextCard
                                         hasBackground={true}
-                                        headline={labelTodo(
-                                            'Evaluation regarding this report'
+                                        headline={label(
+                                            'custom.FA_ReportViewSubHeadingEvaluationsReflections'
                                         )}
                                         body={item}
                                     />
@@ -1163,18 +1191,22 @@ const ReportComponent = ({ pageProps }) => {
                     {/* Reflections */}
                     <SectionWrapper>
                         <SectionWrapper>
-                            <h3 className="t-h4">{labelTodo('Reflections')}</h3>
+                            <h3 className="t-h4">
+                                {label(
+                                    'custom.FA_ReportViewSubHeadingInfluencesReflections'
+                                )}
+                            </h3>
                         </SectionWrapper>
                         <TextCard
                             hasBackground={true}
-                            headline={labelTodo('Project purpose')}
+                            headline={labelTodo('Label todo: Project purpose')}
                             body={currentReport.Project_Purpose__c}
                         />
                         <TextCard
                             className="mt-32"
                             hasBackground={true}
                             headline={labelTodo(
-                                'Progress towards achieving the goals'
+                                'Label todo: Progress towards achieving the goals'
                             )}
                             body={
                                 currentReport.Progress_Towards_Grant_Area_Themes__c
@@ -1183,14 +1215,16 @@ const ReportComponent = ({ pageProps }) => {
                         <TextCard
                             className="mt-32"
                             hasBackground={true}
-                            headline={labelTodo('Important results')}
+                            headline={labelTodo(
+                                'Label todo: Important results'
+                            )}
                             body={currentReport.Important_Results__c}
                         />
                         <TextCard
                             className="mt-32"
                             hasBackground={true}
                             headline={labelTodo(
-                                'Post grant activities or results'
+                                'Label todo: Post grant activities or results'
                             )}
                             body={currentReport.Post_Project_Activities__c}
                         />
@@ -1198,11 +1232,14 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper>
                         <SectionWrapper>
                             <h3 className="t-h4">
-                                {labelTodo('Additional information')}
+                                {label(
+                                    'custom.FA_ReportViewSubHeadingLogAdditional'
+                                )}
                             </h3>
                             <p className="mt-32 t-small">
-                                Additional information for this initiative can
-                                be found on the initiative page
+                                {label(
+                                    'custom.FA_ReportViewSubHeadingLogAdditionalSubHeading'
+                                )}
                             </p>
                         </SectionWrapper>
                     </SectionWrapper>
