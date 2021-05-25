@@ -23,6 +23,8 @@ const useAuth = () => {
         loggedIn,
         user,
         reset,
+        userInitiativeRights,
+        setUserInitiativeRights,
         updateUserTimeout: updateUserTimeoutStore,
     } = useAuthStore();
 
@@ -161,6 +163,19 @@ const useAuth = () => {
         }
     }, [lsUserData]);
 
+    // Get current user access rights
+    function getUserInitiativeRights(initiativeId) {
+        // Get user access rights info from sf api
+        salesForce.custom
+            .getUserInitiativeRights(initiativeId)
+            .then(data => {
+                setUserInitiativeRights(data.data);
+            })
+            .catch(error => {
+                console.warn(error);
+            });
+    }
+
     return {
         handleLoginCallback,
         logout,
@@ -168,6 +183,8 @@ const useAuth = () => {
         user,
         verifyLoggedIn,
         updateUserTimeout,
+        getUserInitiativeRights,
+        userInitiativeRights,
     };
 };
 

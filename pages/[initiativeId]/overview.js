@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 // Utilities
 import { useMetadata, useAuth, useResponsive } from 'utilities/hooks';
-import { useInitiativeDataStore, constants } from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 import { isJson } from 'utilities';
 
 // Components

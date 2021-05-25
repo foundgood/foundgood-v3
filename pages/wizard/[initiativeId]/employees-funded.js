@@ -252,7 +252,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add employee')}
+                title={label('custom.FA_WizardModalHeadingEmployees')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>

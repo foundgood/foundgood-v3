@@ -320,7 +320,7 @@ const ActivitiesComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new activity')}
+                title={label('custom.FA_WizardModalHeadingActivities')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
@@ -370,8 +370,8 @@ const ActivitiesComponent = ({ pageProps }) => {
                         )}
                         showText
                         selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
-                        selectLabel={labelTodo('Country')}
-                        textLabel={labelTodo('Region')}
+                        selectLabel={label('custom.FA_FormCaptureCountry')}
+                        textLabel={label('custom.FA_FormCaptureRegion')}
                         controller={control}
                     />
 

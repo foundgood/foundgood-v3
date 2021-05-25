@@ -235,13 +235,13 @@ const IndicatorsComponent = ({ pageProps }) => {
                     })
                 ) : (
                     <p className="t-h5">
-                        {labelTodo('No activities added to the initiative yet')}
+                        {label('custom.FA_WizardEmptyStatesIndicators')}
                     </p>
                 )}
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo(`New KPI for ${activity?.Things_To_Do__c}`)}
+                title={label('custom.FA_WizardModalHeadingIndicators')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>

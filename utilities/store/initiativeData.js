@@ -79,262 +79,256 @@ const constants = {
     },
 };
 
-const useInitiativeDataStore = create(
-    persist((set, get) => ({
-        CONSTANTS: { ...constants },
+const useInitiativeDataStore = create((set, get) => ({
+    CONSTANTS: { ...constants },
 
-        initiative: {
-            ...defaultInitiative,
-        },
+    initiative: {
+        ...defaultInitiative,
+    },
 
-        // Helper for knowing if NNF is lead funder
-        isNovoLeadFunder() {
-            const funders = Object.values(get().initiative?._funders ?? [])
-                .filter(
-                    funder => funder.Type__c === constants.TYPES.LEAD_FUNDER
-                )
-                .filter(
-                    funder => funder.Account__c === constants.IDS.NNF_ACCOUNT
-                );
-            return funders?.length > 0;
-        },
+    // Helper for knowing if NNF is lead funder
+    isNovoLeadFunder() {
+        const funders = Object.values(get().initiative?._funders ?? [])
+            .filter(funder => funder.Type__c === constants.TYPES.LEAD_FUNDER)
+            .filter(funder => funder.Account__c === constants.IDS.NNF_ACCOUNT);
+        return funders?.length > 0;
+    },
 
-        // Setter for initiative Id
-        setInitiativeId(id) {
+    // Setter for initiative Id
+    setInitiativeId(id) {
+        set(state => ({
+            initiative: {
+                ...state.initiative,
+                Id: id,
+            },
+        }));
+    },
+
+    getInitiativeId() {
+        return get().initiative.Id;
+    },
+
+    // Getter for report based on ID
+    getReport(id) {
+        return id ? get().initiative?._reports[id] ?? {} : {};
+    },
+
+    // Getter for report details based on report ID
+    getReportDetails(id) {
+        return id
+            ? Object.values(get().initiative?._reportDetails).filter(
+                  item => item.Initiative_Report__c === id
+              ) ?? []
+            : [];
+    },
+
+    // Update initiative model and connected models
+    async updateInitiative(id) {
+        const data = await sfQuery(queries.initiative.get(id));
+        if (data) {
+            set(state => ({
+                initiative: { ...state.initiative, ...data },
+            }));
+        }
+
+        // Update auth
+        _updateAuth();
+    },
+
+    // Update single item
+    async updateFunder(id) {
+        const data = await sfQuery(queries.initiativeFunder.get(id));
+        if (data) {
             set(state => ({
                 initiative: {
                     ...state.initiative,
-                    Id: id,
+                    _funders: {
+                        ...state.initiative._funders,
+                        [id]: data,
+                    },
                 },
             }));
-        },
+        }
 
-        getInitiativeId() {
-            return get().initiative.Id;
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        // Getter for report based on ID
-        getReport(id) {
-            return id ? get().initiative?._reports[id] ?? {} : {};
-        },
-
-        // Getter for report details based on report ID
-        getReportDetails(id) {
-            return id
-                ? Object.values(get().initiative?._reportDetails).filter(
-                      item => item.Initiative_Report__c === id
-                  ) ?? []
-                : [];
-        },
-
-        // Update initiative model and connected models
-        async updateInitiative(id) {
-            const data = await sfQuery(queries.initiative.get(id));
-            if (data) {
-                set(state => ({
-                    initiative: { ...state.initiative, ...data },
-                }));
-            }
-
-            // Update auth
-            _updateAuth();
-        },
-
-        // Update single item
-        async updateFunder(id) {
-            const data = await sfQuery(queries.initiativeFunder.get(id));
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _funders: {
-                            ...state.initiative._funders,
-                            [id]: data,
-                        },
+    async updateCollaborator(id) {
+        const data = await sfQuery(queries.initiativeCollaborator.get(id));
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _collaborators: {
+                        ...state.initiative._collaborators,
+                        [id]: data,
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        async updateCollaborator(id) {
-            const data = await sfQuery(queries.initiativeCollaborator.get(id));
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _collaborators: {
-                            ...state.initiative._collaborators,
-                            [id]: data,
-                        },
+    async updateEmployeeFunded(id) {
+        const data = await sfQuery(queries.initiativeEmployeeFunded.get(id));
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _employeesFunded: {
+                        ...state.initiative._employeesFunded,
+                        [id]: data,
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        async updateEmployeeFunded(id) {
-            const data = await sfQuery(
-                queries.initiativeEmployeeFunded.get(id)
-            );
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _employeesFunded: {
-                            ...state.initiative._employeesFunded,
-                            [id]: data,
-                        },
+    async updateReport(id) {
+        const data = await sfQuery(queries.initiativeReport.get(id));
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _reports: {
+                        ...state.initiative._reports,
+                        [id]: data,
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        async updateReport(id) {
-            const data = await sfQuery(queries.initiativeReport.get(id));
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _reports: {
-                            ...state.initiative._reports,
-                            [id]: data,
-                        },
+    async updateGoal(id) {
+        const data = await sfQuery(queries.initiativeGoal.get(id));
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _goals: {
+                        ...state.initiative._goals,
+                        [id]: data,
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        async updateGoal(id) {
-            const data = await sfQuery(queries.initiativeGoal.get(id));
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _goals: {
-                            ...state.initiative._goals,
-                            [id]: data,
-                        },
+    async updateActivity(id) {
+        const data = await sfQuery(queries.initiativeActivity.get(id));
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _activities: {
+                        ...state.initiative._activities,
+                        [id]: data,
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        async updateActivity(id) {
-            const data = await sfQuery(queries.initiativeActivity.get(id));
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _activities: {
-                            ...state.initiative._activities,
-                            [id]: data,
-                        },
+    async updateActivitySuccessMetric(id) {
+        const data = await sfQuery(
+            queries.initiativeActivitySuccessMetric.get(id)
+        );
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _activitySuccessMetrics: {
+                        ...state.initiative._activitySuccessMetrics,
+                        [id]: data,
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        async updateActivitySuccessMetric(id) {
-            const data = await sfQuery(
-                queries.initiativeActivitySuccessMetric.get(id)
-            );
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _activitySuccessMetrics: {
-                            ...state.initiative._activitySuccessMetrics,
-                            [id]: data,
-                        },
+    // Bulk update multiple ids
+    async updateActivityGoals(ids) {
+        const data = await sfQuery(
+            queries.initiativeActivityGoal.getMultiple(ids)
+        );
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _activityGoals: {
+                        ...state.initiative._activityGoals,
+                        ..._returnAsKeys(data),
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        // Bulk update multiple ids
-        async updateActivityGoals(ids) {
-            const data = await sfQuery(
-                queries.initiativeActivityGoal.getMultiple(ids)
-            );
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _activityGoals: {
-                            ...state.initiative._activityGoals,
-                            ..._returnAsKeys(data),
-                        },
+    async updateActivitySuccessMetrics(ids) {
+        const data = await sfQuery(
+            queries.initiativeActivitySuccessMetric.getMultiple(ids)
+        );
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _activitySuccessMetrics: {
+                        ...state.initiative._activitySuccessMetrics,
+                        ..._returnAsKeys(data),
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        async updateActivitySuccessMetrics(ids) {
-            const data = await sfQuery(
-                queries.initiativeActivitySuccessMetric.getMultiple(ids)
-            );
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _activitySuccessMetrics: {
-                            ...state.initiative._activitySuccessMetrics,
-                            ..._returnAsKeys(data),
-                        },
+    async updateReportDetails(ids) {
+        const data = await sfQuery(
+            queries.initiativeReportDetail.getMultiple(ids)
+        );
+
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _reportDetails: {
+                        ...state.initiative._reportDetails,
+                        ..._returnAsKeys(data),
                     },
-                }));
-            }
+                },
+            }));
+        }
 
-            // Update auth
-            _updateAuth();
-        },
+        // Update auth
+        _updateAuth();
+    },
 
-        async updateReportDetails(ids) {
-            const data = await sfQuery(
-                queries.initiativeReportDetail.getMultiple(ids)
-            );
-
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _reportDetails: {
-                            ...state.initiative._reportDetails,
-                            ..._returnAsKeys(data),
-                        },
-                    },
-                }));
-            }
-
-            // Update auth
-            _updateAuth();
-        },
-
-        // Custom data updaters
-        async populateReportDetails(reportId) {
+    // Custom data updaters
+    async populateReportDetails(reportId) {
+        if (reportId) {
             const reportDetailsData = await sfQuery(
                 queries.initiativeReportDetail.getAllReport(reportId)
             );
@@ -352,101 +346,94 @@ const useInitiativeDataStore = create(
 
             // Update auth
             _updateAuth();
-        },
+        }
+    },
 
-        // Populate report data
-        async populateReport(id) {
-            if (!get().initiative._reports[id]) {
-                const data = await sfQuery(queries.initiativeReport.get(id));
-                if (data) {
-                    set(state => ({
-                        initiative: {
-                            ...state.initiative,
-                            _reports: {
-                                ...state.initiative._reports,
-                                [id]: data,
-                            },
-                        },
-                    }));
-                }
-
-                // Update auth
-                _updateAuth();
-            }
-        },
-
-        // Get initiative and all sub data based on initiative ID
-        async populateInitiative(id) {
-            if (get().initiative.Id !== id && id) {
-                // Get initiative
-                const initiativeData = await sfQuery(
-                    queries.initiative.get(id)
-                );
-
-                // Populate dependent data based on same id
-                const collaboratorsData = await sfQuery(
-                    queries.initiativeCollaborator.getAll(id)
-                );
-                const fundersData = await sfQuery(
-                    queries.initiativeFunder.getAll(id)
-                );
-                const employeesFundedData = await sfQuery(
-                    queries.initiativeEmployeeFunded.getAll(id)
-                );
-                const reportsData = await sfQuery(
-                    queries.initiativeReport.getAll(id)
-                );
-                const goalsData = await sfQuery(
-                    queries.initiativeGoal.getAll(id)
-                );
-
-                const activitiesData = await sfQuery(
-                    queries.initiativeActivity.getAll(id)
-                );
-                const activityGoalsData = await sfQuery(
-                    queries.initiativeActivityGoal.getAll(id)
-                );
-                const activitySuccessMetricsData = await sfQuery(
-                    queries.initiativeActivitySuccessMetric.getAll(id)
-                );
-
-                // Update state
+    // Populate report data
+    async populateReport(id) {
+        if (id && !get().initiative._reports[id]) {
+            const data = await sfQuery(queries.initiativeReport.get(id));
+            if (data) {
                 set(state => ({
                     initiative: {
                         ...state.initiative,
-                        ...initiativeData,
-                        _collaborators: _returnAsKeys(collaboratorsData),
-                        _funders: _returnAsKeys(fundersData),
-                        _employeesFunded: _returnAsKeys(employeesFundedData),
-                        _reports: _returnAsKeys(reportsData),
-                        _goals: _returnAsKeys(goalsData),
-                        _activities: _returnAsKeys(activitiesData),
-                        _activitySuccessMetrics: _returnAsKeys(
-                            activitySuccessMetricsData
-                        ),
-                        _activityGoals: _returnAsKeys(activityGoalsData),
+                        _reports: {
+                            ...state.initiative._reports,
+                            [id]: data,
+                        },
                     },
                 }));
-
-                // Update auth
-                _updateAuth();
             }
-        },
 
-        reset() {
-            set(() => ({
-                CONSTANTS: {
-                    ...constants,
-                },
+            // Update auth
+            _updateAuth();
+        }
+    },
+
+    // Get initiative and all sub data based on initiative ID
+    async populateInitiative(id) {
+        if (id && get().initiative.Id !== id) {
+            // Get initiative
+            const initiativeData = await sfQuery(queries.initiative.get(id));
+
+            // Populate dependent data based on same id
+            const collaboratorsData = await sfQuery(
+                queries.initiativeCollaborator.getAll(id)
+            );
+            const fundersData = await sfQuery(
+                queries.initiativeFunder.getAll(id)
+            );
+            const employeesFundedData = await sfQuery(
+                queries.initiativeEmployeeFunded.getAll(id)
+            );
+            const reportsData = await sfQuery(
+                queries.initiativeReport.getAll(id)
+            );
+            const goalsData = await sfQuery(queries.initiativeGoal.getAll(id));
+
+            const activitiesData = await sfQuery(
+                queries.initiativeActivity.getAll(id)
+            );
+            const activityGoalsData = await sfQuery(
+                queries.initiativeActivityGoal.getAll(id)
+            );
+            const activitySuccessMetricsData = await sfQuery(
+                queries.initiativeActivitySuccessMetric.getAll(id)
+            );
+
+            // Update state
+            set(state => ({
                 initiative: {
-                    ...defaultInitiative,
+                    ...state.initiative,
+                    ...initiativeData,
+                    _collaborators: _returnAsKeys(collaboratorsData),
+                    _funders: _returnAsKeys(fundersData),
+                    _employeesFunded: _returnAsKeys(employeesFundedData),
+                    _reports: _returnAsKeys(reportsData),
+                    _goals: _returnAsKeys(goalsData),
+                    _activities: _returnAsKeys(activitiesData),
+                    _activitySuccessMetrics: _returnAsKeys(
+                        activitySuccessMetricsData
+                    ),
+                    _activityGoals: _returnAsKeys(activityGoalsData),
                 },
             }));
-        },
-    })),
-    {
-        name: 'initiativeData',
-    }
-);
+
+            // Update auth
+            _updateAuth();
+        }
+    },
+
+    reset() {
+        set(() => ({
+            CONSTANTS: {
+                ...constants,
+            },
+            initiative: {
+                ...defaultInitiative,
+            },
+        }));
+    },
+}));
 
 export { useInitiativeDataStore };

@@ -97,7 +97,7 @@ const CardComponent = ({
 
                 <div className="self-center">
                     <Button theme="teal" variant="secondary" action={action}>
-                        {label('custom.FA_ButtonUpdate')}
+                        {label('custom.FA_Update')}
                     </Button>
                 </div>
             </div>

@@ -600,7 +600,13 @@ async function extractToJsonFile() {
             console.info('Metadata from zip written to file');
         });
     } catch (error) {
-        throw new Error(err);
+        fs.rmSync('_metadata', { recursive: true, force: true });
+        fs.mkdirSync('_metadata', { recursive: true });
+        fs.writeFile(
+            '_metadata/metadata.json',
+            JSON.stringify({ labels: null, valueSets: null, types: null })
+        );
+        throw new Error(error);
     }
 }
 

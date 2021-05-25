@@ -258,7 +258,7 @@ const ApplicantsComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new applicant')}
+                title={label('custom.FA_WizardModalHeadingApplicants')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>

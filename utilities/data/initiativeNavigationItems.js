@@ -295,7 +295,7 @@ const initiativeItems = () => [
         visible: false,
         baseUrl: '',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/`;
+            return `/${initiativeId}/overview`;
         },
     },
 ];

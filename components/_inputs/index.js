@@ -9,6 +9,8 @@ import SelectionCards from './selectionCards';
 import Number from './number';
 import InputWrapper from './inputWrapper';
 import Reflection from './reflection';
+import SearchFilterMultiselect from './searchFilterMultiselect';
+import SearchFilterDate from './searchFilterDate';
 
 export {
     InputWrapper,
@@ -22,4 +24,6 @@ export {
     TextList,
     Number,
     Reflection,
+    SearchFilterMultiselect,
+    SearchFilterDate,
 };

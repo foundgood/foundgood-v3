@@ -260,7 +260,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new collaborator')}
+                title={label('custom.FA_WizardModalHeadingCollaborators')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>

@@ -25,7 +25,7 @@ const TabNavigationComponent = () => {
     const { label } = useMetadata();
 
     const [menuActive, setMenuActive] = useState(false);
-    // const [subMenuIsActive, setSubMenuIsActive] = useState(false);
+
     const toggleMenu = () => {
         setMenuActive(!menuActive);
     };
@@ -40,16 +40,15 @@ const TabNavigationComponent = () => {
                             return (
                                 <div
                                     key={index}
-                                    onMouseEnter={toggleMenu}
-                                    onMouseLeave={toggleMenu}
                                     className={cc([
-                                        'flex flex-col px-16 pb-16 pt-[14px] mt-4 items-start rounded-8 text-blue-300 t-h6 hover:text-blue-200',
+                                        'flex flex-col px-16 pb-16 pt-[14px] mt-4 items-start rounded-8 text-blue-300 hover:text-blue-200 transition-default',
                                         {
-                                            // 'text-blue-100 ': subMenuIsActive,
                                             'bg-blue-20': menuActive,
                                         },
                                     ])}>
-                                    <div className="flex">
+                                    <button
+                                        className="flex outline-none t-h6 focus:outline-none"
+                                        onClick={toggleMenu}>
                                         {label(item.label)}
                                         {menuActive && (
                                             <FiChevronUp className="ml-4" />
@@ -57,12 +56,13 @@ const TabNavigationComponent = () => {
                                         {!menuActive && (
                                             <FiChevronDown className="ml-4" />
                                         )}
-                                    </div>
+                                    </button>
                                     <div
                                         className={cc([
+                                            'transition-default flex flex-col',
                                             {
-                                                'flex flex-col': menuActive,
-                                                hidden: !menuActive,
+                                                'opacity-100 pointer-events-auto': menuActive,
+                                                'opacity-0 pointer-events-none': !menuActive,
                                             },
                                         ])}>
                                         {item.subItems.map((subItem, i) => (

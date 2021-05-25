@@ -70,10 +70,10 @@ const useSalesForce = () => {
 
     // Method for getting current user initiative rights of the SalesForce API
     // Returns normal swr object ({ data, error, isValidating, mutate })
-    function sfGetUserInitiativeRights(initiativeId) {
+    function sfGetUserInitiativeRights() {
         return useSWR(
-            loggedIn ? 'custom/getUserInitiativeRights' : null,
-            salesForce.custom.getUserInitiativeRights({ initiativeId }),
+            loggedIn ? initiativeId : null,
+            salesForce.custom.getUserInitiativeRights(initiativeId),
             {
                 revalidateOnFocus: false,
                 onSuccess: updateUserTimeout,
@@ -83,10 +83,10 @@ const useSalesForce = () => {
 
     // Method for getting intiatives list of the SalesForce API
     // Returns normal swr object ({ data, error, isValidating, mutate })
-    function sfGetInitiativeList(offset) {
+    function sfGetInitiativeList() {
         return useSWR(
             loggedIn ? 'custom/getInitiativeList' : null,
-            salesForce.custom.getInitiativeList({ offset }),
+            salesForce.custom.getInitiativeList,
             {
                 revalidateOnFocus: false,
                 onSuccess: updateUserTimeout,

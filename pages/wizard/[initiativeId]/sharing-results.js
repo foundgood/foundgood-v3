@@ -349,7 +349,7 @@ const SharingResultsComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new sharing of results')}
+                title={label('custom.FA_WizardModalHeadingSharing')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>

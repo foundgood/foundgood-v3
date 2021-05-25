@@ -136,7 +136,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                     })
                 ) : (
                     <p className="t-h5">
-                        {labelTodo('No activities added to the initiative yet')}
+                        {label('custom.FA_WizardEmptyStatesProgress')}
                     </p>
                 )}
             </InputWrapper>

@@ -7,26 +7,29 @@ import t from 'prop-types';
 
 // Utilities
 import { useInitiativeDataStore } from 'utilities/store';
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useContext, useAuth } from 'utilities/hooks';
 
 // Components
 import Footer from 'components/_layout/footer';
-import ActiveLink from 'components/activeLink';
 import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
 
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
-    const { populateInitiative } = useInitiativeDataStore();
-
-    // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    // Store: Initiative data store
+    const { populateInitiative, initiative } = useInitiativeDataStore();
 
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
 
+    // Hook: Auth
+    const { getUserInitiativeRights } = useAuth();
+
     useEffect(() => {
+        populateInitiative(INITIATIVE_ID);
+
+        // Get user rights for current initiative
         if (INITIATIVE_ID) {
-            populateInitiative(INITIATIVE_ID);
+            getUserInitiativeRights(INITIATIVE_ID);
         }
     }, [INITIATIVE_ID]);
 
@@ -38,9 +41,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                 {/* Iniative title */}
                 <div className="flex items-center justify-start py-16 bg-blue-20 page-px">
                     <p className="font-medium text-blue-100 t-sh5 md:flex line-clamp-3">
-                        {labelTodo(
-                            'Coastal Hazard Wheel: Global coastal disaster prevention & recovery project'
-                        )}
+                        {initiative.Name}
                     </p>
                 </div>
 
