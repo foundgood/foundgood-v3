@@ -98,6 +98,11 @@ const ActivitiesComponent = ({ pageProps }) => {
                 };
             });
             setActivities(activities);
+        } else if (
+            initiative?.Id &&
+            Object.keys(initiative?._activities).length < 1
+        ) {
+            setActivities([]);
         }
     }, [initiative]);
 
@@ -169,6 +174,15 @@ const ActivitiesComponent = ({ pageProps }) => {
                             </SectionWrapper>
                         </div>
                     ))}
+
+                {/* Empty state - No Activities */}
+                {activities?.length < 1 && (
+                    <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                        {labelTodo(
+                            'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                        )}
+                    </div>
+                )}
             </SectionWrapper>
 
             {/* Indicators ?? */}

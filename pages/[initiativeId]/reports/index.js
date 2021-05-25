@@ -23,13 +23,13 @@ const ReportsComponent = ({ pageProps }) => {
     const [reportGroups, setReportGroups] = useState();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log } = useMetadata();
+    const { labelTodo, label } = useMetadata();
 
     useEffect(() => {
         // Make sure data it loaded
         if (
             initiative?._funders &&
-            Object.keys(initiative?._funders).length !== 0
+            Object.keys(initiative?._funders).length > 0
         ) {
             // Group reports by funder
             const funders = Object.values(initiative._funders).map(item => {
@@ -45,6 +45,13 @@ const ReportsComponent = ({ pageProps }) => {
             });
             setReportGroups(reports);
         }
+        // Set empty state
+        else if (
+            initiative?.Id &&
+            Object.keys(initiative?._funders).length < 1
+        ) {
+            setReportGroups([]);
+        }
     }, [initiative]);
 
     return (
@@ -55,8 +62,8 @@ const ReportsComponent = ({ pageProps }) => {
                 </h1>
             </SectionWrapper>
 
-            {reportGroups &&
-                reportGroups.map((item, index) => (
+            {reportGroups?.length > 0 &&
+                reportGroups?.map((item, index) => (
                     <SectionWrapper
                         key={`r-${index}`}
                         className="mt-32 bg-white rounded-8">
@@ -89,6 +96,16 @@ const ReportsComponent = ({ pageProps }) => {
                         </div>
                     </SectionWrapper>
                 ))}
+            {/* Empty state - No reports */}
+            {reportGroups?.length < 1 && (
+                <SectionWrapper className="bg-white rounded-8">
+                    <div className="p-16 text-center border-4 t-body border-gray-10 rounded-8">
+                        {labelTodo(
+                            'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                        )}
+                    </div>
+                </SectionWrapper>
+            )}
         </>
     );
 };

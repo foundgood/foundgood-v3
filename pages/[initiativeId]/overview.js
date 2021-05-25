@@ -169,34 +169,38 @@ const ProjectComponent = ({ pageProps }) => {
                 }
             );
 
-            const multiplier = 3.6; // 1% of 360
+            if (donutData.length > 1) {
+                const multiplier = 3.6; // 1% of 360
 
-            // Create object array - add previous items "deg" (360 deg), to position current slice
-            let donutStyles = donutData.reduce((previous, slice) => {
-                const prevDeg = previous[previous.length - 1]
-                    ? previous[previous.length - 1].deg
-                    : 0;
-                const deg = slice.percentage * 100 * multiplier;
-                const obj = {
-                    deg: deg + prevDeg,
-                    hex: slice.hex,
-                };
-                previous.push(obj);
-                return previous;
-            }, []);
-            // Create array of color / deg pairs, one per slice
-            donutStyles = donutStyles.map((slice, index) => {
-                // Last Slice uses '0' instead of 'X deg' - to close circle
-                if (index == donutStyles.length - 1) {
-                    return `${slice.hex} 0`;
-                } else {
-                    return `${slice.hex} 0 ${slice.deg}deg`;
-                }
-            });
-            // Construct gradient string
-            // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
-            const gradient = `conic-gradient(${donutStyles.join(', ')})`;
-            setPieChartStyle({ backgroundImage: gradient });
+                // Create object array - add previous items "deg" (360 deg), to position current slice
+                let donutStyles = donutData.reduce((previous, slice) => {
+                    const prevDeg = previous[previous.length - 1]
+                        ? previous[previous.length - 1].deg
+                        : 0;
+                    const deg = slice.percentage * 100 * multiplier;
+                    const obj = {
+                        deg: deg + prevDeg,
+                        hex: slice.hex,
+                    };
+                    previous.push(obj);
+                    return previous;
+                }, []);
+                // Create array of color / deg pairs, one per slice
+                donutStyles = donutStyles.map((slice, index) => {
+                    // Last Slice uses '0' instead of 'X deg' - to close circle
+                    if (index == donutStyles.length - 1) {
+                        return `${slice.hex} 0`;
+                    } else {
+                        return `${slice.hex} 0 ${slice.deg}deg`;
+                    }
+                });
+                // Construct gradient string
+                // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
+                const gradient = `conic-gradient(${donutStyles.join(', ')})`;
+                setPieChartStyle({ backgroundImage: gradient });
+            } else {
+                setPieChartStyle({ backgroundColor: donutData[0].hex });
+            }
             setDonutData(donutData);
             setInitiativeData(initiative);
         }
@@ -238,6 +242,7 @@ const ProjectComponent = ({ pageProps }) => {
                                                     layout="fill"
                                                 /> */}
                                                 <img
+                                                    className="w-full h-auto"
                                                     src={
                                                         initiativeData.Hero_Image_URL__c
                                                     }
@@ -443,6 +448,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('custom.FA_ButtonUpdate')}
                             </Button>
                         </div>
+                        {/* List goals */}
                         {Object.values(initiativeData._goals).map(
                             (item, index) => {
                                 const title =
@@ -460,6 +466,14 @@ const ProjectComponent = ({ pageProps }) => {
                                     />
                                 );
                             }
+                        )}
+                        {/* Empty state - No goals */}
+                        {Object.values(initiativeData._goals).length < 1 && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
+                            </div>
                         )}
                     </SectionWrapper>
                     {/* Applicants */}
@@ -506,7 +520,16 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </div>
                             ))}
+                        {/* Empty state - No Applicants */}
+                        {applicants.length < 1 && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
+                            </div>
+                        )}
                     </SectionWrapper>
+
                     {/* Collaborators */}
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
@@ -546,206 +569,263 @@ const ProjectComponent = ({ pageProps }) => {
                                     </p>
                                 </div>
                             ))}
+                        {/* Empty state - No Collaborators */}
+                        {collaborators.length < 1 && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
+                            </div>
+                        )}
                     </SectionWrapper>
 
                     {/* Employees funded */}
-                    {initiativeData._employeesFunded && (
-                        <SectionWrapper className="mt-32 bg-white rounded-8">
-                            <div className="flex justify-between">
-                                <h2 className="t-h3">
-                                    {label(
-                                        'custom.FA_InitiativeViewEmployeesFundedHeading'
-                                    )}
-                                </h2>
-                                <Button variant="secondary">
-                                    {label('custom.FA_ButtonUpdate')}
-                                </Button>
-                            </div>
-
-                            <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
-                                {Object.values(employeeGroups).map(
-                                    (group, index) => {
-                                        const males = group.male
-                                            ? `${group.male} Male`
-                                            : null;
-                                        const females = group.female
-                                            ? `${group.female} Female`
-                                            : null;
-                                        const other = group.other
-                                            ? `${group.other} Other`
-                                            : null;
-                                        const description = [
-                                            males,
-                                            females,
-                                            other,
-                                        ]
-                                            .filter(item => item)
-                                            .join(', ');
-                                        return (
-                                            <NumberCard
-                                                key={`e-${index}`}
-                                                useBackground={true}
-                                                number={group.total}
-                                                headline={group.role}
-                                                description={description}
-                                            />
-                                        );
-                                    }
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewEmployeesFundedHeading'
                                 )}
-                            </div>
-                            <div className="mt-32">
-                                {/* Table header */}
-                                <div className="flex pb-8">
-                                    <div className="w-full t-footnote-bold">
-                                        {label(
-                                            'custom.FA_InitiativeViewEmployeesTableColumnHeadersTitle'
-                                        )}
-                                    </div>
-                                    <div className="w-full t-footnote-bold">
-                                        {label(
-                                            'custom.FA_InitiativeViewEmployeesTableColumnHeadersRole'
-                                        )}
-                                    </div>
-                                    {largeBps.includes(bp) && (
-                                        <div className="w-full t-footnote-bold">
-                                            {label(
-                                                'custom.FA_InitiativeViewEmployeesTableColumnHeadersUtilisation'
-                                            )}
-                                        </div>
+                            </h2>
+                            <Button variant="secondary">
+                                {label('custom.FA_ButtonUpdate')}
+                            </Button>
+                        </div>
+                        {Object.values(initiativeData._employeesFunded).length >
+                            0 && (
+                            <>
+                                <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
+                                    {Object.values(employeeGroups).map(
+                                        (group, index) => {
+                                            const males = group.male
+                                                ? `${group.male} Male`
+                                                : null;
+                                            const females = group.female
+                                                ? `${group.female} Female`
+                                                : null;
+                                            const other = group.other
+                                                ? `${group.other} Other`
+                                                : null;
+                                            const description = [
+                                                males,
+                                                females,
+                                                other,
+                                            ]
+                                                .filter(item => item)
+                                                .join(', ');
+                                            return (
+                                                <NumberCard
+                                                    key={`e-${index}`}
+                                                    useBackground={true}
+                                                    number={group.total}
+                                                    headline={group.role}
+                                                    description={description}
+                                                />
+                                            );
+                                        }
                                     )}
                                 </div>
-
-                                {/* Table Rows */}
-                                {Object.values(
-                                    initiativeData._employeesFunded
-                                ).map((item, index) => (
-                                    <div
-                                        key={`e-${index}`}
-                                        className="flex pt-16 pb-16 border-t-2 border-amber-10">
-                                        <div className="w-full t-h6">
-                                            {item.Job_Title__c}
+                                <div className="mt-32">
+                                    {/* Table header */}
+                                    <div className="flex pb-8">
+                                        <div className="w-full t-footnote-bold">
+                                            {label(
+                                                'custom.FA_InitiativeViewEmployeesTableColumnHeadersTitle'
+                                            )}
                                         </div>
-                                        <div className="w-full">
-                                            <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
-                                                {item.Role_Type__c}
-                                            </span>
+                                        <div className="w-full t-footnote-bold">
+                                            {label(
+                                                'custom.FA_InitiativeViewEmployeesTableColumnHeadersRole'
+                                            )}
                                         </div>
                                         {largeBps.includes(bp) && (
-                                            <div className="w-full t-caption">
-                                                {item.Percent_Involvement__c}
+                                            <div className="w-full t-footnote-bold">
+                                                {label(
+                                                    'custom.FA_InitiativeViewEmployeesTableColumnHeadersUtilisation'
+                                                )}
                                             </div>
                                         )}
                                     </div>
-                                ))}
+
+                                    {/* Table Rows */}
+                                    {Object.values(
+                                        initiativeData._employeesFunded
+                                    ).map((item, index) => (
+                                        <div
+                                            key={`e-${index}`}
+                                            className="flex pt-16 pb-16 border-t-2 border-amber-10">
+                                            <div className="w-full t-h6">
+                                                {item.Job_Title__c}
+                                            </div>
+                                            <div className="w-full">
+                                                <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
+                                                    {item.Role_Type__c}
+                                                </span>
+                                            </div>
+                                            {largeBps.includes(bp) && (
+                                                <div className="w-full t-caption">
+                                                    {
+                                                        item.Percent_Involvement__c
+                                                    }
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
+
+                        {/* Empty state - No Employees */}
+                        {Object.values(initiativeData._employeesFunded).length <
+                            1 && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
                             </div>
-                        </SectionWrapper>
-                    )}
+                        )}
+                    </SectionWrapper>
+
                     {/* Problem Causes */}
-                    {initiativeData.Problem_Causes__c && (
-                        <SectionWrapper className="mt-32 bg-white rounded-8">
-                            <div className="flex justify-between">
-                                <h2 className="t-h3">
-                                    {label(
-                                        'custom.FA_InitiativeViewCausesHeading'
-                                    )}
-                                </h2>
-                                <Button variant="secondary">
-                                    {label('custom.FA_ButtonUpdate')}
-                                </Button>
-                            </div>
-
-                            {/* Some fields are sometimes JSON strings */}
-                            {isJson(initiativeData.Problem_Causes__c) &&
-                                JSON.parse(
-                                    initiativeData.Problem_Causes__c
-                                ).map(item => (
-                                    <p key={item.id} className="mt-16 t-body">
-                                        {item.text}
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label('custom.FA_InitiativeViewCausesHeading')}
+                            </h2>
+                            <Button variant="secondary">
+                                {label('custom.FA_ButtonUpdate')}
+                            </Button>
+                        </div>
+                        {initiativeData.Problem_Causes__c && (
+                            <>
+                                {/* Some fields are sometimes JSON strings */}
+                                {isJson(initiativeData.Problem_Causes__c) &&
+                                    JSON.parse(
+                                        initiativeData.Problem_Causes__c
+                                    ).map(item => (
+                                        <p
+                                            key={item.id}
+                                            className="mt-16 t-body">
+                                            {item.text}
+                                        </p>
+                                    ))}
+                                {!isJson(initiativeData.Problem_Causes__c) && (
+                                    <p className="mt-16 t-body">
+                                        {initiativeData.Problem_Causes__c}
                                     </p>
-                                ))}
-                            {!isJson(initiativeData.Problem_Causes__c) && (
-                                <p className="mt-16 t-body">
-                                    {initiativeData.Problem_Causes__c}
-                                </p>
-                            )}
-                        </SectionWrapper>
-                    )}
-                    {/* Our vision */}
-                    {initiativeData.Ultimate_Outcome__c && (
-                        <SectionWrapper className="mt-32 bg-white rounded-8">
-                            <div className="flex justify-between">
-                                <h2 className="t-h3">
-                                    {label(
-                                        'custom.FA_InitiativeViewVisionHeading'
-                                    )}
-                                </h2>
-                                <Button variant="secondary">
-                                    {label('custom.FA_ButtonUpdate')}
-                                </Button>
+                                )}
+                            </>
+                        )}
+                        {!initiativeData.Problem_Causes__c && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
                             </div>
+                        )}
+                    </SectionWrapper>
 
+                    {/* Our vision */}
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label('custom.FA_InitiativeViewVisionHeading')}
+                            </h2>
+                            <Button variant="secondary">
+                                {label('custom.FA_ButtonUpdate')}
+                            </Button>
+                        </div>
+                        {initiativeData.Ultimate_Outcome__c && (
                             <p className="mt-16 t-body">
                                 {initiativeData.Ultimate_Outcome__c}
                             </p>
-                        </SectionWrapper>
-                    )}
-                    {/* Organisational focus */}
-                    {initiativeData.Why_Problem_Solving__c && (
-                        <SectionWrapper className="mt-32 bg-white rounded-8">
-                            <div className="flex justify-between">
-                                <h2 className="t-h3">
-                                    {label(
-                                        'custom.FA_InitiativeViewOrgFocusHeading'
-                                    )}
-                                </h2>
-                                <Button variant="secondary">
-                                    {label('custom.FA_ButtonUpdate')}
-                                </Button>
+                        )}
+                        {!initiativeData.Problem_Causes__c && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
                             </div>
+                        )}
+                    </SectionWrapper>
 
+                    {/* Organisational focus */}
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewOrgFocusHeading'
+                                )}
+                            </h2>
+                            <Button variant="secondary">
+                                {label('custom.FA_ButtonUpdate')}
+                            </Button>
+                        </div>
+                        {initiativeData.Why_Problem_Solving__c && (
                             <p className="mt-16 t-body">
                                 {initiativeData.Why_Problem_Solving__c}
                             </p>
-                        </SectionWrapper>
-                    )}
-                    {/* The problem to be solved */}
-                    {initiativeData.Situation_Today__c && (
-                        <SectionWrapper className="mt-32 bg-white rounded-8">
-                            <div className="flex justify-between">
-                                <h2 className="t-h3">
-                                    {label(
-                                        'custom.FA_InitiativeViewProblemsHeading'
-                                    )}
-                                </h2>
-                                <Button variant="secondary">
-                                    {label('custom.FA_ButtonUpdate')}
-                                </Button>
+                        )}
+                        {!initiativeData.Why_Problem_Solving__c && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
                             </div>
+                        )}
+                    </SectionWrapper>
 
+                    {/* The problem to be solved */}
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewProblemsHeading'
+                                )}
+                            </h2>
+                            <Button variant="secondary">
+                                {label('custom.FA_ButtonUpdate')}
+                            </Button>
+                        </div>
+                        {initiativeData.Situation_Today__c && (
                             <p className="mt-16 t-body">
                                 {initiativeData.Situation_Today__c}
                             </p>
-                        </SectionWrapper>
-                    )}
-                    {/* Reason for approach */}
-                    {initiativeData.Approach_Thinking__c && (
-                        <SectionWrapper className="mt-32 bg-white rounded-8">
-                            <div className="flex justify-between">
-                                <h2 className="t-h3">
-                                    {label(
-                                        'custom.FA_InitiativeViewReasonsHeading'
-                                    )}
-                                </h2>
-                                <Button variant="secondary">
-                                    {label('custom.FA_ButtonUpdate')}
-                                </Button>
+                        )}
+                        {!initiativeData.Situation_Today__c && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
                             </div>
+                        )}
+                    </SectionWrapper>
 
+                    {/* Reason for approach */}
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewReasonsHeading'
+                                )}
+                            </h2>
+                            <Button variant="secondary">
+                                {label('custom.FA_ButtonUpdate')}
+                            </Button>
+                        </div>
+                        {initiativeData.Approach_Thinking__c && (
                             <p className="mt-16 t-body">
                                 {initiativeData.Approach_Thinking__c}
                             </p>
-                        </SectionWrapper>
-                    )}
+                        )}
+                        {!initiativeData.Approach_Thinking__c && (
+                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                                {labelTodo(
+                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                                )}
+                            </div>
+                        )}
+                    </SectionWrapper>
                 </>
             )}
         </>

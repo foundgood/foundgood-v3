@@ -169,6 +169,12 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     };
                 });
             setResults(results);
+        } else if (
+            initiative?.Id &&
+            Object.keys(initiative?._activitySuccessMetrics).length < 1
+        ) {
+            setActivities([]);
+            setResults([]);
         }
     }, [initiative]);
 
@@ -182,11 +188,13 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     <h2 className="t-h3">
                         {label('custom.FA_InitiativeViewIndicatorsHeading')}
                     </h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
+                    <Button variant="secondary">
+                        {label('custom.FA_ButtonUpdate')}
+                    </Button>
                 </div>
                 {/* Loop - by activity */}
-                {activities &&
-                    activities.map((item, index) => (
+                {activities?.length > 0 &&
+                    activities?.map((item, index) => (
                         <div key={`i-${index}`} className="mt-32">
                             <h3 className="t-h4">{item.title}</h3>
                             {/* Split by type "People" && "Custom"*/}
@@ -194,16 +202,26 @@ const DevelopmentsComponent = ({ pageProps }) => {
                             {index < activities.length - 1 && <DividerLine />}
                         </div>
                     ))}
+                {/* Empty state - No activities */}
+                {activities?.length < 1 && (
+                    <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                        {labelTodo(
+                            'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                        )}
+                    </div>
+                )}
             </SectionWrapper>
             <SectionWrapper className="mt-32 bg-white rounded-8">
                 <div className="flex justify-between">
                     <h2 className="t-h3">
                         {label('custom.FA_ReportViewSubHeadingSharingOverall')}
                     </h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
+                    <Button variant="secondary">
+                        {label('custom.FA_ButtonUpdate')}
+                    </Button>
                 </div>
-                {results &&
-                    results.map((item, index) => (
+                {results?.length > 0 &&
+                    results?.map((item, index) => (
                         <div key={`a-${index}`} className="mt-24">
                             <ReportSharingCard
                                 key={`r-${index}`}
@@ -219,230 +237,15 @@ const DevelopmentsComponent = ({ pageProps }) => {
                             )}
                         </div>
                     ))}
+                {/* Empty state - No results */}
+                {results?.length < 1 && (
+                    <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
+                        {labelTodo(
+                            'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                        )}
+                    </div>
+                )}
             </SectionWrapper>
-
-            {/* 
-            STATIC VERSION!!!
-            <SectionWrapper className="mt-32 bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">{labelTodo('Sharing of results')}</h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
-                </div>
-                <div className="mt-24">
-                    <ReportSharingCard
-                        headline="Science Weekly 🔬"
-                        description="Journal publication"
-                        tags={[
-                            'Policymakers',
-                            'Politicians',
-                            'Professional practitioners',
-                        ]}
-                        items={[
-                            {
-                                label: 'Publication type',
-                                text: 'Industry magazine',
-                            },
-                            { label: 'Publication year', text: '2021' },
-                            {
-                                label: 'Publisher',
-                                text: 'Media company publishing international',
-                            },
-                            { label: 'Author', text: 'Uganda, Denmark' },
-                            { label: 'DOI', text: 'Uganda, Denmark' },
-                        ]}
-                    />
-                    <div className="py-24">
-                        <DividerLine />
-                    </div>
-                </div>
-
-                <div className="mt-24">
-                    <ReportSharingCard
-                        headline="The Joe Rogan Podcast 💪"
-                        description="TV/radio/film/podcast"
-                        tags={[
-                            'Policymakers',
-                            'Politicians',
-                            'Professional practitioners',
-                        ]}
-                    />
-                    <div className="py-24">
-                        <DividerLine />
-                    </div>
-                </div>
-
-                <div className="mt-24">
-                    <ReportSharingCard
-                        headline="Elsewhere Essence Workhop 👯🤯🥴"
-                        description="Workshop or similar"
-                        tags={[
-                            'Policymakers',
-                            'Politicians',
-                            'Professional practitioners',
-                        ]}
-                    />
-                    <div className="py-24">
-                        <DividerLine />
-                    </div>
-                </div>
-            </SectionWrapper>
-            
-            <SectionWrapper className="bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">{labelTodo('Indicator totals')}</h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
-                </div>
-
-                <ChartCard
-                    items={[
-                        {
-                            title: 'Children (age 0-5)',
-                            value: '256',
-                            label: 'Reached so far',
-                        },
-                        {
-                            title: 'Adults (24+)',
-                            value: '384',
-                            label: 'Reached so far',
-                        },
-                        {
-                            title: 'Schools built',
-                            value: '12',
-                            label: 'Total so far',
-                        },
-                        {
-                            title: 'Wells built',
-                            value: '24',
-                            label: 'Total so far',
-                        },
-                    ]}
-                />
-            </SectionWrapper>
-
-            <SectionWrapper className="mt-32 bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">{labelTodo('Indicator targets')}</h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
-                </div>
-
-                <ChartCard
-                    items={[
-                        {
-                            title: 'Children (age 0-5)',
-                            value: '256 / 512',
-                            label: 'Reached so far',
-                        },
-                        {
-                            title: 'Adults (24+)',
-                            value: '384 / 256',
-                            label: 'Reached so far',
-                        },
-                        {
-                            title: 'Schools built',
-                            value: '12/18',
-                            label: 'Total so far',
-                        },
-                        {
-                            title: 'Wells built',
-                            value: '24/32',
-                            label: 'Total so far',
-                        },
-                    ]}
-                />
-            </SectionWrapper>
-
-            <SectionWrapper className="mt-32 bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">{labelTodo('Evaluations')}</h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
-                </div>
-                <div className="mt-24">
-                    <p className="t-body">
-                        Physiological respiration involves the mechanisms that
-                        ensure that the composition of the functional residual
-                        capacity is kept constant.
-                    </p>
-                    <div className="mt-16 t-h4">Evaluator name #1</div>
-                    <DividerLine />
-                </div>
-                <div className="mt-24">
-                    <p className="t-body">
-                        Physiological respiration involves the mechanisms that
-                        ensure that the composition of the functional residual
-                        capacity is kept constant.
-                    </p>
-                    <div className="mt-16 t-h4">Evaluator name #2</div>
-                </div>
-            </SectionWrapper>
-
-            <SectionWrapper className="mt-32 bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">{labelTodo('Outcomes')}</h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
-                </div>
-                <div className="mt-24">
-                    <h3 className="t-h4">{labelTodo('Outcome #1')}</h3>
-                    <p className="t-body">
-                        Physiological respiration involves the mechanisms that
-                        ensure that the composition of the functional residual
-                        capacity is kept constant.
-                    </p>
-                    <div className="p-8 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
-                        Building an inspiring and enabling learning environment
-                        for the natural science in Primart and lower secondary
-                        school (basic school)
-                    </div>
-                    <div className="p-8 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
-                        Building a strong voice for the importance of natural
-                        sciences in Primary and lower secondary school (basic
-                        school)
-                    </div>
-                    <DividerLine />
-                </div>
-
-                <div className="mt-24">
-                    <h3 className="t-h4">{labelTodo('Outcome #2')}</h3>
-                    <p className="t-body">
-                        Physiological respiration involves the mechanisms that
-                        ensure that the composition of the functional residual
-                        capacity is kept constant.
-                    </p>
-                    <div className="p-8 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
-                        Building an inspiring and enabling learning environment
-                        for the natural science in Primart and lower secondary
-                        school (basic school)
-                    </div>
-                    <div className="p-8 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
-                        Building a strong voice for the importance of natural
-                        sciences in Primary and lower secondary school (basic
-                        school)
-                    </div>
-                </div>
-            </SectionWrapper>
-
-            <SectionWrapper className="mt-32 bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">{labelTodo('Influence on policy')}</h2>
-                    <Button variant="secondary">{labelTodo('Update')}</Button>
-                </div>
-                <div className="mt-24">
-                    <div className="t-h4">Influence #1</div>
-                    <p className="mt-16 t-body">
-                        Physiological respiration involves the mechanisms that
-                        ensure that the composition of the functional residual
-                        capacity is kept constant.
-                    </p>
-                    <DividerLine />
-                </div>
-                <div className="mt-24">
-                    <div className="t-h4">Evaluator name #2</div>
-                    <p className="mt-16 t-body">
-                        Physiological respiration involves the mechanisms that
-                        ensure that the composition of the functional residual
-                        capacity is kept constant.
-                    </p>
-                </div>
-            </SectionWrapper> */}
         </>
     );
 };
