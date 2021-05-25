@@ -38,7 +38,7 @@ const AsideNavigationComponent = () => {
                 <h3 className="mt-16 t-sh6">
                     {
                         initiative._reports[REPORT_ID]?.Funder_Report__r
-                            .Account__r.Name
+                            ?.Account__r.Name
                     }
                 </h3>
             </header>
