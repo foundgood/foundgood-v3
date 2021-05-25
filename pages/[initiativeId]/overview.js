@@ -16,7 +16,6 @@ import UpdateButton from 'components/updateButton';
 import NumberCard from 'components/_initiative/numberCard';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
-import NumberCard from 'components/_initiative/numberCard';
 import DividerLine from 'components/_initiative/dividerLine';
 import TextCard from 'components/_initiative/textCard';
 
