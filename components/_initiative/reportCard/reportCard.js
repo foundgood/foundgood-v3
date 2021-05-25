@@ -8,27 +8,26 @@ import t from 'prop-types';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
-
+import { useContext } from 'utilities/hooks';
 // Icon
 import { FiFileText } from 'react-icons/fi';
 
 const ReportCardComponent = ({
+    id,
     headline,
     date,
     status,
     useBackground = true,
 }) => {
+    // Hook: Context
+    const { INITIATIVE_ID } = useContext();
+
     // Hook: Metadata
     const { label } = useMetadata();
-    const tempUrl = '/a0p1x00000EkTIwAAN/reports/a101x000002pIiFAAU';
+    const url = `/${INITIATIVE_ID}/reports/${id}`;
 
-    // Status:
-    // - Published
-    // - In review
-    // - Not started
-    // - In progress
     return (
-        <Link href={tempUrl}>
+        <Link href={url}>
             <a
                 className={cc([
                     'flex-none w-[220px] p-16 mt-16 mr-16 rounded-8 flex flex-col items-start cursor-pointer',
@@ -71,16 +70,16 @@ const ReportCardComponent = ({
 };
 
 ReportCardComponent.propTypes = {
+    // Report id - used for url
+    id: t.string.isRequired,
     // Card title
     headline: t.string,
-    // Report Cards
-    items: t.arrayOf(
-        t.shape({
-            id: t.string,
-            headline: t.string,
-            dueDate: t.string,
-        })
-    ),
+    // Due/Complete date
+    date: t.string,
+    // Published, In review, Not started, In progress,
+    status: t.string,
+    // true/false
+    useBackground: t.bool,
 };
 
 ReportCardComponent.defaultProps = {};

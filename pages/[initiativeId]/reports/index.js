@@ -86,6 +86,7 @@ const ReportsComponent = ({ pageProps }) => {
                                 return (
                                     <ReportCard
                                         key={`r-${index}`}
+                                        id={item.Id}
                                         useBackground={false}
                                         headline={headline}
                                         date={date}
