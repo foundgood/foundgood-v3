@@ -1,27 +1,41 @@
 // React
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // Packages
 import cc from 'classcat';
 
 // Utilities
 import { useInitiativeLayoutStore } from 'utilities/store';
-import { useResponsive } from 'utilities/hooks';
+import { useResponsive, useMetadata, useContext } from 'utilities/hooks';
 
 // Components
 import ActiveLink from 'components/activeLink';
 import IconButton from 'components/iconButton';
 
 // Icons
-import { FiAlignRight, FiChevronsRight } from 'react-icons/fi';
+import {
+    FiAlignRight,
+    FiChevronsRight,
+    FiChevronDown,
+    FiChevronUp,
+} from 'react-icons/fi';
 
 const MobileNavigationComponent = () => {
+    // Hook: Context
+    const { INITIATIVE_ID } = useContext();
+
     // Store: InitiativeLayout
     const {
         mobileMenuActive,
         toggleMobileMenu,
         navigation,
     } = useInitiativeLayoutStore();
+
+    // Hook: Metadata
+    const { label } = useMetadata();
+
+    // Open/Close submenu
+    const [subMenuActive, setSubMenuActive] = useState(false);
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -46,7 +60,7 @@ const MobileNavigationComponent = () => {
     }, [mobileMenuActive]);
 
     // Function: Event wrapper for closing outside click
-    function handleClick(event) {
+    const handleClick = event => {
         if (
             mobileMenuActive &&
             mobileNavigationRef.current &&
@@ -54,7 +68,11 @@ const MobileNavigationComponent = () => {
         ) {
             toggleMobileMenu(false);
         }
-    }
+    };
+
+    const toggleSubMenu = () => {
+        setSubMenuActive(!subMenuActive);
+    };
 
     return (
         <div
@@ -77,23 +95,72 @@ const MobileNavigationComponent = () => {
                     icon={FiChevronsRight}
                     iconType="stroke"
                     action={() => toggleMobileMenu(false)}
-                    className="self-end mb-24 -mr-4"
+                    className="self-end -mr-4"
                 />
-                <div className="flex flex-col pr-48 space-y-24">
-                    {navigation.map((item, index) => (
-                        <ActiveLink
-                            href={item.href}
-                            key={index}
-                            active="text-blue-100">
-                            <a
-                                onClick={() => {
-                                    toggleMobileMenu(false);
-                                }}
-                                className="flex items-center text-blue-300 t-h6 transition-default hover:text-blue-200">
-                                {item.label}
-                            </a>
-                        </ActiveLink>
-                    ))}
+                {/* space-y-24 */}
+                <div className="flex flex-col pr-32">
+                    {navigation.map((item, index) => {
+                        // Submenu
+                        if (!item.slug) {
+                            return (
+                                <div
+                                    key={index}
+                                    className="flex flex-col items-start mt-24 text-blue-300 rounded-8 hover:text-blue-200 transition-default">
+                                    <button
+                                        className="flex outline-none t-h6 focus:outline-none"
+                                        onClick={toggleSubMenu}>
+                                        {label(item.label)}
+                                        {subMenuActive && (
+                                            <FiChevronUp className="ml-4" />
+                                        )}
+                                        {!subMenuActive && (
+                                            <FiChevronDown className="ml-4" />
+                                        )}
+                                    </button>
+                                    <div
+                                        className={cc([
+                                            'transition-default flex flex-col ml-24 overflow-hidden',
+                                            {
+                                                'h-auto': subMenuActive,
+                                                'h-0': !subMenuActive,
+                                            },
+                                        ])}>
+                                        {item.subItems.map((subItem, i) => (
+                                            <ActiveLink
+                                                href={`/${INITIATIVE_ID}/${subItem.slug}`}
+                                                key={i}
+                                                active="text-blue-100">
+                                                <a
+                                                    onClick={() => {
+                                                        toggleMobileMenu(false);
+                                                    }}
+                                                    className="flex flex-col mt-24 text-blue-300 t-h6 transition-default hover:text-blue-200">
+                                                    {label(subItem.label)}
+                                                </a>
+                                            </ActiveLink>
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        }
+                        // Normal menu item
+                        else {
+                            return (
+                                <ActiveLink
+                                    href={`/${INITIATIVE_ID}/${item.slug}`}
+                                    key={index}
+                                    active="text-blue-100">
+                                    <a
+                                        onClick={() => {
+                                            toggleMobileMenu(false);
+                                        }}
+                                        className="flex items-center mt-24 text-blue-300 t-h6 transition-default hover:text-blue-200">
+                                        {label(item.label)}
+                                    </a>
+                                </ActiveLink>
+                            );
+                        }
+                    })}
                 </div>
             </div>
         </div>

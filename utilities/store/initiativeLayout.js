@@ -12,17 +12,8 @@ const useInitiativeLayoutStore = create(set => ({
             mobileMenuActive: toggle,
         })),
 
-    // TODO - Remove! Update mobile version first...
     // Navigation object
     navigation: [
-        { href: '/initiative/overview', label: labelTodo('Overview') },
-        { href: '/initiative/activities', label: labelTodo('Activities') },
-        { href: '/initiative/developments', label: labelTodo('Developments') },
-        { href: '/initiative/logbook', label: labelTodo('Logbook') },
-        { href: '/initiative/reports', label: labelTodo('Reports') },
-    ],
-
-    newNavigation: [
         { slug: 'overview', label: 'custom.FA_MenuContext' },
         {
             label: 'custom.FA_MenuInitiativeDetails',
