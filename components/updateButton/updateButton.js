@@ -5,7 +5,13 @@ import React from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata, useContext, useAuth } from 'utilities/hooks';
+import {
+    useMetadata,
+    useContext,
+    useAuth,
+    useSalesForce,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 
@@ -16,20 +22,60 @@ const UpdateButtonComponent = ({ mode, baseUrl }) => {
     // Hook: Metadata
     const { label } = useMetadata();
 
+    // Hook: Salesforce setup
+    const { sfUpdate } = useSalesForce();
+
     // Hook: Auth
     const { userInitiativeRights } = useAuth();
 
-    // Where to go?
-    const url =
-        mode === 'report'
-            ? `wizard/${INITIATIVE_ID}/${baseUrl}/${REPORT_ID}`
-            : `wizard/${INITIATIVE_ID}/${baseUrl}`;
+    // Initiative data
+    const { updateReport, getReport, CONSTANTS } = useInitiativeDataStore();
+
+    // method: set report to in progress
+    async function reportInProgress() {
+        try {
+            if (
+                getReport(REPORT_ID).Status__c ===
+                CONSTANTS.TYPES.REPORT_NOT_STARTED
+            ) {
+                // Object name
+                const object = 'Initiative_Report__c';
+
+                // Data for sf
+                const data = {
+                    Status__c: CONSTANTS.TYPES.REPORT_IN_PROGRESS,
+                };
+
+                // Update
+                await sfUpdate({ object, data, id: REPORT_ID });
+
+                // Update store
+                await updateReport(REPORT_ID);
+            }
+
+            // Change location
+            router.push(`/wizard/${INITIATIVE_ID}/${baseUrl}/${REPORT_ID}`);
+        } catch (error) {
+            console.warn(error);
+        }
+    }
 
     return (
         <Button
             variant="secondary"
-            action={url}
-            disabled={!userInitiativeRights.canEdit}>
+            action={
+                mode === 'report'
+                    ? reportInProgress
+                    : `/wizard/${INITIATIVE_ID}/${baseUrl}`
+            }
+            disabled={
+                !userInitiativeRights.canEdit ||
+                (mode === 'report' &&
+                    ![
+                        CONSTANTS.TYPES.REPORT_NOT_STARTED,
+                        CONSTANTS.TYPES.REPORT_IN_PROGRESS,
+                    ].includes(getReport(REPORT_ID).Status__c))
+            }>
             {label('custom.FA_Update')}
         </Button>
     );
