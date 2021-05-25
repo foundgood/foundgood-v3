@@ -52,13 +52,6 @@ const BottomNavigationComponent = () => {
             // Submit throws if there is any validation errors
             await handleSubmit();
 
-            console.log(
-                nextItemUrl(
-                    INITIATIVE_ID === 'new' ? getInitiativeId() : INITIATIVE_ID,
-                    REPORT_ID
-                )
-            );
-
             // Go to next in flow
             router.push(
                 nextItemUrl(

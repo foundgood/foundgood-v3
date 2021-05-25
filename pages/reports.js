@@ -22,7 +22,7 @@ const ReportComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Reset initiative data
-    const { reset: resetInitiativeData, CONSTANTS } = useInitiativeDataStore();
+    const { CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { label, valueSet, log } = useMetadata();
@@ -64,11 +64,6 @@ const ReportComponent = ({ pageProps }) => {
     // Search results data
     const [initial, setInitial] = useState(null);
     const [filtered, setFiltered] = useState(null);
-
-    // Reset initiative data on page load
-    useEffect(() => {
-        resetInitiativeData();
-    }, []);
 
     // Add data results to initial data set
     useEffect(() => {

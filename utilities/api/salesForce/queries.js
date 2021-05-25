@@ -1,5 +1,3 @@
-const limit = 100;
-
 const queries = {
     account: {
         allGrantees() {
@@ -64,7 +62,7 @@ const queries = {
         },
     },
     initiativeReport: {
-        _query: `SELECT Id, Initiative__c, CreatedById, LastModifiedDate, Name, Report_Viewer_Version__c, Project_Purpose__c, Progress_Towards_Grant_Area_Themes__c, Important_Results__c, Post_Project_Activities__c, Summary_Of_Activities__c, Summary_Of_Challenges_And_Learnings__c, Executive_Summary__c, Funder_Report__c, Funder_Report__r.Account__r.Name, Report_Type__c, Report_Period_Start_Date__c, Report_Period_End_Date__c, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Report__c`,
+        _query: `SELECT Id, Exported_Report_URL__c, Initiative__c, CreatedById, LastModifiedDate, Name, Report_Viewer_Version__c, Project_Purpose__c, Progress_Towards_Grant_Area_Themes__c, Important_Results__c, Post_Project_Activities__c, Summary_Of_Activities__c, Summary_Of_Challenges_And_Learnings__c, Executive_Summary__c, Funder_Report__c, Funder_Report__r.Account__r.Name, Report_Type__c, Report_Period_Start_Date__c, Report_Period_End_Date__c, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Report__c`,
         get(id) {
             return `${this._query} WHERE Id = '${id}'`;
         },
