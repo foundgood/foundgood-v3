@@ -10,7 +10,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 import { stripUndefined } from 'utilities';
 
 // Components
-import Button from 'components/button';
+import UpdateButton from 'components/updateButton';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
 import ChartCard from 'components/_initiative/chartCard';
@@ -189,9 +189,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     <h2 className="t-h3">
                         {label('custom.FA_InitiativeViewIndicatorsHeading')}
                     </h2>
-                    <Button variant="secondary">
-                        {label('custom.FA_ButtonUpdate')}
-                    </Button>
+                    <UpdateButton mode="initiative" baseUrl="indicators" />
                 </div>
                 {/* Loop - by activity */}
                 {activities?.length > 0 &&
@@ -211,9 +209,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     <h2 className="t-h3">
                         {label('custom.FA_ReportViewSubHeadingSharingOverall')}
                     </h2>
-                    <Button variant="secondary">
-                        {label('custom.FA_ButtonUpdate')}
-                    </Button>
+                    <UpdateButton mode="initiative" baseUrl="sharing-results" />
                 </div>
                 {results?.length > 0 &&
                     results?.map((item, index) => (

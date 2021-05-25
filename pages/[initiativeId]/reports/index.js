@@ -9,7 +9,7 @@ import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
-import Button from 'components/button';
+import UpdateButton from 'components/updateButton';
 import ReportCard from 'components/_initiative/reportCard';
 import SectionWrapper from 'components/sectionWrapper';
 
@@ -69,11 +69,10 @@ const ReportsComponent = ({ pageProps }) => {
                         className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">{item.Account__r.Name}</h2>
-                            <Button
-                                variant="secondary"
-                                action="/wizard/report-schedule">
-                                {labelTodo('Update')}
-                            </Button>
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="report-schedule"
+                            />
                         </div>
 
                         <div className="flex flex-wrap">

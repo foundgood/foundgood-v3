@@ -331,9 +331,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewFundersGrantsHeading'
                                 )}
                             </h2>
-                            <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
-                            </Button>
+                            <UpdateButton mode="initiative" baseUrl="funders" />
                         </div>
 
                         <div className="flex flex-col items-center p-16 md:flex-row">
@@ -450,9 +448,7 @@ const ProjectComponent = ({ pageProps }) => {
                             <h2 className="t-h3">
                                 {label('custom.FA_InitiativeViewGoalsHeading')}
                             </h2>
-                            <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
-                            </Button>
+                            <UpdateButton mode="initiative" baseUrl="goals" />
                         </div>
                         {/* List goals */}
                         {Object.values(initiativeData._goals).map(
@@ -486,9 +482,10 @@ const ProjectComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewApplicantsHeading'
                                 )}
                             </h2>
-                            <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
-                            </Button>
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="applicants"
+                            />
                         </div>
                         {applicants &&
                             applicants.map((item, index) => (
@@ -534,9 +531,10 @@ const ProjectComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewCollaboratorsHeading'
                                 )}
                             </h2>
-                            <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
-                            </Button>
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="collaborators"
+                            />
                         </div>
                         {collaborators &&
                             collaborators.map((item, index) => (
@@ -577,9 +575,10 @@ const ProjectComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewEmployeesFundedHeading'
                                 )}
                             </h2>
-                            <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
-                            </Button>
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="employees-funded"
+                            />
                         </div>
                         {Object.values(initiativeData._employeesFunded).length >
                             0 && (
@@ -677,8 +676,12 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('custom.FA_InitiativeViewCausesHeading')}
                             </h2>
                             <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
+                                {labelTodo('Update: Which wizard page')}
                             </Button>
+                            {/* <UpdateButton
+                                mode="initiative"
+                                baseUrl=""
+                            /> */}
                         </div>
                         {initiativeData.Problem_Causes__c && (
                             <>
@@ -710,8 +713,12 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('custom.FA_InitiativeViewVisionHeading')}
                             </h2>
                             <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
+                                {labelTodo('Update: Which wizard page')}
                             </Button>
+                            {/* <UpdateButton
+                                mode="initiative"
+                                baseUrl=""
+                            /> */}
                         </div>
                         {initiativeData.Ultimate_Outcome__c && (
                             <p className="mt-16 t-body">
@@ -730,8 +737,12 @@ const ProjectComponent = ({ pageProps }) => {
                                 )}
                             </h2>
                             <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
+                                {labelTodo('Update: Which wizard page')}
                             </Button>
+                            {/* <UpdateButton
+                                mode="initiative"
+                                baseUrl=""
+                            /> */}
                         </div>
                         {initiativeData.Why_Problem_Solving__c && (
                             <p className="mt-16 t-body">
@@ -752,8 +763,12 @@ const ProjectComponent = ({ pageProps }) => {
                                 )}
                             </h2>
                             <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
+                                {labelTodo('Update: Which wizard page')}
                             </Button>
+                            {/* <UpdateButton
+                                mode="initiative"
+                                baseUrl=""
+                            /> */}
                         </div>
                         {initiativeData.Situation_Today__c && (
                             <p className="mt-16 t-body">
@@ -772,8 +787,12 @@ const ProjectComponent = ({ pageProps }) => {
                                 )}
                             </h2>
                             <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
+                                {labelTodo('Update: Which wizard page')}
                             </Button>
+                            {/* <UpdateButton
+                                mode="initiative"
+                                baseUrl=""
+                            /> */}
                         </div>
                         {initiativeData.Approach_Thinking__c && (
                             <p className="mt-16 t-body">
