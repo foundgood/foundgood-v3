@@ -246,9 +246,13 @@ const ReportComponent = ({ pageProps }) => {
                         initiative._activitySuccessMetrics
                     ).map(item => {
                         if (activity.Id == item.Initiative_Activity__c) {
-                            let title;
-                            let label;
-                            let groupTitle;
+                            // let title;
+                            // let label;
+                            // let groupTitle;
+                            // Not all indicators have a "Target"
+                            const value = item.Target__c
+                                ? `${item.Current_Status__c} / ${item.Target__c}`
+                                : item.Current_Status__c;
 
                             if (
                                 item.Type__c ===
@@ -260,37 +264,31 @@ const ReportComponent = ({ pageProps }) => {
                                     CONSTANTS.TYPES.INDICATOR_GENDER_OTHER
                                         ? item.Gender_Other__c
                                         : item.Gender__c;
-                                title = `${gender} (${labelTodo('age')} ${
-                                    item.Lowest_Age__c
-                                }-${item.Highest_Age__c})`;
-                                label = labelTodo('Reached so far');
-                                groupTitle = 'labelTodo';
-                                // label(
-                                //     'custom.FA_InitiativeViewIndicatorsPeopleReached'
-                                // );
+
+                                return {
+                                    type: item.Type__c,
+                                    groupTitle: label(
+                                        'custom.FA_InitiativeViewIndicatorsPeopleReached'
+                                    ),
+                                    title: `${gender} (${labelTodo('age')} ${
+                                        item.Lowest_Age__c
+                                    }-${item.Highest_Age__c})`,
+                                    value: value,
+                                    label: labelTodo('Reached so far'),
+                                };
                             }
                             // Custom indicators - CONSTANTS.TYPES.INDICATOR_CUSTOM
                             else {
-                                title = item.Name;
-                                label = labelTodo('Total so far');
-                                groupTitle = 'labelTodo';
-                                // label(
-                                //     'custom.FA_InitiativeViewIndicatorsMetrics'
-                                // );
+                                return {
+                                    type: item.Type__c,
+                                    groupTitle: label(
+                                        'custom.FA_InitiativeViewIndicatorsMetrics'
+                                    ),
+                                    title: item.Name,
+                                    value: value,
+                                    label: labelTodo('Total so far'),
+                                };
                             }
-
-                            // Not all indicators have a "Target"
-                            const value = item.Target__c
-                                ? `${item.Current_Status__c} / ${item.Target__c}`
-                                : item.Current_Status__c;
-
-                            return {
-                                type: item.Type__c,
-                                groupTitle: groupTitle,
-                                title: title,
-                                value: value,
-                                label: label,
-                            };
                         }
                     });
                     // Split indicators into Two groups 'People' & 'Custom'
@@ -569,7 +567,9 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuOverview'))}>
                         <SectionWrapper>
-                            <h2 className="t-h4">{labelTodo('Overview')}</h2>
+                            <h2 className="t-h4">
+                                {label('custom.FA_ReportViewHeadingSummary')}
+                            </h2>
                             <h3 className="mt-24 t-preamble">
                                 {initiativeData.Summary__c}
                             </h3>
@@ -668,7 +668,11 @@ const ReportComponent = ({ pageProps }) => {
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuFunders'))}>
                         <SectionWrapper>
-                            <h3 className="t-h4">{labelTodo('Funders')}</h3>
+                            <h3 className="t-h4">
+                                {label(
+                                    'custom.FA_ReportViewSubHeadingFundersOverall'
+                                )}
+                            </h3>
                         </SectionWrapper>
                         {/* Donut chart */}
                         <div className="flex items-center p-16 border-4 border-blue-10 rounded-8">
@@ -739,7 +743,9 @@ const ReportComponent = ({ pageProps }) => {
                                 </SectionWrapper>
                                 <SectionWrapper className="bg-blue-10 rounded-8">
                                     <div className="t-h5">
-                                        {labelTodo('Updates from this year')}
+                                        {label(
+                                            'custom.FA_ReportViewSubHeadingFundersReflections'
+                                        )}
                                     </div>
                                     <p className="mt-8 t-body">
                                         {item.reportReflection}
