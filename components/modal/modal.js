@@ -20,6 +20,7 @@ const ModalComponent = ({
     onSave,
     disabledSave,
     title,
+    saveText,
 }) => {
     // Hook: Metadata
     const { label } = useMetadata();
@@ -78,7 +79,7 @@ const ModalComponent = ({
                             theme="coral"
                             action={onSave}
                             disabled={disabledSave}>
-                            {label('custom.FA_ButtonSave')}
+                            {saveText || label('custom.FA_ButtonSave')}
                         </Button>
                     </div>
                 </div>
@@ -98,10 +99,12 @@ ModalComponent.propTypes = {
     title: t.string,
     close: t.func,
     save: t.func,
+    saveText: t.string,
 };
 
 ModalComponent.defaultProps = {
     isOpen: false,
+    saveText: '',
 };
 
 export default ModalComponent;

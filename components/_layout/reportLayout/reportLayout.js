@@ -7,7 +7,12 @@ import t from 'prop-types';
 
 // Utilities
 import { useReportLayoutStore } from 'utilities/store';
-import { useResponsive, useMetadata, useContext } from 'utilities/hooks';
+import {
+    useResponsive,
+    useMetadata,
+    useContext,
+    useAuth,
+} from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -31,11 +36,19 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
 
+    // Hook: Auth
+    const { getUserInitiativeRights } = useAuth();
+
     // Hook: Get breakpoint
     const bp = useResponsive();
 
     useEffect(() => {
         populateInitiative(INITIATIVE_ID);
+
+        // Get user rights for current initiative
+        if (INITIATIVE_ID) {
+            getUserInitiativeRights(INITIATIVE_ID);
+        }
     }, [INITIATIVE_ID]);
 
     // Effect: Listen to breakpoint and toggle menu accordingly
