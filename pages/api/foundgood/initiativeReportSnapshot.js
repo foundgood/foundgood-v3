@@ -28,12 +28,14 @@ export default async (req, res) => {
                 process.env.SYSTEM_LOGIN_PASSWORD
             );
 
-            // console.log({ sfLoginData });
+            console.log({ sfLoginData });
 
             // Create array of promises based on ids
             const sfDataPromises = body.ids.map(id =>
                 salesForce.fetchers.query(
-                    salesForce.queries.initiativeReportComplete.get(id),
+                    salesForce.queries.snapshot.initiativeReportAndinitiativeData(
+                        [id]
+                    ),
                     sfLoginData.access_token,
                     sfLoginData.instance_url
                 )
@@ -46,50 +48,51 @@ export default async (req, res) => {
 
             // console.log({ sfDataObjects });
 
-            // Create array of promises based on results to send to S3
-            const s3DataPromises = sfDataObjects.map(dataObject => {
-                const data = dataObject?.records[0] ?? null;
-                if (data) {
-                    return s3.uploadInitiativeReport({
-                        json: data,
-                        fileName: data.Id,
-                    });
-                } else {
-                    return new Promise(resolve => resolve());
-                }
-            });
+            // // Create array of promises based on results to send to S3
+            // const s3DataPromises = sfDataObjects.map(dataObject => {
+            //     const data = dataObject?.records[0] ?? null;
+            //     if (data) {
+            //         return s3.uploadInitiativeReport({
+            //             json: data,
+            //             fileName: data.Id,
+            //         });
+            //     } else {
+            //         return new Promise(resolve => resolve());
+            //     }
+            // });
 
-            // console.log({ s3DataPromises });
+            // // console.log({ s3DataPromises });
 
-            // Resolve S3 promises to get URLs
-            const s3Data = await Promise.all(s3DataPromises);
+            // // Resolve S3 promises to get URLs
+            // const s3Data = await Promise.all(s3DataPromises);
 
-            // console.log({ s3Data });
+            // // console.log({ s3Data });
 
-            // Map data from s3 to fit SalesForce custom endpoint
-            const exportResults = s3Data.map(item => ({
-                initiativeReportId: item.key
-                    .replace('snapshots/', '')
-                    .replace('.json', ''),
-                reportViewerVersion: body.version ?? '1.1',
-                exportedReportUrl: item.Location,
-            }));
+            // // Map data from s3 to fit SalesForce custom endpoint
+            // const exportResults = s3Data.map(item => ({
+            //     initiativeReportId: item.key
+            //         .replace('snapshots/', '')
+            //         .replace('.json', ''),
+            //     reportViewerVersion: body.version ?? '1.1',
+            //     exportedReportUrl: item.Location,
+            // }));
 
-            // console.log({ exportResults });
+            // // console.log({ exportResults });
 
-            // Send to SalesForce custom endpoint
-            const { data } = await salesForce.custom.setExportResults(
-                exportResults,
-                sfLoginData.access_token,
-                sfLoginData.instance_url
-            );
+            // // Send to SalesForce custom endpoint
+            // const { data } = await salesForce.custom.setExportResults(
+            //     exportResults,
+            //     sfLoginData.access_token,
+            //     sfLoginData.instance_url
+            // );
 
             // console.log({ data });
 
             // Logout from SalesForce
             await salesForce.user.logout(sfLoginData.access_token);
 
-            res.status(200).json({ Status: 'Complete' }); // For when it's done
+            res.status(200).json(sfDataObjects);
+            // res.status(200).json({ Status: 'Complete' }); // For when it's done
 
             return;
         }

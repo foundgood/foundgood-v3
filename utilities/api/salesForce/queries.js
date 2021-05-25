@@ -126,6 +126,44 @@ const queries = {
         },
     },
 
+    snapshot: {
+        initiativeReportAndinitiativeData(reportIds) {
+            return `SELECT Id, Name, Status__c, Due_Date__c, Executive_Summary__c, Funder_Report__c, Funder_Report__r.Account__r.Name, Report_Type__c, Post_Project_Activities__c, Important_Results__c, Progress_Towards_Grant_Area_Themes__c, Project_Purpose__c, Summary_Of_Initiative_Risks__c, Summary_Of_Challenges_And_Learnings__c, Summary_Of_Activities__c, Report_Period_End_Date__c ,Report_Period_Start_Date__c, Exported_Report_URL__c, Report_Viewer_Version__c,
+            Initiative__c, Initiative__r.Lead_Grantee__c, Initiative__r.Lead_Grantee__r.Name, Initiative__r.Name, Initiative__r.Summary__c, Initiative__r.Category__c, Initiative__r.Problem_Effect__c, Initiative__r.Where_Is_Problem__c, Initiative__r.Additional_Location_Information__c,
+            Funder_Report__r.Application_ID__c, Funder_Report__r.Amount__c, Funder_Report__r.CurrencyIsoCode, Funder_Report__r.Grant_Start_Date__c, Funder_Report__r.Grant_End_Date__c
+            FROM Initiative_Report__c
+            WHERE Id IN ('${reportIds.join("','")}')`;
+        },
+        initiativeReportDetailsRelatedToInitiativeReport(reportIds) {
+            return `SELECT Initiative_Report__c, Type__c, Description__c, Problem_Resolutions__c, URL__c, Type_Of_Influence__c, Who_Is_Evaluating__c,
+            Initiative_Employee_Funded__c, Initiative_Employee_Funded__r.Gender__c, Initiative_Employee_Funded__r.Gender_Other__c, Initiative_Employee_Funded__r.Role_Type__c, Initiative_Employee_Funded__r.Job_Title__c, Initiative_Employee_Funded__r.Percent_Involvement__c,
+            Initiative_Funder__c, Initiative_Funder__r.Account__c, Initiative_Funder__r.Account__r.Name, Initiative_Funder__r.Grant_Start_Date__c, Initiative_Funder__r.Grant_End_Date__c, Initiative_Funder__r.Approval_Date__c, Initiative_Funder__r.Amount__c, Initiative_Funder__r.CurrencyIsoCode, Initiative_Funder__r.Type__c, Initiative_Funder__r.Application_Id__c,
+            Initiative_Collaborator__c, Initiative_Collaborator__r.Account__c, Initiative_Collaborator__r.Account__r.Name, Initiative_Collaborator__r.Description__c, Initiative_Collaborator__r.Start_Date__c, Initiative_Collaborator__r.End_Date__c, Initiative_Collaborator__r.Type__c,
+            Initiative_Activity__c, Initiative_Activity__r.Activity_Type__c, Initiative_Activity__r.Things_To_Do__c, Initiative_Activity__r.KPI_Category__c, Initiative_Activity__r.Activity_Tag__c, Initiative_Activity__r.Initiative_Location__c, Initiative_Activity__r.Additional_Location_Information__c, Initiative_Activity__r.Dissemination_Method__c, Initiative_Activity__r.Audience_Tag__c, Initiative_Activity__r.Publication_Type__c, Initiative_Activity__r.Publication_Year__c, Initiative_Activity__r.Publication_Title__c, Initiative_Activity__r.Publication_Publisher__c, Initiative_Activity__r.Publication_Author__c, Initiative_Activity__r.Publication_DOI__c,
+            (SELECT Initiative_Update__c FROM Initiative_Report_Detail_Entries__r WHERE Type__c = 'Update')
+            FROM Initiative_Report_Detail__c
+            WHERE Initiative_Report_Detail__c.Initiative_Report__c IN ('${reportIds.join(
+                "','"
+            )}')`;
+        },
+        initiativeUpdatesRelatedToInitiativeReportDetails(updateIds) {
+            return `SELECT Id, Description__c, Initiative_Activity__c,
+            (SELECT URL__c, Type__c FROM Initiative_Update_Content__r)
+            FROM Initiative_Update__c
+            WHERE Id IN ('${updateIds.join("','")}')`;
+        },
+        initiativeSuccessMetricsRelatedToInitiativeReportDetails(activityIds) {
+            return `SELECT Name, Current_Status__c
+            FROM Initiative_Activity_Success_Metric__c
+            WHERE Initiative_Activity__c IN ('${activityIds.join("','")}')`;
+        },
+        initiativeGoals(initiativeIds) {
+            return `SELECT Type__c, Goal__c, KPI_Category__c, Funder_Objective__c
+            FROM Initiative_Goal__c
+            WHERE Initiative__c IN ('${initiativeIds.join("','")}')`;
+        },
+    },
+
     // TBD
     getObjectById: {
         initiative(id) {
