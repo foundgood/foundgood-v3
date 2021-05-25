@@ -169,7 +169,12 @@ const useAuth = () => {
         salesForce.custom
             .getUserInitiativeRights(initiativeId)
             .then(data => {
-                setUserInitiativeRights(data.data);
+                if (data) {
+                    setUserInitiativeRights({
+                        canView: data?.data.bHasCreateRelatedRecordsAccess,
+                        canEdit: data?.data.bHasCreateTeamMemberAccess,
+                    });
+                }
             })
             .catch(error => {
                 console.warn(error);

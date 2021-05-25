@@ -67,6 +67,10 @@ const constants = {
         ACTIVITY_JOURNAL: 'Journal publication',
         INFLUENCE_ON_POLICY: 'Influence On Policy',
         EVALUATION: 'Evaluation',
+        REPORT_NOT_STARTED: 'Not started',
+        REPORT_IN_PROGRESS: 'In progress',
+        REPORT_IN_REVIEW: 'In review',
+        REPORT_PUBLISHED: 'Published',
         // REPORT DETAIL OVERVIEW TYPES
         EMPLOYEES_FUNDED_OVERVIEW: 'Employees Funded Overview',
         FUNDER_OVERVIEW: 'Funder Overview',

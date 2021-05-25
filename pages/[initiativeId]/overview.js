@@ -12,6 +12,8 @@ import { isJson } from 'utilities';
 
 // Components
 import Button from 'components/button';
+import UpdateButton from 'components/updateButton';
+import NumberCard from 'components/_initiative/numberCard';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
 import NumberCard from 'components/_initiative/numberCard';
@@ -224,9 +226,10 @@ const ProjectComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewOverviewHeading'
                                 )}
                             </h2>
-                            <Button variant="secondary">
-                                {label('custom.FA_ButtonUpdate')}
-                            </Button>
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="overview"
+                            />
                         </div>
 
                         <div className="mt-24">

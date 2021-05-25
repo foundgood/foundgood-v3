@@ -22,7 +22,7 @@ const BottomNavigationComponent = () => {
     const [loading, setLoading] = useState(false);
 
     // Hook: Context
-    const { INITIATIVE_ID, REPORT_ID } = useContext();
+    const { INITIATIVE_ID, REPORT_ID, MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
     const { label } = useMetadata();
@@ -77,7 +77,14 @@ const BottomNavigationComponent = () => {
     return (
         <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
             <div className="flex items-center justify-between w-full">
-                <Button theme="coral" variant="secondary" action="/">
+                <Button
+                    theme="coral"
+                    variant="secondary"
+                    action={
+                        MODE === CONTEXTS.REPORT
+                            ? `/${INITIATIVE_ID}/reports/${REPORT_ID}`
+                            : `/${INITIATIVE_ID}/overview`
+                    }>
                     {label('custom.FA_ButtonExit')}
                 </Button>
                 <p
