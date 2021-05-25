@@ -11,10 +11,11 @@ import { stripUndefined } from 'utilities';
 
 // Components
 import Button from 'components/button';
+import SectionWrapper from 'components/sectionWrapper';
+import SectionEmpty from 'components/sectionEmpty';
 import ChartCard from 'components/_initiative/chartCard';
 import ReportSharingCard from 'components/_initiative/reportSharingCard';
 import DividerLine from 'components/_initiative/dividerLine';
-import SectionWrapper from 'components/sectionWrapper';
 
 const DevelopmentsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -203,13 +204,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                         </div>
                     ))}
                 {/* Empty state - No activities */}
-                {activities?.length < 1 && (
-                    <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                        {labelTodo(
-                            'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                        )}
-                    </div>
-                )}
+                {activities?.length < 1 && <SectionEmpty />}
             </SectionWrapper>
             <SectionWrapper className="mt-32 bg-white rounded-8">
                 <div className="flex justify-between">
@@ -238,13 +233,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                         </div>
                     ))}
                 {/* Empty state - No results */}
-                {results?.length < 1 && (
-                    <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                        {labelTodo(
-                            'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                        )}
-                    </div>
-                )}
+                {results?.length < 1 && <SectionEmpty />}
             </SectionWrapper>
         </>
     );

@@ -14,7 +14,7 @@ const SectionWrapperComponent = ({
     const elementClassNames = cc([
         { 'px-16 md:px-32': !paddingY },
         {
-            'px-16 pt-16 pb-12 md:px-32 md:pt-32 md:pb-24': paddingY,
+            'p-16 md:px-32 md:pt-32 md:pb-24': paddingY,
             'offset-anchor': id,
         },
         className,

@@ -102,7 +102,7 @@ const ReportsComponent = ({ pageProps }) => {
                 <SectionWrapper className="bg-white rounded-8">
                     <div className="p-16 text-center border-4 t-body border-gray-10 rounded-8">
                         {labelTodo(
-                            'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
+                            'Label todo: This section has not been updated. '
                         )}
                     </div>
                 </SectionWrapper>

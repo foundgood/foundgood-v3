@@ -12,6 +12,7 @@ import { isJson, stripUndefined } from 'utilities';
 // Components
 import Button from 'components/button';
 import SectionWrapper from 'components/sectionWrapper';
+import SectionEmpty from 'components/sectionEmpty';
 import ReportDetailCard from 'components/_initiative/reportDetailCard';
 // import ChartCard from 'components/_initiative/chartCard';
 
@@ -176,13 +177,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                     ))}
 
                 {/* Empty state - No Activities */}
-                {activities?.length < 1 && (
-                    <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                        {labelTodo(
-                            'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                        )}
-                    </div>
-                )}
+                {activities?.length < 1 && <SectionEmpty />}
             </SectionWrapper>
 
             {/* Indicators ?? */}

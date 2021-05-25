@@ -37,6 +37,8 @@ TextCardComponent.propTypes = {
     headline: t.string,
     // Card description
     body: t.string,
+    // Card label
+    label: t.string,
 };
 
 TextCardComponent.defaultProps = {};

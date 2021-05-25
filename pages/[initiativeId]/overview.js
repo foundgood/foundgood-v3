@@ -12,8 +12,9 @@ import { isJson } from 'utilities';
 
 // Components
 import Button from 'components/button';
-import NumberCard from 'components/_initiative/numberCard';
 import SectionWrapper from 'components/sectionWrapper';
+import SectionEmpty from 'components/sectionEmpty';
+import NumberCard from 'components/_initiative/numberCard';
 import DividerLine from 'components/_initiative/dividerLine';
 import TextCard from 'components/_initiative/textCard';
 
@@ -68,8 +69,8 @@ const ProjectComponent = ({ pageProps }) => {
     ];
 
     useEffect(() => {
-        // Initial Load - Handle empty object state?
-        console.log('initiative: ', initiative);
+        // Initial Load
+        // console.log('initiative: ', initiative);
 
         // Make sure data is loaded
         if (
@@ -269,7 +270,9 @@ const ProjectComponent = ({ pageProps }) => {
                                         </h3>
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
-                                            {labelTodo('Initiative period')}
+                                            {label(
+                                                'custom.FA_ReportViewInitiativePeriod'
+                                            )}
                                         </h4>
                                         <h3 className="t-h5">
                                             {initiativeData.Grant_Start_Date__c}
@@ -303,7 +306,7 @@ const ProjectComponent = ({ pageProps }) => {
                                                             key={`g-${index}`}
                                                             className="mt-8 t-h5">
                                                             <span className="px-6 pt-4 mr-4 leading-none text-white bg-teal-300 rounded-4">
-                                                                {problem.amount.toLocaleString(
+                                                                {problem.amount?.toLocaleString(
                                                                     'de-DE'
                                                                 )}
                                                             </span>
@@ -342,7 +345,7 @@ const ProjectComponent = ({ pageProps }) => {
                                         </p>
                                         <p className="t-h6">
                                             {currency}{' '}
-                                            {totalAmount.toLocaleString(
+                                            {totalAmount?.toLocaleString(
                                                 'de-DE'
                                             )}
                                         </p>
@@ -365,7 +368,7 @@ const ProjectComponent = ({ pageProps }) => {
                                             className={`w-16 h-16 mr-8 rounded-2 ${item.color}`}></span>
                                         {`${item.name} - ${
                                             item.currency
-                                        } ${item.amount.toLocaleString(
+                                        } ${item.amount?.toLocaleString(
                                             'de-DE'
                                         )}`}
                                     </div>
@@ -420,7 +423,7 @@ const ProjectComponent = ({ pageProps }) => {
                                             </div>
                                             <div className="w-full t-caption">
                                                 {item.CurrencyIsoCode}{' '}
-                                                {item.Amount__c.toLocaleString(
+                                                {item.Amount__c?.toLocaleString(
                                                     'de-DE'
                                                 )}
                                             </div>
@@ -469,11 +472,7 @@ const ProjectComponent = ({ pageProps }) => {
                         )}
                         {/* Empty state - No goals */}
                         {Object.values(initiativeData._goals).length < 1 && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
+                            <SectionEmpty />
                         )}
                     </SectionWrapper>
                     {/* Applicants */}
@@ -521,13 +520,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 </div>
                             ))}
                         {/* Empty state - No Applicants */}
-                        {applicants.length < 1 && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
-                        )}
+                        {applicants.length < 1 && <SectionEmpty />}
                     </SectionWrapper>
 
                     {/* Collaborators */}
@@ -570,13 +563,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 </div>
                             ))}
                         {/* Empty state - No Collaborators */}
-                        {collaborators.length < 1 && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
-                        )}
+                        {collaborators.length < 1 && <SectionEmpty />}
                     </SectionWrapper>
 
                     {/* Employees funded */}
@@ -677,13 +664,7 @@ const ProjectComponent = ({ pageProps }) => {
 
                         {/* Empty state - No Employees */}
                         {Object.values(initiativeData._employeesFunded).length <
-                            1 && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
-                        )}
+                            1 && <SectionEmpty />}
                     </SectionWrapper>
 
                     {/* Problem Causes */}
@@ -716,13 +697,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 )}
                             </>
                         )}
-                        {!initiativeData.Problem_Causes__c && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
-                        )}
+                        {!initiativeData.Problem_Causes__c && <SectionEmpty />}
                     </SectionWrapper>
 
                     {/* Our vision */}
@@ -740,13 +715,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {initiativeData.Ultimate_Outcome__c}
                             </p>
                         )}
-                        {!initiativeData.Problem_Causes__c && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
-                        )}
+                        {!initiativeData.Problem_Causes__c && <SectionEmpty />}
                     </SectionWrapper>
 
                     {/* Organisational focus */}
@@ -767,11 +736,7 @@ const ProjectComponent = ({ pageProps }) => {
                             </p>
                         )}
                         {!initiativeData.Why_Problem_Solving__c && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
+                            <SectionEmpty />
                         )}
                     </SectionWrapper>
 
@@ -792,13 +757,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {initiativeData.Situation_Today__c}
                             </p>
                         )}
-                        {!initiativeData.Situation_Today__c && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
-                        )}
+                        {!initiativeData.Situation_Today__c && <SectionEmpty />}
                     </SectionWrapper>
 
                     {/* Reason for approach */}
@@ -819,11 +778,7 @@ const ProjectComponent = ({ pageProps }) => {
                             </p>
                         )}
                         {!initiativeData.Approach_Thinking__c && (
-                            <div className="p-16 mt-24 text-center border-4 t-body border-gray-10 rounded-8">
-                                {labelTodo(
-                                    'Label todo: You haven’t filled in this information yet. You are not required to complete this information.'
-                                )}
-                            </div>
+                            <SectionEmpty />
                         )}
                     </SectionWrapper>
                 </>
