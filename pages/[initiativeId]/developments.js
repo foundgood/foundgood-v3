@@ -83,10 +83,14 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                                 ? item.Gender_Other__c
                                                 : item.Gender__c;
                                         title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
-                                        label = labelTodo('Reached so far');
+                                        label = label(
+                                            'custom.FA_InitiativeViewMetricsTotal'
+                                        );
                                     } else {
                                         title = item.Name;
-                                        label = labelTodo('Total so far');
+                                        label = label(
+                                            'custom.FA_InitiativeViewMetricsTotal'
+                                        );
                                     }
 
                                     const value = item.Target__c

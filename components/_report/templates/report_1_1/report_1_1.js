@@ -34,7 +34,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     // Overview
     const [coApplicants, setCoApplicants] = useState();
     const [coFunders, setCoFunders] = useState();
-    const [novoFunder, setNovoFunder] = useState();
+    const [novoLeadFunder, setNovoLeadFunder] = useState();
 
     // Specific data for this report
     const [currentReport, setCurrentReport] = useState([]);
@@ -217,13 +217,13 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                             'custom.FA_InitiativeViewIndicatorsPeopleReached'
                                         ),
                                         title: `${gender} (${labelTodo(
-                                            'Label todo: age'
+                                            'age'
                                         )} ${item.Lowest_Age__c}-${
                                             item.Highest_Age__c
                                         })`,
                                         value: value,
-                                        label: labelTodo(
-                                            'Label todo: Reached so far'
+                                        label: label(
+                                            'custom.FA_ReportViewActivitiesGraphKeyDuring'
                                         ),
                                     };
                                 }
@@ -236,8 +236,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                         ),
                                         title: item.Name,
                                         value: value,
-                                        label: labelTodo(
-                                            'Label todo: Total so far'
+                                        label: label(
+                                            'custom.FA_ReportViewActivitiesGraphKeyDuring'
                                         ),
                                     };
                                 }
@@ -465,8 +465,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                 const novoFunder = Object.values(initiative._funders)
                     .filter(
                         item =>
-                            item.Type__c == CONSTANTS.TYPES.LEAD_FUNDER &&
-                            item.Account__r.Name == 'Novo Nordisk Fonden'
+                            item.Type__c === CONSTANTS.TYPES.LEAD_FUNDER &&
+                            item.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
                     )
                     .map(item => ({
                         amount: `${
@@ -476,7 +476,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             (item.Amount__c / totalAmount) * 100
                         )}%`,
                     }))[0];
-                setNovoFunder(novoFunder);
+                setNovoLeadFunder(novoFunder);
 
                 const donutData = Object.values(initiative._funders).map(
                     (funder, index) => {
@@ -691,8 +691,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     </div>
                                 )}
                             </div>
-                            {/* TDD - Should this be the lead funder? */}
-                            {novoFunder && (
+                            {/* TDD - Only related to NNf or ALL lead funders? */}
+                            {novoLeadFunder && (
                                 <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                                     <div className="t-sh6 text-blue-60">
                                         {label(
@@ -701,7 +701,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                         {' Novo Nordisk Foundation'}
                                     </div>
                                     <h3 className="t-h5">
-                                        {novoFunder.amount}
+                                        {novoLeadFunder.amount}
                                     </h3>
 
                                     <div className="mt-16 t-sh6 text-blue-60">
@@ -709,14 +709,17 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                             'custom.FA_ReportViewShareOfTotalFunding'
                                         )}
                                     </div>
-                                    <h3 className="t-h5">{novoFunder.share}</h3>
+                                    <h3 className="t-h5">
+                                        {novoLeadFunder.share}
+                                    </h3>
                                 </div>
                             )}
                         </div>
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Report Summary */}
-                    <SectionWrapper>
+                    <SectionWrapper
+                        id={asId(label('custom.FA_ReportWizardMenuSummary'))}>
                         <SectionWrapper>
                             <div className="flex justify-between mt-32">
                                 <h3 className="t-h4">
@@ -780,16 +783,15 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         <SectionWrapper>
                             <div className="flex justify-between mt-32">
                                 <h3 className="t-h4">
-                                    {/* Show to different headings
-                                    depending on if lead funder is Novo Nordisk Foundation */}
-                                    {/*
-                                    labelTodo()
-                                    {leadFunder == 'NNF' && }
-                                    {!leadFunder == 'NNF' && }
-                                    */}
-                                    {label(
-                                        'custom.FA_InitiativeViewGoalsHeading'
-                                    )}
+                                    {/* Show to different headings. Depending on if lead funder is Novo Nordisk Foundation */}
+                                    {!novoLeadFunder &&
+                                        label(
+                                            'custom.FA_InitiativeViewGoalsHeading'
+                                        )}
+                                    {!novoLeadFunder &&
+                                        label(
+                                            'custom.FA_ReportViewHeadingFunderObjectives'
+                                        )}
                                 </h3>
                                 <UpdateButton mode="report" baseUrl="goals" />
                             </div>
@@ -982,8 +984,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     </SectionWrapper>
                                     <TextCard
                                         hasBackground={true}
-                                        headline={labelTodo(
-                                            'label todo: Updates from this year'
+                                        headline={label(
+                                            'custom.FA_ReportViewUpdatesForReport'
                                         )}
                                         body={item.reportReflection}
                                     />
@@ -1357,7 +1359,11 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Reflections */}
-                    <SectionWrapper>
+                    <SectionWrapper
+                        // id="end-of-grant-reflections"
+                        id={asId(
+                            label('custom.FA_ReportWizardMenuEndReflections')
+                        )}>
                         <SectionWrapper>
                             <div className="flex justify-between mt-32">
                                 <h3 className="t-h4">
