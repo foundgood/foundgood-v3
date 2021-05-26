@@ -45,6 +45,7 @@ const EndOfGrantReflectionsComponent = () => {
 
     // Method: Submit page content
     async function submit(formData) {
+        console.log({ formData });
         try {
             const {
                 Project_Purpose__c,

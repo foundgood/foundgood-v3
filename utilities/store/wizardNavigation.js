@@ -101,6 +101,7 @@ const useWizardNavigationStore = create((set, get) => ({
             },
             // {...d.logbook, items: [d.logbook]},
             { ...d.reports, items: [d.reportSchedule] },
+            d.done,
         ];
 
         set(state => {
@@ -116,38 +117,6 @@ const useWizardNavigationStore = create((set, get) => ({
         // Dictionary
         const d = reportWizardDictionary;
         switch (configurationType) {
-            case 'Annual':
-                items = [
-                    d.introduction,
-                    {
-                        ...d.summary,
-                        items: [
-                            d.reportDetails,
-                            d.funders,
-                            d.overview,
-                            d.reportSummary,
-                        ],
-                    },
-                    {
-                        ...d.keyChanges,
-                        items: [
-                            d.applicants,
-                            d.collaborators,
-                            d.employeesFunded,
-                            d.goals,
-                            d.activities,
-                            d.indicators,
-                            d.progressSoFar,
-                            d.sharingResults,
-                        ],
-                    },
-                    {
-                        ...d.keyResults,
-                        items: [d.influenceOnPolicy, d.evaluations],
-                    },
-                    d.done,
-                ];
-                break;
             case 'Final':
                 items = [
                     d.introduction,

@@ -19,7 +19,7 @@ const AsideNavigationComponent = () => {
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { label, labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     // Store: wizardNavigation
     const {
@@ -64,7 +64,7 @@ const AsideNavigationComponent = () => {
                     </>
                 ) : (
                     <h2 className="mt-8 t-h5">
-                        {labelTodo('Create your initiative')}
+                        {label('custom.FA_CreateNewInitiative')}
                     </h2>
                 )}
             </header>

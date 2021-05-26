@@ -49,6 +49,12 @@ const BottomNavigationComponent = () => {
     async function onHandleContinue() {
         setLoading(true);
         try {
+            console.log(
+                nextItemUrl(
+                    INITIATIVE_ID === 'new' ? getInitiativeId() : INITIATIVE_ID,
+                    REPORT_ID
+                )
+            );
             // Submit throws if there is any validation errors
             await handleSubmit();
 
