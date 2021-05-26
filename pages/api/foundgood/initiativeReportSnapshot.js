@@ -42,6 +42,17 @@ export default async (req, res) => {
                 sfLoginData.instance_url
             );
 
+            // Handle no reports
+            if (!sfInitiativeReports?.records ?? false) {
+                // One of the ids are not there
+                res.status(400).json({
+                    message: 'No reports with ids',
+                    ids: body.ids,
+                });
+
+                return;
+            }
+
             // Create simple object with only initiative ids and base structure
             initiatives = sfInitiativeReports.records.reduce(
                 (acc, report) => ({
