@@ -115,9 +115,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     return (
         <>
             <SectionWrapper>
-                <div className="t-h1">
-                    {label('custom.FA_InitiativeViewActivitiesHeading')}
-                </div>
+                <div className="t-h1">{label('custom.FA_MenuActivities')}</div>
             </SectionWrapper>
 
             <SectionWrapper className="bg-white mb-128 rounded-8">

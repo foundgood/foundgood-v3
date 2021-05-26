@@ -24,8 +24,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     const { labelTodo, label } = useMetadata();
 
     // Data manipulation
-    const [developmentGoals, setDevelopmentGoals] = useState();
     const [initiativeData, setInitiativeData] = useState();
+    const [developmentGoals, setDevelopmentGoals] = useState();
     const [donutData, setDonutData] = useState();
     const [pieChartStyle, setPieChartStyle] = useState({});
     const [totalAmount, setTotalAmount] = useState();
@@ -339,12 +339,13 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                 // // Report outcomes - TBD
                 // const outcomes = Object.values(initiative._reportDetails)
                 //     .filter(item => {
+                //         console.log('Type__c: ', item.Type__c);
                 //         return item.Type__c == CONSTANTS.TYPES.OUTCOME_OVERVIEW
                 //             ? true
                 //             : false;
                 //     })
                 //     .map(item => {
-                //         // console.log('outcome: ', item);
+                //         console.log('outcome: ', item.Problem_Resolutions);
                 //     });
                 // setOutcomes(outcomes);
 
@@ -551,9 +552,9 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 {initiativeData.Lead_Grantee__r?.Name}
                             </div>
 
-                            <div className="mt-48 t-h1">
+                            <h1 className="mt-48 t-h1">
                                 {initiativeData.Name}
-                            </div>
+                            </h1>
                             <div className="mt-16 t-sh2">
                                 {currentReport.Report_Type__c}{' '}
                                 {currentReport.Due_Date__c?.substring(0, 4)}

@@ -27,9 +27,7 @@ const LogbookComponent = ({ pageProps }) => {
         <>
             <SectionWrapper>
                 <div className="flex justify-between mr-48 md:mr-0">
-                    <h1 className="t-h1">
-                        {label('custom.FA_InitiativeViewLogEntryHeading')}
-                    </h1>
+                    <h1 className="t-h1">{label('custom.FA_MenuLogbook')}</h1>
                     <Button variant="primary" theme="teal">
                         {label('custom.FA_ButtonUpdate')}
                     </Button>

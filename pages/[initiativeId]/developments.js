@@ -182,7 +182,9 @@ const DevelopmentsComponent = ({ pageProps }) => {
     return (
         <>
             <SectionWrapper>
-                <div className="t-h1">Label todo: {label('Developments')}</div>
+                <div className="t-h1">
+                    {label('custom.FA_MenuDevelopments')}
+                </div>
             </SectionWrapper>
             <SectionWrapper className="mt-32 bg-white rounded-8">
                 <div className="flex justify-between">
