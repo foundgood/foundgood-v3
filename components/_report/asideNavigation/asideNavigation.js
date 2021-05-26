@@ -28,6 +28,7 @@ const AsideNavigationComponent = () => {
 
     // Effect: Update wizard navigation items
     useEffect(() => {
+        console.log('TYPE: ', initiative._reports[REPORT_ID]?.Report_Type__c);
         buildReportNavigationItems(
             initiative._reports[REPORT_ID]?.Report_Type__c
         );
@@ -52,7 +53,7 @@ const AsideNavigationComponent = () => {
                 </h3>
             </header>
             {/* Parent items */}
-            <ul className="mt-48 space-y-48">
+            <ul className="pb-24 mt-48 space-y-48">
                 {items?.map(item => {
                     if (item.visible) {
                         return (

@@ -57,7 +57,7 @@ const HeaderComponent = ({ showUserControls }) => {
             <div className="fixed flex items-center justify-between header-h page-mx z-logo">
                 <Link href="/">
                     <a className="f">
-                        <FGLogo className="fill-current" />
+                        <FGLogo className="text-blue-300 fill-current" />
                     </a>
                 </Link>
             </div>

@@ -46,28 +46,32 @@ const useReportNavigationStore = create((set, get) => ({
                     {
                         ...d.summary,
                         items: [
-                            d.reportDetails,
-                            d.funders,
+                            // d.reportDetails,
                             d.overview,
                             d.reportSummary,
+                            d.goals, // Moved from Key changes
                         ],
                     },
                     {
                         ...d.keyChanges,
                         items: [
+                            d.funders, // Moved from Summary
                             d.applicants,
                             d.collaborators,
                             d.employeesFunded,
-                            d.goals,
                             d.activities,
-                            d.indicators,
-                            d.progressSoFar,
+                            // d.indicators,
+                            // d.progressSoFar,
                             d.sharingResults,
                         ],
                     },
                     {
                         ...d.keyResults,
-                        items: [d.influenceOnPolicy, d.evaluations],
+                        items: [
+                            d.influenceOnPolicy,
+                            d.evaluations,
+                            d.endOfGrantReflections,
+                        ],
                     },
                 ];
                 break;
