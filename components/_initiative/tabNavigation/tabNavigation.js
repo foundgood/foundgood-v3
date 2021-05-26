@@ -19,7 +19,7 @@ const TabNavigationComponent = () => {
     const { INITIATIVE_ID } = useContext();
 
     // Store: InitiativeLayout
-    const { newNavigation } = useInitiativeLayoutStore();
+    const { navigation } = useInitiativeLayoutStore();
 
     // Hook: Metadata
     const { label } = useMetadata();
@@ -34,7 +34,7 @@ const TabNavigationComponent = () => {
         <>
             {INITIATIVE_ID && (
                 <div className="relative items-start justify-end hidden space-x-16 md:flex page-px tab-nav-bg">
-                    {newNavigation.map((item, index) => {
+                    {navigation.map((item, index) => {
                         // Submenu
                         if (!item.slug) {
                             return (

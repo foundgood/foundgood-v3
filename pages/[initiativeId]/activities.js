@@ -10,7 +10,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 import { isJson, stripUndefined } from 'utilities';
 
 // Components
-import Button from 'components/button';
+import UpdateButton from 'components/updateButton';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
 import ReportDetailCard from 'components/_initiative/reportDetailCard';
@@ -25,7 +25,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { label } = useMetadata();
 
     const [activities, setActivities] = useState();
 
@@ -42,7 +42,6 @@ const ActivitiesComponent = ({ pageProps }) => {
             // Only show activities with type "Intervention"
             let activities = Object.values(initiative._activities).filter(
                 item => {
-                    console.log(item);
                     return item.Activity_Type__c ===
                         CONSTANTS.TYPES.ACTIVITY_INTERVENTION
                         ? true
@@ -110,7 +109,9 @@ const ActivitiesComponent = ({ pageProps }) => {
     return (
         <>
             <SectionWrapper>
-                <div className="t-h1">{label('Activities')}</div>
+                <div className="t-h1">
+                    {label('custom.FA_InitiativeViewActivitiesHeading')}
+                </div>
             </SectionWrapper>
 
             <SectionWrapper className="bg-white mb-128 rounded-8">
@@ -118,9 +119,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                     <h2 className="t-h3">
                         {label('custom.FA_InitiativeViewActivitiesHeading')}
                     </h2>
-                    <Button variant="secondary">
-                        {label('custom.FA_ButtonUpdate')}
-                    </Button>
+                    <UpdateButton mode="initiative" baseUrl="activities" />
                 </div>
 
                 {activities?.length > 0 &&
