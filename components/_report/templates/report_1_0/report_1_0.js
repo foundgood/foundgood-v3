@@ -9,6 +9,7 @@ import Image from 'next/image';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
+import { useReportLayoutStore } from 'utilities/store';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -22,7 +23,10 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
     // Hook: Metadata
     const { labelTodo, label } = useMetadata();
 
-    // const [initiativeData, setInitiativeData] = useState();
+    // Store: ReportLayout
+    const { leftMenuActive, toggleLeftMenu } = useReportLayoutStore();
+
+    // Data maniipulation
     const [name, setName] = useState();
     const [status, setStatus] = useState();
     const [deadline, setDeadline] = useState();
@@ -32,6 +36,11 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
     const [learning, setLearning] = useState();
     const [outcomes, setOutcomes] = useState();
     const [files, setFiles] = useState();
+
+    useEffect(() => {
+        // Hide naviagiton for old reports
+        toggleLeftMenu(false);
+    }, []);
 
     useEffect(() => {
         // Initial Load
