@@ -95,7 +95,7 @@ const ReportSummaryComponent = () => {
                     label={label(
                         'custom.FA_ReportWizardActivitySummaryReflectionSubHeading'
                     )}
-                    placeholder={labelTodo('Enter summary')}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}
@@ -108,7 +108,7 @@ const ReportSummaryComponent = () => {
                     label={label(
                         'custom.FA_ReportWizardChallengesReflectionSubHeading'
                     )}
-                    placeholder={labelTodo('Enter summary')}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}

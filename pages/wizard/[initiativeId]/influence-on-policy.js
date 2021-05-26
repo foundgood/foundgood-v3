@@ -241,7 +241,9 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeReportDetail.Type_Of_Influence__c'
                         )}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         maxLength={80}
                         controller={control}
                         required

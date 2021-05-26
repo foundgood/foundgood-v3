@@ -97,7 +97,7 @@ const EndOfGrantReflectionsComponent = () => {
                     label={label(
                         'custom.FA_ReportWizardPurposeReflectionSubHeading'
                     )}
-                    placeholder={labelTodo('Enter summary')}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}
@@ -110,7 +110,7 @@ const EndOfGrantReflectionsComponent = () => {
                     label={label(
                         'custom.FA_ReportWizardProgressReflectionSubHeading'
                     )}
-                    placeholder={labelTodo('Enter summary')}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}
@@ -121,7 +121,7 @@ const EndOfGrantReflectionsComponent = () => {
                     label={label(
                         'custom.FA_ReportWizardResultsReflectionSubHeading'
                     )}
-                    placeholder={labelTodo('Enter summary')}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}

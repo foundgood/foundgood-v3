@@ -275,7 +275,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeCollaborator.Account__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={
                             accountGrantees?.records?.map(item => ({
                                 label: item.Name,
@@ -296,7 +296,9 @@ const ApplicantsComponent = ({ pageProps }) => {
                             subLabel={helpText(
                                 'objects.initiativeCollaborator.Type__c'
                             )}
-                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                            placeholder={label(
+                                'custom.FA_FormCaptureSelectEmpty'
+                            )}
                             options={valueSet(
                                 'initiativeCollaborator.Type__c'
                             ).filter(item =>
@@ -317,7 +319,9 @@ const ApplicantsComponent = ({ pageProps }) => {
                             'objects.initiativeCollaborator.Description__c'
                         )}
                         label={labelTodo('Description of collaboration')}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         controller={control}
                     />
                     <DateRange

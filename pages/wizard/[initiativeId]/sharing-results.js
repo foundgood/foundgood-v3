@@ -366,7 +366,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivity.Things_To_Do__c'
                         )}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         maxLength={200}
                         controller={control}
                         required
@@ -380,7 +382,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivity.Dissemination_Method__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeActivity.Dissemination_Method__c'
                         )}
@@ -396,7 +398,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivity.Audience_Tag__c'
                         )}
-                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                        selectPlaceholder={label(
+                            'custom.FA_FormCaptureSelectEmpty'
+                        )}
                         options={valueSet('initiativeActivity.Audience_Tag__c')}
                         listMaxLength={4}
                         controller={control}
@@ -415,7 +419,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivity.Publication_Type__c'
                                 )}
-                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                                placeholder={label(
+                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                )}
                                 maxLength={30}
                                 controller={control}
                             />
@@ -437,7 +443,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivity.Publication_Title__c'
                                 )}
-                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                                placeholder={label(
+                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                )}
                                 maxLength={200}
                                 controller={control}
                             />
@@ -449,7 +457,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivity.Publication_Publisher__c'
                                 )}
-                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                                placeholder={label(
+                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                )}
                                 maxLength={200}
                                 controller={control}
                             />
@@ -461,7 +471,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivity.Publication_Author__c'
                                 )}
-                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                                placeholder={label(
+                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                )}
                                 maxLength={80}
                                 controller={control}
                             />
@@ -473,7 +485,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivity.Publication_DOI__c'
                                 )}
-                                placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                                placeholder={label(
+                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                )}
                                 maxLength={30}
                                 controller={control}
                             />

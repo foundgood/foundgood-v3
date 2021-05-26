@@ -137,7 +137,9 @@ const OverviewComponent = () => {
                             subLabel={helpText(
                                 'objects.initiative.Lead_Grantee__c'
                             )}
-                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                            placeholder={label(
+                                'custom.FA_FormCaptureSelectEmpty'
+                            )}
                             disabled
                             required
                             controller={control}
@@ -150,7 +152,7 @@ const OverviewComponent = () => {
                         subLabel={helpText(
                             'objects.initiative.Lead_Grantee__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={accountGrantees?.records.map(item => ({
                             label: item.Name,
                             value: item.Id,
@@ -165,7 +167,7 @@ const OverviewComponent = () => {
                     name="Name"
                     defaultValue={initiative?.Name?.replace('___', '')}
                     label={label('custom.FA_InitiativeName')}
-                    placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={80}
                     required={!isNovoLeadFunder()}
                     disabled={isNovoLeadFunder()}
@@ -180,7 +182,9 @@ const OverviewComponent = () => {
                             subLabel={helpText(
                                 'objects.initiative.Category__c'
                             )}
-                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                            placeholder={label(
+                                'custom.FA_FormCaptureSelectEmpty'
+                            )}
                             options={valueSet('initiative.Category__c')}
                             controller={control}
                             disabled={isNovoLeadFunder()}
@@ -192,7 +196,7 @@ const OverviewComponent = () => {
                         name="Category__c"
                         label={label('objects.initiative.Category__c')}
                         subLabel={helpText('objects.initiative.Category__c')}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet('initiative.Category__c')}
                         controller={control}
                         disabled={isNovoLeadFunder()}
@@ -205,7 +209,7 @@ const OverviewComponent = () => {
                     defaultValue={initiative?.Summary__c}
                     label={label('objects.initiative.Summary__c')}
                     subLabel={helpText('objects.initiative.Summary__c')}
-                    placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={400}
                     controller={control}
                 />
@@ -235,7 +239,9 @@ const OverviewComponent = () => {
                     )}
                     listMaxLength={3}
                     options={valueSet('account.Location__c')}
-                    selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                    selectPlaceholder={label(
+                        'custom.FA_FormCaptureSelectEmpty'
+                    )}
                     controller={control}
                     buttonLabel={label('custom.FA_ButtonAddLocation')}
                 />

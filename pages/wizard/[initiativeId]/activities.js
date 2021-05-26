@@ -337,7 +337,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivity.Things_To_Do__c'
                         )}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         maxLength={200}
                         controller={control}
                         required
@@ -350,7 +352,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivity.Activity_Tag__c'
                         )}
-                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                        selectPlaceholder={label(
+                            'custom.FA_FormCaptureSelectEmpty'
+                        )}
                         options={controlledValueSet(
                             'initiativeActivity.Activity_Tag__c',
                             initiative?.Category__c
@@ -373,7 +377,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                             'initiativeActivity.Initiative_Location__c'
                         )}
                         showText
-                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                        selectPlaceholder={label(
+                            'custom.FA_FormCaptureSelectEmpty'
+                        )}
                         selectLabel={label('custom.FA_FormCaptureCountry')}
                         textLabel={label('custom.FA_FormCaptureRegion')}
                         controller={control}
@@ -396,7 +402,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     };
                                 }
                             )}
-                            selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                            selectPlaceholder={label(
+                                'custom.FA_FormCaptureSelectEmpty'
+                            )}
                             controller={control}
                         />
                     )}

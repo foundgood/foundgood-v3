@@ -269,7 +269,9 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeEmployeeFunded.Job_Title__c'
                         )}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         maxLength={80}
                         required
                         controller={control}
@@ -282,7 +284,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeEmployeeFunded.Role_Type__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeEmployeeFunded.Role_Type__c'
                         )}
@@ -297,7 +299,9 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeEmployeeFunded.Gender__c'
                         )}
-                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                        selectPlaceholder={label(
+                            'custom.FA_FormCaptureSelectEmpty'
+                        )}
                         textPlaceholder={label(
                             'objects.initiativeEmployeeFunded.Gender_Other__c'
                         )}
