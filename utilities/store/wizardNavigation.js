@@ -21,9 +21,6 @@ function _goToNextSection(sectionIndex, items) {
 const useWizardNavigationStore = create((set, get) => ({
     // Handles url change in bottom navigation
     async onUrlOrContextChange(baseUrl) {
-        // Reset submitHandler
-        get().setCurrentSubmitHandler(null);
-
         // Set current item
         const currentItem = await get().setCurrentItem(baseUrl);
 

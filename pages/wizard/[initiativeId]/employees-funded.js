@@ -187,7 +187,11 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 setCurrentSubmitHandler(
                     handleSubmitReflections(submitReflections, error)
                 );
-            }, 10);
+            }, 100);
+        } else {
+            setTimeout(() => {
+                setCurrentSubmitHandler(null);
+            }, 100);
         }
     }, []);
 

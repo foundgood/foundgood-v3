@@ -91,7 +91,7 @@ const ReportDetailsComponent = () => {
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 10);
+        }, 100);
     }, []);
 
     // Get current report

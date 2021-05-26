@@ -43,7 +43,7 @@ const GoalsComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { currentItem } = useWizardNavigationStore();
+    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
     const { initiative, updateGoal, CONSTANTS } = useInitiativeDataStore();
@@ -130,6 +130,13 @@ const GoalsComponent = ({ pageProps }) => {
     useEffect(() => {
         setGoalType(goalTypeSelect);
     }, [goalTypeSelect]);
+
+    // Reset submithandler
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentSubmitHandler(null);
+        }, 100);
+    }, []);
 
     return (
         <>

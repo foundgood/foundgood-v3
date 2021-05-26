@@ -76,7 +76,7 @@ const ReportSummaryComponent = () => {
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 10);
+        }, 100);
     }, []);
 
     // Get current report

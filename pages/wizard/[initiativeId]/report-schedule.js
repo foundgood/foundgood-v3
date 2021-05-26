@@ -36,7 +36,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
     const { isDirty } = useFormState({ control });
 
     // Store: Wizard navigation
-    const { currentItem } = useWizardNavigationStore();
+    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
@@ -131,6 +131,13 @@ const ReportScheduleComponent = ({ pageProps }) => {
 
     // Funders
     const funders = Object.keys(initiative._funders);
+
+    // Reset submithandler
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentSubmitHandler(null);
+        }, 100);
+    }, []);
 
     return (
         <>

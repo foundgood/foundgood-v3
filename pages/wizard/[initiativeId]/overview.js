@@ -107,7 +107,7 @@ const OverviewComponent = () => {
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 10);
+        }, 100);
     }, [initiative]);
 
     // Main collaborator

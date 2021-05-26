@@ -43,18 +43,12 @@ const BottomNavigationComponent = () => {
         setTimeout(() => {
             const splitRoute = router.pathname.split('/');
             onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
-        }, 100);
+        }, 50);
     }, [router.pathname]);
 
     async function onHandleContinue() {
         setLoading(true);
         try {
-            console.log(
-                nextItemUrl(
-                    INITIATIVE_ID === 'new' ? getInitiativeId() : INITIATIVE_ID,
-                    REPORT_ID
-                )
-            );
             // Submit throws if there is any validation errors
             await handleSubmit();
 

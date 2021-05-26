@@ -85,7 +85,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 10);
+        }, 100);
     }, []);
 
     // Activities

@@ -49,7 +49,7 @@ const IndicatorsComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { currentItem } = useWizardNavigationStore();
+    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -182,6 +182,13 @@ const IndicatorsComponent = ({ pageProps }) => {
 
     // Funders
     const activities = Object.keys(initiative?._activities);
+
+    // Reset submithandler
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentSubmitHandler(null);
+        }, 100);
+    }, []);
 
     return (
         <>

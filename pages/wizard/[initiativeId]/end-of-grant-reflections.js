@@ -45,7 +45,6 @@ const EndOfGrantReflectionsComponent = () => {
 
     // Method: Submit page content
     async function submit(formData) {
-        console.log({ formData });
         try {
             const {
                 Project_Purpose__c,
@@ -79,7 +78,7 @@ const EndOfGrantReflectionsComponent = () => {
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 10);
+        }, 100);
     }, []);
 
     // Get current report
