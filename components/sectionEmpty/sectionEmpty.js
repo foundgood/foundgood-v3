@@ -13,7 +13,7 @@ import SectionWrapper from 'components/sectionWrapper';
 
 const SectionEmptyComponent = ({ headline, type }) => {
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { label } = useMetadata();
     return (
         <>
             {headline && (

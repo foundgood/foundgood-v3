@@ -37,19 +37,18 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     const [novoFunder, setNovoFunder] = useState();
 
     // Specific data for this report
-    const [currentReport, setCurrentReport] = useState();
-    const [funders, setFunders] = useState();
-    const [applicants, setApplicants] = useState();
-    const [collaborators, setCollaborators] = useState();
-    const [
-        employeesFundedReflection,
-        setEmployeesFundedReflection,
-    ] = useState();
-    const [employeeGroups, setEmployeeGroups] = useState();
-    const [activities, setActivities] = useState();
-    const [results, setResults] = useState();
-    const [influences, setInfluences] = useState();
-    const [evaluations, setEvaluations] = useState();
+    const [currentReport, setCurrentReport] = useState([]);
+    const [funders, setFunders] = useState([]);
+    const [applicants, setApplicants] = useState([]);
+    const [collaborators, setCollaborators] = useState([]);
+    const [employeesFundedReflection, setEmployeesFundedReflection] = useState(
+        []
+    );
+    const [employeeGroups, setEmployeeGroups] = useState([]);
+    const [activities, setActivities] = useState([]);
+    const [results, setResults] = useState([]);
+    const [influences, setInfluences] = useState([]);
+    const [evaluations, setEvaluations] = useState([]);
     // const [outcomes, setOutcomes] = useState(); // TBD
 
     const donutColors = [
@@ -139,6 +138,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                 const collaborators = allCollaborators.filter(item =>
                     CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)
                 );
+                console.log('collaborators: ', collaborators);
                 setApplicants(applicants);
                 setCollaborators(collaborators);
 
@@ -733,8 +733,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {currentReport?.Summary_Of_Activities__c && (
                             <TextCard
                                 hasBackground={true}
-                                headline={labelTodo(
-                                    'Label todo: Overall perfomance'
+                                headline={label(
+                                    'objects.initiativeReport.Summary_Of_Activities__c'
                                 )}
                                 body={currentReport?.Summary_Of_Activities__c}
                             />
@@ -743,8 +743,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {!currentReport?.Summary_Of_Activities__c && (
                             <SectionEmpty
                                 type="report"
-                                headline={labelTodo(
-                                    'Label todo: Overall perfomance'
+                                headline={label(
+                                    'objects.initiativeReport.Summary_Of_Activities__c'
                                 )}
                             />
                         )}
@@ -753,8 +753,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             <TextCard
                                 hasBackground={true}
                                 className="mt-32"
-                                headline={labelTodo(
-                                    'Label todo: Challenges & Learnings'
+                                headline={label(
+                                    'objects.initiativeReport.Summary_Of_Challenges_And_Learnings__c'
                                 )}
                                 body={
                                     currentReport?.Summary_Of_Challenges_And_Learnings__c
@@ -765,8 +765,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {!currentReport?.Summary_Of_Challenges_And_Learnings__c && (
                             <SectionEmpty
                                 type="report"
-                                headline={labelTodo(
-                                    'Label todo: Challenges & Learnings'
+                                headline={label(
+                                    'objects.initiativeReport.Summary_Of_Challenges_And_Learnings__c'
                                 )}
                             />
                         )}
@@ -954,39 +954,9 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 />
                             </div>
                         </SectionWrapper>
-                        <SectionWrapper>
-                            <ReportDetailCard
-                                headline="This is my title"
-                                items={[
-                                    {
-                                        label: 'Type',
-                                        text: 'Lorem ipsum',
-                                    },
-                                    {
-                                        label: 'Period',
-                                        text: 'Lorem ipsum',
-                                    },
-                                ]}
-                            />
-                            <DividerLine />
-                            <ReportDetailCard
-                                headline="This is my title"
-                                description="Lorem ipsum dolor sit amet, adipiscing elit. Cras imperdiet nec erat ac condimentum. Nulla vel rutrum ligula. Sed hendrerit interdum orci a posuere. Vivamus ut velit aliquet, mollis purus eget, iaculis nisl."
-                                items={[
-                                    {
-                                        label: 'Type',
-                                        text: 'Lorem ipsum',
-                                    },
-                                    {
-                                        label: 'Period',
-                                        text: 'Lorem ipsum',
-                                    },
-                                ]}
-                            />
-                        </SectionWrapper>
 
-                        {applicants &&
-                            applicants.map((item, index) => (
+                        {applicants?.length > 0 &&
+                            applicants?.map((item, index) => (
                                 <div key={`a-${index}`}>
                                     <SectionWrapper>
                                         <ReportDetailCard
@@ -1018,7 +988,9 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     />
                                 </div>
                             ))}
-                        {!applicants && <SectionEmpty type="report" />}
+                        {applicants?.length < 1 && (
+                            <SectionEmpty type="report" />
+                        )}
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Collaborators */}
@@ -1050,14 +1022,14 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                             description="" // Collaborators don't have a description
                                             items={[
                                                 {
-                                                    label: labelTodo(
-                                                        'Label todo: Type'
+                                                    label: label(
+                                                        'custom.FA_ReportViewCollaboratorType'
                                                     ),
                                                     text: item.Type__c,
                                                 },
                                                 {
-                                                    label: labelTodo(
-                                                        'Label todo: Period'
+                                                    label: label(
+                                                        'custom.FA_ReportViewCollaborationPeriod'
                                                     ),
                                                     text: `${item.Start_Date__c} - ${item.End_Date__c}`,
                                                 },
@@ -1404,8 +1376,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {currentReport.Project_Purpose__c && (
                             <TextCard
                                 hasBackground={true}
-                                headline={labelTodo(
-                                    'Label todo: Project purpose'
+                                headline={label(
+                                    'objects.initiativeReport.Project_Purpose__c'
                                 )}
                                 body={currentReport.Project_Purpose__c}
                             />
@@ -1414,8 +1386,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {!currentReport.Project_Purpose__c && (
                             <SectionEmpty
                                 type="report"
-                                headline={labelTodo(
-                                    'Label todo: Project purpose'
+                                headline={label(
+                                    'objects.initiativeReport.Project_Purpose__c'
                                 )}
                             />
                         )}
@@ -1425,8 +1397,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             <TextCard
                                 className="mt-32"
                                 hasBackground={true}
-                                headline={labelTodo(
-                                    'Label todo: Progress towards achieving the goals'
+                                headline={label(
+                                    'objects.initiativeReport.Progress_Towards_Grant_Area_Themes__c'
                                 )}
                                 body={
                                     currentReport.Progress_Towards_Grant_Area_Themes__c
@@ -1437,8 +1409,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {!currentReport.Project_Purpose__c && (
                             <SectionEmpty
                                 type="report"
-                                headline={labelTodo(
-                                    'Label todo: Progress towards achieving the goals'
+                                headline={label(
+                                    'objects.initiativeReport.Progress_Towards_Grant_Area_Themes__c'
                                 )}
                             />
                         )}
@@ -1448,8 +1420,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             <TextCard
                                 className="mt-32"
                                 hasBackground={true}
-                                headline={labelTodo(
-                                    'Label todo: Important results'
+                                headline={label(
+                                    'objects.initiativeReport.Important_Results__c'
                                 )}
                                 body={currentReport.Important_Results__c}
                             />
@@ -1458,29 +1430,29 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {!currentReport.Important_Results__c && (
                             <SectionEmpty
                                 type="report"
-                                headline={labelTodo(
-                                    'Label todo: Important results'
+                                headline={label(
+                                    'objects.initiativeReport.Important_Results__c'
                                 )}
                             />
                         )}
 
-                        {/* Post grant */}
+                        {/* Post project activities */}
                         {currentReport.Post_Project_Activities__c && (
                             <TextCard
                                 className="mt-32"
                                 hasBackground={true}
-                                headline={labelTodo(
-                                    'Label todo: Post grant activities or results'
+                                headline={label(
+                                    'objects.initiativeReport.Post_Project_Activities__c'
                                 )}
                                 body={currentReport.Post_Project_Activities__c}
                             />
                         )}
-                        {/* Empty state - Post grant */}
+                        {/* Empty state - Post project activities */}
                         {!currentReport.Post_Project_Activities__c && (
                             <SectionEmpty
                                 type="report"
-                                headline={labelTodo(
-                                    'Label todo: Post grant activities or results'
+                                headline={label(
+                                    'objects.initiativeReport.Post_Project_Activities__c'
                                 )}
                             />
                         )}
