@@ -42,7 +42,6 @@ const ActivitiesComponent = ({ pageProps }) => {
             // Only show activities with type "Intervention"
             let activities = Object.values(initiative._activities).filter(
                 item => {
-                    console.log(item);
                     return item.Activity_Type__c ===
                         CONSTANTS.TYPES.ACTIVITY_INTERVENTION
                         ? true
@@ -110,7 +109,9 @@ const ActivitiesComponent = ({ pageProps }) => {
     return (
         <>
             <SectionWrapper>
-                <div className="t-h1">{label('Activities')}</div>
+                <div className="t-h1">
+                    {label('custom.FA_InitiativeViewActivitiesHeading')}
+                </div>
             </SectionWrapper>
 
             <SectionWrapper className="bg-white mb-128 rounded-8">
