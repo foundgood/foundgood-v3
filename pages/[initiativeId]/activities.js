@@ -25,7 +25,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label, log } = useMetadata();
 
     const [activities, setActivities] = useState();
 
@@ -40,63 +40,69 @@ const ActivitiesComponent = ({ pageProps }) => {
                 : initiative.Problem_Resolutions__c;
 
             // Only show activities with type "Intervention"
-            let activities = Object.values(initiative._activities).filter(
-                item => {
+            const activities = Object.values(initiative._activities)
+                .filter(item => {
                     return item.Activity_Type__c ===
                         CONSTANTS.TYPES.ACTIVITY_INTERVENTION
                         ? true
                         : false;
-                }
-            );
-            // Check if they have related goals
-            activities = activities.map((item, index) => {
-                const title = item.Things_To_Do__c;
-                const location = item.Initiative_Location__c?.split(';').join(
-                    ', '
-                );
-                const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
-                    success => {
-                        return success.Name;
-                    }
-                );
-                const relatedGoals = Object.values(
-                    initiative._activityGoals
-                ).map(relatedGoal => {
-                    // This activity has a RelatedGoal
-                    if (relatedGoal.Initiative_Activity__c == item.Id) {
-                        // Compare RelatedGoals ID -> with Goal Ids
-                        return Object.values(initiative._goals).map(
-                            (goal, index) => {
-                                // Return the original Goal description
-                                if (
-                                    relatedGoal.Initiative_Goal__c == goal.Id &&
-                                    goal.Type__c ==
-                                        CONSTANTS.TYPES.GOAL_PREDEFINED
-                                ) {
-                                    return {
-                                        description: goal.Funder_Objective__c,
-                                    };
-                                } else if (
-                                    relatedGoal.Initiative_Goal__c == goal.Id &&
-                                    goal.Type__c == CONSTANTS.TYPES.GOAL_CUSTOM
-                                ) {
-                                    return { description: goal.Goal__c };
-                                }
-                            }
-                        );
-                    }
-                });
+                })
+                .map((item, index) => {
+                    console.log('Activity: ', item);
+                    const title = item.Things_To_Do__c;
+                    const location = item.Initiative_Location__c?.split(
+                        ';'
+                    ).join(', ');
+                    const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
+                        success => {
+                            return success.Name;
+                        }
+                    );
 
-                return {
-                    // type: item.Activity_Type__c, // "Intervention" or "Dissemination"
-                    title: title,
-                    description: item.Things_To_Do_Description__c,
-                    location: location,
-                    successIndicators: successIndicators,
-                    goals: descriptions,
-                    relatedGoals: stripUndefined(relatedGoals),
-                };
-            });
+                    // Check if they have related goals
+                    const relatedGoals = Object.values(
+                        initiative._activityGoals
+                    ).map(relatedGoal => {
+                        // This activity has a RelatedGoal
+                        if (relatedGoal.Initiative_Activity__c == item.Id) {
+                            // Compare RelatedGoals ID -> with Goal Ids
+                            return Object.values(initiative._goals).map(
+                                (goal, index) => {
+                                    // Return the original Goal description
+                                    if (
+                                        relatedGoal.Initiative_Goal__c ==
+                                            goal.Id &&
+                                        goal.Type__c ==
+                                            CONSTANTS.TYPES.GOAL_PREDEFINED
+                                    ) {
+                                        return {
+                                            description:
+                                                goal.Funder_Objective__c,
+                                        };
+                                    } else if (
+                                        relatedGoal.Initiative_Goal__c ==
+                                            goal.Id &&
+                                        goal.Type__c ==
+                                            CONSTANTS.TYPES.GOAL_CUSTOM
+                                    ) {
+                                        return { description: goal.Goal__c };
+                                    }
+                                }
+                            );
+                        }
+                    });
+
+                    return {
+                        // type: item.Activity_Type__c, // "Intervention" or "Dissemination"
+                        title: title,
+                        description: item.Things_To_Do_Description__c,
+                        location: location,
+                        successIndicators: successIndicators,
+                        goals: descriptions,
+                        relatedGoals: stripUndefined(relatedGoals),
+                        activityType: item.Activity_Tag__c?.split(';'),
+                    };
+                });
             setActivities(activities);
         } else if (
             initiative?.Id &&
@@ -137,10 +143,29 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     },
                                 ]}
                             />
-
-                            {item.successIndicators && (
+                            {item.activityType.length > 0 && (
                                 <>
-                                    <div className="mt-16 t-h5">
+                                    <div className="mt-32 t-h6">
+                                        {label(
+                                            'custom.FA_InitiativeViewActivityType'
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col items-start">
+                                        {item.activityType.map(
+                                            (type, index) => (
+                                                <div
+                                                    key={`t-${index}`}
+                                                    className="px-10 pt-6 pb-3 mt-16 bg-blue-20 rounded-4 t-sh7">
+                                                    {type}
+                                                </div>
+                                            )
+                                        )}
+                                    </div>
+                                </>
+                            )}
+                            {item.successIndicators.length > 0 && (
+                                <>
+                                    <div className="mt-32 t-h5">
                                         {label(
                                             'custom.FA_InitiativeViewActivityIndicators'
                                         )}
@@ -150,7 +175,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         (success, index) => (
                                             <div
                                                 key={`s-${index}`}
-                                                className="p-8 mt-16 bg-blue-10 rounded-4 t-sh5">
+                                                className="p-12 mt-16 bg-blue-10 rounded-4 t-sh5">
                                                 {success}
                                             </div>
                                         )
@@ -158,20 +183,23 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 </>
                             )}
 
-                            <SectionWrapper>
-                                <div className="t-h5">
-                                    {label(
-                                        'custom.FA_InitiativeViewActivityRelatedGoals'
-                                    )}
-                                </div>
-                                {item.relatedGoals.map((goal, index) => (
-                                    <div
-                                        key={`g-${index}`}
-                                        className="p-8 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
-                                        {goal[0].description}
+                            {/* Related goals */}
+                            {item.relatedGoals.length > 0 && (
+                                <>
+                                    <div className="mt-32 t-h5">
+                                        {label(
+                                            'custom.FA_InitiativeViewActivityRelatedGoals'
+                                        )}
                                     </div>
-                                ))}
-                            </SectionWrapper>
+                                    {item.relatedGoals.map((goal, index) => (
+                                        <div
+                                            key={`g-${index}`}
+                                            className="p-12 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
+                                            {goal[0].description}
+                                        </div>
+                                    ))}
+                                </>
+                            )}
                         </div>
                     ))}
 
