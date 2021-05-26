@@ -377,6 +377,9 @@ const useInitiativeDataStore = create((set, get) => ({
     // Get initiative and all sub data based on initiative ID
     async populateInitiative(id) {
         if (id && get().initiative.Id !== id) {
+            // Reset
+            get().reset();
+
             // Get initiative
             const initiativeData = await sfQuery(queries.initiative.get(id));
 

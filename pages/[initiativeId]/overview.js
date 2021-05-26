@@ -13,7 +13,6 @@ import { isJson } from 'utilities';
 // Components
 import Button from 'components/button';
 import UpdateButton from 'components/updateButton';
-import NumberCard from 'components/_initiative/numberCard';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
 import DividerLine from 'components/_initiative/dividerLine';
