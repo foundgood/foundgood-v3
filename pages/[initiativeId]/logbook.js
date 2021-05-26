@@ -30,7 +30,7 @@ const LogbookComponent = ({ pageProps }) => {
                     <h1 className="t-h1">
                         {label('custom.FA_InitiativeViewLogEntryHeading')}
                     </h1>
-                    <Button variant="secondary" theme="teal">
+                    <Button variant="primary" theme="teal">
                         {labelTodo('Update')}
                     </Button>
                 </div>
