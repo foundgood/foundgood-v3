@@ -12,6 +12,7 @@ import { isJson } from 'utilities';
 
 // Components
 import Button from 'components/button';
+import NumberCard from 'components/_initiative/numberCard';
 import UpdateButton from 'components/updateButton';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';

@@ -34,11 +34,13 @@ const AsideNavigationComponent = () => {
     // Effect: Update wizard navigation items
     useEffect(() => {
         if (MODE === CONTEXTS.REPORT) {
-            buildReportWizardItems();
+            buildReportWizardItems(
+                initiative._reports[REPORT_ID]?.Report_Type__c
+            );
         } else {
             buildInitiativeWizardItems(initiative.Configuration_Type__c);
         }
-    }, [MODE]);
+    }, [MODE, initiative._reports[REPORT_ID]]);
 
     return (
         <>
@@ -68,7 +70,7 @@ const AsideNavigationComponent = () => {
             </header>
 
             <ul className="mt-48">
-                {items.map((item, index) => {
+                {items?.map((item, index) => {
                     if (item.visible) {
                         return (
                             <TopLevelItem key={`nav-${index}`} item={item} />

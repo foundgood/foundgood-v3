@@ -46,6 +46,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
         initiative,
         updateReport,
         isNovoLeadFunder,
+        CONSTANTS,
     } = useInitiativeDataStore();
 
     // Method: Save new item, returns id

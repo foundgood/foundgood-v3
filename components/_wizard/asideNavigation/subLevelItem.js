@@ -51,7 +51,7 @@ const SubLevelItemComponent = ({ item }) => {
 
     return (
         <li className="mt-24 ml-32 md:cursor-pointers">
-            <button onClick={() => onHandleNavigate()}>
+            <button onClick={() => onHandleNavigate()} className="text-left">
                 <span
                     className={cc([
                         'flex t-caption',

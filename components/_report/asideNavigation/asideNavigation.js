@@ -1,18 +1,17 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
-import cc from 'classcat';
 import dayjs from 'dayjs';
 import Scrollspy from 'react-scrollspy';
 
 // Utilities
 import { useMetadata, useContext } from 'utilities/hooks';
-import { useInitiativeDataStore } from 'utilities/store';
+import {
+    useInitiativeDataStore,
+    useReportNavigationStore,
+} from 'utilities/store';
 import { asId } from 'utilities';
-
-// Data
-import { reportItems } from 'utilities/data/reportNavigationItems';
 
 const AsideNavigationComponent = () => {
     // Context for wizard pages
@@ -23,6 +22,16 @@ const AsideNavigationComponent = () => {
 
     // Store: Initiative data
     const { initiative } = useInitiativeDataStore();
+
+    // Store: Report navigation
+    const { buildReportNavigationItems, items } = useReportNavigationStore();
+
+    // Effect: Update wizard navigation items
+    useEffect(() => {
+        buildReportNavigationItems(
+            initiative._reports[REPORT_ID]?.Report_Type__c
+        );
+    }, [REPORT_ID]);
 
     return (
         <>
@@ -44,7 +53,7 @@ const AsideNavigationComponent = () => {
             </header>
             {/* Parent items */}
             <ul className="mt-48 space-y-48">
-                {reportItems().map(item => {
+                {items?.map(item => {
                     if (item.visible) {
                         return (
                             <li key={item.title}>
