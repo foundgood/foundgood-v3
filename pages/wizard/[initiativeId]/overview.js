@@ -141,7 +141,6 @@ const OverviewComponent = () => {
                                 'custom.FA_FormCaptureSelectEmpty'
                             )}
                             disabled
-                            required
                             controller={control}
                         />
                     </>
