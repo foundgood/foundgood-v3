@@ -43,7 +43,7 @@ const GoalsComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { currentItem } = useWizardNavigationStore();
+    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
     const { initiative, updateGoal, CONSTANTS } = useInitiativeDataStore();
@@ -131,6 +131,13 @@ const GoalsComponent = ({ pageProps }) => {
         setGoalType(goalTypeSelect);
     }, [goalTypeSelect]);
 
+    // Reset submithandler
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentSubmitHandler(null);
+        }, 100);
+    }, []);
+
     return (
         <>
             <TitlePreamble
@@ -177,7 +184,7 @@ const GoalsComponent = ({ pageProps }) => {
                         name="Type__c"
                         label={label('objects.initiativeGoal.Type__c')}
                         subLabel={helpText('objects.initiativeGoal.Type__c')}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet('initiativeGoal.Type__c')}
                         controller={control}
                         required
@@ -191,7 +198,9 @@ const GoalsComponent = ({ pageProps }) => {
                             subLabel={helpText(
                                 'objects.initiativeGoal.Goal__c'
                             )}
-                            placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                            placeholder={label(
+                                'custom.FA_FormCaptureTextEntryEmpty'
+                            )}
                             maxLength={200}
                             controller={control}
                         />
@@ -208,7 +217,9 @@ const GoalsComponent = ({ pageProps }) => {
                             subLabel={helpText(
                                 'objects.initiativeGoal.Funder_Objective__c'
                             )}
-                            placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                            placeholder={label(
+                                'custom.FA_FormCaptureSelectEmpty'
+                            )}
                             options={controlledValueSet(
                                 'initiativeGoal.Funder_Objective__c',
                                 initiative?.Category__c

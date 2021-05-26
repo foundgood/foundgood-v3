@@ -1,13 +1,9 @@
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import {
-    initiativeItems,
-    initiativeDetailingItems,
-    initiativePlanningItems,
-} from 'utilities/data/initiativeNavigationItems';
+import { initiativeWizardDictionary } from 'utilities/data/initiativeNavigationItems';
 
-import { reportItems } from 'utilities/data/reportNavigationItems';
+import { reportWizardDictionary } from 'utilities/data/reportNavigationItems';
 
 // Helper for getting next url
 function _goToNextSection(sectionIndex, items) {
@@ -25,9 +21,6 @@ function _goToNextSection(sectionIndex, items) {
 const useWizardNavigationStore = create((set, get) => ({
     // Handles url change in bottom navigation
     async onUrlOrContextChange(baseUrl) {
-        // Reset submitHandler
-        get().setCurrentSubmitHandler(null);
-
         // Set current item
         const currentItem = await get().setCurrentItem(baseUrl);
 
@@ -51,70 +44,145 @@ const useWizardNavigationStore = create((set, get) => ({
 
     // Rebuilds initiative wizard items
     buildInitiativeWizardItems(configurationType = []) {
+        // What types
+        const planning = configurationType.includes('Planning');
+        const detailing = configurationType.includes('Explain');
+
+        // Dictionary
+        const d = initiativeWizardDictionary;
+
+        // Items
+        const items = [
+            d.introduction,
+            d.informationCapture,
+            {
+                ...d.context,
+                items: [
+                    d.overview,
+                    d.funders,
+                    d.applicants,
+                    d.collaborators,
+                    d.employeesFunded,
+                ],
+            },
+            // If detailing is on
+            ...(detailing
+                ? [
+                      {
+                          ...d.background,
+                          items: [
+                              d.problemsToBeSolved,
+                              d.causesOfTheProblem,
+                              d.organisationalFocus,
+                              d.ourVision,
+                              d.reasonsForThisSolve,
+                          ],
+                      },
+                  ]
+                : []),
+            {
+                ...d.activitiesParent,
+                items: [d.goals, d.activities, d.indicators, d.sharingResults],
+            },
+            {
+                ...d.developments,
+                items: [
+                    // If planning is on
+                    ...(planning ? [d.targets] : []),
+                    d.progressSoFar,
+                    d.evaluations,
+                    d.influenceOnPolicy,
+                    // If planning is on
+                    ...(planning ? [d.outcomes] : []),
+                ],
+            },
+            // {...d.logbook, items: [d.logbook]},
+            { ...d.reports, items: [d.reportSchedule] },
+            d.done,
+        ];
+
         set(state => {
-            // What types
-            const planning = configurationType.includes('Planning');
-            const detailing = configurationType.includes('Explain');
-
-            // Baseline for items = reporting items
-            let items = initiativeItems();
-
-            // Add planning if needed
-            if (planning) {
-                items[4] = {
-                    ...items[4],
-                    items: [
-                        planningItems()[0],
-                        ...items[4].items,
-                        planningItems()[1],
-                    ],
-                };
-            }
-
-            // Add detailing if selected
-            if (detailing) {
-                items = [
-                    ...items.slice(0, 3),
-                    ...detailingItems(),
-                    ...items.slice(3, items.length),
-                ];
-            }
-
             state.items = items;
         });
     },
 
     // Rebuilds report wizard items
-    buildReportWizardItems(configurationType = []) {
+    buildReportWizardItems(configurationType) {
+        // Items
+        let items;
+
+        // Dictionary
+        const d = reportWizardDictionary;
+        switch (configurationType) {
+            case 'Final':
+                items = [
+                    d.introduction,
+                    {
+                        ...d.summary,
+                        items: [
+                            d.reportDetails,
+                            d.funders,
+                            d.overview,
+                            d.reportSummary,
+                        ],
+                    },
+                    {
+                        ...d.keyChanges,
+                        items: [
+                            d.applicants,
+                            d.collaborators,
+                            d.employeesFunded,
+                            d.goals,
+                            d.activities,
+                            d.indicators,
+                            d.progressSoFar,
+                            d.sharingResults,
+                        ],
+                    },
+                    {
+                        ...d.keyResults,
+                        items: [d.influenceOnPolicy, d.evaluations],
+                    },
+                    { ...d.reflections, items: [d.endOfGrantReflections] },
+                    d.done,
+                ];
+                break;
+
+            default:
+                // Annual
+                items = [
+                    d.introduction,
+                    {
+                        ...d.summary,
+                        items: [
+                            d.reportDetails,
+                            d.funders,
+                            d.overview,
+                            d.reportSummary,
+                        ],
+                    },
+                    {
+                        ...d.keyChanges,
+                        items: [
+                            d.applicants,
+                            d.collaborators,
+                            d.employeesFunded,
+                            d.goals,
+                            d.activities,
+                            d.indicators,
+                            d.progressSoFar,
+                            d.sharingResults,
+                        ],
+                    },
+                    {
+                        ...d.keyResults,
+                        items: [d.influenceOnPolicy, d.evaluations],
+                    },
+                    d.done,
+                ];
+                break;
+        }
         set(state => {
-            // What types
-            const planning = configurationType.includes('Planning');
-            const detailing = configurationType.includes('Explain');
-
-            // Baseline for items = reporting items
-            let items = reportItems();
-
-            // // Add planning if needed
-            // if (planning) {
-            //     items[4] = {
-            //         ...items[4],
-            //         items: [
-            //             planningItems()[0],
-            //             ...items[4].items,
-            //             planningItems()[1],
-            //         ],
-            //     };
-            // }
-
-            // // Add detailing if selected
-            // if (detailing) {
-            //     items = [
-            //         ...items.slice(0, 3),
-            //         ...detailingItems(),
-            //         ...items.slice(3, items.length),
-            //     ];
-            // }
-
             state.items = items;
         });
     },

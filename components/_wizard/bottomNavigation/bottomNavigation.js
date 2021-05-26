@@ -43,7 +43,7 @@ const BottomNavigationComponent = () => {
         setTimeout(() => {
             const splitRoute = router.pathname.split('/');
             onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
-        }, 100);
+        }, 50);
     }, [router.pathname]);
 
     async function onHandleContinue() {

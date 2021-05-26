@@ -199,7 +199,11 @@ const CollaboratorsComponent = ({ pageProps }) => {
                 setCurrentSubmitHandler(
                     handleSubmitReflections(submitReflections, error)
                 );
-            }, 10);
+            }, 100);
+        } else {
+            setTimeout(() => {
+                setCurrentSubmitHandler(null);
+            }, 100);
         }
     }, []);
 
@@ -273,7 +277,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeCollaborator.Account__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={
                             accountOrganisations?.records?.map(item => ({
                                 label: item.Name,
@@ -289,7 +293,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeCollaborator.Type__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeCollaborator.Type__c'
                         ).filter(item =>
@@ -306,7 +310,9 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeCollaborator.Description__c'
                         )}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         controller={control}
                         required
                     />

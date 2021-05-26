@@ -59,7 +59,7 @@ const InformationCaptureComponent = () => {
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit));
-        }, 10);
+        }, 100);
     }, []);
 
     return (

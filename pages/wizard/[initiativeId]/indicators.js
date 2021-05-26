@@ -49,7 +49,7 @@ const IndicatorsComponent = ({ pageProps }) => {
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
     // Store: Wizard navigation
-    const { currentItem } = useWizardNavigationStore();
+    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
     const {
@@ -183,6 +183,13 @@ const IndicatorsComponent = ({ pageProps }) => {
     // Funders
     const activities = Object.keys(initiative?._activities);
 
+    // Reset submithandler
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentSubmitHandler(null);
+        }, 100);
+    }, []);
+
     return (
         <>
             <TitlePreamble
@@ -254,7 +261,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeActivitySuccessMetric.Type__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeActivitySuccessMetric.Type__c'
                         )}
@@ -269,7 +276,9 @@ const IndicatorsComponent = ({ pageProps }) => {
                             label={label(
                                 'custom.FA_InitiativeActivitySuccessMetricName'
                             )}
-                            placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                            placeholder={label(
+                                'custom.FA_FormCaptureTextEntryEmpty'
+                            )}
                             maxLength={80}
                             controller={control}
                         />
@@ -285,7 +294,9 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivitySuccessMetric.KPI__c'
                                 )}
-                                placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                                placeholder={label(
+                                    'custom.FA_FormCaptureSelectEmpty'
+                                )}
                                 options={controlledValueSet(
                                     'initiativeActivitySuccessMetric.KPI__c',
                                     initiative?.Category__c
@@ -304,8 +315,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivitySuccessMetric.Gender__c'
                                 )}
-                                selectPlaceholder={labelTodo(
-                                    'SELECT_PLACEHOLDER'
+                                selectPlaceholder={label(
+                                    'custom.FA_FormCaptureSelectEmpty'
                                 )}
                                 textPlaceholder={label(
                                     'objects.initiativeActivitySuccessMetric.Gender_Other__c'

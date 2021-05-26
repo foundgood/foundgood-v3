@@ -225,7 +225,11 @@ const FundersComponent = ({ pageProps }) => {
                 setCurrentSubmitHandler(
                     handleSubmitReflections(submitReflections, error)
                 );
-            }, 10);
+            }, 100);
+        } else {
+            setTimeout(() => {
+                setCurrentSubmitHandler(null);
+            }, 100);
         }
     }, []);
 
@@ -297,7 +301,7 @@ const FundersComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeFunder.Account__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={
                             accountFoundations?.records?.map(item => ({
                                 label: item.Name,
@@ -315,7 +319,7 @@ const FundersComponent = ({ pageProps }) => {
                         name="Type__c"
                         label={label('objects.initiativeFunder.Type__c')}
                         subLabel={helpText('objects.initiativeFunder.Type__c')}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet('initiativeFunder.Type__c')}
                         disabled={
                             isNovoLeadFunder() &&
@@ -331,7 +335,9 @@ const FundersComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeFunder.Amount__c'
                         )}
-                        selectPlaceholder={labelTodo('SELECT_PLACEHOLDER')}
+                        selectPlaceholder={label(
+                            'custom.FA_FormCaptureSelectEmpty'
+                        )}
                         listMaxLength={1}
                         options={[
                             { label: 'DKK', value: 'DKK' },
@@ -375,7 +381,9 @@ const FundersComponent = ({ pageProps }) => {
                             'objects.initiativeFunder.Application_Id__c'
                         )}
                         label={labelTodo('Application ID number')}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         maxLength={15}
                         disabled={
                             isNovoLeadFunder() &&

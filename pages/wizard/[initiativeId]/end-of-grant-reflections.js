@@ -20,7 +20,7 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, Reflection } from 'components/_inputs';
 
-const ReportSummaryComponent = () => {
+const EndOfGrantReflectionsComponent = () => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
@@ -47,16 +47,18 @@ const ReportSummaryComponent = () => {
     async function submit(formData) {
         try {
             const {
-                Summary_Of_Activities__c,
-                Summary_Of_Challenges_And_Learnings__c,
+                Project_Purpose__c,
+                Progress_Towards_Grant_Area_Themes__c,
+                Important_Results__c,
             } = formData;
 
             await sfUpdate({
                 object: 'Initiative_Report__c',
                 id: REPORT_ID,
                 data: {
-                    Summary_Of_Activities__c,
-                    Summary_Of_Challenges_And_Learnings__c,
+                    Project_Purpose__c,
+                    Progress_Towards_Grant_Area_Themes__c,
+                    Important_Results__c,
                 },
             });
 
@@ -90,10 +92,10 @@ const ReportSummaryComponent = () => {
             />
             <InputWrapper>
                 <Reflection
-                    name="Summary_Of_Activities__c"
-                    defaultValue={currentReport.Summary_Of_Activities__c}
+                    name="Project_Purpose__c"
+                    defaultValue={currentReport.Project_Purpose__c}
                     label={label(
-                        'custom.FA_ReportWizardActivitySummaryReflectionSubHeading'
+                        'custom.FA_ReportWizardPurposeReflectionSubHeading'
                     )}
                     placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={750}
@@ -101,12 +103,23 @@ const ReportSummaryComponent = () => {
                     controller={control}
                 />
                 <Reflection
-                    name="Summary_Of_Challenges_And_Learnings__c"
+                    name="Progress_Towards_Grant_Area_Themes__c"
                     defaultValue={
-                        currentReport.Summary_Of_Challenges_And_Learnings__c
+                        currentReport.Progress_Towards_Grant_Area_Themes__c
                     }
                     label={label(
-                        'custom.FA_ReportWizardChallengesReflectionSubHeading'
+                        'custom.FA_ReportWizardProgressReflectionSubHeading'
+                    )}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    maxLength={750}
+                    required
+                    controller={control}
+                />
+                <Reflection
+                    name="Important_Results__c"
+                    defaultValue={currentReport.Important_Results__c}
+                    label={label(
+                        'custom.FA_ReportWizardResultsReflectionSubHeading'
                     )}
                     placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={750}
@@ -118,10 +131,10 @@ const ReportSummaryComponent = () => {
     );
 };
 
-ReportSummaryComponent.propTypes = {};
+EndOfGrantReflectionsComponent.propTypes = {};
 
-ReportSummaryComponent.defaultProps = {};
+EndOfGrantReflectionsComponent.defaultProps = {};
 
-ReportSummaryComponent.layout = 'wizard';
+EndOfGrantReflectionsComponent.layout = 'wizard';
 
-export default ReportSummaryComponent;
+export default EndOfGrantReflectionsComponent;

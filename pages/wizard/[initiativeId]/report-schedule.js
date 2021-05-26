@@ -36,7 +36,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
     const { isDirty } = useFormState({ control });
 
     // Store: Wizard navigation
-    const { currentItem } = useWizardNavigationStore();
+    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
@@ -46,6 +46,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
         initiative,
         updateReport,
         isNovoLeadFunder,
+        CONSTANTS,
     } = useInitiativeDataStore();
 
     // Method: Save new item, returns id
@@ -131,6 +132,13 @@ const ReportScheduleComponent = ({ pageProps }) => {
     // Funders
     const funders = Object.keys(initiative._funders);
 
+    // Reset submithandler
+    useEffect(() => {
+        setTimeout(() => {
+            setCurrentSubmitHandler(null);
+        }, 100);
+    }, []);
+
     return (
         <>
             <TitlePreamble
@@ -189,7 +197,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeReport.Report_Type__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet('initiativeReport.Report_Type__c')}
                         controller={control}
                         disabled={
@@ -226,7 +234,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeReport.Status__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet('initiativeReport.Status__c')}
                         controller={control}
                     />

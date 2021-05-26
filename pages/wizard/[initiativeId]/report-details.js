@@ -91,7 +91,7 @@ const ReportDetailsComponent = () => {
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 10);
+        }, 100);
     }, []);
 
     // Get current report
@@ -109,7 +109,9 @@ const ReportDetailsComponent = () => {
                         name="Name"
                         defaultValue={currentReport.Name}
                         label={label('custom.FA_ReportName')}
-                        placeholder={labelTodo('TEXT_PLACEHOLDER')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         maxLength={80}
                         disabled={isNovoLeadFunder()}
                         required={!isNovoLeadFunder()}

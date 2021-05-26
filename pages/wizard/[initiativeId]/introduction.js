@@ -81,11 +81,13 @@ const IntroductionComponent = ({ pageProps }) => {
             resetInitiativeStore();
             buildInitiativeWizardItems(initiative.Configuration_Type__c);
         }
+    }, [MODE]);
 
+    useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(submit);
-        }, 10);
-    }, [MODE]);
+        }, 100);
+    }, []);
 
     return MODE === CONTEXTS.REPORT ? (
         <>

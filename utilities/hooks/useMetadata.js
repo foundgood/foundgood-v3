@@ -50,11 +50,13 @@ const useMetadata = () => {
         // Default values
         if (valuesParent) {
             return formattedAsSelect
-                ? valuesParent.values.map(item => ({
-                      label: item.label,
-                      value: item.fullName,
-                  }))
-                : valuesParent.values;
+                ? valuesParent.values
+                      .filter(item => !(item.isActive ?? false))
+                      .map(item => ({
+                          label: item.label,
+                          value: item.fullName,
+                      }))
+                : valuesParent.values.filter(item => !(item.isActive ?? false));
         }
 
         return [];
@@ -77,20 +79,25 @@ const useMetadata = () => {
             return formattedAsSelect
                 ? Object.values(valuesObject)
                       .flat()
+                      .filter(item => !(item.isActive ?? false))
                       .map(item => ({
                           label: item.label,
                           value: item.fullName,
                       }))
-                : Object.values(valuesObject).flat();
+                : Object.values(valuesObject)
+                      .flat()
+                      .filter(item => !(item.isActive ?? false));
         }
 
         if (valuesObject[key]) {
             return formattedAsSelect
-                ? valuesObject[key].map(item => ({
-                      label: item.label,
-                      value: item.fullName,
-                  }))
-                : valuesObject[key];
+                ? valuesObject[key]
+                      .filter(item => !(item.isActive ?? false))
+                      .map(item => ({
+                          label: item.label,
+                          value: item.fullName,
+                      }))
+                : valuesObject[key].filter(item => !(item.isActive ?? false));
         }
 
         return [];

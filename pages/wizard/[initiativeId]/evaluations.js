@@ -167,7 +167,11 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 setCurrentSubmitHandler(
                     handleSubmitReflections(submitReflections, error)
                 );
-            }, 10);
+            }, 100);
+        } else {
+            setTimeout(() => {
+                setCurrentSubmitHandler(null);
+            }, 100);
         }
     }, []);
 
@@ -234,7 +238,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeReportDetail.Who_Is_Evaluating__c'
                         )}
-                        placeholder={labelTodo('SELECT_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeReportDetail.Who_Is_Evaluating__c'
                         )}

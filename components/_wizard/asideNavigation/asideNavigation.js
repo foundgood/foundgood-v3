@@ -19,7 +19,7 @@ const AsideNavigationComponent = () => {
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { label, labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     // Store: wizardNavigation
     const {
@@ -34,11 +34,13 @@ const AsideNavigationComponent = () => {
     // Effect: Update wizard navigation items
     useEffect(() => {
         if (MODE === CONTEXTS.REPORT) {
-            buildReportWizardItems();
+            buildReportWizardItems(
+                initiative._reports[REPORT_ID]?.Report_Type__c
+            );
         } else {
             buildInitiativeWizardItems(initiative.Configuration_Type__c);
         }
-    }, [MODE]);
+    }, [MODE, initiative._reports[REPORT_ID]]);
 
     return (
         <>
@@ -62,13 +64,13 @@ const AsideNavigationComponent = () => {
                     </>
                 ) : (
                     <h2 className="mt-8 t-h5">
-                        {labelTodo('Create your initiative')}
+                        {label('custom.FA_CreateNewInitiative')}
                     </h2>
                 )}
             </header>
 
             <ul className="mt-48">
-                {items.map((item, index) => {
+                {items?.map((item, index) => {
                     if (item.visible) {
                         return (
                             <TopLevelItem key={`nav-${index}`} item={item} />
