@@ -21,7 +21,7 @@ const LogbookComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { label } = useMetadata();
 
     return (
         <>
@@ -31,7 +31,7 @@ const LogbookComponent = ({ pageProps }) => {
                         {label('custom.FA_InitiativeViewLogEntryHeading')}
                     </h1>
                     <Button variant="primary" theme="teal">
-                        {labelTodo('Update')}
+                        {label('custom.FA_ButtonUpdate')}
                     </Button>
                 </div>
             </SectionWrapper>

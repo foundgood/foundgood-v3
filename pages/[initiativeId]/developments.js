@@ -202,7 +202,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                         </div>
                     ))}
                 {/* Empty state - No activities */}
-                {activities?.length < 1 && <SectionEmpty />}
+                {activities?.length < 1 && <SectionEmpty type="initiative" />}
             </SectionWrapper>
             <SectionWrapper className="mt-32 bg-white rounded-8">
                 <div className="flex justify-between">
@@ -229,7 +229,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                         </div>
                     ))}
                 {/* Empty state - No results */}
-                {results?.length < 1 && <SectionEmpty />}
+                {results?.length < 1 && <SectionEmpty type="initiative" />}
             </SectionWrapper>
         </>
     );

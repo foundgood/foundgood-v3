@@ -176,27 +176,8 @@ const ActivitiesComponent = ({ pageProps }) => {
                     ))}
 
                 {/* Empty state - No Activities */}
-                {activities?.length < 1 && <SectionEmpty />}
+                {activities?.length < 1 && <SectionEmpty type="initiative" />}
             </SectionWrapper>
-
-            {/* Indicators ?? */}
-            {/* <div className="mt-32 bg-white rounded-8">
-                <SectionWrapper>
-                    <div className="flex justify-between">
-                        <h2 className="t-h3">{labelTodo('Indicators')}</h2>
-                        <Button variant="secondary">
-                            {labelTodo('Update')}
-                        </Button>
-                    </div>
-                </SectionWrapper>
-
-                <ChartCard
-                    items={[
-                        { title: 'Schools built' },
-                        { title: 'Wells built' },
-                    ]}
-                />
-            </div> */}
         </>
     );
 };

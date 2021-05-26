@@ -11,6 +11,7 @@ import { stripUndefined, asId } from 'utilities';
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
+import UpdateButton from 'components/updateButton';
 import ReportDetailCard from 'components/_initiative/reportDetailCard';
 import ReportSharingCard from 'components/_initiative/reportSharingCard';
 import TextCard from 'components/_initiative/textCard';
@@ -56,6 +57,10 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
         'bg-blue-60',
         'bg-coral-60',
         'bg-amber-60',
+        'bg-teal-100',
+        'bg-blue-100',
+        'bg-coral-100',
+        'bg-amber-100',
         'bg-teal-300',
         'bg-blue-300',
         'bg-coral-300',
@@ -66,6 +71,10 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
         '#545E92', // bg-blue-60
         '#995B57', // bg-coral-60
         '#977958', // bg-amber-60
+        '#1C5471', // bg-teal-100
+        '#223070', // bg-blue-100
+        '#782C28', // bg-coral-100
+        '#76502A', // bg-amber-100
         '#548DBB', // bg-teal-300
         '#4355B8', // bg-blue-300
         '#B15446', // bg-coral-300
@@ -77,6 +86,9 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
         if (report?.Id && initiative?.Id) {
             // Set current report
             setCurrentReport(report);
+
+            console.log('report: ', report);
+            console.log('initiative: ', initiative);
 
             // Make sure we have Report Details
             if (Object.values(initiative._reportDetails).length > 0) {
@@ -558,9 +570,17 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuOverview'))}>
                         <SectionWrapper>
-                            <h2 className="t-h4">
-                                {label('custom.FA_ReportViewHeadingSummary')}
-                            </h2>
+                            <div className="flex justify-between">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewHeadingOverview'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="overview"
+                                />
+                            </div>
                             <h3 className="mt-24 t-preamble">
                                 {initiativeData.Summary__c}
                             </h3>
@@ -597,17 +617,15 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                         )}
                                     {!developmentGoals && (
                                         <div>
-                                            {labelTodo(
-                                                'Label todo: No sustainable development goals have been added to this initiative'
-                                            )}
+                                            {label('custom.FA_ReportEmptySDGs')}
                                         </div>
                                     )}
                                 </div>
                             </div>
                             <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                                 <div className="t-sh6 text-blue-60">
-                                    {labelTodo(
-                                        'label todo: Grant start and end date'
+                                    {label(
+                                        'custom.FA_ReportViewGrantStartEndDate'
                                     )}
                                 </div>
                                 <h3 className="t-h5">
@@ -631,15 +649,13 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 {/* Empty state - No Location */}
                                 {!initiativeData.Translated_Where_Is_Problem__c && (
                                     <div>
-                                        {labelTodo(
-                                            'No locations hav been added to this initiative'
-                                        )}
+                                        {label('custom.FA_ReportEmptyLocation')}
                                     </div>
                                 )}
                             </div>
                             <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                                 <div className="t-sh6 text-blue-60">
-                                    {labelTodo('label todo: Co-funders')}
+                                    {label('custom.FA_ReportViewCoFunders')}
                                 </div>
 
                                 <div>
@@ -654,12 +670,10 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                         ))}
                                     {/* Empty state - NO co-funders */}
                                     {!coFunders &&
-                                        labelTodo(
-                                            'Label todo: No co-funders have been added to this initiative'
-                                        )}
+                                        label('custom.FA_ReportEmptyCoFunders')}
                                 </div>
                                 <div className="mt-16 t-sh6 text-blue-60">
-                                    {labelTodo('label todo: Co-applicants')}
+                                    {label('custom.FA_ReportViewCoApplicants')}
                                 </div>
                                 {/* List of co-applicants */}
                                 {coApplicants && (
@@ -670,26 +684,28 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 {/* Empty state - NO co-applicants */}
                                 {!coApplicants && (
                                     <div>
-                                        {labelTodo(
-                                            'Label todo: No co-funders have been added to this initiative'
+                                        {label(
+                                            'custom.FA_ReportEmptyCoApplicants'
                                         )}
                                     </div>
                                 )}
                             </div>
+                            {/* TDD - Should this be the lead funder? */}
                             {novoFunder && (
                                 <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                                     <div className="t-sh6 text-blue-60">
-                                        {labelTodo(
-                                            'label todo: Amount granted by Novo Nordisk Foundation'
+                                        {label(
+                                            'custom.FA_ReportViewAmountByFunder'
                                         )}
+                                        {' Novo Nordisk Foundation'}
                                     </div>
                                     <h3 className="t-h5">
                                         {novoFunder.amount}
                                     </h3>
 
                                     <div className="mt-16 t-sh6 text-blue-60">
-                                        {labelTodo(
-                                            'label todo: Share of total funding'
+                                        {label(
+                                            'custom.FA_ReportViewShareOfTotalFunding'
                                         )}
                                     </div>
                                     <h3 className="t-h5">{novoFunder.share}</h3>
@@ -701,9 +717,17 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     {/* Report Summary */}
                     <SectionWrapper>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label('custom.FA_ReportViewHeadingSummary')}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewHeadingSummary'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="report-summary"
+                                />
+                            </div>
                         </SectionWrapper>
                         {/* Overall perfomance */}
                         {currentReport?.Summary_Of_Activities__c && (
@@ -718,6 +742,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {/* Empty state - No Overall perfomance */}
                         {!currentReport?.Summary_Of_Activities__c && (
                             <SectionEmpty
+                                type="report"
                                 headline={labelTodo(
                                     'Label todo: Overall perfomance'
                                 )}
@@ -739,6 +764,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {/* Empty state - No Overall perfomance */}
                         {!currentReport?.Summary_Of_Challenges_And_Learnings__c && (
                             <SectionEmpty
+                                type="report"
                                 headline={labelTodo(
                                     'Label todo: Challenges & Learnings'
                                 )}
@@ -751,9 +777,21 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuGoals'))}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {labelTodo('Label todo: Goals')}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {/* Show to different headings
+                                    depending on if lead funder is Novo Nordisk Foundation */}
+                                    {/*
+                                    labelTodo()
+                                    {leadFunder == 'NNF' && }
+                                    {!leadFunder == 'NNF' && }
+                                    */}
+                                    {label(
+                                        'custom.FA_InitiativeViewGoalsHeading'
+                                    )}
+                                </h3>
+                                <UpdateButton mode="report" baseUrl="goals" />
+                            </div>
                         </SectionWrapper>
 
                         {Object.values(initiativeData._goals).length > 0 &&
@@ -776,7 +814,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 }
                             )}
                         {Object.values(initiativeData._goals).length < 1 && (
-                            <SectionEmpty />
+                            <SectionEmpty type="report" />
                         )}
                     </SectionWrapper>
 
@@ -792,11 +830,14 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuFunders'))}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingFundersOverall'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingFundersOverall'
+                                    )}
+                                </h3>
+                                <UpdateButton mode="report" baseUrl="funders" />
+                            </div>
                         </SectionWrapper>
                         {/* Donut chart */}
                         {donutData && (
@@ -844,7 +885,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             </div>
                         )}
                         {/* Empty state - No funders */}
-                        {!donutData && <SectionEmpty />}
+                        {!donutData && <SectionEmpty type="report" />}
 
                         {/* List of funders */}
                         {funders &&
@@ -901,11 +942,17 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             label('custom.FA_ReportWizardMenuApplicants')
                         )}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {labelTodo(
-                                    'label todo: New co-applicant relationships this year'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_InitiativeViewApplicantsHeading'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="applicants"
+                                />
+                            </div>
                         </SectionWrapper>
                         <SectionWrapper>
                             <ReportDetailCard
@@ -948,14 +995,14 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                             description="" // Collaborators don't have a description
                                             items={[
                                                 {
-                                                    label: labelTodo(
-                                                        'label todo: Type'
+                                                    label: label(
+                                                        'custom.FA_ReportViewCollaboratorType'
                                                     ),
                                                     text: item.Type__c,
                                                 },
                                                 {
-                                                    label: labelTodo(
-                                                        'label todo: Period'
+                                                    label: label(
+                                                        'custom.FA_ReportViewCollaborationPeriod'
                                                     ),
                                                     text: `${item.Start_Date__c} - ${item.End_Date__c}`,
                                                 },
@@ -971,7 +1018,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     />
                                 </div>
                             ))}
-                        {!applicants && <SectionEmpty />}
+                        {!applicants && <SectionEmpty type="report" />}
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Collaborators */}
@@ -980,15 +1027,21 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             label('custom.FA_ReportWizardMenuCollaborations')
                         )}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingCollaborationsOverall'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingCollaborationsOverall'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="collaborators"
+                                />
+                            </div>
                         </SectionWrapper>
 
-                        {collaborators &&
-                            collaborators.map((item, index) => (
+                        {collaborators?.length > 0 &&
+                            collaborators?.map((item, index) => (
                                 <div key={`c-${index}`}>
                                     <SectionWrapper>
                                         <ReportDetailCard
@@ -1020,18 +1073,26 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     />
                                 </div>
                             ))}
-                        {!collaborators && <SectionEmpty />}
+                        {collaborators?.length < 1 && (
+                            <SectionEmpty type="report" />
+                        )}
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Employees funded by the grant */}
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuEmployees'))}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingEmployeesOverall'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingEmployeesOverall'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="employees-funded"
+                                />
+                            </div>
                         </SectionWrapper>
                         {employeesFundedReflection && (
                             <>
@@ -1076,7 +1137,9 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 />
                             </>
                         )}
-                        {!employeesFundedReflection && <SectionEmpty />}
+                        {!employeesFundedReflection && (
+                            <SectionEmpty type="report" />
+                        )}
                     </SectionWrapper>
 
                     {/* ------------------------------------------------------------------------------------------ */}
@@ -1086,15 +1149,21 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             label('custom.FA_ReportWizardMenuActivities')
                         )}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingActivitiesOverall'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingActivitiesOverall'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="activities"
+                                />
+                            </div>
                         </SectionWrapper>
 
-                        {activities &&
-                            activities.map((item, index) => (
+                        {activities?.length > 0 &&
+                            activities?.map((item, index) => (
                                 <div key={`a-${index}`}>
                                     <SectionWrapper>
                                         <ReportDetailCard
@@ -1153,21 +1222,30 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     )}
                                 </div>
                             ))}
-                        {!activities && <SectionEmpty />}
+                        {activities?.length < 1 && (
+                            <SectionEmpty type="report" />
+                        )}
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Sharing of results */}
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuSharing'))}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingSharingOverall'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingSharingOverall'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="sharing-results"
+                                />
+                            </div>
                         </SectionWrapper>
-                        {results &&
-                            results.map((item, index) => (
+
+                        {results?.length > 0 &&
+                            results?.map((item, index) => (
                                 <div key={`r-${index}`}>
                                     <SectionWrapper>
                                         <ReportSharingCard
@@ -1186,12 +1264,12 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                         body={item.reportReflection}
                                     />
 
-                                    {index < activities.length - 1 && (
+                                    {index < results.length - 1 && (
                                         <DividerLine />
                                     )}
                                 </div>
                             ))}
-                        {!results && <SectionEmpty />}
+                        {results?.length < 1 && <SectionEmpty type="report" />}
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Logbook entries - TBD */}
@@ -1233,14 +1311,20 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     <SectionWrapper
                         id={asId(label('custom.FA_ReportWizardMenuInfluence'))}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingInfluencesOverall'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingInfluencesOverall'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="influence-on-policy"
+                                />
+                            </div>
                         </SectionWrapper>
-                        {influences &&
-                            influences.map((item, index) => (
+                        {influences?.length > 0 &&
+                            influences?.map((item, index) => (
                                 <div key={`i-${index}`}>
                                     <TextCard
                                         hasBackground={true}
@@ -1255,7 +1339,9 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     )}
                                 </div>
                             ))}
-                        {!influences && <SectionEmpty />}
+                        {influences?.length < 1 && (
+                            <SectionEmpty type="report" />
+                        )}
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Evaluations */}
@@ -1264,14 +1350,20 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             label('custom.FA_ReportWizardMenuEvaluations')
                         )}>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingEvaluationsOverall'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingEvaluationsOverall'
+                                    )}
+                                </h3>
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="evaluations"
+                                />
+                            </div>
                         </SectionWrapper>
-                        {evaluations &&
-                            evaluations.map((item, index) => (
+                        {evaluations?.length > 0 &&
+                            evaluations?.map((item, index) => (
                                 <div key={`i-${index}`}>
                                     <TextCard
                                         hasBackground={true}
@@ -1286,17 +1378,27 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     )}
                                 </div>
                             ))}
-                        {!evaluations && <SectionEmpty />}
+                        {evaluations?.length < 1 && (
+                            <SectionEmpty type="report" />
+                        )}
                     </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Reflections */}
                     <SectionWrapper>
                         <SectionWrapper>
-                            <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingInfluencesReflections'
-                                )}
-                            </h3>
+                            <div className="flex justify-between mt-32">
+                                <h3 className="t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingInfluencesReflections'
+                                    )}
+                                </h3>
+                                {/* 
+                                <UpdateButton
+                                    mode="report"
+                                    baseUrl="evaluations"
+                                />
+                                */}
+                            </div>
                         </SectionWrapper>
                         {/* Project purpose */}
                         {currentReport.Project_Purpose__c && (
@@ -1311,6 +1413,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {/* Empty state - Project purpose */}
                         {!currentReport.Project_Purpose__c && (
                             <SectionEmpty
+                                type="report"
                                 headline={labelTodo(
                                     'Label todo: Project purpose'
                                 )}
@@ -1333,6 +1436,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {/* Empty state - Progress goals */}
                         {!currentReport.Project_Purpose__c && (
                             <SectionEmpty
+                                type="report"
                                 headline={labelTodo(
                                     'Label todo: Progress towards achieving the goals'
                                 )}
@@ -1353,6 +1457,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {/* Empty state - Important results */}
                         {!currentReport.Important_Results__c && (
                             <SectionEmpty
+                                type="report"
                                 headline={labelTodo(
                                     'Label todo: Important results'
                                 )}
@@ -1373,6 +1478,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         {/* Empty state - Post grant */}
                         {!currentReport.Post_Project_Activities__c && (
                             <SectionEmpty
+                                type="report"
                                 headline={labelTodo(
                                     'Label todo: Post grant activities or results'
                                 )}

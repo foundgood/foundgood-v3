@@ -12,6 +12,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 import UpdateButton from 'components/updateButton';
 import ReportCard from 'components/_initiative/reportCard';
 import SectionWrapper from 'components/sectionWrapper';
+import SectionEmpty from 'components/sectionEmpty';
 
 const ReportsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -23,7 +24,7 @@ const ReportsComponent = ({ pageProps }) => {
     const [reportGroups, setReportGroups] = useState();
 
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { label } = useMetadata();
 
     useEffect(() => {
         // Make sure data it loaded
@@ -97,15 +98,7 @@ const ReportsComponent = ({ pageProps }) => {
                     </SectionWrapper>
                 ))}
             {/* Empty state - No reports */}
-            {reportGroups?.length < 1 && (
-                <SectionWrapper className="bg-white rounded-8">
-                    <div className="p-16 text-center border-4 t-body border-gray-10 rounded-8">
-                        {labelTodo(
-                            'Label todo: This section has not been updated. '
-                        )}
-                    </div>
-                </SectionWrapper>
-            )}
+            {reportGroups?.length < 1 && <SectionEmpty type="initiative" />}
         </>
     );
 };

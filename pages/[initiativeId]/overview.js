@@ -28,7 +28,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { label } = useMetadata();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -53,6 +53,10 @@ const ProjectComponent = ({ pageProps }) => {
         'bg-blue-60',
         'bg-coral-60',
         'bg-amber-60',
+        'bg-teal-100',
+        'bg-blue-100',
+        'bg-coral-100',
+        'bg-amber-100',
         'bg-teal-300',
         'bg-blue-300',
         'bg-coral-300',
@@ -63,6 +67,10 @@ const ProjectComponent = ({ pageProps }) => {
         '#545E92', // bg-blue-60
         '#995B57', // bg-coral-60
         '#977958', // bg-amber-60
+        '#1C5471', // bg-teal-100
+        '#223070', // bg-blue-100
+        '#782C28', // bg-coral-100
+        '#76502A', // bg-amber-100
         '#548DBB', // bg-teal-300
         '#4355B8', // bg-blue-300
         '#B15446', // bg-coral-300
@@ -470,7 +478,7 @@ const ProjectComponent = ({ pageProps }) => {
                         )}
                         {/* Empty state - No goals */}
                         {Object.values(initiativeData._goals).length < 1 && (
-                            <SectionEmpty />
+                            <SectionEmpty type="initiative" />
                         )}
                     </SectionWrapper>
                     {/* Applicants */}
@@ -519,7 +527,9 @@ const ProjectComponent = ({ pageProps }) => {
                                 </div>
                             ))}
                         {/* Empty state - No Applicants */}
-                        {applicants.length < 1 && <SectionEmpty />}
+                        {applicants.length < 1 && (
+                            <SectionEmpty type="initiative" />
+                        )}
                     </SectionWrapper>
 
                     {/* Collaborators */}
@@ -563,7 +573,9 @@ const ProjectComponent = ({ pageProps }) => {
                                 </div>
                             ))}
                         {/* Empty state - No Collaborators */}
-                        {collaborators.length < 1 && <SectionEmpty />}
+                        {collaborators.length < 1 && (
+                            <SectionEmpty type="initiative" />
+                        )}
                     </SectionWrapper>
 
                     {/* Employees funded */}
@@ -665,7 +677,7 @@ const ProjectComponent = ({ pageProps }) => {
 
                         {/* Empty state - No Employees */}
                         {Object.values(initiativeData._employeesFunded).length <
-                            1 && <SectionEmpty />}
+                            1 && <SectionEmpty type="initiative" />}
                     </SectionWrapper>
 
                     {/* Problem Causes */}
@@ -674,9 +686,6 @@ const ProjectComponent = ({ pageProps }) => {
                             <h2 className="t-h3">
                                 {label('custom.FA_InitiativeViewCausesHeading')}
                             </h2>
-                            <Button variant="secondary">
-                                {labelTodo('Update: Which wizard page')}
-                            </Button>
                             {/* <UpdateButton
                                 mode="initiative"
                                 baseUrl=""
@@ -702,7 +711,9 @@ const ProjectComponent = ({ pageProps }) => {
                                 )}
                             </>
                         )}
-                        {!initiativeData.Problem_Causes__c && <SectionEmpty />}
+                        {!initiativeData.Problem_Causes__c && (
+                            <SectionEmpty type="initiative" />
+                        )}
                     </SectionWrapper>
 
                     {/* Our vision */}
@@ -711,9 +722,6 @@ const ProjectComponent = ({ pageProps }) => {
                             <h2 className="t-h3">
                                 {label('custom.FA_InitiativeViewVisionHeading')}
                             </h2>
-                            <Button variant="secondary">
-                                {labelTodo('Update: Which wizard page')}
-                            </Button>
                             {/* <UpdateButton
                                 mode="initiative"
                                 baseUrl=""
@@ -724,7 +732,9 @@ const ProjectComponent = ({ pageProps }) => {
                                 {initiativeData.Ultimate_Outcome__c}
                             </p>
                         )}
-                        {!initiativeData.Problem_Causes__c && <SectionEmpty />}
+                        {!initiativeData.Problem_Causes__c && (
+                            <SectionEmpty type="initiative" />
+                        )}
                     </SectionWrapper>
 
                     {/* Organisational focus */}
@@ -735,9 +745,6 @@ const ProjectComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewOrgFocusHeading'
                                 )}
                             </h2>
-                            <Button variant="secondary">
-                                {labelTodo('Update: Which wizard page')}
-                            </Button>
                             {/* <UpdateButton
                                 mode="initiative"
                                 baseUrl=""
@@ -749,7 +756,7 @@ const ProjectComponent = ({ pageProps }) => {
                             </p>
                         )}
                         {!initiativeData.Why_Problem_Solving__c && (
-                            <SectionEmpty />
+                            <SectionEmpty type="initiative" />
                         )}
                     </SectionWrapper>
 
@@ -761,9 +768,6 @@ const ProjectComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewProblemsHeading'
                                 )}
                             </h2>
-                            <Button variant="secondary">
-                                {labelTodo('Update: Which wizard page')}
-                            </Button>
                             {/* <UpdateButton
                                 mode="initiative"
                                 baseUrl=""
@@ -774,7 +778,9 @@ const ProjectComponent = ({ pageProps }) => {
                                 {initiativeData.Situation_Today__c}
                             </p>
                         )}
-                        {!initiativeData.Situation_Today__c && <SectionEmpty />}
+                        {!initiativeData.Situation_Today__c && (
+                            <SectionEmpty type="initiative" />
+                        )}
                     </SectionWrapper>
 
                     {/* Reason for approach */}
@@ -785,9 +791,6 @@ const ProjectComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewReasonsHeading'
                                 )}
                             </h2>
-                            <Button variant="secondary">
-                                {labelTodo('Update: Which wizard page')}
-                            </Button>
                             {/* <UpdateButton
                                 mode="initiative"
                                 baseUrl=""
@@ -799,7 +802,7 @@ const ProjectComponent = ({ pageProps }) => {
                             </p>
                         )}
                         {!initiativeData.Approach_Thinking__c && (
-                            <SectionEmpty />
+                            <SectionEmpty type="initiative" />
                         )}
                     </SectionWrapper>
                 </>
