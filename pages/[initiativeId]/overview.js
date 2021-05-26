@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 // Packages
 import t from 'prop-types';
+import cc from 'classcat';
 import Image from 'next/image';
 
 // Utilities
@@ -315,10 +316,9 @@ const ProjectComponent = ({ pageProps }) => {
                                                         <h3
                                                             key={`g-${index}`}
                                                             className="mt-8 t-h5">
-                                                            <span className="px-6 pt-4 mr-4 leading-none text-white bg-teal-300 rounded-4">
-                                                                {problem.amount?.toLocaleString(
-                                                                    'de-DE'
-                                                                )}
+                                                            <span
+                                                                className={`px-6 pt-4 mr-8 leading-none text-white bg-sdgs-${problem.amount} rounded-4`}>
+                                                                {problem.amount}
                                                             </span>
                                                             {problem.title}
                                                         </h3>
