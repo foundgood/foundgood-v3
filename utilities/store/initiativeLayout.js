@@ -29,7 +29,7 @@ const useInitiativeLayoutStore = create(set => ({
                 { slug: 'logbook', label: 'custom.FA_MenuLogbook' },
             ],
         },
-        { slug: 'reports', label: 'custom.FA_MenuReports' },
+        { slug: 'reports', label: 'custom.FA_TabReports' },
     ],
 }));
 
