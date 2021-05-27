@@ -34,6 +34,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     // Store: Initiaitive Data
     const {
         populateReport,
+        populateReportDetails,
         populateInitiative,
         initiative,
     } = useInitiativeDataStore();
@@ -64,6 +65,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
         if (MODE === CONTEXTS.REPORT && REPORT_ID && INITIATIVE_ID) {
             populateInitiative(INITIATIVE_ID);
             populateReport(REPORT_ID);
+            populateReportDetails(REPORT_ID);
         }
 
         // Initiative mode - check to populate initiative

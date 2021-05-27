@@ -87,7 +87,7 @@ const IntroductionComponent = ({ pageProps }) => {
         setTimeout(() => {
             setCurrentSubmitHandler(submit);
         }, 100);
-    }, []);
+    }, [initiative]);
 
     return MODE === CONTEXTS.REPORT ? (
         <>

@@ -48,6 +48,7 @@ const ReportDetailsComponent = () => {
 
     // Store: Initiative data
     const {
+        initiative,
         updateReport,
         getReport,
         isNovoLeadFunder,
@@ -92,7 +93,7 @@ const ReportDetailsComponent = () => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit, error));
         }, 100);
-    }, []);
+    }, [initiative]);
 
     // Get current report
     const currentReport = getReport(REPORT_ID);

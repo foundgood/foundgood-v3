@@ -178,7 +178,7 @@ const IndicatorsComponent = ({ pageProps }) => {
         setTimeout(() => {
             setCurrentSubmitHandler(null);
         }, 100);
-    }, []);
+    }, [initiative]);
 
     return (
         <>

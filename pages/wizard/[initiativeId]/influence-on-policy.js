@@ -173,7 +173,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 setCurrentSubmitHandler(null);
             }, 100);
         }
-    }, []);
+    }, [initiative]);
 
     return (
         <>

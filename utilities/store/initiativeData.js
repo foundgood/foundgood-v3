@@ -65,11 +65,6 @@ const constants = {
         ACTIVITY_INTERVENTION: 'Intervention',
         ACTIVITY_DISSEMINATION: 'Dissemination',
         ACTIVITY_JOURNAL: 'Journal publication',
-
-        FUNDER_OVERVIEW: 'Funder Overview',
-        COLLABORATOR_OVERVIEW: 'Collaborator Overview',
-        ACTIVITY_OVERVIEW: 'Activity Overview',
-
         INFLUENCE_ON_POLICY: 'Influence On Policy',
         EVALUATION: 'Evaluation',
         REPORT_NOT_STARTED: 'Not started',

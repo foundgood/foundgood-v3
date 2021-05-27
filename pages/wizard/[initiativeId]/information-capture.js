@@ -60,7 +60,7 @@ const InformationCaptureComponent = () => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit));
         }, 100);
-    }, []);
+    }, [initiative]);
 
     return (
         <>

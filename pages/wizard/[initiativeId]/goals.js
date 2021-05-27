@@ -136,7 +136,7 @@ const GoalsComponent = ({ pageProps }) => {
         setTimeout(() => {
             setCurrentSubmitHandler(null);
         }, 100);
-    }, []);
+    }, [initiative]);
 
     return (
         <>

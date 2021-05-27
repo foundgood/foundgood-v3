@@ -193,7 +193,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 setCurrentSubmitHandler(null);
             }, 100);
         }
-    }, []);
+    }, [initiative]);
 
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);

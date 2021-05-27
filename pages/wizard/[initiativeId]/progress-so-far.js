@@ -89,7 +89,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
         setTimeout(() => {
             setCurrentSubmitHandler(handleSubmit(submit, error));
         }, 100);
-    }, []);
+    }, [initiative]);
 
     // Activities
     const activities = Object.keys(initiative?._activities);
