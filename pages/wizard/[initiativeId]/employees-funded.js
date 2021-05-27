@@ -318,7 +318,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeEmployeeFunded.Percent_Involvement__c'
                         )}
-                        placeholder={labelTodo('NUMBER_PLACEHOLDER')}
+                        placeholder={label('custom.FA_FormCaptureNumberEmpty')}
                         minValue={0}
                         maxValue={100}
                         controller={control}

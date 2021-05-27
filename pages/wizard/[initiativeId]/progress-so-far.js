@@ -54,10 +54,13 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                         sfUpdate({
                             object,
                             data: {
-                                Current_Status__c:
-                                    (initiative?._activitySuccessMetrics[key]
-                                        ?.Current_Status__c ?? 0) +
-                                    parseInt(formData[key], 10),
+                                // Previous behaviour was to add numbers
+                                // Current_Status__c:
+                                //     (initiative?._activitySuccessMetrics[key]
+                                //         ?.Current_Status__c ?? 0) +
+                                //     parseInt(formData[key], 10),
+                                // Current status is just to show
+                                Current_Status__c: parseInt(formData[key], 10),
                             },
                             id: key,
                         });

@@ -54,7 +54,8 @@ const useWizardNavigationStore = create((set, get) => ({
         // Items
         const items = [
             d.introduction,
-            d.informationCapture,
+            // TODO Add in when we have more reporting options
+            // d.informationCapture,
             {
                 ...d.context,
                 items: [
@@ -82,14 +83,19 @@ const useWizardNavigationStore = create((set, get) => ({
                 : []),
             {
                 ...d.activitiesParent,
-                items: [d.goals, d.activities, d.indicators, d.sharingResults],
+                items: [
+                    d.goals,
+                    d.activities,
+                    d.indicators,
+                    // d.progressSoFar, // Not in at the moment
+                    // If planning is on
+                    ...(planning ? [d.targets] : []),
+                ],
             },
             {
                 ...d.developments,
                 items: [
-                    // If planning is on
-                    ...(planning ? [d.targets] : []),
-                    d.progressSoFar,
+                    d.sharingResults,
                     d.evaluations,
                     d.influenceOnPolicy,
                     // If planning is on

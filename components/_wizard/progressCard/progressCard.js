@@ -12,7 +12,8 @@ import { Number, InputWrapper } from 'components/_inputs';
 
 const ProgressCardComponent = ({ headline, items, controller }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
+
     return controller ? (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100">
             {headline && <h4 className="t-sh4">{headline}</h4>}
@@ -29,19 +30,19 @@ const ProgressCardComponent = ({ headline, items, controller }) => {
                                 <div className="text-teal-100 t-h5">
                                     {item.headline}
                                 </div>
-                                <div className="text-teal-60 t-caption">
+                                {/* <div className="text-teal-60 t-caption">
                                     {labelTodo('Currently')} {item.currently}
-                                </div>
+                                </div> */}
                             </div>
 
                             <div>
                                 <InputWrapper>
                                     <Number
                                         name={item.id}
-                                        subLabel={labelTodo(
-                                            'Additional reached'
+                                        subLabel={label(
+                                            'custom.FA_ReportViewActivitiesGraphKeyDuring'
                                         )}
-                                        placeholder="0"
+                                        placeholder={item.currently}
                                         controller={controller}
                                     />
                                 </InputWrapper>
