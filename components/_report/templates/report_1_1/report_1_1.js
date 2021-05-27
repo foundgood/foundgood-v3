@@ -609,9 +609,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                                     className="mt-8 t-h5">
                                                     <span
                                                         className={`px-6 pt-4 mr-8 leading-none text-white bg-sdgs-${problem.amount} rounded-4`}>
-                                                        {problem.amount?.toLocaleString(
-                                                            'de-DE'
-                                                        )}
+                                                        {problem.amount}
                                                     </span>
                                                     {problem.title}
                                                 </h3>

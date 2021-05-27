@@ -298,11 +298,22 @@ const ProjectComponent = ({ pageProps }) => {
                                                 'custom.FA_InitiativeViewInitiativeLocation'
                                             )}
                                         </h4>
-                                        <h3 className="t-h5">
-                                            {initiativeData.Translated_Where_Is_Problem__c?.split(
-                                                ';'
-                                            ).join(', ')}
-                                        </h3>
+                                        {/* Location */}
+                                        {initiativeData.Translated_Where_Is_Problem__c && (
+                                            <h3 className="t-h5">
+                                                {initiativeData.Translated_Where_Is_Problem__c?.split(
+                                                    ';'
+                                                ).join(', ')}
+                                            </h3>
+                                        )}
+                                        {/* Empty state - No Location */}
+                                        {!initiativeData.Translated_Where_Is_Problem__c && (
+                                            <div>
+                                                {label(
+                                                    'custom.FA_ReportEmptyLocation'
+                                                )}
+                                            </div>
+                                        )}
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
                                             {label(
@@ -324,6 +335,13 @@ const ProjectComponent = ({ pageProps }) => {
                                                         </h3>
                                                     )
                                                 )}
+                                            {!developmentGoals && (
+                                                <div>
+                                                    {label(
+                                                        'custom.FA_ReportEmptySDGs'
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
