@@ -198,10 +198,6 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={valueSet('initiativeReport.Report_Type__c')}
                         controller={control}
-                        disabled={
-                            isNovoLeadFunder() &&
-                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
-                        }
                         required
                     />
                     <DatePicker
@@ -212,10 +208,6 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         )}
                         controller={control}
                         required
-                        disabled={
-                            isNovoLeadFunder() &&
-                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
-                        }
                     />
                     <DateRange
                         name="ReportDates"
