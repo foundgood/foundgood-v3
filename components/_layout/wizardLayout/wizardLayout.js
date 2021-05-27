@@ -61,6 +61,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
 
     // Fill report with data
     useEffect(() => {
+        console.log({ REPORT_ID, INITIATIVE_ID });
         // Report mode - check to populate both report and initiative
         if (MODE === CONTEXTS.REPORT && REPORT_ID && INITIATIVE_ID) {
             populateInitiative(INITIATIVE_ID);

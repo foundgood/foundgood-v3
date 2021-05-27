@@ -332,7 +332,7 @@ const useInitiativeDataStore = create((set, get) => ({
 
     // Custom data updaters
     async populateReportDetails(reportId) {
-        if (reportId) {
+        if (reportId && reportId !== '[reportId]') {
             const reportDetailsData = await sfQuery(
                 queries.initiativeReportDetail.getAllReport(reportId)
             );
@@ -355,7 +355,7 @@ const useInitiativeDataStore = create((set, get) => ({
 
     // Populate report data
     async populateReport(id) {
-        if (id && !get().initiative._reports[id]) {
+        if (id && id !== '[reportId]' && !get().initiative._reports[id]) {
             const data = await sfQuery(queries.initiativeReport.get(id));
             if (data) {
                 set(state => ({
@@ -376,7 +376,7 @@ const useInitiativeDataStore = create((set, get) => ({
 
     // Get initiative and all sub data based on initiative ID
     async populateInitiative(id) {
-        if (id && get().initiative.Id !== id) {
+        if (id && id !== '[initiativeId]' && get().initiative.Id !== id) {
             // Reset
             get().reset();
 
