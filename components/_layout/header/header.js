@@ -85,7 +85,7 @@ const HeaderComponent = ({ showUserControls }) => {
                                 <a>
                                     <FiInbox className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
-                                        {label('custom.FA_MenuReports')}
+                                        {label('custom.FA_TabReports')}
                                     </span>
                                 </a>
                             </Link>

@@ -40,7 +40,7 @@ const initiativeWizardDictionary = {
         items: [],
     },
     reports: {
-        title: 'custom.FA_MenuReports',
+        title: 'custom.FA_TabReports',
         visible: true,
         items: [],
     },
