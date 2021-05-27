@@ -25,6 +25,9 @@ import ReportOverview from 'components/_report/templates/report_1_1/reportOvervi
 import ReportSummary from 'components/_report/templates/report_1_1/reportSummary';
 import ReportGoals from 'components/_report/templates/report_1_1/reportGoals';
 import ReportFunders from 'components/_report/templates/report_1_1/reportFunders';
+import ReportApplicants from 'components/_report/templates/report_1_1/reportApplicants';
+import ReportCollaborators from 'components/_report/templates/report_1_1/reportCollaborators';
+import ReportEmployeesFunded from 'components/_report/templates/report_1_1/reportEmployeesFunded';
 
 const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     // Hook: Metadata
@@ -46,13 +49,13 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
 
     // Specific data for this report
     const [currentReport, setCurrentReport] = useState([]);
-    const [funders, setFunders] = useState([]);
-    const [applicants, setApplicants] = useState([]);
-    const [collaborators, setCollaborators] = useState([]);
-    const [employeesFundedReflection, setEmployeesFundedReflection] = useState(
-        []
-    );
-    const [employeeGroups, setEmployeeGroups] = useState([]);
+    // const [funders, setFunders] = useState([]);
+    // const [applicants, setApplicants] = useState([]);
+    // const [collaborators, setCollaborators] = useState([]);
+    // const [employeesFundedReflection, setEmployeesFundedReflection] = useState(
+    //     []
+    // );
+    // const [employeeGroups, setEmployeeGroups] = useState([]);
     const [activities, setActivities] = useState([]);
     const [results, setResults] = useState([]);
     const [influences, setInfluences] = useState([]);
@@ -137,51 +140,51 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                 //     });
                 // setFunders(funders);
 
-                // Collaborators are split in two groups
-                // "Co-applicants" & "Additional Collaborator"
-                // Get all and then split them
-                const allCollaborators = Object.values(
-                    initiative._reportDetails
-                )
-                    .filter(item => {
-                        return item.Type__c ==
-                            CONSTANTS.TYPES.COLLABORATOR_OVERVIEW
-                            ? true
-                            : false;
-                    })
-                    .map(item => {
-                        // Get funder based on key
-                        const collaborator =
-                            initiative._collaborators[
-                                item.Initiative_Collaborator__c
-                            ];
-                        // Add Report Reflection text to collaborators
-                        collaborator.reportReflection = item.Description__c;
-                        return collaborator;
-                    });
-                const applicants = allCollaborators.filter(
-                    item =>
-                        !CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)
-                );
-                const collaborators = allCollaborators.filter(item =>
-                    CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)
-                );
-                console.log('collaborators: ', collaborators);
-                setApplicants(applicants);
-                setCollaborators(collaborators);
+                // // Collaborators are split in two groups
+                // // "Co-applicants" & "Additional Collaborator"
+                // // Get all and then split them
+                // const allCollaborators = Object.values(
+                //     initiative._reportDetails
+                // )
+                //     .filter(item => {
+                //         return item.Type__c ==
+                //             CONSTANTS.TYPES.COLLABORATOR_OVERVIEW
+                //             ? true
+                //             : false;
+                //     })
+                //     .map(item => {
+                //         // Get funder based on key
+                //         const collaborator =
+                //             initiative._collaborators[
+                //                 item.Initiative_Collaborator__c
+                //             ];
+                //         // Add Report Reflection text to collaborators
+                //         collaborator.reportReflection = item.Description__c;
+                //         return collaborator;
+                //     });
+                // const applicants = allCollaborators.filter(
+                //     item =>
+                //         !CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)
+                // );
+                // const collaborators = allCollaborators.filter(item =>
+                //     CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)
+                // );
+                // console.log('collaborators: ', collaborators);
+                // setApplicants(applicants);
+                // setCollaborators(collaborators);
 
-                // Get reflection for employees funded
-                const employeesReflection = Object.values(
-                    initiative._reportDetails
-                ).filter(item => {
-                    return item.Type__c ==
-                        CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
-                        ? true
-                        : false;
-                });
-                setEmployeesFundedReflection(
-                    employeesReflection[0]?.Description__c
-                );
+                // // Get reflection for employees funded
+                // const employeesReflection = Object.values(
+                //     initiative._reportDetails
+                // ).filter(item => {
+                //     return item.Type__c ==
+                //         CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
+                //         ? true
+                //         : false;
+                // });
+                // setEmployeesFundedReflection(
+                //     employeesReflection[0]?.Description__c
+                // );
 
                 // Get reports ALL Activities
                 // Activies are split between:
@@ -410,40 +413,40 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                 // });
             }
 
-            // Employee funded - Data for Number cards
-            // Group empoyees per role
-            // EX Data:
-            // {
-            //     { role: 'Project manager', total: 2, male: 1, female: 1 },
-            //     { role: 'Scientists', total: 4, male: 1, female: 3 },
-            // };
-            let employeeGroups = Object.values(
-                initiative._employeesFunded
-            ).reduce((result, employee) => {
-                result[employee.Role_Type__c] =
-                    result[employee.Role_Type__c] || {};
-                // Ref
-                const group = result[employee.Role_Type__c];
+            // // Employee funded - Data for Number cards
+            // // Group empoyees per role
+            // // EX Data:
+            // // {
+            // //     { role: 'Project manager', total: 2, male: 1, female: 1 },
+            // //     { role: 'Scientists', total: 4, male: 1, female: 3 },
+            // // };
+            // let employeeGroups = Object.values(
+            //     initiative._employeesFunded
+            // ).reduce((result, employee) => {
+            //     result[employee.Role_Type__c] =
+            //         result[employee.Role_Type__c] || {};
+            //     // Ref
+            //     const group = result[employee.Role_Type__c];
 
-                // Role
-                group.role = employee.Role_Type__c;
+            //     // Role
+            //     group.role = employee.Role_Type__c;
 
-                // Total employees
-                group.total = group.total ? group.total + 1 : 1;
+            //     // Total employees
+            //     group.total = group.total ? group.total + 1 : 1;
 
-                // Calculate how many are male/female/other in each group
-                if (employee.Gender__c == CONSTANTS.TYPES.GENDER_MALE) {
-                    group.male = group.male ? group.male + 1 : 1;
-                } else if (
-                    employee.Gender__c == CONSTANTS.TYPES.GENDER_FEMALE
-                ) {
-                    group.female = group.female ? group.female + 1 : 1;
-                } else if (employee.Gender__c == CONSTANTS.TYPES.GENDER_OTHER) {
-                    group.other = group.other ? group.other + 1 : 1;
-                }
-                return result;
-            }, {});
-            setEmployeeGroups(employeeGroups);
+            //     // Calculate how many are male/female/other in each group
+            //     if (employee.Gender__c == CONSTANTS.TYPES.GENDER_MALE) {
+            //         group.male = group.male ? group.male + 1 : 1;
+            //     } else if (
+            //         employee.Gender__c == CONSTANTS.TYPES.GENDER_FEMALE
+            //     ) {
+            //         group.female = group.female ? group.female + 1 : 1;
+            //     } else if (employee.Gender__c == CONSTANTS.TYPES.GENDER_OTHER) {
+            //         group.other = group.other ? group.other + 1 : 1;
+            //     }
+            //     return result;
+            // }, {});
+            // setEmployeeGroups(employeeGroups);
 
             // // Make sure we have funders & collaborators
             // // Overview details + Funders numbers
@@ -614,312 +617,171 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Applicants */}
-                    <SectionWrapper
-                        id={asId(
-                            label('custom.FA_ReportWizardMenuApplicants')
-                        )}>
-                        <SectionWrapper>
-                            <div className="flex justify-between mt-32">
-                                <h3 className="t-h4">
-                                    {label(
-                                        'custom.FA_InitiativeViewApplicantsHeading'
-                                    )}
-                                </h3>
-                                <UpdateButton
-                                    mode="report"
-                                    baseUrl="applicants"
-                                />
-                            </div>
-                        </SectionWrapper>
+                    <ReportApplicants
+                        initiative={initiativeData}
+                        report={currentReport}
+                        constants={CONSTANTS}
+                    />
 
-                        {applicants?.length > 0 &&
-                            applicants?.map((item, index) => (
-                                <div key={`a-${index}`}>
-                                    <SectionWrapper>
-                                        <ReportDetailCard
-                                            headline={item.Account__r.Name}
-                                            image="" // Collaborators don't have an image
-                                            description="" // Collaborators don't have a description
-                                            items={[
-                                                {
-                                                    label: label(
-                                                        'custom.FA_ReportViewCollaboratorType'
-                                                    ),
-                                                    text: item.Type__c,
-                                                },
-                                                {
-                                                    label: label(
-                                                        'custom.FA_ReportViewCollaborationPeriod'
-                                                    ),
-                                                    text: `${item.Start_Date__c} - ${item.End_Date__c}`,
-                                                },
-                                            ]}
-                                        />
-                                    </SectionWrapper>
-                                    <TextCard
-                                        hasBackground={true}
-                                        headline={label(
-                                            'custom.FA_ReportViewUpdatesForReport'
-                                        )}
-                                        body={item.reportReflection}
-                                    />
-                                </div>
-                            ))}
-                        {applicants?.length < 1 && (
-                            <SectionEmpty type="report" />
-                        )}
-                    </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Collaborators */}
-                    <SectionWrapper
-                        id={asId(
-                            label('custom.FA_ReportWizardMenuCollaborations')
-                        )}>
-                        <SectionWrapper>
-                            <div className="flex justify-between mt-32">
-                                <h3 className="t-h4">
-                                    {label(
-                                        'custom.FA_ReportViewSubHeadingCollaborationsOverall'
-                                    )}
-                                </h3>
-                                <UpdateButton
-                                    mode="report"
-                                    baseUrl="collaborators"
-                                />
-                            </div>
-                        </SectionWrapper>
+                    <ReportCollaborators
+                        initiative={initiativeData}
+                        report={currentReport}
+                        constants={CONSTANTS}
+                    />
 
-                        {collaborators?.length > 0 &&
-                            collaborators?.map((item, index) => (
-                                <div key={`c-${index}`}>
-                                    <SectionWrapper>
-                                        <ReportDetailCard
-                                            headline={item.Account__r.Name}
-                                            image="" // Collaborators don't have an image
-                                            description="" // Collaborators don't have a description
-                                            items={[
-                                                {
-                                                    label: label(
-                                                        'custom.FA_ReportViewCollaboratorType'
-                                                    ),
-                                                    text: item.Type__c,
-                                                },
-                                                {
-                                                    label: label(
-                                                        'custom.FA_ReportViewCollaborationPeriod'
-                                                    ),
-                                                    text: `${item.Start_Date__c} - ${item.End_Date__c}`,
-                                                },
-                                            ]}
-                                        />
-                                    </SectionWrapper>
-                                    <TextCard
-                                        hasBackground={true}
-                                        headline={label(
-                                            'custom.FA_ReportViewSubHeadingCollaborationReflections'
-                                        )}
-                                        body={item.reportReflection}
-                                    />
-                                </div>
-                            ))}
-                        {collaborators?.length < 1 && (
-                            <SectionEmpty type="report" />
-                        )}
-                    </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Employees funded by the grant */}
-                    <SectionWrapper
-                        id={asId(label('custom.FA_ReportWizardMenuEmployees'))}>
-                        <SectionWrapper>
-                            <div className="flex justify-between mt-32">
-                                <h3 className="t-h4">
-                                    {label(
-                                        'custom.FA_ReportViewSubHeadingEmployeesOverall'
-                                    )}
-                                </h3>
-                                <UpdateButton
-                                    mode="report"
-                                    baseUrl="employees-funded"
-                                />
-                            </div>
-                        </SectionWrapper>
-                        {employeesFundedReflection && (
-                            <>
-                                <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
-                                    {Object.values(employeeGroups).map(
-                                        (group, index) => {
-                                            const males = group.male
-                                                ? `${group.male} Male`
-                                                : null;
-                                            const females = group.female
-                                                ? `${group.female} Female`
-                                                : null;
-                                            const other = group.other
-                                                ? `${group.other} Other`
-                                                : null;
-                                            const description = [
-                                                males,
-                                                females,
-                                                other,
-                                            ]
-                                                .filter(item => item)
-                                                .join(', ');
-                                            return (
-                                                <NumberCard
-                                                    key={`e-${index}`}
-                                                    number={group.total}
-                                                    headline={group.role}
-                                                    description={description}
-                                                />
-                                            );
-                                        }
-                                    )}
-                                </div>
-
-                                <TextCard
-                                    className="mt-32"
-                                    hasBackground={true}
-                                    headline={label(
-                                        'custom.FA_ReportViewSubHeadingEmployeesReflections'
-                                    )}
-                                    body={employeesFundedReflection}
-                                />
-                            </>
-                        )}
-                        {!employeesFundedReflection && (
-                            <SectionEmpty type="report" />
-                        )}
-                    </SectionWrapper>
+                    {currentReport?.Report_Type__c !== 'Status' && (
+                        <ReportEmployeesFunded
+                            initiative={initiativeData}
+                            report={currentReport}
+                            constants={CONSTANTS}
+                        />
+                    )}
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Activities */}
-                    <SectionWrapper
-                        id={asId(
-                            label('custom.FA_ReportWizardMenuActivities')
-                        )}>
-                        <SectionWrapper>
-                            <div className="flex justify-between mt-32">
-                                <h3 className="t-h4">
-                                    {label(
-                                        'custom.FA_ReportViewSubHeadingActivitiesOverall'
-                                    )}
-                                </h3>
-                                <UpdateButton
-                                    mode="report"
-                                    baseUrl="activities"
-                                />
-                            </div>
-                        </SectionWrapper>
+                    {currentReport?.Report_Type__c !== 'Status' && (
+                        <SectionWrapper
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuActivities')
+                            )}>
+                            <SectionWrapper>
+                                <div className="flex justify-between mt-32">
+                                    <h3 className="t-h4">
+                                        {label(
+                                            'custom.FA_ReportViewSubHeadingActivitiesOverall'
+                                        )}
+                                    </h3>
+                                    <UpdateButton
+                                        mode="report"
+                                        baseUrl="activities"
+                                    />
+                                </div>
+                            </SectionWrapper>
 
-                        {activities?.length > 0 &&
-                            activities?.map((item, index) => (
-                                <div key={`a-${index}`}>
-                                    <SectionWrapper>
-                                        <ReportDetailCard
-                                            headline={item.title}
-                                            description={item.description}
-                                            items={[
-                                                {
-                                                    label: label(
-                                                        'custom.FA_InitiativeViewActivityLocation'
-                                                    ),
-                                                    text: item.location,
-                                                },
-                                            ]}
-                                        />
-                                    </SectionWrapper>
-                                    <SectionWrapper>
-                                        {item.peopleIndicators && (
-                                            <ChartCard
-                                                useBorder={true}
-                                                headline={
-                                                    item.peopleIndicators[0]
-                                                        .groupTitle
-                                                }
-                                                items={item.peopleIndicators}
+                            {activities?.length > 0 &&
+                                activities?.map((item, index) => (
+                                    <div key={`a-${index}`}>
+                                        <SectionWrapper>
+                                            <ReportDetailCard
+                                                headline={item.title}
+                                                description={item.description}
+                                                items={[
+                                                    {
+                                                        label: label(
+                                                            'custom.FA_InitiativeViewActivityLocation'
+                                                        ),
+                                                        text: item.location,
+                                                    },
+                                                ]}
                                             />
-                                        )}
-                                    </SectionWrapper>
-                                    <SectionWrapper>
-                                        {item.customIndicators && (
-                                            <ChartCard
-                                                className="mt-24"
-                                                useBorder={true}
-                                                headline={
-                                                    item.customIndicators[0]
-                                                        .groupTitle
-                                                }
-                                                items={item.customIndicators}
-                                            />
-                                        )}
-                                        {/* <ChartCard
+                                        </SectionWrapper>
+                                        <SectionWrapper>
+                                            {item.peopleIndicators && (
+                                                <ChartCard
+                                                    useBorder={true}
+                                                    headline={
+                                                        item.peopleIndicators[0]
+                                                            .groupTitle
+                                                    }
+                                                    items={
+                                                        item.peopleIndicators
+                                                    }
+                                                />
+                                            )}
+                                        </SectionWrapper>
+                                        <SectionWrapper>
+                                            {item.customIndicators && (
+                                                <ChartCard
+                                                    className="mt-24"
+                                                    useBorder={true}
+                                                    headline={
+                                                        item.customIndicators[0]
+                                                            .groupTitle
+                                                    }
+                                                    items={
+                                                        item.customIndicators
+                                                    }
+                                                />
+                                            )}
+                                            {/* <ChartCard
                                             useBorder={true}
                                             headline={labelTodo('Indicators')}
                                             items={item.indicators}
                                         /> */}
-                                    </SectionWrapper>
-                                    <TextCard
-                                        hasBackground={true}
-                                        className="mt-32"
-                                        headline={label(
-                                            'custom.FA_ReportViewSubHeadingActivityReflections'
+                                        </SectionWrapper>
+                                        <TextCard
+                                            hasBackground={true}
+                                            className="mt-32"
+                                            headline={label(
+                                                'custom.FA_ReportViewSubHeadingActivityReflections'
+                                            )}
+                                            body={item.reportReflection}
+                                        />
+                                        {index < activities.length - 1 && (
+                                            <DividerLine />
                                         )}
-                                        body={item.reportReflection}
-                                    />
-                                    {index < activities.length - 1 && (
-                                        <DividerLine />
-                                    )}
-                                </div>
-                            ))}
-                        {activities?.length < 1 && (
-                            <SectionEmpty type="report" />
-                        )}
-                    </SectionWrapper>
+                                    </div>
+                                ))}
+                            {activities?.length < 1 && (
+                                <SectionEmpty type="report" />
+                            )}
+                        </SectionWrapper>
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Sharing of results */}
-                    <SectionWrapper
-                        id={asId(label('custom.FA_ReportWizardMenuSharing'))}>
-                        <SectionWrapper>
-                            <div className="flex justify-between mt-32">
-                                <h3 className="t-h4">
-                                    {label(
-                                        'custom.FA_ReportViewSubHeadingSharingOverall'
-                                    )}
-                                </h3>
-                                <UpdateButton
-                                    mode="report"
-                                    baseUrl="sharing-results"
-                                />
-                            </div>
-                        </SectionWrapper>
-
-                        {results?.length > 0 &&
-                            results?.map((item, index) => (
-                                <div key={`r-${index}`}>
-                                    <SectionWrapper>
-                                        <ReportSharingCard
-                                            headline={item.headline}
-                                            description={item.label}
-                                            tags={item.tags}
-                                            items={item.items}
-                                        />
-                                    </SectionWrapper>
-
-                                    <TextCard
-                                        hasBackground={true}
-                                        headline={label(
-                                            'custom.FA_ReportViewSubHeadingSharingReflections'
+                    {currentReport?.Report_Type__c !== 'Status' && (
+                        <SectionWrapper
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuSharing')
+                            )}>
+                            <SectionWrapper>
+                                <div className="flex justify-between mt-32">
+                                    <h3 className="t-h4">
+                                        {label(
+                                            'custom.FA_ReportViewSubHeadingSharingOverall'
                                         )}
-                                        body={item.reportReflection}
+                                    </h3>
+                                    <UpdateButton
+                                        mode="report"
+                                        baseUrl="sharing-results"
                                     />
-
-                                    {index < results.length - 1 && (
-                                        <DividerLine />
-                                    )}
                                 </div>
-                            ))}
-                        {results?.length < 1 && <SectionEmpty type="report" />}
-                    </SectionWrapper>
+                            </SectionWrapper>
+
+                            {results?.length > 0 &&
+                                results?.map((item, index) => (
+                                    <div key={`r-${index}`}>
+                                        <SectionWrapper>
+                                            <ReportSharingCard
+                                                headline={item.headline}
+                                                description={item.label}
+                                                tags={item.tags}
+                                                items={item.items}
+                                            />
+                                        </SectionWrapper>
+
+                                        <TextCard
+                                            hasBackground={true}
+                                            headline={label(
+                                                'custom.FA_ReportViewSubHeadingSharingReflections'
+                                            )}
+                                            body={item.reportReflection}
+                                        />
+
+                                        {index < results.length - 1 && (
+                                            <DividerLine />
+                                        )}
+                                    </div>
+                                ))}
+                            {results?.length < 1 && (
+                                <SectionEmpty type="report" />
+                            )}
+                        </SectionWrapper>
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Logbook entries - TBD */}
                     {/*
@@ -934,13 +796,17 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     */}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Headline: "Key results" */}
-                    <SectionWrapper paddingY={false}>
+                    {currentReport?.Report_Type__c !== 'Status' && (
                         <SectionWrapper paddingY={false}>
-                            <h2 className="t-h3 mt-96">
-                                {label('custom.FA_ReportViewHeadingKeyResults')}
-                            </h2>
+                            <SectionWrapper paddingY={false}>
+                                <h2 className="t-h3 mt-96">
+                                    {label(
+                                        'custom.FA_ReportViewHeadingKeyResults'
+                                    )}
+                                </h2>
+                            </SectionWrapper>
                         </SectionWrapper>
-                    </SectionWrapper>
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Outcomes TBD */}
                     {/* {outcomes && (
@@ -957,187 +823,202 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     )} */}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Influences on policy */}
-                    <SectionWrapper
-                        id={asId(label('custom.FA_ReportWizardMenuInfluence'))}>
-                        <SectionWrapper>
-                            <div className="flex justify-between mt-32">
-                                <h3 className="t-h4">
-                                    {label(
-                                        'custom.FA_ReportViewSubHeadingInfluencesOverall'
-                                    )}
-                                </h3>
-                                <UpdateButton
-                                    mode="report"
-                                    baseUrl="influence-on-policy"
-                                />
-                            </div>
-                        </SectionWrapper>
-                        {influences?.length > 0 &&
-                            influences?.map((item, index) => (
-                                <div key={`i-${index}`}>
-                                    <TextCard
-                                        hasBackground={true}
-                                        headline={label(
-                                            'custom.FA_ReportViewSubHeadingInfluencesReflections'
+                    {currentReport?.Report_Type__c !== 'Status' && (
+                        <SectionWrapper
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuInfluence')
+                            )}>
+                            <SectionWrapper>
+                                <div className="flex justify-between mt-32">
+                                    <h3 className="t-h4">
+                                        {label(
+                                            'custom.FA_ReportViewSubHeadingInfluencesOverall'
                                         )}
-                                        body={item}
+                                    </h3>
+                                    <UpdateButton
+                                        mode="report"
+                                        baseUrl="influence-on-policy"
                                     />
-
-                                    {index < influences.length - 1 && (
-                                        <DividerLine />
-                                    )}
                                 </div>
-                            ))}
-                        {influences?.length < 1 && (
-                            <SectionEmpty type="report" />
-                        )}
-                    </SectionWrapper>
+                            </SectionWrapper>
+                            {influences?.length > 0 &&
+                                influences?.map((item, index) => (
+                                    <div key={`i-${index}`}>
+                                        <TextCard
+                                            hasBackground={true}
+                                            headline={label(
+                                                'custom.FA_ReportViewSubHeadingInfluencesReflections'
+                                            )}
+                                            body={item}
+                                        />
+
+                                        {index < influences.length - 1 && (
+                                            <DividerLine />
+                                        )}
+                                    </div>
+                                ))}
+                            {influences?.length < 1 && (
+                                <SectionEmpty type="report" />
+                            )}
+                        </SectionWrapper>
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Evaluations */}
-                    <SectionWrapper
-                        id={asId(
-                            label('custom.FA_ReportWizardMenuEvaluations')
-                        )}>
-                        <SectionWrapper>
-                            <div className="flex justify-between mt-32">
-                                <h3 className="t-h4">
-                                    {label(
-                                        'custom.FA_ReportViewSubHeadingEvaluationsOverall'
-                                    )}
-                                </h3>
-                                <UpdateButton
-                                    mode="report"
-                                    baseUrl="evaluations"
-                                />
-                            </div>
-                        </SectionWrapper>
-                        {evaluations?.length > 0 &&
-                            evaluations?.map((item, index) => (
-                                <div key={`i-${index}`}>
-                                    <TextCard
-                                        hasBackground={true}
-                                        headline={label(
-                                            'custom.FA_ReportViewSubHeadingEvaluationsReflections'
+                    {currentReport?.Report_Type__c !== 'Status' && (
+                        <SectionWrapper
+                            id={asId(
+                                label('custom.FA_ReportWizardMenuEvaluations')
+                            )}>
+                            <SectionWrapper>
+                                <div className="flex justify-between mt-32">
+                                    <h3 className="t-h4">
+                                        {label(
+                                            'custom.FA_ReportViewSubHeadingEvaluationsOverall'
                                         )}
-                                        body={item}
+                                    </h3>
+                                    <UpdateButton
+                                        mode="report"
+                                        baseUrl="evaluations"
                                     />
-
-                                    {index < evaluations.length - 1 && (
-                                        <DividerLine />
-                                    )}
                                 </div>
-                            ))}
-                        {evaluations?.length < 1 && (
-                            <SectionEmpty type="report" />
-                        )}
-                    </SectionWrapper>
+                            </SectionWrapper>
+                            {evaluations?.length > 0 &&
+                                evaluations?.map((item, index) => (
+                                    <div key={`i-${index}`}>
+                                        <TextCard
+                                            hasBackground={true}
+                                            headline={label(
+                                                'custom.FA_ReportViewSubHeadingEvaluationsReflections'
+                                            )}
+                                            body={item}
+                                        />
+
+                                        {index < evaluations.length - 1 && (
+                                            <DividerLine />
+                                        )}
+                                    </div>
+                                ))}
+                            {evaluations?.length < 1 && (
+                                <SectionEmpty type="report" />
+                            )}
+                        </SectionWrapper>
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Reflections */}
-                    <SectionWrapper
-                        // id="end-of-grant-reflections"
-                        id={asId(
-                            label('custom.FA_ReportWizardMenuEndReflections')
-                        )}>
-                        <SectionWrapper>
-                            <div className="flex justify-between mt-32">
-                                <h3 className="t-h4">
-                                    {label(
-                                        'custom.FA_ReportViewSubHeadingInfluencesReflections'
-                                    )}
-                                </h3>
-                                {/* 
+                    {currentReport?.Report_Type__c !== 'Status' &&
+                        currentReport?.Report_Type__c !== 'Annual' && (
+                            <SectionWrapper
+                                // id="end-of-grant-reflections"
+                                id={asId(
+                                    label(
+                                        'custom.FA_ReportWizardMenuEndReflections'
+                                    )
+                                )}>
+                                <SectionWrapper>
+                                    <div className="flex justify-between mt-32">
+                                        <h3 className="t-h4">
+                                            {label(
+                                                'custom.FA_ReportViewSubHeadingInfluencesReflections'
+                                            )}
+                                        </h3>
+                                        {/* 
                                 <UpdateButton
                                     mode="report"
                                     baseUrl="evaluations"
                                 />
                                 */}
-                            </div>
-                        </SectionWrapper>
-                        {/* Project purpose */}
-                        {currentReport.Project_Purpose__c && (
-                            <TextCard
-                                hasBackground={true}
-                                headline={label(
-                                    'objects.initiativeReport.Project_Purpose__c'
+                                    </div>
+                                </SectionWrapper>
+                                {/* Project purpose */}
+                                {currentReport.Project_Purpose__c && (
+                                    <TextCard
+                                        hasBackground={true}
+                                        headline={label(
+                                            'objects.initiativeReport.Project_Purpose__c'
+                                        )}
+                                        body={currentReport.Project_Purpose__c}
+                                    />
                                 )}
-                                body={currentReport.Project_Purpose__c}
-                            />
-                        )}
-                        {/* Empty state - Project purpose */}
-                        {!currentReport.Project_Purpose__c && (
-                            <SectionEmpty
-                                type="report"
-                                headline={label(
-                                    'objects.initiativeReport.Project_Purpose__c'
+                                {/* Empty state - Project purpose */}
+                                {!currentReport.Project_Purpose__c && (
+                                    <SectionEmpty
+                                        type="report"
+                                        headline={label(
+                                            'objects.initiativeReport.Project_Purpose__c'
+                                        )}
+                                    />
                                 )}
-                            />
-                        )}
 
-                        {/* Progress goals */}
-                        {currentReport.Progress_Towards_Grant_Area_Themes__c && (
-                            <TextCard
-                                className="mt-32"
-                                hasBackground={true}
-                                headline={label(
-                                    'objects.initiativeReport.Progress_Towards_Grant_Area_Themes__c'
+                                {/* Progress goals */}
+                                {currentReport.Progress_Towards_Grant_Area_Themes__c && (
+                                    <TextCard
+                                        className="mt-32"
+                                        hasBackground={true}
+                                        headline={label(
+                                            'objects.initiativeReport.Progress_Towards_Grant_Area_Themes__c'
+                                        )}
+                                        body={
+                                            currentReport.Progress_Towards_Grant_Area_Themes__c
+                                        }
+                                    />
                                 )}
-                                body={
-                                    currentReport.Progress_Towards_Grant_Area_Themes__c
-                                }
-                            />
-                        )}
-                        {/* Empty state - Progress goals */}
-                        {!currentReport.Project_Purpose__c && (
-                            <SectionEmpty
-                                type="report"
-                                headline={label(
-                                    'objects.initiativeReport.Progress_Towards_Grant_Area_Themes__c'
+                                {/* Empty state - Progress goals */}
+                                {!currentReport.Project_Purpose__c && (
+                                    <SectionEmpty
+                                        type="report"
+                                        headline={label(
+                                            'objects.initiativeReport.Progress_Towards_Grant_Area_Themes__c'
+                                        )}
+                                    />
                                 )}
-                            />
-                        )}
 
-                        {/* Important results */}
-                        {currentReport.Important_Results__c && (
-                            <TextCard
-                                className="mt-32"
-                                hasBackground={true}
-                                headline={label(
-                                    'objects.initiativeReport.Important_Results__c'
+                                {/* Important results */}
+                                {currentReport.Important_Results__c && (
+                                    <TextCard
+                                        className="mt-32"
+                                        hasBackground={true}
+                                        headline={label(
+                                            'objects.initiativeReport.Important_Results__c'
+                                        )}
+                                        body={
+                                            currentReport.Important_Results__c
+                                        }
+                                    />
                                 )}
-                                body={currentReport.Important_Results__c}
-                            />
-                        )}
-                        {/* Empty state - Important results */}
-                        {!currentReport.Important_Results__c && (
-                            <SectionEmpty
-                                type="report"
-                                headline={label(
-                                    'objects.initiativeReport.Important_Results__c'
+                                {/* Empty state - Important results */}
+                                {!currentReport.Important_Results__c && (
+                                    <SectionEmpty
+                                        type="report"
+                                        headline={label(
+                                            'objects.initiativeReport.Important_Results__c'
+                                        )}
+                                    />
                                 )}
-                            />
-                        )}
 
-                        {/* Post project activities */}
-                        {currentReport.Post_Project_Activities__c && (
-                            <TextCard
-                                className="mt-32"
-                                hasBackground={true}
-                                headline={label(
-                                    'objects.initiativeReport.Post_Project_Activities__c'
+                                {/* Post project activities */}
+                                {currentReport.Post_Project_Activities__c && (
+                                    <TextCard
+                                        className="mt-32"
+                                        hasBackground={true}
+                                        headline={label(
+                                            'objects.initiativeReport.Post_Project_Activities__c'
+                                        )}
+                                        body={
+                                            currentReport.Post_Project_Activities__c
+                                        }
+                                    />
                                 )}
-                                body={currentReport.Post_Project_Activities__c}
-                            />
-                        )}
-                        {/* Empty state - Post project activities */}
-                        {!currentReport.Post_Project_Activities__c && (
-                            <SectionEmpty
-                                type="report"
-                                headline={label(
-                                    'objects.initiativeReport.Post_Project_Activities__c'
+                                {/* Empty state - Post project activities */}
+                                {!currentReport.Post_Project_Activities__c && (
+                                    <SectionEmpty
+                                        type="report"
+                                        headline={label(
+                                            'objects.initiativeReport.Post_Project_Activities__c'
+                                        )}
+                                    />
                                 )}
-                            />
+                            </SectionWrapper>
                         )}
-                    </SectionWrapper>
                     {/* Additional Info */}
                     <SectionWrapper>
                         <SectionWrapper>
