@@ -19,6 +19,7 @@ const ReportCardComponent = ({
     items,
     actionCreate,
     actionUpdate,
+    disableCreate,
 }) => {
     // Hook: Metadata
     const { label } = useMetadata();
@@ -34,9 +35,14 @@ const ReportCardComponent = ({
                         </h4>
                     </div>
                 )}
-                <Button theme="teal" variant="primary" action={actionCreate}>
-                    {label('custom.FA_ButtonAddReport')}
-                </Button>
+                {!disableCreate && (
+                    <Button
+                        theme="teal"
+                        variant="primary"
+                        action={actionCreate}>
+                        {label('custom.FA_ButtonAddReport')}
+                    </Button>
+                )}
             </div>
             {items?.length > 0 && (
                 <div className="inline-grid items-start grid-cols-1 gap-24 md:grid-cols-2">
@@ -80,8 +86,11 @@ ReportCardComponent.propTypes = {
             dueDate: t.string,
         })
     ),
+    disableCreate: t.bool,
 };
 
-ReportCardComponent.defaultProps = {};
+ReportCardComponent.defaultProps = {
+    disableCreate: false,
+};
 
 export default ReportCardComponent;

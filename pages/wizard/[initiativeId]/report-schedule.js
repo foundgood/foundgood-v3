@@ -64,12 +64,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
-            const {
-                ReportDates,
-                Report_Type__c,
-                Due_Date__c,
-                Status__c,
-            } = formData;
+            const { ReportDates, Report_Type__c, Due_Date__c } = formData;
 
             // Object name
             const object = 'Initiative_Report__c';
@@ -81,7 +76,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 Report_Period_End_Date__c: ReportDates.to,
                 Report_Type__c,
                 Due_Date__c,
-                Status__c,
+                Status__c: CONSTANTS.TYPES.REPORT_NOT_STARTED,
                 Funder_Report__c: funder.Id,
             };
 
@@ -117,12 +112,10 @@ const ReportScheduleComponent = ({ pageProps }) => {
             Report_Period_End_Date__c,
             Report_Type__c,
             Due_Date__c,
-            Status__c,
         } = initiative?._reports[updateId] ?? {};
 
         setValue('Report_Type__c', Report_Type__c);
         setValue('Due_Date__c', Due_Date__c);
-        setValue('Status__c', Status__c);
         setValue('ReportDates', {
             from: Report_Period_Start_Date__c,
             to: Report_Period_End_Date__c,
@@ -149,6 +142,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 {funders.length > 0 ? (
                     funders.map(funderKey => {
                         const funder = initiative?._funders[funderKey];
+                        console.log(funder);
                         // Get report items based on funder id (funderKey) and report.Funder_Report__c
                         const reportItems = Object.keys(initiative?._reports)
                             .filter(
@@ -166,6 +160,10 @@ const ReportScheduleComponent = ({ pageProps }) => {
                                     headline: labelTodo(item.Report_Type__c),
                                     dueDate: labelTodo(item.Due_Date__c),
                                 }))}
+                                disableCreate={
+                                    funder.Account__c ===
+                                    CONSTANTS.IDS.NNF_ACCOUNT
+                                }
                                 actionCreate={() => {
                                     setModalIsOpen(true);
                                     setFunder(funder);
@@ -226,16 +224,6 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         )} / ${label(
                             'objects.initiativeReport.Report_Period_End_Date__c'
                         )}`}
-                        controller={control}
-                    />
-                    <Select
-                        name="Status__c"
-                        label={label('objects.initiativeReport.Status__c')}
-                        subLabel={helpText(
-                            'objects.initiativeReport.Status__c'
-                        )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
-                        options={valueSet('initiativeReport.Status__c')}
                         controller={control}
                     />
                 </InputWrapper>
