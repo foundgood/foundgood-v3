@@ -68,9 +68,9 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                 if (
                                     activity.Id == item.Initiative_Activity__c
                                 ) {
-                                    let title;
-                                    let label;
-
+                                    const value = item.Target__c
+                                        ? `${item.Current_Status__c} / ${item.Target__c}`
+                                        : item.Current_Status__c;
                                     if (
                                         item.Type__c ===
                                         CONSTANTS.TYPES.INDICATOR_PREDEFINED
@@ -82,21 +82,22 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                                 .INDICATOR_GENDER_OTHER
                                                 ? item.Gender_Other__c
                                                 : item.Gender__c;
-                                        title = `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`;
-                                        label = labelTodo('Reached so far');
+                                        return {
+                                            title: `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`,
+                                            value: value,
+                                            label: label(
+                                                'custom.FA_InitiativeViewMetricsTotal'
+                                            ),
+                                        };
                                     } else {
-                                        title = item.Name;
-                                        label = labelTodo('Total so far');
+                                        return {
+                                            title: item.Name,
+                                            value: value,
+                                            label: label(
+                                                'custom.FA_InitiativeViewMetricsTotal'
+                                            ),
+                                        };
                                     }
-
-                                    const value = item.Target__c
-                                        ? `${item.Current_Status__c} / ${item.Target__c}`
-                                        : item.Current_Status__c;
-                                    return {
-                                        title: title,
-                                        value: value,
-                                        label: label,
-                                    };
                                 }
                             }
                         )
