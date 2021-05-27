@@ -149,6 +149,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                     : sfCreate({
                           object,
                           data: {
+                              Type__c: CONSTANTS.TYPES.COLLABORATOR_OVERVIEW,
                               Initiative_Collaborator__c: item.relationId,
                               Description__c: item.value,
                               Initiative_Report__c: REPORT_ID,
