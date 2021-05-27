@@ -171,6 +171,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                     : sfCreate({
                           object,
                           data: {
+                              Type__c: CONSTANTS.TYPES.ACTIVITY_OVERVIEW,
                               Initiative_Activity__c: item.relationId,
                               Description__c: item.value,
                               Initiative_Report__c: REPORT_ID,

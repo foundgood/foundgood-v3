@@ -167,6 +167,7 @@ const FundersComponent = ({ pageProps }) => {
                     : sfCreate({
                           object,
                           data: {
+                              Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
                               Initiative_Funder__c: item.relationId,
                               Description__c: item.value,
                               Initiative_Report__c: REPORT_ID,
