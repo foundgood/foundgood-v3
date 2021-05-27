@@ -342,60 +342,6 @@ const initiativeWizardDictionary = {
             },
         },
     },
-    evaluations: {
-        title: 'custom.FA_InitiativeViewEvaluationsHeading',
-        baseUrl: 'evaluations',
-        url(initiativeId) {
-            return `/wizard/${initiativeId}/evaluations`;
-        },
-        labels: {
-            form: {
-                title: 'custom.FA_InitiativeWizardEvaluationsHeading',
-                preamble: 'custom.FA_InitiativeWizardEvaluationsSubheading',
-            },
-            help: {
-                why: 'custom.FA_InitiativeWizardEvaluationsHelpWhy',
-                what: 'custom.FA_InitiativeWizardEvaluationsHelpWhat',
-                guide: 'custom.FA_InitiativeWizardEvaluationsHelpGuide',
-            },
-        },
-    },
-    influenceOnPolicy: {
-        title: 'custom.FA_InitiativeViewInfluenceHeading',
-        baseUrl: 'influence-on-policy',
-        url(initiativeId) {
-            return `/wizard/${initiativeId}/influence-on-policy`;
-        },
-        labels: {
-            form: {
-                title: 'custom.FA_InitiativeWizardInfluenceHeading',
-                preamble: 'custom.FA_InitiativeWizardInfluenceSubheading',
-            },
-            help: {
-                why: 'custom.FA_InitiativeWizardInfluenceHelpWhy',
-                what: 'custom.FA_InitiativeWizardInfluenceHelpWhat',
-                guide: 'custom.FA_InitiativeWizardInfluenceHelpGuide',
-            },
-        },
-    },
-    outcomes: {
-        title: 'custom.FA_InitiativeViewOutcomesHeading',
-        baseUrl: 'outcomes',
-        url(initiativeId) {
-            return `/wizard/${initiativeId}/outcomes`;
-        },
-        labels: {
-            form: {
-                title: 'custom.FA_InitiativeWizardOutcomesHeading',
-                preamble: 'custom.FA_InitiativeWizardOutcomesSubheading',
-            },
-            help: {
-                why: 'custom.FA_InitiativeWizardOutcomesHelpWhy',
-                what: 'custom.FA_InitiativeWizardOutcomesHelpWhat',
-                guide: 'custom.FA_InitiativeWizardOutcomesHelpGuide',
-            },
-        },
-    },
     logbookEntry: {
         title: 'custom.FA_InitiativeViewLogEntryHeading',
         baseUrl: 'logbook-entry',
