@@ -684,8 +684,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                                 <ChartCard
                                                     useBorder={true}
                                                     headline={
-                                                        item.peopleIndicators[0]
-                                                            .groupTitle
+                                                        item.customIndicators[0]
+                                                            ?.groupTitle
                                                     }
                                                     items={
                                                         item.peopleIndicators
@@ -700,7 +700,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                                     useBorder={true}
                                                     headline={
                                                         item.customIndicators[0]
-                                                            .groupTitle
+                                                            ?.groupTitle
                                                     }
                                                     items={
                                                         item.customIndicators
