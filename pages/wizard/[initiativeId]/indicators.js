@@ -340,7 +340,9 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
                                 )}
-                                placeholder={labelTodo('NUMBER_PLACEHOLDER')}
+                                placeholder={label(
+                                    'custom.FA_FormCaptureNumberEmpty'
+                                )}
                                 minValue={0}
                                 maxValue={150}
                                 controller={control}
@@ -357,7 +359,9 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivitySuccessMetric.Highest_Age__c'
                                 )}
-                                placeholder={labelTodo('NUMBER_PLACEHOLDER')}
+                                placeholder={label(
+                                    'custom.FA_FormCaptureNumberEmpty'
+                                )}
                                 minValue={0}
                                 maxValue={150}
                                 controller={control}

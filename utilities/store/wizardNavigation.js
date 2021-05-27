@@ -82,14 +82,19 @@ const useWizardNavigationStore = create((set, get) => ({
                 : []),
             {
                 ...d.activitiesParent,
-                items: [d.goals, d.activities, d.indicators, d.sharingResults],
+                items: [
+                    d.goals,
+                    d.activities,
+                    d.indicators,
+                    // d.progressSoFar, // Not in at the moment
+                    // If planning is on
+                    ...(planning ? [d.targets] : []),
+                ],
             },
             {
                 ...d.developments,
                 items: [
-                    // If planning is on
-                    ...(planning ? [d.targets] : []),
-                    d.progressSoFar,
+                    d.sharingResults,
                     d.evaluations,
                     d.influenceOnPolicy,
                     // If planning is on
