@@ -49,6 +49,26 @@ const ProjectComponent = ({ pageProps }) => {
     const [collaborators, setCollaborators] = useState();
     const [employeeGroups, setEmployeeGroups] = useState();
 
+    const sdgs = [
+        '#E32840',
+        '#DCA545',
+        '#4F9E3E',
+        '#C31D32',
+        '#FC3D2E',
+        '#33BEE0',
+        '#FBC230',
+        '#A01C44',
+        '#FB6A33',
+        '#DB1C68',
+        '#FB9D37',
+        '#BE8A38',
+        '#417D47',
+        '#1D98D7',
+        '#5ABE38',
+        '#0D699B',
+        '#1C4969',
+    ];
+
     const donutColors = [
         'bg-teal-60',
         'bg-blue-60',
@@ -328,7 +348,14 @@ const ProjectComponent = ({ pageProps }) => {
                                                             key={`g-${index}`}
                                                             className="mt-8 t-h5">
                                                             <span
-                                                                className={`px-6 pt-4 mr-8 leading-none text-white bg-sdgs-${problem.amount} rounded-4`}>
+                                                                className={`px-6 pt-4 mr-8 leading-none text-white rounded-4`}
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        sdgs[
+                                                                            problem
+                                                                                .amount
+                                                                        ],
+                                                                }}>
                                                                 {problem.amount}
                                                             </span>
                                                             {problem.title}

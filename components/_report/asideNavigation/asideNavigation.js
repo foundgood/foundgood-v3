@@ -28,7 +28,6 @@ const AsideNavigationComponent = () => {
 
     // Effect: Update wizard navigation items
     useEffect(() => {
-        console.log('TYPE: ', initiative._reports[REPORT_ID]?.Report_Type__c);
         buildReportNavigationItems(
             initiative._reports[REPORT_ID]?.Report_Type__c
         );
