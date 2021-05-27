@@ -148,6 +148,27 @@ const useWizardNavigationStore = create((set, get) => ({
                 ];
                 break;
 
+            case 'Status':
+                items = [
+                    d.introduction,
+                    {
+                        ...d.summary,
+                        items: [
+                            d.reportDetails,
+                            d.funders,
+                            d.overview,
+                            d.reportSummary,
+                            d.risksAndChallenges,
+                        ],
+                    },
+                    {
+                        ...d.keyChanges,
+                        items: [d.applicants, d.collaborators],
+                    },
+                    d.done,
+                ];
+                break;
+
             default:
                 // Annual
                 items = [
