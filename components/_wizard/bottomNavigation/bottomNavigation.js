@@ -44,7 +44,7 @@ const BottomNavigationComponent = () => {
             const splitRoute = router.pathname.split('/');
             onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
         }, 50);
-    }, [router.pathname]);
+    }, [router.asPath]);
 
     async function onHandleContinue() {
         setLoading(true);
