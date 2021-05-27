@@ -28,28 +28,34 @@ const AsideNavigationComponent = () => {
 
     // Effect: Update wizard navigation items
     useEffect(() => {
-        buildReportNavigationItems(
-            initiative._reports[REPORT_ID]?.Report_Type__c
-        );
-    }, [REPORT_ID]);
+        if (REPORT_ID && initiative._reports[REPORT_ID]) {
+            buildReportNavigationItems(
+                initiative._reports[REPORT_ID]?.Report_Type__c
+            );
+        }
+    }, [REPORT_ID, initiative]);
 
     return (
         <>
             <header>
-                <p className="mt-8 t-footnote">{initiative.Name}</p>
-                <h2 className="mt-16 t-h5">
-                    {`${initiative._reports[REPORT_ID]?.Report_Type__c} ${label(
-                        'custom.FA_TitleReport'
-                    )} ${dayjs(
-                        initiative._reports[REPORT_ID]?.Due_Date__c
-                    ).format('YYYY')}`}
-                </h2>
-                <h3 className="mt-16 t-sh6">
-                    {
-                        initiative._reports[REPORT_ID]?.Funder_Report__r
-                            ?.Account__r.Name
-                    }
-                </h3>
+                {initiative._reports[REPORT_ID] && (
+                    <>
+                        <p className="mt-8 t-footnote">{initiative.Name}</p>
+                        <h2 className="mt-16 t-h5">
+                            {`${
+                                initiative._reports[REPORT_ID]?.Report_Type__c
+                            } ${label('custom.FA_TitleReport')} ${dayjs(
+                                initiative._reports[REPORT_ID]?.Due_Date__c
+                            ).format('YYYY')}`}
+                        </h2>
+                        <h3 className="mt-16 t-sh6">
+                            {
+                                initiative._reports[REPORT_ID]?.Funder_Report__r
+                                    ?.Account__r.Name
+                            }
+                        </h3>
+                    </>
+                )}
             </header>
             {/* Parent items */}
             <ul className="pb-24 mt-48 space-y-48">
