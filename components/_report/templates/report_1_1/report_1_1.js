@@ -34,7 +34,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     // Overview
     const [coApplicants, setCoApplicants] = useState();
     const [coFunders, setCoFunders] = useState();
-    const [novoLeadFunder, setNovoLeadFunder] = useState();
+    const [isNnfLeadFunder, setIsNnfLeadFunder] = useState(false);
+    const [leadFunder, setLeadFunder] = useState();
 
     // Specific data for this report
     const [currentReport, setCurrentReport] = useState([]);
@@ -460,15 +461,13 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                 setTotalAmount(totalAmount);
                 setCurrency(currency);
 
-                // Header - If Novo Nordisk is lead funder
-                // Calculate Novo's funding share
-                const novoFunder = Object.values(initiative._funders)
+                // Header - Lead funder
+                const leadFunder = Object.values(initiative._funders)
                     .filter(
-                        item =>
-                            item.Type__c === CONSTANTS.TYPES.LEAD_FUNDER &&
-                            item.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                        item => item.Type__c === CONSTANTS.TYPES.LEAD_FUNDER
                     )
                     .map(item => ({
+                        name: item.Account__r.Name,
                         amount: `${
                             item.CurrencyIsoCode
                         } ${item.Amount__c?.toLocaleString('de-DE')}`,
@@ -476,7 +475,15 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             (item.Amount__c / totalAmount) * 100
                         )}%`,
                     }))[0];
-                setNovoLeadFunder(novoFunder);
+                setLeadFunder(leadFunder);
+
+                const nnfLeadFunder = Object.values(initiative._funders).filter(
+                    item =>
+                        item.Type__c === CONSTANTS.TYPES.LEAD_FUNDER &&
+                        item.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
+                );
+                const isNnfLeadFunder = nnfLeadFunder.length > 0 ? true : false;
+                setIsNnfLeadFunder(isNnfLeadFunder);
 
                 const donutData = Object.values(initiative._funders).map(
                     (funder, index) => {
@@ -690,17 +697,16 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                     </div>
                                 )}
                             </div>
-                            {/* TDD - Only related to NNf or ALL lead funders? */}
-                            {novoLeadFunder && (
+                            {leadFunder && (
                                 <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                                     <div className="t-sh6 text-blue-60">
                                         {label(
                                             'custom.FA_ReportViewAmountByFunder'
-                                        )}
-                                        {' Novo Nordisk Foundation'}
+                                        )}{' '}
+                                        {leadFunder.name}
                                     </div>
                                     <h3 className="t-h5">
-                                        {novoLeadFunder.amount}
+                                        {leadFunder.amount}
                                     </h3>
 
                                     <div className="mt-16 t-sh6 text-blue-60">
@@ -708,9 +714,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                             'custom.FA_ReportViewShareOfTotalFunding'
                                         )}
                                     </div>
-                                    <h3 className="t-h5">
-                                        {novoLeadFunder.share}
-                                    </h3>
+                                    <h3 className="t-h5">{leadFunder.share}</h3>
                                 </div>
                             )}
                         </div>
@@ -783,11 +787,11 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             <div className="flex justify-between mt-32">
                                 <h3 className="t-h4">
                                     {/* Show to different headings. Depending on if lead funder is Novo Nordisk Foundation */}
-                                    {!novoLeadFunder &&
+                                    {!isNnfLeadFunder &&
                                         label(
                                             'custom.FA_InitiativeViewGoalsHeading'
                                         )}
-                                    {!novoLeadFunder &&
+                                    {isNnfLeadFunder &&
                                         label(
                                             'custom.FA_ReportViewHeadingFunderObjectives'
                                         )}
