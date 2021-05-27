@@ -225,7 +225,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new influence on policy')}
+                title={label('custom.FA_WizardModalHeadingEvaluation')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>
