@@ -1,2 +1,2 @@
-import ReportOverview from './reportOverview.js';
-export default ReportOverview;
+import ReportSummary from './reportSummary.js';
+export default ReportSummary;

@@ -59,27 +59,6 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
         // Make sure we have funders & collaborators
         // Overview details + Funders numbers
         if (Object.values(initiative._funders).length > 0) {
-            // Make sure we have Report Details
-            if (Object.values(initiative._reportDetails).length > 0) {
-                // Get list of funders
-                const funders = Object.values(initiative._reportDetails)
-                    .filter(item => {
-                        return item.Type__c == constants.TYPES.FUNDER_OVERVIEW
-                            ? true
-                            : false;
-                    })
-                    .map(item => {
-                        // Get funder based on key
-                        const funder =
-                            initiative._funders[item.Initiative_Funder__c];
-
-                        // Add reflection to funder
-                        funder.reportReflection = item.Description__c;
-                        return funder;
-                    });
-                setFunders(funders);
-            }
-
             // 🍩 Donut data 🍩
             // Build donut slices using color gradient
             // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
@@ -138,6 +117,27 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
             const gradient = `conic-gradient(${donutStyles.join(', ')})`;
             setPieChartStyle({ backgroundImage: gradient });
             setDonutData(donutData);
+
+            // Make sure we have Report Details
+            if (Object.values(initiative._reportDetails).length > 0) {
+                // Get list of funders
+                const funders = Object.values(initiative._reportDetails)
+                    .filter(item => {
+                        return item.Type__c == constants.TYPES.FUNDER_OVERVIEW
+                            ? true
+                            : false;
+                    })
+                    .map(item => {
+                        // Get funder based on key
+                        const funder =
+                            initiative._funders[item.Initiative_Funder__c];
+
+                        // Add reflection to funder
+                        funder.reportReflection = item.Description__c;
+                        return funder;
+                    });
+                setFunders(funders);
+            }
         }
     }, []);
 
