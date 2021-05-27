@@ -8,11 +8,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useMetadata, useContext } from 'utilities/hooks';
 import { useReportLayoutStore } from 'utilities/store';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
+import Button from 'components/button';
 import TextCard from 'components/_initiative/textCard';
 import DividerLine from 'components/_initiative/dividerLine';
 
@@ -20,11 +21,14 @@ import DividerLine from 'components/_initiative/dividerLine';
 import { FiFileText } from 'react-icons/fi';
 
 const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
+    // Hook: Context
+    const { INITIATIVE_ID } = useContext();
+
     // Hook: Metadata
     const { labelTodo, label } = useMetadata();
 
     // Store: ReportLayout
-    const { leftMenuActive, toggleLeftMenu } = useReportLayoutStore();
+    const { toggleLeftMenu } = useReportLayoutStore();
 
     // Data maniipulation
     const [name, setName] = useState();
@@ -117,7 +121,16 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
     return (
         <>
             {/* Header */}
+
             <SectionWrapper>
+                <div className="flex justify-end">
+                    <Button
+                        variant="secondary"
+                        className="self-start hidden xl:flex"
+                        action={`/${INITIATIVE_ID}/reports`}>
+                        {labelTodo('Back to reports')}
+                    </Button>
+                </div>
                 <SectionWrapper>
                     <h1 className="mt-48 t-h1">{name}</h1>
                     <div className="mt-16 t-sh2">
