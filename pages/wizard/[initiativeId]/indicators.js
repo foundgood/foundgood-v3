@@ -168,16 +168,6 @@ const IndicatorsComponent = ({ pageProps }) => {
     // Watch the change of  type
     useEffect(() => {
         setIndicatorType(indicatorTypeSelect);
-
-        // Use this logic in order to have dynamic required validation
-        if (indicatorTypeSelect === CONSTANTS.TYPES.INDICATOR_CUSTOM) {
-            unregister('Name');
-        } else {
-            unregister('KPI__c');
-            unregister('Gender');
-            unregister('Lowest_Age__c');
-            unregister('Highest_Age__c');
-        }
     }, [indicatorTypeSelect]);
 
     // Funders
