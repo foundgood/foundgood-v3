@@ -137,7 +137,7 @@ const WizardStatusComponent = () => {
                             !userInitiativeRights.canEdit
                         }
                         action={() => setShowModal(true)}>
-                        {label('custom.FA_ButtonComplete')}
+                        {label('custom.FA_ButtonSubmit')}
                     </Button>
                 </div>
             </div>
