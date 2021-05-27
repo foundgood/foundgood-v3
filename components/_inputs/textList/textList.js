@@ -145,7 +145,7 @@ const TextListComponent = ({
 
                 {listMaxLength > 1 && (
                     <Button
-                        variant="secondary"
+                        variant="quaternary"
                         className="self-start mt-16"
                         disabled={list.length >= listMaxLength}
                         action={addToList}>

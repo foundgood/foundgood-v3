@@ -11,6 +11,7 @@ import InputWrapper from './inputWrapper';
 import Reflection from './reflection';
 import SearchFilterMultiselect from './searchFilterMultiselect';
 import SearchFilterDate from './searchFilterDate';
+import Image from './image';
 
 export {
     InputWrapper,
@@ -26,4 +27,5 @@ export {
     Reflection,
     SearchFilterMultiselect,
     SearchFilterDate,
+    Image,
 };

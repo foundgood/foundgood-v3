@@ -5,7 +5,12 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import {
+    useAuth,
+    useMetadata,
+    useSalesForce,
+    useContext,
+} from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -20,12 +25,16 @@ import {
     LongText,
     SelectList,
     DateRange,
+    Image,
 } from 'components/_inputs';
 
 const OverviewComponent = () => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
+
+    // Hook: Context
+    const { MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
     const { labelTodo, label, valueSet, log, helpText } = useMetadata();
@@ -61,6 +70,8 @@ const OverviewComponent = () => {
                 Account__c,
                 Category__c,
                 GrantDate,
+                Problem_Effect__c,
+                Hero_Image__c,
             } = formData;
 
             await sfUpdate({
@@ -70,9 +81,13 @@ const OverviewComponent = () => {
                     Name,
                     Summary__c,
                     Category__c,
+                    Hero_Image_URL__c: Hero_Image__c,
                     Grant_Start_Date__c: GrantDate.from,
                     Grant_End_Date__c: GrantDate.to,
                     Where_Is_Problem__c: Where_Is_Problem__c.map(
+                        item => item.selectValue
+                    ).join(';'),
+                    Problem_Effect__c: Problem_Effect__c.map(
                         item => item.selectValue
                     ).join(';'),
                 },
@@ -161,17 +176,32 @@ const OverviewComponent = () => {
                         controller={control}
                     />
                 )}
+                {initiative?.Name === '___' ? (
+                    <Text
+                        name="Name"
+                        label={label('custom.FA_InitiativeName')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
+                        maxLength={80}
+                        required={!isNovoLeadFunder()}
+                        disabled={isNovoLeadFunder()}
+                        controller={control}
+                    />
+                ) : (
+                    <Text
+                        name="Name"
+                        defaultValue={initiative?.Name}
+                        label={label('custom.FA_InitiativeName')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
+                        maxLength={80}
+                        disabled={true}
+                        controller={control}
+                    />
+                )}
 
-                <Text
-                    name="Name"
-                    defaultValue={initiative?.Name?.replace('___', '')}
-                    label={label('custom.FA_InitiativeName')}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
-                    maxLength={80}
-                    required={!isNovoLeadFunder()}
-                    disabled={isNovoLeadFunder()}
-                    controller={control}
-                />
                 {initiative?.Category__c ? (
                     <>
                         <Select
@@ -244,6 +274,32 @@ const OverviewComponent = () => {
                     controller={control}
                     buttonLabel={label('custom.FA_ButtonAddLocation')}
                 />
+                <SelectList
+                    name="Problem_Effect__c"
+                    defaultValue={initiative?.Problem_Effect__c?.split(';').map(
+                        value => ({
+                            selectValue: value,
+                        })
+                    )}
+                    label={label('objects.initiative.Problem_Effect__c')}
+                    subLabel={helpText('objects.initiative.Problem_Effect__c')}
+                    listMaxLength={10}
+                    options={valueSet('initiative.Problem_Effect__c')}
+                    selectPlaceholder={label(
+                        'custom.FA_FormCaptureSelectEmpty'
+                    )}
+                    controller={control}
+                    buttonLabel={label('custom.FA_ButtonAddSDG')}
+                />
+                {MODE === CONTEXTS.INITIATIVE && (
+                    <Image
+                        name="Hero_Image__c"
+                        label={label('objects.initiative.Hero_Image__c')}
+                        subLabel={helpText('objects.initiative.Hero_Image__c')}
+                        defaultValue={initiative.Hero_Image_URL__c}
+                        controller={control}
+                    />
+                )}
             </InputWrapper>
         </>
     );

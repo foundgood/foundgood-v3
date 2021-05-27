@@ -123,15 +123,21 @@ const ButtonComponent = ({
     return (
         <>
             {event === 'url' ? (
-                <Link href={action}>
-                    <a
-                        href={action}
-                        className={elementClassNames}
-                        target={blank ? '_blank' : '_self'}
-                        rel={blank ? 'noreferrer noopener' : ''}>
+                action === 'fake' ? (
+                    <div className={cc(['cursor-pointer', elementClassNames])}>
                         {content}
-                    </a>
-                </Link>
+                    </div>
+                ) : (
+                    <Link href={action}>
+                        <a
+                            href={action}
+                            className={elementClassNames}
+                            target={blank ? '_blank' : '_self'}
+                            rel={blank ? 'noreferrer noopener' : ''}>
+                            {content}
+                        </a>
+                    </Link>
+                )
             ) : (
                 <button
                     disabled={disabled}
