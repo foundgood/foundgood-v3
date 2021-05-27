@@ -45,10 +45,6 @@ const HomeComponent = () => {
         control,
         name: 'filter.category',
     });
-    const filterStage = useWatch({
-        control,
-        name: 'filter.stage',
-    });
     const filterStartDate = useWatch({
         control,
         name: 'filter.startDate',
@@ -90,7 +86,7 @@ const HomeComponent = () => {
     function onFilter(data) {
         if (initial) {
             const {
-                filter: { text, category, stage, startDate, endDate },
+                filter: { text, category, startDate, endDate },
             } = data;
 
             let nextFiltered;
@@ -110,12 +106,6 @@ const HomeComponent = () => {
                     ? nextFiltered.filter(item =>
                           category.includes(item.Category__c)
                       )
-                    : nextFiltered;
-
-            // Optional stage
-            nextFiltered =
-                stage.length > 0
-                    ? nextFiltered.filter(item => stage.includes(item.Stage__c))
                     : nextFiltered;
 
             // Optional start date
@@ -142,13 +132,7 @@ const HomeComponent = () => {
 
     useEffect(() => {
         onFilter(getValues());
-    }, [
-        filterCategory,
-        filterText,
-        filterStage,
-        filterStartDate,
-        filterEndDate,
-    ]);
+    }, [filterCategory, filterText, filterStartDate, filterEndDate]);
 
     return (
         <div
@@ -183,14 +167,6 @@ const HomeComponent = () => {
                                 )}
                                 controller={control}
                                 options={valueSet('initiative.Category__c')}
-                            />
-                            <SearchFilterMultiselect
-                                name="filter.stage"
-                                label={label(
-                                    'custom.FA_InitiativeManagerInitiativeStatus'
-                                )}
-                                controller={control}
-                                options={valueSet('initiative.Stage__c')}
                             />
                             <SearchFilterDate
                                 name="filter.startDate"
