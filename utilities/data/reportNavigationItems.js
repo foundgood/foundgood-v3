@@ -108,7 +108,24 @@ const reportWizardDictionary = {
             return `/wizard/${initiativeId}/report-summary/${reportId}`;
         },
     },
-    risksAndChallenges: {},
+    risksAndChallenges: {
+        title: 'custom.FA_ReportWizardMenuRisks',
+        labels: {
+            form: {
+                title: 'custom.FA_ReportWizardRisksHeading',
+                preamble: 'custom.FA_ReportWizardRisksSubHeading',
+            },
+            help: {
+                why: 'custom.FA_ReportWizardRisksHelpWhy',
+                what: 'custom.FA_ReportWizardRisksHelpWhat',
+                guide: 'custom.FA_ReportWizardRisksHelpGuide',
+            },
+        },
+        baseUrl: 'risks-and-challenges',
+        url(initiativeId, reportId) {
+            return `/wizard/${initiativeId}/risks-and-challenges/${reportId}`;
+        },
+    },
     applicants: {
         title: 'custom.FA_ReportWizardMenuApplicants',
         labels: {
