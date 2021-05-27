@@ -3,6 +3,7 @@ import React from 'react';
 
 // Packages
 import t from 'prop-types';
+import { useRouter } from 'next/router';
 
 // Utilities
 import {
@@ -19,6 +20,9 @@ import Button from 'components/button';
 const UpdateButtonComponent = ({ mode, baseUrl }) => {
     // Hook: Context
     const { INITIATIVE_ID, REPORT_ID } = useContext();
+
+    // Hook: Router
+    const router = useRouter();
 
     // Hook: Metadata
     const { label } = useMetadata();
