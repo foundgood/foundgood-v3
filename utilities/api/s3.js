@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { nanoid } from 'nanoid';
 
 async function uploadInitiativeReport({ json, fileName }) {
     try {
@@ -31,7 +32,7 @@ async function uploadMediaFile(file) {
     try {
         // Add as form data
         const formData = new FormData();
-        formData.append('file', file, file.name);
+        formData.append('file', file, `${nanoid()}-${file.name}`);
 
         const response = await axios.post(
             `${process.env.NEXT_PUBLIC_LOCAL_SERVER_URL}/api/s3/uploadMediaFile`,
