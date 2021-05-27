@@ -8,27 +8,49 @@ const useReportNavigationStore = create((set, get) => ({
         let items;
         const d = reportWizardDictionary;
         switch (configurationType) {
-            case 'Final':
+            case 'Status':
                 items = [
                     {
                         ...d.summary,
                         items: [
-                            d.reportDetails,
-                            d.funders,
+                            // d.reportDetails,
                             d.overview,
                             d.reportSummary,
+                            // d.riskChallenges, // Risk and challenges - TBD
                         ],
                     },
                     {
                         ...d.keyChanges,
                         items: [
+                            d.funders, // Moved from Summary
+                            d.applicants,
+                            d.collaborators,
+                        ],
+                    },
+                ];
+                break;
+
+            case 'Final':
+                items = [
+                    {
+                        ...d.summary,
+                        items: [
+                            // d.reportDetails,
+                            d.overview,
+                            d.reportSummary,
+                            d.goals, // Moved from Key changes
+                        ],
+                    },
+                    {
+                        ...d.keyChanges,
+                        items: [
+                            d.funders, // Moved from Summary
                             d.applicants,
                             d.collaborators,
                             d.employeesFunded,
-                            d.goals,
                             d.activities,
-                            d.indicators,
-                            d.progressSoFar,
+                            // d.indicators,
+                            // d.progressSoFar,
                             d.sharingResults,
                         ],
                     },
@@ -38,6 +60,7 @@ const useReportNavigationStore = create((set, get) => ({
                     },
                     { ...d.reflections, items: [d.endOfGrantReflections] },
                 ];
+
                 break;
 
             default:
@@ -67,11 +90,7 @@ const useReportNavigationStore = create((set, get) => ({
                     },
                     {
                         ...d.keyResults,
-                        items: [
-                            d.influenceOnPolicy,
-                            d.evaluations,
-                            d.endOfGrantReflections,
-                        ],
+                        items: [d.influenceOnPolicy, d.evaluations],
                     },
                 ];
                 break;
