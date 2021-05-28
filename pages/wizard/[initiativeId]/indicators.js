@@ -173,8 +173,16 @@ const IndicatorsComponent = ({ pageProps }) => {
         setIndicatorType(indicatorTypeSelect);
     }, [indicatorTypeSelect]);
 
-    // Funders
-    const activities = Object.keys(initiative?._activities);
+    // Activities
+    const activities = Object.keys(initiative?._activities).filter(
+        activityKey => {
+            const activity = initiative?._activities[activityKey];
+            return (
+                activity.Activity_Type__c ===
+                CONSTANTS.TYPES.ACTIVITY_INTERVENTION
+            );
+        }
+    );
 
     // Reset submithandler
     useEffect(() => {
