@@ -79,6 +79,7 @@ const UpdateButtonComponent = ({ mode, baseUrl }) => {
                     ![
                         CONSTANTS.TYPES.REPORT_NOT_STARTED,
                         CONSTANTS.TYPES.REPORT_IN_PROGRESS,
+                        CONSTANTS.TYPES.REPORT_IN_REVIEW,
                     ].includes(getReport(REPORT_ID).Status__c))
             }>
             {label('custom.FA_Update')}

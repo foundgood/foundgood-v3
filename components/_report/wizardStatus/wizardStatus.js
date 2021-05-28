@@ -119,11 +119,9 @@ const WizardStatusComponent = () => {
                                 : 'primary'
                         }
                         disabled={
-                            [
-                                CONSTANTS.TYPES.REPORT_IN_REVIEW,
-                                CONSTANTS.TYPES.REPORT_PUBLISHED,
-                            ].includes(currentReport.Status__c) ||
-                            !userInitiativeRights.canEdit
+                            [CONSTANTS.TYPES.REPORT_PUBLISHED].includes(
+                                currentReport.Status__c
+                            ) || !userInitiativeRights.canEdit
                         }
                         action={reportInProgress}>
                         {label('custom.FA_ButtonRunWizard')}
