@@ -127,7 +127,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                 </div>
 
                 {activities?.length > 0 &&
-                    activities.map((item, index) => (
+                    activities?.map((item, index) => (
                         <div key={`a-${index}`} className="mt-64">
                             <h3 className="t-h4">{item.title}</h3>
                             <ReportDetailCard
@@ -141,7 +141,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     },
                                 ]}
                             />
-                            {item.activityType.length > 0 && (
+                            {item.activityType?.length > 0 && (
                                 <>
                                     <div className="mt-32 t-h6">
                                         {label(
@@ -149,7 +149,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         )}
                                     </div>
                                     <div className="flex flex-col items-start">
-                                        {item.activityType.map(
+                                        {item.activityType?.map(
                                             (type, index) => (
                                                 <div
                                                     key={`t-${index}`}
@@ -161,7 +161,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     </div>
                                 </>
                             )}
-                            {item.successIndicators.length > 0 && (
+                            {item.successIndicators?.length > 0 && (
                                 <>
                                     <div className="mt-32 t-h5">
                                         {label(
@@ -169,7 +169,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         )}
                                     </div>
 
-                                    {item.successIndicators.map(
+                                    {item.successIndicators?.map(
                                         (success, index) => (
                                             <div
                                                 key={`s-${index}`}
