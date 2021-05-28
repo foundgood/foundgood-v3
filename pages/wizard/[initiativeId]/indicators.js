@@ -44,6 +44,7 @@ const IndicatorsComponent = ({ pageProps }) => {
     const { handleSubmit, control, setValue, reset, unregister } = useForm();
     const { isDirty } = useFormState({ control });
     const indicatorTypeSelect = useWatch({ control, name: 'Type__c' });
+    const kpiTypeSelect = useWatch({ control, name: 'KPI__c' });
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
@@ -98,13 +99,13 @@ const IndicatorsComponent = ({ pageProps }) => {
             const ActivitySuccessMetricId = updateId
                 ? await sfUpdate({
                       object,
-                      data: data[indicatorType],
+                      data: data[indicatorTypeSelect],
                       id: updateId,
                   })
                 : await sfCreate({
                       object,
                       data: {
-                          ...data[indicatorType],
+                          ...data[indicatorTypeSelect],
                           Initiative_Activity__c: activity.Id,
                       },
                   });
@@ -120,7 +121,6 @@ const IndicatorsComponent = ({ pageProps }) => {
 
             // Clear content in form
             reset();
-            setIndicatorType(null);
             setActivity(null);
             setUpdateId(null);
         } catch (error) {
@@ -137,7 +137,6 @@ const IndicatorsComponent = ({ pageProps }) => {
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
     const [activity, setActivity] = useState(null);
-    const [indicatorType, setIndicatorType] = useState(null);
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
@@ -163,15 +162,7 @@ const IndicatorsComponent = ({ pageProps }) => {
         ]);
         setValue('Highest_Age__c', Highest_Age__c);
         setValue('Lowest_Age__c', Lowest_Age__c);
-
-        // Set indicator type
-        setIndicatorType(Type__c);
     }, [updateId, modalIsOpen]);
-
-    // Watch the change of  type
-    useEffect(() => {
-        setIndicatorType(indicatorTypeSelect);
-    }, [indicatorTypeSelect]);
 
     // Activities
     const activities = Object.keys(initiative?._activities).filter(
@@ -183,6 +174,22 @@ const IndicatorsComponent = ({ pageProps }) => {
             );
         }
     );
+
+    // Do crazy shit when kpi has something with age in it
+    useEffect(() => {
+        const currentKpi = CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
+            item => item.value === kpiTypeSelect
+        );
+
+        // If we have a custom aged indicator please set it
+        if (currentKpi.length > 0) {
+            setValue('Highest_Age__c', currentKpi[0].max);
+            setValue('Lowest_Age__c', currentKpi[0].min);
+        } else {
+            setValue('Highest_Age__c', null);
+            setValue('Lowest_Age__c', null);
+        }
+    }, [kpiTypeSelect]);
 
     // Reset submithandler
     useEffect(() => {
@@ -215,21 +222,58 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 headline={
                                     _get(activity, 'Things_To_Do__c') || ''
                                 }
-                                items={successMetricItems.map(item => ({
-                                    id: item.Id,
-                                    headline:
+                                items={successMetricItems.map(item => {
+                                    let headline;
+
+                                    if (
                                         item.Type__c ===
                                         CONSTANTS.TYPES.INDICATOR_CUSTOM
-                                            ? item.Name
-                                            : `${item.Gender__c} ${
-                                                  item.Gender_Other__c
-                                                      ? `(${item.Gender_Other__c})`
-                                                      : ''
-                                              } ${item.KPI__c} ${
-                                                  item.Lowest_Age__c
-                                              }-${item.Highest_Age__c}`,
-                                    label: item.Type__c,
-                                }))}
+                                    ) {
+                                        headline = item.Name;
+                                    } else {
+                                        // Get gender
+                                        const gender = item.Gender__c
+                                            ? item.Gender__c
+                                            : '';
+                                        const genderOther = item.Gender_Other__c
+                                            ? ` ${item.Gender_Other__c}`
+                                            : '';
+
+                                        // Get KPI
+                                        const kpi = item.KPI__c
+                                            ? ` ${item.KPI__c} `
+                                            : '';
+
+                                        // Get age
+                                        const lowestAge =
+                                            CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
+                                                i => item.KPI__c === i.value
+                                            ).length === 0 && item.Lowest_Age__c
+                                                ? `${item.Lowest_Age__c}`
+                                                : '';
+
+                                        const highestAge =
+                                            CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
+                                                i => item.KPI__c === i.value
+                                            ).length === 0 &&
+                                            item.Highest_Age__c
+                                                ? `${item.Highest_Age__c}`
+                                                : '';
+
+                                        const age =
+                                            lowestAge && highestAge
+                                                ? `${lowestAge}-${highestAge}`
+                                                : `${lowestAge}${highestAge}`;
+
+                                        headline = `${gender}${genderOther}${kpi}${age}`;
+                                    }
+
+                                    return {
+                                        id: item.Id,
+                                        headline,
+                                        label: item.Type__c,
+                                    };
+                                })}
                                 actionCreate={() => {
                                     setModalIsOpen(true);
                                     setActivity(activity);
@@ -272,7 +316,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                     />
 
                     {/* Custom indicator */}
-                    {indicatorType === CONSTANTS.TYPES.INDICATOR_CUSTOM && (
+                    {indicatorTypeSelect ===
+                        CONSTANTS.TYPES.INDICATOR_CUSTOM && (
                         <Text
                             name="Name"
                             label={label(
@@ -286,7 +331,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                         />
                     )}
                     {/* Predefined indicator */}
-                    {indicatorType === CONSTANTS.TYPES.INDICATOR_PREDEFINED && (
+                    {indicatorTypeSelect ===
+                        CONSTANTS.TYPES.INDICATOR_PREDEFINED && (
                         <>
                             <Select
                                 name="KPI__c"
@@ -304,10 +350,6 @@ const IndicatorsComponent = ({ pageProps }) => {
                                     initiative?.Category__c
                                 )}
                                 controller={control}
-                                required={
-                                    indicatorType ===
-                                    CONSTANTS.TYPES.INDICATOR_PREDEFINED
-                                }
                             />
                             <SelectList
                                 name="Gender"
@@ -329,49 +371,43 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 showText
                                 listMaxLength={1}
                                 controller={control}
-                                required={
-                                    indicatorType ===
-                                    CONSTANTS.TYPES.INDICATOR_PREDEFINED
-                                }
                             />
-                            <Number
-                                name="Lowest_Age__c"
-                                label={label(
-                                    'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
-                                )}
-                                subLabel={helpText(
-                                    'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
-                                )}
-                                placeholder={label(
-                                    'custom.FA_FormCaptureNumberEmpty'
-                                )}
-                                minValue={0}
-                                maxValue={150}
-                                controller={control}
-                                required={
-                                    indicatorType ===
-                                    CONSTANTS.TYPES.INDICATOR_PREDEFINED
-                                }
-                            />
-                            <Number
-                                name="Highest_Age__c"
-                                label={label(
-                                    'objects.initiativeActivitySuccessMetric.Highest_Age__c'
-                                )}
-                                subLabel={helpText(
-                                    'objects.initiativeActivitySuccessMetric.Highest_Age__c'
-                                )}
-                                placeholder={label(
-                                    'custom.FA_FormCaptureNumberEmpty'
-                                )}
-                                minValue={0}
-                                maxValue={150}
-                                controller={control}
-                                required={
-                                    indicatorType ===
-                                    CONSTANTS.TYPES.INDICATOR_PREDEFINED
-                                }
-                            />
+                            {CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
+                                item => item.value === kpiTypeSelect
+                            ).length === 0 && (
+                                <>
+                                    <Number
+                                        name="Lowest_Age__c"
+                                        label={label(
+                                            'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
+                                        )}
+                                        subLabel={helpText(
+                                            'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
+                                        )}
+                                        placeholder={label(
+                                            'custom.FA_FormCaptureNumberEmpty'
+                                        )}
+                                        minValue={0}
+                                        maxValue={150}
+                                        controller={control}
+                                    />
+                                    <Number
+                                        name="Highest_Age__c"
+                                        label={label(
+                                            'objects.initiativeActivitySuccessMetric.Highest_Age__c'
+                                        )}
+                                        subLabel={helpText(
+                                            'objects.initiativeActivitySuccessMetric.Highest_Age__c'
+                                        )}
+                                        placeholder={label(
+                                            'custom.FA_FormCaptureNumberEmpty'
+                                        )}
+                                        minValue={0}
+                                        maxValue={150}
+                                        controller={control}
+                                    />
+                                </>
+                            )}
                         </>
                     )}
                 </InputWrapper>
