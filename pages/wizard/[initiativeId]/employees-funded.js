@@ -122,8 +122,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         // Object name
         const object = 'Initiative_Report_Detail__c';
 
-        console.log(currentReflection);
-
         // Check if reflection exist - then update
 
         const reportDetailId =
