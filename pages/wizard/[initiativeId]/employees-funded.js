@@ -122,24 +122,27 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         // Object name
         const object = 'Initiative_Report_Detail__c';
 
+        console.log(currentReflection);
+
         // Check if reflection exist - then update
 
-        const reportDetailId = currentReflection
-            ? await sfUpdate({
-                  object,
-                  id: currentReflection.Id,
-                  data: {
-                      Description__c: Employees_Funded_Overview,
-                  },
-              })
-            : await sfCreate({
-                  object,
-                  data: {
-                      Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
-                      Description__c: Employees_Funded_Overview,
-                      Initiative_Report__c: REPORT_ID,
-                  },
-              });
+        const reportDetailId =
+            currentReflection && currentReflection.Id
+                ? await sfUpdate({
+                      object,
+                      id: currentReflection.Id,
+                      data: {
+                          Description__c: Employees_Funded_Overview,
+                      },
+                  })
+                : await sfCreate({
+                      object,
+                      data: {
+                          Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
+                          Description__c: Employees_Funded_Overview,
+                          Initiative_Report__c: REPORT_ID,
+                      },
+                  });
 
         // Update affected activity goals
         await updateReportDetails([reportDetailId]);
