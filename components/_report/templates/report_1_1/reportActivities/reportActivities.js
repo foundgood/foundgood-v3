@@ -6,7 +6,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
-import { asId } from 'utilities';
+import { asId, stripUndefined } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
