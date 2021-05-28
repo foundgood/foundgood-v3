@@ -48,18 +48,6 @@ const GoalsComponent = ({ pageProps }) => {
     // Store: Initiative data
     const { initiative, updateGoal, CONSTANTS } = useInitiativeDataStore();
 
-    // Method: Save new item, returns id
-    async function save(object, data) {
-        const id = await sfCreate({ object, data });
-        return id;
-    }
-
-    // Method: Update current item, returns id
-    async function update(object, data, id) {
-        await sfUpdate({ object, data, id });
-        return id;
-    }
-
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
@@ -89,10 +77,10 @@ const GoalsComponent = ({ pageProps }) => {
 
             // Update / Save
             const goalId = updateId
-                ? await update(object, data[goalType], updateId)
-                : await save(object, {
-                      ...data[goalType],
-                      Initiative__c: initiative.Id,
+                ? await sfUpdate({ object, data: data[goalType], id: updateId })
+                : await sfCreate({
+                      object,
+                      data: { ...data[goalType], Initiative__c: initiative.Id },
                   });
 
             // Update store

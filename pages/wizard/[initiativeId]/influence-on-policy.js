@@ -57,18 +57,6 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
-    // Method: Save new item, returns id
-    async function save(object, data) {
-        const id = await sfCreate({ object, data });
-        return id;
-    }
-
-    // Method: Update current item, returns id
-    async function update(object, data, id) {
-        await sfUpdate({ object, data, id });
-        return id;
-    }
-
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
@@ -85,10 +73,10 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
 
             // Update / Save
             const reportDetailId = updateId
-                ? await update(object, data, updateId)
-                : await save(object, {
-                      ...data,
-                      Initiative_Report__c: REPORT_ID,
+                ? await sfUpdate({ object, data, id: updateId })
+                : await sfCreate({
+                      object,
+                      data: { ...data, Initiative_Report__c: REPORT_ID },
                   });
 
             // Bulk update affected activity goals

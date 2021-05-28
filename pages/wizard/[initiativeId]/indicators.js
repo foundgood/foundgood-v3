@@ -58,18 +58,6 @@ const IndicatorsComponent = ({ pageProps }) => {
         CONSTANTS,
     } = useInitiativeDataStore();
 
-    // Method: Save new item, returns id
-    async function save(object, data) {
-        const id = await sfCreate({ object, data });
-        return id;
-    }
-
-    // Method: Update current item, returns id
-    async function update(object, data, id) {
-        await sfUpdate({ object, data, id });
-        return id;
-    }
-
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
@@ -108,10 +96,17 @@ const IndicatorsComponent = ({ pageProps }) => {
 
             // Update / Save
             const ActivitySuccessMetricId = updateId
-                ? await update(object, data[indicatorType], updateId)
-                : await save(object, {
-                      ...data[indicatorType],
-                      Initiative_Activity__c: activity.Id,
+                ? await sfUpdate({
+                      object,
+                      data: data[indicatorType],
+                      id: updateId,
+                  })
+                : await sfCreate({
+                      object,
+                      data: {
+                          ...data[indicatorType],
+                          Initiative_Activity__c: activity.Id,
+                      },
                   });
 
             // Update store

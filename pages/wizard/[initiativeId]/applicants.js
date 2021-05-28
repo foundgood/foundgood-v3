@@ -61,18 +61,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     // Get data for form
     const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
 
-    // Method: Save new item, returns id
-    async function save(object, data) {
-        const id = await sfCreate({ object, data });
-        return id;
-    }
-
-    // Method: Update current item, returns id
-    async function update(object, data, id) {
-        await sfUpdate({ object, data, id });
-        return id;
-    }
-
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
@@ -95,8 +83,11 @@ const ApplicantsComponent = ({ pageProps }) => {
 
             // Update / Save
             const collaboratorId = updateId
-                ? await update(object, data, updateId)
-                : await save(object, { ...data, Initiative__c: initiative.Id });
+                ? await sfUpdate({ object, data, id: updateId })
+                : await sfCreate({
+                      object,
+                      data: { ...data, Initiative__c: initiative.Id },
+                  });
 
             // Update store
             await updateCollaborator(collaboratorId);

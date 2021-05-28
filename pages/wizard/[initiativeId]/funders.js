@@ -71,18 +71,6 @@ const FundersComponent = ({ pageProps }) => {
         queries.account.allFoundations()
     );
 
-    // Method: Save new item, returns id
-    async function save(object, data) {
-        const id = await sfCreate({ object, data });
-        return id;
-    }
-
-    // Method: Update current item, returns id
-    async function update(object, data, id) {
-        await sfUpdate({ object, data, id });
-        return id;
-    }
-
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
@@ -114,8 +102,11 @@ const FundersComponent = ({ pageProps }) => {
 
             // Update / Save
             const funderId = updateId
-                ? await update(object, data, updateId)
-                : await save(object, { ...data, Initiative__c: initiative.Id });
+                ? await sfUpdate({ object, data, id: updateId })
+                : await sfCreate({
+                      object,
+                      data: { ...data, Initiative__c: initiative.Id },
+                  });
 
             // Update store
             await updateFunder(funderId);
