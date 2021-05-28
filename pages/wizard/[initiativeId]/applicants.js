@@ -61,21 +61,12 @@ const ApplicantsComponent = ({ pageProps }) => {
     // Get data for form
     const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
 
-    // Method: Save new item, returns id
-    async function save(object, data) {
-        const id = await sfCreate({ object, data });
-        return id;
-    }
-
-    // Method: Update current item, returns id
-    async function update(object, data, id) {
-        await sfUpdate({ object, data, id });
-        return id;
-    }
-
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
+            // Modal save button state
+            setModalIsSaving(true);
+
             const { Dates, Account__c, Type__c, Description__c } = formData;
 
             // Object name
@@ -92,8 +83,11 @@ const ApplicantsComponent = ({ pageProps }) => {
 
             // Update / Save
             const collaboratorId = updateId
-                ? await update(object, data, updateId)
-                : await save(object, { ...data, Initiative__c: initiative.Id });
+                ? await sfUpdate({ object, data, id: updateId })
+                : await sfCreate({
+                      object,
+                      data: { ...data, Initiative__c: initiative.Id },
+                  });
 
             // Update store
             await updateCollaborator(collaboratorId);
@@ -101,9 +95,14 @@ const ApplicantsComponent = ({ pageProps }) => {
             // Close modal
             setModalIsOpen(false);
 
+            // Modal save button state
+            setModalIsSaving(false);
+
             // Clear content in form
             reset();
         } catch (error) {
+            // Modal save button state
+            setModalIsSaving(false);
             console.warn(error);
         }
     }
@@ -168,6 +167,7 @@ const ApplicantsComponent = ({ pageProps }) => {
 
     // Local state to handle modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
@@ -214,8 +214,9 @@ const ApplicantsComponent = ({ pageProps }) => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id}
             />
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id}>
                 {Object.keys(initiative._collaborators).map(collaboratorKey => {
                     const collaborator =
                         initiative._collaborators[collaboratorKey];
@@ -265,7 +266,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('custom.FA_WizardModalHeadingApplicants')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty}
+                disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <Select

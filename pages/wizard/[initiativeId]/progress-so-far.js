@@ -99,8 +99,9 @@ const ProgressSoFarComponent = ({ pageProps }) => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id}
             />
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id}>
                 {activities.length > 0 ? (
                     activities.map(activityKey => {
                         const activity = initiative?._activities[activityKey];

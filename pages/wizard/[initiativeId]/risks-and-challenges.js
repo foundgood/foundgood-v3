@@ -86,8 +86,9 @@ const RisksAndChallengesComponent = () => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id}
             />
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id}>
                 <Reflection
                     name="Summary_Of_Initiative_Risks__c"
                     defaultValue={currentReport.Summary_Of_Initiative_Risks__c}
