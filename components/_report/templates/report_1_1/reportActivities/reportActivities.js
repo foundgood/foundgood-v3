@@ -15,6 +15,7 @@ import UpdateButton from 'components/updateButton';
 import ReportDetailCard from 'components/_initiative/reportDetailCard';
 import ChartCard from 'components/_initiative/chartCard';
 import TextCard from 'components/_initiative/textCard';
+import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportActivitiesComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata

@@ -14,6 +14,7 @@ import SectionEmpty from 'components/sectionEmpty';
 import UpdateButton from 'components/updateButton';
 import ReportSharingCard from 'components/_initiative/reportSharingCard';
 import TextCard from 'components/_initiative/textCard';
+import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportResultsComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata

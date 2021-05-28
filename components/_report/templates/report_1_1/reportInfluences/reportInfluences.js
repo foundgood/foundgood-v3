@@ -13,6 +13,7 @@ import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
 import UpdateButton from 'components/updateButton';
 import TextCard from 'components/_initiative/textCard';
+import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportInfluencesComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
