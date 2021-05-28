@@ -82,6 +82,8 @@ const SharingResultsComponent = ({ pageProps }) => {
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
+        // Modal save button state
+        setModalIsSaving(true);
         try {
             const {
                 Things_To_Do__c,
@@ -128,9 +130,14 @@ const SharingResultsComponent = ({ pageProps }) => {
             // Close modal
             setModalIsOpen(false);
 
+            // Modal save button state
+            setModalIsSaving(false);
+
             // Clear content in form
             reset();
         } catch (error) {
+            // Modal save button state
+            setModalIsSaving(false);
             console.warn(error);
         }
     }
@@ -195,6 +202,7 @@ const SharingResultsComponent = ({ pageProps }) => {
 
     // Local state to handle modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
@@ -263,8 +271,9 @@ const SharingResultsComponent = ({ pageProps }) => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id}
             />
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id}>
                 {Object.keys(initiative?._activities)
                     .filter(activityKey => {
                         const activity = initiative?._activities[activityKey];
@@ -356,7 +365,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('custom.FA_WizardModalHeadingSharing')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty}
+                disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <Text

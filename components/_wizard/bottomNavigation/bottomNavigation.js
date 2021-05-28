@@ -102,11 +102,15 @@ const BottomNavigationComponent = () => {
                         ])}
                         theme="coral"
                         variant="secondary"
+                        disabled={loading}
                         action={router.back}>
                         {label('custom.FA_ButtonBack')}
                     </Button>
 
-                    <Button theme="coral" action={onHandleContinue}>
+                    <Button
+                        theme="coral"
+                        action={onHandleContinue}
+                        disabled={loading}>
                         {label('custom.FA_ButtonContinue')}
                     </Button>
                 </div>

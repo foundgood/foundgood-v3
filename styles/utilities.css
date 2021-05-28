@@ -16,6 +16,25 @@
         @apply transition-colors duration-300 ease-smooth-out;
     }
 
+    /* Animation class for title prelaod */
+    .title-preamble-preload-animate {
+        background-size: 400% 400%;
+        animation: TitlePreamblePreload 6s ease infinite;
+    }
+
+    /* Keyframes for text loader */
+    @keyframes TitlePreamblePreload {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 51%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
     /* Header */
     .header-mt {
         @apply mt-48 lg:mt-64 sm:mt-56;

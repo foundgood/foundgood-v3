@@ -89,8 +89,9 @@ const EndOfGrantReflectionsComponent = () => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id}
             />
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id}>
                 <Reflection
                     name="Project_Purpose__c"
                     defaultValue={currentReport.Project_Purpose__c}

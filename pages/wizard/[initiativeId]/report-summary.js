@@ -87,8 +87,9 @@ const ReportSummaryComponent = () => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id && currentReport.Id}
             />
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id && currentReport.Id}>
                 <Reflection
                     name="Summary_Of_Activities__c"
                     defaultValue={currentReport.Summary_Of_Activities__c}

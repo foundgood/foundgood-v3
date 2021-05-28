@@ -136,9 +136,10 @@ const OverviewComponent = () => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id}
             />
 
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id}>
                 {mainCollaborator.Id ? (
                     <>
                         <Text

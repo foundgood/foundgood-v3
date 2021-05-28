@@ -180,8 +180,9 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id}
             />
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id}>
                 {getReportDetails(REPORT_ID)
                     .filter(
                         item =>

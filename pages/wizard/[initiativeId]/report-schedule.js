@@ -63,6 +63,8 @@ const ReportScheduleComponent = ({ pageProps }) => {
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
+        // Modal save button state
+        setModalIsSaving(true);
         try {
             const { ReportDates, Report_Type__c, Due_Date__c } = formData;
 
@@ -91,15 +93,21 @@ const ReportScheduleComponent = ({ pageProps }) => {
             // Close modal
             setModalIsOpen(false);
 
+            // Modal save button state
+            setModalIsSaving(false);
+
             // Clear content in form
             reset();
         } catch (error) {
+            // Modal save button state
+            setModalIsSaving(false);
             console.warn(error);
         }
     }
 
     // Local state to handle modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
@@ -137,8 +145,9 @@ const ReportScheduleComponent = ({ pageProps }) => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id}
             />
-            <InputWrapper>
+            <InputWrapper preload={!initiative.Id}>
                 {funders.length > 0 ? (
                     funders.map(funderKey => {
                         const funder = initiative?._funders[funderKey];
@@ -186,7 +195,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('custom.FA_WizardModalHeadingReports')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty}
+                disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <Select

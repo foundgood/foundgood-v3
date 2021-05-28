@@ -9,12 +9,28 @@ import t from 'prop-types';
 
 // Components
 
-const InputWrapperComponent = ({ children }) => {
-    return <div className="flex flex-col space-y-48">{children}</div>;
+const InputWrapperComponent = ({ children, preload }) => {
+    return (
+        <div
+            style={{ willChange: 'transform opacity' }}
+            className={cc([
+                'flex flex-col space-y-48 transition-slow transform',
+                {
+                    'opacity-0 translate-y-48': preload,
+                    'opacity-100 translate-y-0': !preload,
+                },
+            ])}>
+            {children}
+        </div>
+    );
 };
 
-InputWrapperComponent.propTypes = {};
+InputWrapperComponent.propTypes = {
+    preload: t.bool,
+};
 
-InputWrapperComponent.defaultProps = {};
+InputWrapperComponent.defaultProps = {
+    preload: false,
+};
 
 export default InputWrapperComponent;

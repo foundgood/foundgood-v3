@@ -103,62 +103,58 @@ const ReportDetailsComponent = () => {
             <TitlePreamble
                 title={label(currentItem?.item?.labels?.form?.title)}
                 preamble={label(currentItem?.item?.labels?.form?.preamble)}
+                preload={!initiative.Id && currentReport.Id}
             />
-            {currentReport.Id ? (
-                <InputWrapper>
-                    <Text
-                        name="Name"
-                        defaultValue={currentReport.Name}
-                        label={label('custom.FA_ReportName')}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
-                        maxLength={80}
-                        disabled={isNovoLeadFunder()}
-                        required={!isNovoLeadFunder()}
-                        controller={control}
-                    />
-                    <Select
-                        name="Report_Type__c"
-                        defaultValue={currentReport.Report_Type__c}
-                        label={label('objects.initiativeReport.Report_Type__c')}
-                        subLabel={helpText(
-                            'objects.initiativeReport.Report_Type__c'
-                        )}
-                        placeholder={labelTodo('Type')}
-                        options={valueSet('initiativeReport.Report_Type__c')}
-                        disabled={isNovoLeadFunder()}
-                        required={!isNovoLeadFunder()}
-                        controller={control}
-                    />
-                    <DatePicker
-                        name="Due_Date__c"
-                        label={label('objects.initiativeReport.Due_Date__c')}
-                        subLabel={helpText(
-                            'objects.initiativeReport.Due_Date__c'
-                        )}
-                        defaultValue={currentReport.Due_Date__c}
-                        controller={control}
-                        disabled={isNovoLeadFunder()}
-                        required={!isNovoLeadFunder()}
-                    />
-                    <DateRange
-                        name="ReportDuration"
-                        defaultValue={{
-                            from: currentReport.Report_Period_Start_Date__c,
-                            to: currentReport.Report_Period_End_Date__c,
-                        }}
-                        disabled={isNovoLeadFunder()}
-                        label={`${label(
-                            'objects.initiativeReport.Report_Period_Start_Date__c'
-                        )} / ${label(
-                            'objects.initiativeReport.Report_Period_End_Date__c'
-                        )}`}
-                        controller={control}
-                        required={!isNovoLeadFunder()}
-                    />
-                </InputWrapper>
-            ) : null}
+
+            <InputWrapper preload={!initiative.Id && currentReport.Id}>
+                <Text
+                    name="Name"
+                    defaultValue={currentReport.Name}
+                    label={label('custom.FA_ReportName')}
+                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    maxLength={80}
+                    disabled={isNovoLeadFunder()}
+                    required={!isNovoLeadFunder()}
+                    controller={control}
+                />
+                <Select
+                    name="Report_Type__c"
+                    defaultValue={currentReport.Report_Type__c}
+                    label={label('objects.initiativeReport.Report_Type__c')}
+                    subLabel={helpText(
+                        'objects.initiativeReport.Report_Type__c'
+                    )}
+                    placeholder={labelTodo('Type')}
+                    options={valueSet('initiativeReport.Report_Type__c')}
+                    disabled={isNovoLeadFunder()}
+                    required={!isNovoLeadFunder()}
+                    controller={control}
+                />
+                <DatePicker
+                    name="Due_Date__c"
+                    label={label('objects.initiativeReport.Due_Date__c')}
+                    subLabel={helpText('objects.initiativeReport.Due_Date__c')}
+                    defaultValue={currentReport.Due_Date__c}
+                    controller={control}
+                    disabled={isNovoLeadFunder()}
+                    required={!isNovoLeadFunder()}
+                />
+                <DateRange
+                    name="ReportDuration"
+                    defaultValue={{
+                        from: currentReport.Report_Period_Start_Date__c,
+                        to: currentReport.Report_Period_End_Date__c,
+                    }}
+                    disabled={isNovoLeadFunder()}
+                    label={`${label(
+                        'objects.initiativeReport.Report_Period_Start_Date__c'
+                    )} / ${label(
+                        'objects.initiativeReport.Report_Period_End_Date__c'
+                    )}`}
+                    controller={control}
+                    required={!isNovoLeadFunder()}
+                />
+            </InputWrapper>
         </>
     );
 };
