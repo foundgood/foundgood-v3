@@ -49,7 +49,7 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                 .filter(item => {
                     // "Dissemination" or "Intervention"
                     return item.Activity_Type__c ==
-                        constants.TYPES.ACTIVITY_INTERVENTION
+                        constants.TYPES.ACTIVITY_DISSEMINATION
                         ? true
                         : false;
                 })
