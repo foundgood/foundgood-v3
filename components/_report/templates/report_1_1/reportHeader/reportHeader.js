@@ -1,12 +1,8 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
 import t from 'prop-types';
-
-// Utilities
-// import { useMetadata } from 'utilities/hooks';
-// import { useReport } from 'utilities/hooks/reportContext';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';

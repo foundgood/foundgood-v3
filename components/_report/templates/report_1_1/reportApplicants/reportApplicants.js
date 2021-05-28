@@ -22,39 +22,31 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
     const [applicants, setApplicants] = useState([]);
 
     useEffect(() => {
-        // Make sure we have funders & collaborators
-        // Overview details + Funders numbers
-        if (Object.values(initiative._funders).length > 0) {
-            // Make sure we have Report Details
-            if (Object.values(initiative._reportDetails).length > 0) {
-                // Collaborators are split in two groups
-                // "Co-applicants" & "Additional Collaborator"
-                // Get all and then split them
-                const allCollaborators = Object.values(
-                    initiative._reportDetails
-                )
-                    .filter(item => {
-                        return item.Type__c ==
-                            constants.TYPES.COLLABORATOR_OVERVIEW
-                            ? true
-                            : false;
-                    })
-                    .map(item => {
-                        // Get funder based on key
-                        const collaborator =
-                            initiative._collaborators[
-                                item.Initiative_Collaborator__c
-                            ];
-                        // Add Report Reflection text to collaborators
-                        collaborator.reportReflection = item.Description__c;
-                        return collaborator;
-                    });
-                const applicants = allCollaborators.filter(
-                    item =>
-                        !constants.TYPES.COLLABORATORS.includes(item.Type__c)
-                );
-                setApplicants(applicants);
-            }
+        // Make sure we have Report Details
+        if (Object.values(initiative._reportDetails).length > 0) {
+            // Collaborators are split in two groups
+            // "Co-applicants" & "Additional Collaborator"
+            // Get all and then split them
+            const allCollaborators = Object.values(initiative._reportDetails)
+                .filter(item => {
+                    return item.Type__c == constants.TYPES.COLLABORATOR_OVERVIEW
+                        ? true
+                        : false;
+                })
+                .map(item => {
+                    // Get funder based on key
+                    const collaborator =
+                        initiative._collaborators[
+                            item.Initiative_Collaborator__c
+                        ];
+                    // Add Report Reflection text to collaborators
+                    collaborator.reportReflection = item.Description__c;
+                    return collaborator;
+                });
+            const applicants = allCollaborators.filter(
+                item => !constants.TYPES.COLLABORATORS.includes(item.Type__c)
+            );
+            setApplicants(applicants);
         }
     }, []);
 

@@ -20,66 +20,60 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
     const { label } = useMetadata();
 
     const [employeeGroups, setEmployeeGroups] = useState([]);
-    const [employeesFundedReflection, setEmployeesFundedReflection] = useState(
-        []
-    );
+    const [
+        employeesFundedReflection,
+        setEmployeesFundedReflection,
+    ] = useState();
 
     useEffect(() => {
-        // Make sure we have funders & collaborators
-        // Overview details + Funders numbers
-        if (Object.values(initiative._funders).length > 0) {
-            // Make sure we have Report Details
-            if (Object.values(initiative._reportDetails).length > 0) {
-                // Get reflection for employees funded
-                const employeesReflection = Object.values(
-                    initiative._reportDetails
-                ).filter(item => {
-                    return item.Type__c ==
-                        constants.TYPES.EMPLOYEES_FUNDED_OVERVIEW
-                        ? true
-                        : false;
-                });
-                setEmployeesFundedReflection(
-                    employeesReflection[0]?.Description__c
-                );
+        // Make sure we have Report Details
+        if (Object.values(initiative._reportDetails).length > 0) {
+            // Get reflection for employees funded
+            const employeesReflection = Object.values(
+                initiative._reportDetails
+            ).filter(item => {
+                return item.Type__c == constants.TYPES.EMPLOYEES_FUNDED_OVERVIEW
+                    ? true
+                    : false;
+            });
+            setEmployeesFundedReflection(
+                employeesReflection[0]?.Description__c
+            );
 
-                // Employee funded - Data for Number cards
-                // Group empoyees per role
-                // EX Data:
-                // {
-                //     { role: 'Project manager', total: 2, male: 1, female: 1 },
-                //     { role: 'Scientists', total: 4, male: 1, female: 3 },
-                // };
-                let employeeGroups = Object.values(
-                    initiative._employeesFunded
-                ).reduce((result, employee) => {
-                    result[employee.Role_Type__c] =
-                        result[employee.Role_Type__c] || {};
-                    // Ref
-                    const group = result[employee.Role_Type__c];
+            // Employee funded - Data for Number cards
+            // Group empoyees per role
+            // EX Data:
+            // {
+            //     { role: 'Project manager', total: 2, male: 1, female: 1 },
+            //     { role: 'Scientists', total: 4, male: 1, female: 3 },
+            // };
+            let employeeGroups = Object.values(
+                initiative._employeesFunded
+            ).reduce((result, employee) => {
+                result[employee.Role_Type__c] =
+                    result[employee.Role_Type__c] || {};
+                // Ref
+                const group = result[employee.Role_Type__c];
 
-                    // Role
-                    group.role = employee.Role_Type__c;
+                // Role
+                group.role = employee.Role_Type__c;
 
-                    // Total employees
-                    group.total = group.total ? group.total + 1 : 1;
+                // Total employees
+                group.total = group.total ? group.total + 1 : 1;
 
-                    // Calculate how many are male/female/other in each group
-                    if (employee.Gender__c == constants.TYPES.GENDER_MALE) {
-                        group.male = group.male ? group.male + 1 : 1;
-                    } else if (
-                        employee.Gender__c == constants.TYPES.GENDER_FEMALE
-                    ) {
-                        group.female = group.female ? group.female + 1 : 1;
-                    } else if (
-                        employee.Gender__c == constants.TYPES.GENDER_OTHER
-                    ) {
-                        group.other = group.other ? group.other + 1 : 1;
-                    }
-                    return result;
-                }, {});
-                setEmployeeGroups(employeeGroups);
-            }
+                // Calculate how many are male/female/other in each group
+                if (employee.Gender__c == constants.TYPES.GENDER_MALE) {
+                    group.male = group.male ? group.male + 1 : 1;
+                } else if (
+                    employee.Gender__c == constants.TYPES.GENDER_FEMALE
+                ) {
+                    group.female = group.female ? group.female + 1 : 1;
+                } else if (employee.Gender__c == constants.TYPES.GENDER_OTHER) {
+                    group.other = group.other ? group.other + 1 : 1;
+                }
+                return result;
+            }, {});
+            setEmployeeGroups(employeeGroups);
         }
     }, []);
 
