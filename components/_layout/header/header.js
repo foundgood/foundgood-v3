@@ -54,7 +54,7 @@ const HeaderComponent = ({ showUserControls }) => {
 
     return (
         <>
-            <div className="fixed flex items-center justify-between header-h page-mx z-logo">
+            <div className="fixed flex items-center justify-between header-h page-mx z-logo print:hidden">
                 <Link href="/">
                     <a className="f">
                         <FGLogo className="text-blue-300 fill-current" />
@@ -63,7 +63,7 @@ const HeaderComponent = ({ showUserControls }) => {
             </div>
             <div
                 className={cc([
-                    'fixed left-0 flex items-center justify-end w-full text-blue-300 z-header header-h page-px',
+                    'fixed left-0 flex items-center justify-end w-full text-blue-300 z-header header-h page-px print:hidden',
                     {
                         'bg-white': showUserControls,
                     },
@@ -109,7 +109,7 @@ const HeaderComponent = ({ showUserControls }) => {
             <div
                 ref={userNavigationRef}
                 className={cc([
-                    'bg-white p-16 rounded-8 absolute header-t right-0 page-mr flex flex-col space-y-16 min-w-[192px] mt-8 z-logo transform transition-default',
+                    'bg-white p-16 rounded-8 absolute header-t right-0 page-mr flex flex-col space-y-16 min-w-[192px] mt-8 z-logo transform transition-default print:hidden',
                     {
                         'opacity-100 translate-x-0 pointer-events-auto': userNavActive,
                         'opacity-0 -translate-y-10 pointer-events-none': !userNavActive,

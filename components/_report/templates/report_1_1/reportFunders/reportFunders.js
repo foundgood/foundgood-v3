@@ -86,37 +86,41 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                     };
                 }
             );
-
-            const multiplier = 3.6; // 1% of 360
-
-            // Create object array.
-            // Use reduce to add previous "deg" to position current slice (360 deg)
-            let donutStyles = donutData.reduce((previous, slice) => {
-                const prevDeg = previous[previous.length - 1]
-                    ? previous[previous.length - 1].deg
-                    : 0;
-                const deg = slice.percentage * 100 * multiplier;
-                const obj = {
-                    deg: deg + prevDeg,
-                    hex: slice.hex,
-                };
-                previous.push(obj);
-                return previous;
-            }, []);
-            // Create array of color / deg pairs, one per slice
-            donutStyles = donutStyles.map((slice, index) => {
-                // Last Slice uses '0' instead of 'X deg' - to close circle
-                if (index == donutStyles.length - 1) {
-                    return `${slice.hex} 0`;
-                } else {
-                    return `${slice.hex} 0 ${slice.deg}deg`;
-                }
-            });
-            // Construct gradient string
-            // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
-            const gradient = `conic-gradient(${donutStyles.join(', ')})`;
-            setPieChartStyle({ backgroundImage: gradient });
             setDonutData(donutData);
+
+            if (donutData.length > 1) {
+                const multiplier = 3.6; // 1% of 360
+
+                // Create object array.
+                // Use reduce to add previous "deg" to position current slice (360 deg)
+                let donutStyles = donutData.reduce((previous, slice) => {
+                    const prevDeg = previous[previous.length - 1]
+                        ? previous[previous.length - 1].deg
+                        : 0;
+                    const deg = slice.percentage * 100 * multiplier;
+                    const obj = {
+                        deg: deg + prevDeg,
+                        hex: slice.hex,
+                    };
+                    previous.push(obj);
+                    return previous;
+                }, []);
+                // Create array of color / deg pairs, one per slice
+                donutStyles = donutStyles.map((slice, index) => {
+                    // Last Slice uses '0' instead of 'X deg' - to close circle
+                    if (index == donutStyles.length - 1) {
+                        return `${slice.hex} 0`;
+                    } else {
+                        return `${slice.hex} 0 ${slice.deg}deg`;
+                    }
+                });
+                // Construct gradient string
+                // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
+                const gradient = `conic-gradient(${donutStyles.join(', ')})`;
+                setPieChartStyle({ backgroundImage: gradient });
+            } else {
+                setPieChartStyle({ backgroundColor: donutData[0].hex });
+            }
 
             // Make sure we have Report Details
             if (Object.values(initiative._reportDetails).length > 0) {

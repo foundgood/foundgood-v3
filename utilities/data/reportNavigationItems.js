@@ -308,7 +308,6 @@ const reportWizardDictionary = {
             return `/wizard/${initiativeId}/evaluations/${reportId}`;
         },
     },
-    postProjectActivities: {},
     endOfGrantReflections: {
         title: 'custom.FA_ReportWizardMenuEndReflections',
         labels: {
@@ -327,7 +326,25 @@ const reportWizardDictionary = {
             return `/wizard/${initiativeId}/end-of-grant-reflections/${reportId}`;
         },
     },
-    postProjectActivities: {},
+    postProjectActivities: {
+        title: 'custom.FA_ReportWizardMenuInfluence',
+        labels: {
+            form: {
+                title: 'custom.FA_ReportWizardPostProjectActivitiesHeading',
+                preamble:
+                    'custom.FA_ReportWizardPostProjectActivitiesSubHeading',
+            },
+            help: {
+                why: 'custom.FA_ReportWizardPostProjectActivitiesHelpWhy',
+                what: 'custom.FA_ReportWizardPostProjectActivitiesHelpWhat',
+                guide: 'custom.FA_ReportWizardPostProjectActivitiesHelpGuide',
+            },
+        },
+        baseUrl: 'post-project-activities',
+        url(initiativeId, reportId) {
+            return `/wizard/${initiativeId}/post-project-activities/${reportId}`;
+        },
+    },
 };
 
 export { reportWizardDictionary };

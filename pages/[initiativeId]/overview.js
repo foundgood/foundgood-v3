@@ -413,7 +413,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </div>
                                 {/* List of funders */}
-                                {donutData.map((item, index) => (
+                                {donutData?.map((item, index) => (
                                     <div
                                         key={`d-${index}`}
                                         className="flex mt-8 t-caption">

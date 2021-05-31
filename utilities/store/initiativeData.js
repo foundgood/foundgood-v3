@@ -239,6 +239,8 @@ const useInitiativeDataStore = create((set, get) => ({
         _updateAuth();
     },
 
+    async updateOutcomes(id) {},
+
     async updateActivity(id) {
         const data = await sfQuery(queries.initiativeActivity.get(id));
         if (data) {
@@ -282,6 +284,7 @@ const useInitiativeDataStore = create((set, get) => ({
         const data = await sfQuery(
             queries.initiativeActivityGoal.getMultiple(ids)
         );
+
         if (data) {
             set(state => ({
                 initiative: {
@@ -293,6 +296,26 @@ const useInitiativeDataStore = create((set, get) => ({
                 },
             }));
         }
+
+        // Update auth
+        _updateAuth();
+    },
+
+    // Activity Goals: Remove items based on ids
+    async removeActivityGoals(ids) {
+        set(state => {
+            const activityGoals = Object.values(
+                state.initiative._activityGoals
+            ).filter(item => {
+                return ids.includes(item.Id) ? false : true;
+            });
+            return {
+                initiative: {
+                    ...state.initiative,
+                    _activityGoals: { activityGoals },
+                },
+            };
+        });
 
         // Update auth
         _updateAuth();

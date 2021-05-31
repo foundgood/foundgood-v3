@@ -70,4 +70,38 @@ async function update({ object, id, data }) {
     }
 }
 
-export { create, update };
+// curl https://yourInstance.salesforce.com/services/data/v52.0/sobjects/Account/001D000000INjVe -H "Authorization: Bearer token" -H "Content-Type: application/json" -d @patchaccount.json -X PATCH
+// curl https://yourInstance.salesforce.com/services/data/v52.0/sobjects/Account/001D000000INjVe -H "Authorization: Bearer token" -X DELETE
+
+// Delete any Salesforce object
+async function remove({ object, id }) {
+    try {
+        const response = await axios.delete(
+            `${instanceUrl()}/services/data/v${
+                process.env.NEXT_PUBLIC_SF_VERSION
+            }/sobjects/${object}/${id}`,
+            // data,
+            {
+                headers: {
+                    // 'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken()}`,
+                },
+            }
+        );
+
+        // Convert non-ok HTTP responses into errors:
+        if (response.status !== 204) {
+            throw {
+                statusText: response,
+                response,
+            };
+        }
+
+        return 'All ok';
+    } catch (error) {
+        console.warn(error);
+        return error;
+    }
+}
+
+export { create, update, remove };

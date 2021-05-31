@@ -56,7 +56,11 @@ const ResultCardComponent = ({
             </AnimateHeight>
         </div>
     ) : (
-        <Card {...rest}>{journalPublication && <p>test</p>}</Card>
+        <Card {...rest}>
+            {journalPublication && (
+                <JournalPublication {...journalPublication} />
+            )}
+        </Card>
     );
 };
 
