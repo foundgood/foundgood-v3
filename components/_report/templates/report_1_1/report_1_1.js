@@ -77,6 +77,14 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     />
 
                     {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Headline: "Key changes" */}
+                    <SectionWrapper paddingY={false}>
+                        <h2 className="t-h3 mt-96">
+                            {label('custom.FA_ReportViewHeadingKeyChanges')}
+                        </h2>
+                    </SectionWrapper>
+
+                    {/* ------------------------------------------------------------------------------------------ */}
                     {/* Funders */}
                     <ReportFunders
                         initiative={initiativeData}
@@ -92,13 +100,6 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         constants={CONSTANTS}
                     />
 
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Headline: "Key changes" */}
-                    <SectionWrapper paddingY={false}>
-                        <h2 className="t-h3 mt-96">
-                            {label('custom.FA_ReportViewHeadingKeyChanges')}
-                        </h2>
-                    </SectionWrapper>
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Collaborators */}
                     <ReportCollaborators
