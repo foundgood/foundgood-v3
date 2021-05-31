@@ -179,19 +179,19 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                 ]}
                             />
                         </SectionWrapper>
-                        <SectionWrapper>
-                            {item.peopleIndicators && (
+                        {item.peopleIndicators.length > 0 && (
+                            <SectionWrapper>
                                 <ChartCard
                                     useBorder={true}
                                     headline={
-                                        item.customIndicators[0]?.groupTitle
+                                        item.peopleIndicators[0]?.groupTitle
                                     }
                                     items={item.peopleIndicators}
                                 />
-                            )}
-                        </SectionWrapper>
-                        <SectionWrapper>
-                            {item.customIndicators && (
+                            </SectionWrapper>
+                        )}
+                        {item.customIndicators.length > 0 && (
+                            <SectionWrapper>
                                 <ChartCard
                                     className="mt-24"
                                     useBorder={true}
@@ -200,8 +200,8 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                     }
                                     items={item.customIndicators}
                                 />
-                            )}
-                        </SectionWrapper>
+                            </SectionWrapper>
+                        )}
                         <TextCard
                             hasBackground={true}
                             className="mt-32"
