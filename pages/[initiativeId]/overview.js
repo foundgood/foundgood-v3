@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 import cc from 'classcat';
 import Image from 'next/image';
+import dayjs from 'dayjs';
 
 // Utilities
 import { useMetadata, useAuth, useResponsive } from 'utilities/hooks';
@@ -566,9 +567,12 @@ const ProjectComponent = ({ pageProps }) => {
                                     </h3>
                                     <p className="mt-16 t-sh5 text-blue-60">
                                         {/* Display year, not full date */}
-                                        {item.Start_Date__c?.substring(0, 4)}
-                                        {' - '}
-                                        {item.End_Date__c?.substring(0, 4)}
+                                        {item.Start_Date__c &&
+                                            `${dayjs(item.Start_Date__c).format(
+                                                'YYYY'
+                                            )} - ${dayjs(
+                                                item.End_Date__c
+                                            ).format('YYYY')}`}
                                     </p>
                                     <p className="mt-16 t-body">
                                         {item.Description__c}
@@ -614,10 +618,12 @@ const ProjectComponent = ({ pageProps }) => {
                                         {item.Account__r.Name}
                                     </h3>
                                     <p className="mt-16 t-sh5 text-blue-60">
-                                        {/* Display year, not full date */}
-                                        {item.Start_Date__c?.substring(0, 4)}
-                                        {' - '}
-                                        {item.End_Date__c?.substring(0, 4)}
+                                        {item.Start_Date__c &&
+                                            `${dayjs(item.Start_Date__c).format(
+                                                'YYYY'
+                                            )} - ${dayjs(
+                                                item.End_Date__c
+                                            ).format('YYYY')}`}
                                     </p>
                                     <p className="mt-16 t-body">
                                         {item.Description__c}

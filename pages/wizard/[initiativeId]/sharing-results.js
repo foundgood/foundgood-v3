@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 // Packages
 import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
+import dayjs from 'dayjs';
 
 // Utilities
 import {
@@ -67,6 +68,21 @@ const SharingResultsComponent = ({ pageProps }) => {
 
     // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+
+    // Array of years - Publication year
+    const getYears = () => {
+        const years = [];
+        const currentYear = new Date().getFullYear();
+        let startYear = currentYear - 10; // 10 years back
+        while (startYear <= currentYear) {
+            const year = startYear++;
+            years.push({
+                label: `${year}`,
+                value: `${year}-01-01`,
+            });
+        }
+        return years;
+    };
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -324,8 +340,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                                         ? {
                                               type:
                                                   activity.Publication_Type__c,
-                                              year:
-                                                  activity.Publication_Year__c,
+                                              year: dayjs(
+                                                  activity.Publication_Year__c
+                                              ).format('YYYY'),
                                               title:
                                                   activity.Publication_Title__c,
                                               publisher:
@@ -426,7 +443,8 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 maxLength={30}
                                 controller={control}
                             />
-                            <DatePicker
+
+                            <Select
                                 name="Publication_Year__c"
                                 label={label(
                                     'objects.initiativeActivity.Publication_Year__c'
@@ -434,6 +452,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 subLabel={helpText(
                                     'objects.initiativeActivity.Publication_Year__c'
                                 )}
+                                options={getYears()}
                                 controller={control}
                             />
                             <Text

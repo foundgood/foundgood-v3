@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 // Packages
 import t from 'prop-types';
+import dayjs from 'dayjs';
 
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
@@ -141,7 +142,9 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                 label: label(
                                     'custom.FA_InitiativeViewSharingPublicationYear'
                                 ),
-                                text: item.Publication_Year__c,
+                                text: dayjs(item.Publication_Year__c).format(
+                                    'YYYY'
+                                ),
                             },
                             {
                                 label: label(
