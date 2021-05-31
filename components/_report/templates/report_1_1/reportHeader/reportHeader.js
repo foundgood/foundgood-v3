@@ -3,6 +3,7 @@ import React from 'react';
 
 // Packages
 import t from 'prop-types';
+import Image from 'next/image';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -13,14 +14,14 @@ const ReportHeaderComponent = ({ initiative, report }) => {
             <SectionWrapper>
                 <div className="w-64 h-64 overflow-hidden rounded-4">
                     {initiative.Hero_Image_URL__c && (
-                        // <Image
-                        //     src={initiative.Hero_Image_URL__c}
-                        //     width="64"
-                        //     height="64"></Image>
-                        <img
-                            className="w-full h-full"
+                        <Image
                             src={initiative.Hero_Image_URL__c}
-                        />
+                            width="64"
+                            height="64"></Image>
+                        // <img
+                        //     className="w-full h-full"
+                        //     src={initiative.Hero_Image_URL__c}
+                        // />
                     )}
                 </div>
                 <div className="mt-16">{initiative.Lead_Grantee__r?.Name}</div>
@@ -31,6 +32,7 @@ const ReportHeaderComponent = ({ initiative, report }) => {
                     {report.Due_Date__c?.substring(0, 4)}
                 </div>
                 <div className="flex mt-16 t-caption text-blue-60">
+                    {/* Which id to show? */}
                     {initiative.Application_Id__c}
                     <div className="mx-4">•</div>
                     {initiative.Stage__c}

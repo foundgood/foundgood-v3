@@ -35,8 +35,9 @@ const InitiativeRowComponent = ({
                 <div className="flex justify-start">
                     {image ? (
                         <div className="relative flex-shrink-0 hidden overflow-hidden w-128 h-128 rounded-8 sm:flex">
+                            {/* <img className="w-full h-full" src={image} /> */}
                             <Image
-                                src="/images/fg-landscape-1.jpg"
+                                src={image}
                                 layout="fill"
                                 objectFit="cover"
                                 sizes="256px"

@@ -266,19 +266,19 @@ const ProjectComponent = ({ pageProps }) => {
                                     <div className="relative w-full h-full">
                                         {initiativeData.Hero_Image_URL__c && (
                                             <div className="relative mt-16 bg-blue-10 imageContainer">
-                                                {/* <Image
+                                                <Image
                                                     className="image"
                                                     src={
                                                         initiativeData.Hero_Image_URL__c
                                                     }
                                                     layout="fill"
-                                                /> */}
-                                                <img
+                                                />
+                                                {/* <img
                                                     className="w-full h-auto"
                                                     src={
                                                         initiativeData.Hero_Image_URL__c
                                                     }
-                                                />
+                                                /> */}
                                             </div>
                                         )}
                                     </div>

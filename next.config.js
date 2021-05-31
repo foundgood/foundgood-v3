@@ -14,7 +14,10 @@ module.exports = {
         return config;
     },
     images: {
-        domains: ['foundgood-initiative-update-content-media.s3.amazonaws.com'],
+        domains: [
+            'foundgood-initiative-update-content-media.s3.amazonaws.com',
+            'foundgood-initiative-update-content-media.s3.eu-west-1.amazonaws.com',
+        ],
     },
     target: 'serverless',
     async rewrites() {

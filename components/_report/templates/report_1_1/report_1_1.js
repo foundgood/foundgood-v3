@@ -35,8 +35,8 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     useEffect(() => {
         // Initial Load
         if (report?.Id && initiative?.Id) {
-            console.log('report: ', report);
-            console.log('initiative: ', initiative);
+            // console.log('report: ', report);
+            // console.log('initiative: ', initiative);
 
             setCurrentReport(report);
             setInitiativeData(initiative);
