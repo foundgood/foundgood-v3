@@ -103,41 +103,52 @@ const ProgressSoFarComponent = ({ pageProps }) => {
             />
             <InputWrapper preload={!initiative.Id}>
                 {activities.length > 0 ? (
-                    activities.map(activityKey => {
-                        const activity = initiative?._activities[activityKey];
-                        // Get success metric items based on activity id (activityKey) and activitySuccessMetric.XXX
-                        const successMetricItems = Object.values(
-                            initiative?._activitySuccessMetrics
-                        ).filter(
-                            item => item.Initiative_Activity__c === activityKey
-                        );
+                    activities
+                        .filter(activityKey => {
+                            const activity =
+                                initiative?._activities[activityKey];
+                            return (
+                                activity.Activity_Type__c ==
+                                CONSTANTS.TYPES.ACTIVITY_INTERVENTION
+                            );
+                        })
+                        .map(activityKey => {
+                            const activity =
+                                initiative?._activities[activityKey];
+                            // Get success metric items based on activity id (activityKey) and activitySuccessMetric.XXX
+                            const successMetricItems = Object.values(
+                                initiative?._activitySuccessMetrics
+                            ).filter(
+                                item =>
+                                    item.Initiative_Activity__c === activityKey
+                            );
 
-                        return (
-                            <ProgressCard
-                                key={activity.Id}
-                                headline={
-                                    _get(activity, 'Things_To_Do__c') || ''
-                                }
-                                controller={control}
-                                items={successMetricItems.map(item => ({
-                                    id: item.Id,
-                                    headline:
-                                        item.Type__c ===
-                                        CONSTANTS.TYPES.INDICATOR_CUSTOM
-                                            ? item.Name
-                                            : `${item.Gender__c} ${
-                                                  item.Gender_Other__c
-                                                      ? `(${item.Gender_Other__c})`
-                                                      : ''
-                                              } ${item.KPI__c} ${
-                                                  item.Lowest_Age__c
-                                              }-${item.Highest_Age__c}`,
-                                    label: item.Type__c,
-                                    currently: item.Current_Status__c,
-                                }))}
-                            />
-                        );
-                    })
+                            return (
+                                <ProgressCard
+                                    key={activity.Id}
+                                    headline={
+                                        _get(activity, 'Things_To_Do__c') || ''
+                                    }
+                                    controller={control}
+                                    items={successMetricItems.map(item => ({
+                                        id: item.Id,
+                                        headline:
+                                            item.Type__c ===
+                                            CONSTANTS.TYPES.INDICATOR_CUSTOM
+                                                ? item.Name
+                                                : `${item.Gender__c} ${
+                                                      item.Gender_Other__c
+                                                          ? `(${item.Gender_Other__c})`
+                                                          : ''
+                                                  } ${item.KPI__c} ${
+                                                      item.Lowest_Age__c
+                                                  }-${item.Highest_Age__c}`,
+                                        label: item.Type__c,
+                                        currently: item.Current_Status__c,
+                                    }))}
+                                />
+                            );
+                        })
                 ) : (
                     <p className="t-h5">
                         {label('custom.FA_WizardEmptyStatesProgress')}
