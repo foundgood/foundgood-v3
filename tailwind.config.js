@@ -192,6 +192,9 @@ module.exports = {
                 ...remInPx(8),
                 ...remInPx(16),
             },
+            screens: {
+                print: { raw: 'print' },
+            },
         },
     },
     variants: {
