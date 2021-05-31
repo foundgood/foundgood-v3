@@ -51,7 +51,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { isDirty } = useFormState({ control });
 
     // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    const { sfCreate, sfUpdate, sfDelete, sfQuery, queries } = useSalesForce();
 
     // Store: Initiative data
     const {
@@ -59,6 +59,7 @@ const ActivitiesComponent = ({ pageProps }) => {
         getReportDetails,
         updateActivity,
         updateActivityGoals,
+        removeActivityGoals,
         updateReportDetails,
         CONSTANTS,
     } = useInitiativeDataStore();
@@ -99,8 +100,24 @@ const ActivitiesComponent = ({ pageProps }) => {
             // Update store
             await updateActivity(activityId);
 
+            // Remove all previous goals
+            const deleteActivityGoals = Object.values(
+                initiative?._activityGoals
+            ).filter(item => item.Initiative_Activity__c === activityId);
+
+            const deletedActivityGoalIds = await Promise.all(
+                deleteActivityGoals.map(activityGoal => {
+                    return sfDelete({
+                        object: 'Initiative_Activity_Goal__c',
+                        id: activityGoal.Id,
+                    });
+                })
+            );
+            // Store - remove deleted data
+            removeActivityGoals(deletedActivityGoalIds);
+
             // Create Initiative activitie goals based on goal
-            const activityGoalIds = await Promise.all(
+            const addedActivityGoalIds = await Promise.all(
                 Goals.map(item => {
                     return sfCreate({
                         object: 'Initiative_Activity_Goal__c',
@@ -113,7 +130,7 @@ const ActivitiesComponent = ({ pageProps }) => {
             );
 
             // Bulk update affected activity goals
-            await updateActivityGoals(activityGoalIds);
+            await updateActivityGoals(addedActivityGoalIds);
 
             // Close modal
             setModalIsOpen(false);
@@ -243,6 +260,8 @@ const ActivitiesComponent = ({ pageProps }) => {
                 setCurrentSubmitHandler(null);
             }, 100);
         }
+
+        console.log('initiative: ', initiative);
     }, [initiative]);
 
     // Current report details
@@ -393,7 +412,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                             subLabel={helpText(
                                 'objects.initiativeGoal.Goal__c'
                             )}
-                            listMaxLength={1}
+                            // listMaxLength={1}
                             options={Object.keys(initiative?._goals).map(
                                 goalKey => {
                                     const goal = initiative?._goals[goalKey];
@@ -407,6 +426,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 'custom.FA_FormCaptureSelectEmpty'
                             )}
                             controller={control}
+                            buttonLabel={label('custom.FA_ButtonAddGoal')}
                         />
                     )}
                 </InputWrapper>

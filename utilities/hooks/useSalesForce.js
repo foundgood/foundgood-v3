@@ -55,6 +55,24 @@ const useSalesForce = () => {
         }
     }
 
+    // Method for deleting any object in the SalesForce API
+    // Object is the name of the object - e.g. Initiative_Activity__c
+    // Remember to add parent id in data if this is in someway is a reference to this.
+    // E.g. {..., "Initiative__c": "a0p1x0000008CbtAAE"}
+    // Returns nothing
+    async function sfDelete({ object, id }) {
+        try {
+            await salesForce.crud.remove({ object, id });
+
+            // Update user timeout
+            updateUserTimeout();
+
+            return id;
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
     // Method for setting the user language in the SalesForce API
     // Language is either 'da' or 'en_US'
     async function sfSetUserLanguage(language) {
@@ -98,6 +116,7 @@ const useSalesForce = () => {
         sfQuery,
         sfCreate,
         sfUpdate,
+        sfDelete,
         sfSetUserLanguage,
         sfGetUserInitiativeRights,
         sfGetInitiativeList,
