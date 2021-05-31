@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
@@ -45,6 +45,10 @@ const ApplicantsComponent = ({ pageProps }) => {
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+
+    // Watch & Update - Applicant Type
+    const applicantTypeSelect = useWatch({ control, name: 'Type__c' });
+    const [applicantType, setApplicantType] = useState(null);
 
     // Store: Initiative data
     const {
@@ -189,6 +193,9 @@ const ApplicantsComponent = ({ pageProps }) => {
             to: End_Date__c,
         });
         setValue('Description__c', Description__c);
+
+        // Set goal type
+        setApplicantType(Type__c);
     }, [updateId, modalIsOpen]);
 
     // Add submit handler to wizard navigation store
@@ -205,6 +212,12 @@ const ApplicantsComponent = ({ pageProps }) => {
             }, 100);
         }
     }, [initiative]);
+
+    // Watch the change of goal type
+    useEffect(() => {
+        console.log('Set type: ', applicantTypeSelect);
+        setApplicantType(applicantTypeSelect);
+    }, [applicantTypeSelect]);
 
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);
@@ -326,15 +339,17 @@ const ApplicantsComponent = ({ pageProps }) => {
                         )}
                         controller={control}
                     />
-                    <DateRange
-                        name="Dates"
-                        label={`${label(
-                            'objects.initiativeCollaborator.Start_Date__c'
-                        )} / ${label(
-                            'objects.initiativeCollaborator.End_Date__c'
-                        )}`}
-                        controller={control}
-                    />
+                    {applicantType === CONSTANTS.TYPES.MAIN_COLLABORATOR && (
+                        <DateRange
+                            name="Dates"
+                            label={`${label(
+                                'objects.initiativeCollaborator.Start_Date__c'
+                            )} / ${label(
+                                'objects.initiativeCollaborator.End_Date__c'
+                            )}`}
+                            controller={control}
+                        />
+                    )}
                 </InputWrapper>
             </Modal>
         </>
