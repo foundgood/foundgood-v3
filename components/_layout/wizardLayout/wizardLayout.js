@@ -134,7 +134,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
             )}
 
             {/* Button navigation */}
-            <div className="fixed left-0 right-0 flex justify-between py-8 pointer-events-none lg:bg-white transition-default xl:bg-transparent xl:justify-end header-t page-px z-below-aside">
+            <div className="fixed left-0 right-0 flex justify-between py-8 bg-white pointer-events-none transition-default xl:bg-transparent xl:justify-end header-t page-px z-below-aside">
                 {layoutSettings.aside && (
                     <IconButton
                         icon={FiAlignLeft}

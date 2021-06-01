@@ -54,7 +54,13 @@ const HeaderComponent = ({ showUserControls }) => {
 
     return (
         <>
-            <div className="fixed flex items-center justify-between header-h page-mx z-logo print:hidden">
+            <div
+                className={cc([
+                    'fixed flex items-center justify-between  header-h page-mx z-logo print:hidden',
+                    {
+                        'bg-white w-full xl:w-auto xl:bg-transparent': !showUserControls,
+                    },
+                ])}>
                 <Link href="/">
                     <a className="f">
                         <FGLogo className="text-blue-300 fill-current" />

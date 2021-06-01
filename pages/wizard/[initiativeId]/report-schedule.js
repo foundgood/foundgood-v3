@@ -142,7 +142,6 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 {funders.length > 0 ? (
                     funders.map(funderKey => {
                         const funder = initiative?._funders[funderKey];
-                        console.log(funder);
                         // Get report items based on funder id (funderKey) and report.Funder_Report__c
                         const reportItems = Object.keys(initiative?._reports)
                             .filter(
