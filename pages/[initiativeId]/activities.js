@@ -10,6 +10,8 @@ import { useInitiativeDataStore } from 'utilities/store';
 import { isJson, stripUndefined } from 'utilities';
 
 // Components
+import Preloader from 'components/preloader';
+import Footer from 'components/_layout/footer';
 import UpdateButton from 'components/updateButton';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
@@ -25,7 +27,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, log } = useMetadata();
+    const { label } = useMetadata();
 
     const [activities, setActivities] = useState();
 
@@ -48,7 +50,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                         : false;
                 })
                 .map((item, index) => {
-                    console.log('Activity: ', item);
                     const title = item.Things_To_Do__c;
                     const location = item.Initiative_Location__c?.split(
                         ';'
@@ -114,96 +115,115 @@ const ActivitiesComponent = ({ pageProps }) => {
 
     return (
         <>
-            <SectionWrapper>
-                <div className="t-h1">{label('custom.FA_MenuActivities')}</div>
-            </SectionWrapper>
+            {/* Preloading - Show loading */}
+            {!initiative?.Id && <Preloader hasBg={true} />}
 
-            <SectionWrapper className="bg-white mb-128 rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">
-                        {label('custom.FA_InitiativeViewActivitiesHeading')}
-                    </h2>
-                    <UpdateButton mode="initiative" baseUrl="activities" />
-                </div>
-
-                {activities?.length > 0 &&
-                    activities?.map((item, index) => (
-                        <div key={`a-${index}`} className="mt-64">
-                            <h3 className="t-h4">{item.title}</h3>
-                            <ReportDetailCard
-                                description={item.description}
-                                items={[
-                                    {
-                                        label: label(
-                                            'custom.FA_InitiativeViewActivityLocation'
-                                        ),
-                                        text: item.location,
-                                    },
-                                ]}
-                            />
-                            {item.activityType?.length > 0 && (
-                                <>
-                                    <div className="mt-32 t-h6">
-                                        {label(
-                                            'custom.FA_InitiativeViewActivityType'
-                                        )}
-                                    </div>
-                                    <div className="flex flex-col items-start">
-                                        {item.activityType?.map(
-                                            (type, index) => (
-                                                <div
-                                                    key={`t-${index}`}
-                                                    className="px-10 pt-6 pb-3 mt-16 bg-blue-20 rounded-4 t-sh7">
-                                                    {type}
-                                                </div>
-                                            )
-                                        )}
-                                    </div>
-                                </>
-                            )}
-                            {item.successIndicators?.length > 0 && (
-                                <>
-                                    <div className="mt-32 t-h5">
-                                        {label(
-                                            'custom.FA_InitiativeViewActivityIndicators'
-                                        )}
-                                    </div>
-
-                                    {item.successIndicators?.map(
-                                        (success, index) => (
-                                            <div
-                                                key={`s-${index}`}
-                                                className="p-12 mt-16 bg-blue-10 rounded-4 t-sh5">
-                                                {success}
-                                            </div>
-                                        )
-                                    )}
-                                </>
-                            )}
-
-                            {/* Related goals */}
-                            {item.relatedGoals.length > 0 && (
-                                <>
-                                    <div className="mt-32 t-h5">
-                                        {label(
-                                            'custom.FA_InitiativeViewActivityRelatedGoals'
-                                        )}
-                                    </div>
-                                    {item.relatedGoals.map((goal, index) => (
-                                        <div
-                                            key={`g-${index}`}
-                                            className="p-12 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
-                                            {goal[0].description}
-                                        </div>
-                                    ))}
-                                </>
-                            )}
+            {/* Data Loaded - Show initiative */}
+            {initiative?.Id && (
+                <div className="animate-fade-in">
+                    <SectionWrapper>
+                        <div className="t-h1">
+                            {label('custom.FA_MenuActivities')}
                         </div>
-                    ))}
+                    </SectionWrapper>
+                    <SectionWrapper className="bg-white mb-128 rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewActivitiesHeading'
+                                )}
+                            </h2>
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="activities"
+                            />
+                        </div>
 
-                {/* Empty state - No Activities */}
-                {activities?.length < 1 && <SectionEmpty type="initiative" />}
-            </SectionWrapper>
+                        {activities?.length > 0 &&
+                            activities?.map((item, index) => (
+                                <div key={`a-${index}`} className="mt-64">
+                                    <h3 className="t-h4">{item.title}</h3>
+                                    <ReportDetailCard
+                                        description={item.description}
+                                        items={[
+                                            {
+                                                label: label(
+                                                    'custom.FA_InitiativeViewActivityLocation'
+                                                ),
+                                                text: item.location,
+                                            },
+                                        ]}
+                                    />
+                                    {item.activityType?.length > 0 && (
+                                        <>
+                                            <div className="mt-32 t-h6">
+                                                {label(
+                                                    'custom.FA_InitiativeViewActivityType'
+                                                )}
+                                            </div>
+                                            <div className="flex flex-col items-start">
+                                                {item.activityType?.map(
+                                                    (type, index) => (
+                                                        <div
+                                                            key={`t-${index}`}
+                                                            className="px-10 pt-6 pb-3 mt-16 bg-blue-20 rounded-4 t-sh7">
+                                                            {type}
+                                                        </div>
+                                                    )
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
+                                    {item.successIndicators?.length > 0 && (
+                                        <>
+                                            <div className="mt-32 t-h5">
+                                                {label(
+                                                    'custom.FA_InitiativeViewActivityIndicators'
+                                                )}
+                                            </div>
+
+                                            {item.successIndicators?.map(
+                                                (success, index) => (
+                                                    <div
+                                                        key={`s-${index}`}
+                                                        className="p-12 mt-16 bg-blue-10 rounded-4 t-sh5">
+                                                        {success}
+                                                    </div>
+                                                )
+                                            )}
+                                        </>
+                                    )}
+
+                                    {/* Related goals */}
+                                    {item.relatedGoals.length > 0 && (
+                                        <>
+                                            <div className="mt-32 t-h5">
+                                                {label(
+                                                    'custom.FA_InitiativeViewActivityRelatedGoals'
+                                                )}
+                                            </div>
+                                            {item.relatedGoals.map(
+                                                (goal, index) => (
+                                                    <div
+                                                        key={`g-${index}`}
+                                                        className="p-12 mt-16 border-4 border-blue-10 rounded-4 t-sh5">
+                                                        {goal[0].description}
+                                                    </div>
+                                                )
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            ))}
+
+                        {/* Empty state - No Activities */}
+                        {activities?.length < 1 && (
+                            <SectionEmpty type="initiative" />
+                        )}
+                    </SectionWrapper>
+                    <Footer />
+                </div>
+            )}
         </>
     );
 };

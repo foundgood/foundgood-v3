@@ -9,7 +9,9 @@ import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import Preloader from 'components/preloader';
 import UpdateButton from 'components/updateButton';
+import Footer from 'components/_layout/footer';
 import ReportCard from 'components/_initiative/reportCard';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
@@ -57,59 +59,71 @@ const ReportsComponent = ({ pageProps }) => {
 
     return (
         <>
-            <SectionWrapper>
-                <div className="flex justify-between">
-                    <h1 className="t-h1">
-                        {label(
-                            'custom.FA_InitiativeViewReportsScheduleHeading'
-                        )}
-                    </h1>
-                    {reportGroups?.length < 1 && (
-                        <UpdateButton
-                            mode="initiative"
-                            baseUrl="report-schedule"
-                            variant="primary"
-                        />
-                    )}
-                </div>
-            </SectionWrapper>
+            {/* Preloading - Show loading */}
+            {!initiative?.Id && <Preloader hasBg={true} />}
 
-            {reportGroups?.length > 0 &&
-                reportGroups?.map((item, index) => (
-                    <SectionWrapper
-                        key={`r-${index}`}
-                        className="mt-32 bg-white rounded-8">
+            {/* Data Loaded - Show initiative */}
+            {initiative?.Id && (
+                <div className="animate-fade-in">
+                    <SectionWrapper>
                         <div className="flex justify-between">
-                            <h2 className="t-h3">{item.Account__r.Name}</h2>
-                            <UpdateButton
-                                mode="initiative"
-                                baseUrl="report-schedule"
-                            />
-                        </div>
-
-                        <div className="flex flex-wrap">
-                            {item.reports.map((item, index) => {
-                                const headline =
-                                    item.Report_Viewer_Version__c == '1'
-                                        ? 'Report'
-                                        : item.Report_Type__c;
-                                const date = item.Due_Date__c;
-                                return (
-                                    <ReportCard
-                                        key={`r-${index}`}
-                                        id={item.Id}
-                                        useBackground={false}
-                                        headline={headline}
-                                        date={date}
-                                        status={item.Status__c}
-                                    />
-                                );
-                            })}
+                            <h1 className="t-h1">
+                                {label(
+                                    'custom.FA_InitiativeViewReportsScheduleHeading'
+                                )}
+                            </h1>
+                            {reportGroups?.length < 1 && (
+                                <UpdateButton
+                                    mode="initiative"
+                                    baseUrl="report-schedule"
+                                    variant="primary"
+                                />
+                            )}
                         </div>
                     </SectionWrapper>
-                ))}
-            {/* Empty state - No reports */}
-            {reportGroups?.length < 1 && <SectionEmpty type="initiative" />}
+                    {reportGroups?.length > 0 &&
+                        reportGroups?.map((item, index) => (
+                            <SectionWrapper
+                                key={`r-${index}`}
+                                className="mt-32 bg-white rounded-8">
+                                <div className="flex justify-between">
+                                    <h2 className="t-h3">
+                                        {item.Account__r.Name}
+                                    </h2>
+                                    <UpdateButton
+                                        mode="initiative"
+                                        baseUrl="report-schedule"
+                                    />
+                                </div>
+
+                                <div className="flex flex-wrap">
+                                    {item.reports.map((item, index) => {
+                                        const headline =
+                                            item.Report_Viewer_Version__c == '1'
+                                                ? 'Report'
+                                                : item.Report_Type__c;
+                                        const date = item.Due_Date__c;
+                                        return (
+                                            <ReportCard
+                                                key={`r-${index}`}
+                                                id={item.Id}
+                                                useBackground={false}
+                                                headline={headline}
+                                                date={date}
+                                                status={item.Status__c}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </SectionWrapper>
+                        ))}
+                    {/* Empty state - No reports */}
+                    {reportGroups?.length < 1 && (
+                        <SectionEmpty type="initiative" />
+                    )}
+                    <Footer />
+                </div>
+            )}
         </>
     );
 };

@@ -126,7 +126,6 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
                 {/* Content */}
                 <div className="w-full bg-white transition-slow max-w-[900px] page-mx mt-264 xl:mt-192 rounded-8">
                     {children}
-                    <Footer />
                 </div>
             </div>
         </>

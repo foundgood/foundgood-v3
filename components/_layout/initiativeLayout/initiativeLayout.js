@@ -69,7 +69,6 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                 {/* Content */}
                 <div className="w-full max-w-[900px] page-mx mt-160 md:mt-232 pb-64 lg:pb-96 rounded-8">
                     {children}
-                    <Footer />
                 </div>
             </div>
         </>

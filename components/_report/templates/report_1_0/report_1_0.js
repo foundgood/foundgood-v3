@@ -12,6 +12,8 @@ import { useMetadata, useContext } from 'utilities/hooks';
 import { useReportLayoutStore } from 'utilities/store';
 
 // Components
+import Preloader from 'components/preloader';
+import Footer from 'components/_layout/footer';
 import SectionWrapper from 'components/sectionWrapper';
 import Button from 'components/button';
 import TextCard from 'components/_initiative/textCard';
@@ -120,116 +122,132 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
 
     return (
         <>
-            {/* Header */}
+            {/* Preloading - Show loading */}
+            {!initiative?.Id && <Preloader hasBg={true} />}
 
-            <SectionWrapper>
-                <div className="flex justify-end">
-                    <Button
-                        variant="secondary"
-                        className="self-start hidden xl:flex"
-                        action={`/${INITIATIVE_ID}/reports`}>
-                        {labelTodo('Back to reports')}
-                    </Button>
-                </div>
-                <SectionWrapper>
-                    <h1 className="mt-48 t-h1">{name}</h1>
-                    <div className="mt-16 t-sh2">
-                        {labelTodo('Deadline: ')} {deadline}
-                    </div>
-                    <div className="mt-16 t-sh6">{status}</div>
-                </SectionWrapper>
-            </SectionWrapper>
-
-            {/* Texts */}
-            <SectionWrapper>
-                {summary && (
-                    <TextCard
-                        // hasRounded={false}
-                        className="mt-24"
-                        hasBackground={true}
-                        headline={label('custom.FA_ReportViewHeadingSummary')}
-                        body={summary}
-                    />
-                )}
-                {achievement && (
-                    <TextCard
-                        className="mt-24"
-                        hasBackground={true}
-                        headline={labelTodo('Achievements')}
-                        // headline={label(
-                        //     'custom.FA_ReportViewHeadingSummary'
-                        // )}
-                        body={achievement}
-                    />
-                )}
-                {challenge && (
-                    <TextCard
-                        className="mt-24"
-                        hasBackground={true}
-                        headline={labelTodo('Challenges')}
-                        body={challenge}
-                    />
-                )}
-                {learning && (
-                    <TextCard
-                        className="mt-24"
-                        hasBackground={true}
-                        headline={labelTodo('Learnings')}
-                        body={learning}
-                    />
-                )}
-
-                {outcomes && (
+            {/* Data Loaded - Show initiative */}
+            {initiative?.Id && (
+                <div className="animate-fade-in">
                     <SectionWrapper>
-                        <h2 className="mt-48 t-h4">{labelTodo('Outcomes')}</h2>
-                        {outcomes.map((item, index) => (
-                            <>
-                                <div key={`o-${index}`} className="mt-16">
-                                    <p className="mt-16 t-small">
-                                        {item.description}
-                                    </p>
-                                    {item.goals?.length > 0 &&
-                                        item.goals?.map((goal, i) => (
-                                            <div
-                                                key={`g-${i}`}
-                                                className="p-12 mt-16 border-4 border-blue-10 rounded-4 t-sh6">
-                                                {goal}
-                                            </div>
-                                        ))}
-                                </div>
-                                {index < outcomes.length - 1 && <DividerLine />}
-                            </>
-                        ))}
+                        <div className="flex justify-end">
+                            <Button
+                                variant="secondary"
+                                className="self-start hidden xl:flex"
+                                action={`/${INITIATIVE_ID}/reports`}>
+                                {labelTodo('Back to reports')}
+                            </Button>
+                        </div>
+                        <SectionWrapper>
+                            <h1 className="mt-48 t-h1">{name}</h1>
+                            <div className="mt-16 t-sh2">
+                                {labelTodo('Deadline: ')} {deadline}
+                            </div>
+                            <div className="mt-16 t-sh6">{status}</div>
+                        </SectionWrapper>
                     </SectionWrapper>
-                )}
-                {files && (
+
+                    {/* Texts */}
                     <SectionWrapper>
-                        <h2 className="mt-48 t-h4">
-                            {label(
-                                'custom.FA_ReportViewSubHeadingLogAdditional'
-                            )}
-                        </h2>
-                        {files.map((item, index) => (
-                            <a
-                                key={`o-${index}`}
-                                className="flex w-full p-16 mt-16 cursor-pointer rounded-8 bg-blue-10"
-                                download={item.fileName} // Only work if same domain
-                                href={item.filePath}
-                                target="_blank">
-                                <div className="mr-16">
-                                    <FiFileText className="w-48 h-48" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <div className="t-h6">{item.fileName}</div>
-                                    <div className="text-blue-200 t-sh5">
-                                        {labelTodo('Download')}
+                        {summary && (
+                            <TextCard
+                                // hasRounded={false}
+                                className="mt-24"
+                                hasBackground={true}
+                                headline={label(
+                                    'custom.FA_ReportViewHeadingSummary'
+                                )}
+                                body={summary}
+                            />
+                        )}
+                        {achievement && (
+                            <TextCard
+                                className="mt-24"
+                                hasBackground={true}
+                                headline={labelTodo('Achievements')}
+                                // headline={label(
+                                //     'custom.FA_ReportViewHeadingSummary'
+                                // )}
+                                body={achievement}
+                            />
+                        )}
+                        {challenge && (
+                            <TextCard
+                                className="mt-24"
+                                hasBackground={true}
+                                headline={labelTodo('Challenges')}
+                                body={challenge}
+                            />
+                        )}
+                        {learning && (
+                            <TextCard
+                                className="mt-24"
+                                hasBackground={true}
+                                headline={labelTodo('Learnings')}
+                                body={learning}
+                            />
+                        )}
+
+                        {outcomes && (
+                            <SectionWrapper>
+                                <h2 className="mt-48 t-h4">
+                                    {labelTodo('Outcomes')}
+                                </h2>
+                                {outcomes.map((item, index) => (
+                                    <div key={`o-${index}`}>
+                                        <div className="mt-16">
+                                            <p className="mt-16 t-small">
+                                                {item.description}
+                                            </p>
+                                            {item.goals?.length > 0 &&
+                                                item.goals?.map((goal, i) => (
+                                                    <div
+                                                        key={`g-${i}`}
+                                                        className="p-12 mt-16 border-4 border-blue-10 rounded-4 t-sh6">
+                                                        {goal}
+                                                    </div>
+                                                ))}
+                                        </div>
+                                        {index < outcomes.length - 1 && (
+                                            <DividerLine />
+                                        )}
                                     </div>
-                                </div>
-                            </a>
-                        ))}
+                                ))}
+                            </SectionWrapper>
+                        )}
+                        {files && (
+                            <SectionWrapper>
+                                <h2 className="mt-48 t-h4">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingLogAdditional'
+                                    )}
+                                </h2>
+                                {files.map((item, index) => (
+                                    <a
+                                        key={`o-${index}`}
+                                        className="flex w-full p-16 mt-16 cursor-pointer rounded-8 bg-blue-10"
+                                        download={item.fileName} // Only work if same domain
+                                        href={item.filePath}
+                                        target="_blank">
+                                        <div className="mr-16">
+                                            <FiFileText className="w-48 h-48" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <div className="t-h6">
+                                                {item.fileName}
+                                            </div>
+                                            <div className="text-blue-200 t-sh5">
+                                                {labelTodo('Download')}
+                                            </div>
+                                        </div>
+                                    </a>
+                                ))}
+                            </SectionWrapper>
+                        )}
                     </SectionWrapper>
-                )}
-            </SectionWrapper>
+
+                    <Footer />
+                </div>
+            )}
         </>
     );
 };

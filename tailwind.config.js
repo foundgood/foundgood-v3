@@ -195,6 +195,61 @@ module.exports = {
             screens: {
                 print: { raw: 'print' },
             },
+            keyframes: {
+                'fade-in': {
+                    '0%': {
+                        opacity: 0,
+                    },
+                    '100%': {
+                        opacity: 1,
+                    },
+                },
+                'preloader-colors': {
+                    '0%': {
+                        color: '#ee6055',
+                    },
+                    '25%': {
+                        color: '#60d394',
+                    },
+                    '50%': {
+                        color: '#aaf683',
+                    },
+                    '75%': {
+                        color: '#ffd97d',
+                    },
+                    '100%': {
+                        color: '#ff9b85',
+                    },
+                },
+            },
+            animation: {
+                'fade-in': 'fade-in 1s ease-out',
+                'preloader-colors':
+                    'preloader-colors 4s ease-out 0s infinite alternate',
+            },
+            // keyframes: {
+            //     'preloader-colors-loop': {
+            //         '0%': {
+            //             color: '#ee6055',
+            //         },
+            //         '25%': {
+            //             color: '#60d394',
+            //         },
+            //         '50%': {
+            //             color: '#aaf683',
+            //         },
+            //         '75%': {
+            //             color: '#ffd97d',
+            //         },
+            //         '100%': {
+            //             color: '#ff9b85',
+            //         },
+            //     },
+            // },
+            // animation: {
+            //     'preloader-colors-loop':
+            //         'preloader-colors-loop 10s linear 0s infinite alternate',
+            // },
         },
     },
     variants: {

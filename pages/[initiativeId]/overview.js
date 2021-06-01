@@ -13,7 +13,8 @@ import { useInitiativeDataStore } from 'utilities/store';
 import { isJson } from 'utilities';
 
 // Components
-import Button from 'components/button';
+import Preloader from 'components/preloader';
+import Footer from 'components/_layout/footer';
 import UpdateButton from 'components/updateButton';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
@@ -103,15 +104,17 @@ const ProjectComponent = ({ pageProps }) => {
         // Initial Load
         // console.log('initiative: ', initiative);
 
-        // Employee funded - Data for Number cards
-        // Group empoyees per role
-        // EX Data:
-        // {
-        //     { role: 'Project manager', total: 2, male: 1, female: 1 },
-        //     { role: 'Scientists', total: 4, male: 1, female: 3 },
-        // };
-        let employeeGroups = Object.values(initiative._employeesFunded).reduce(
-            (result, employee) => {
+        if (initiative?.Id) {
+            // Employee funded - Data for Number cards
+            // Group empoyees per role
+            // EX Data:
+            // {
+            //     { role: 'Project manager', total: 2, male: 1, female: 1 },
+            //     { role: 'Scientists', total: 4, male: 1, female: 3 },
+            // };
+            let employeeGroups = Object.values(
+                initiative._employeesFunded
+            ).reduce((result, employee) => {
                 result[employee.Role_Type__c] =
                     result[employee.Role_Type__c] || {};
                 // Ref
@@ -132,143 +135,141 @@ const ProjectComponent = ({ pageProps }) => {
                     group.other = group.other ? group.other + 1 : 1;
                 }
                 return result;
-            },
-            {}
-        );
-        setEmployeeGroups(employeeGroups);
+            }, {});
+            setEmployeeGroups(employeeGroups);
 
-        // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
-        // Split them up depending on the type.
-        // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
-        const collaborators = Object.values(initiative._collaborators).filter(
-            item => {
+            // "Collaborators" & "Applicants" all comes from "initiative._collaborators"
+            // Split them up depending on the type.
+            // TYPE: "Additional collaborator" === Collaborator. All other types are Applicants
+            const collaborators = Object.values(
+                initiative._collaborators
+            ).filter(item => {
                 if (CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)) {
                     return item;
                 }
-            }
-        );
-        const applicants = Object.values(initiative._collaborators).filter(
-            item => {
-                if (!CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)) {
-                    return item;
-                }
-            }
-        );
-        setApplicants(applicants);
-        setCollaborators(collaborators);
-
-        // Merge goal data, to single array
-        const sdgNums = initiative?.Problem_Effect__c?.split(';');
-        const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
-        if (sdgNums?.length > 0) {
-            const developmentGoals = sdgNums.map(num => {
-                return { title: sdgs[num].label, amount: num };
             });
-            setDevelopmentGoals(developmentGoals);
-        }
-
-        // Make sure data is loaded
-        if (
-            initiative?._funders &&
-            Object.keys(initiative?._funders).length !== 0
-        ) {
-            // 🍩 Donut data 🍩
-            // Build donut slices using color gradient
-            // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
-            const currencies = Object.values(initiative._funders).reduce(
-                (acc, funder) => {
-                    acc.push(funder.CurrencyIsoCode);
-                    return acc;
-                },
-                []
+            const applicants = Object.values(initiative._collaborators).filter(
+                item => {
+                    if (!CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)) {
+                        return item;
+                    }
+                }
             );
+            setApplicants(applicants);
+            setCollaborators(collaborators);
 
-            const hasMultipleCurrencies =
-                new Set(currencies).size !== 1 ? true : false;
+            // Merge goal data, to single array
+            const sdgNums = initiative?.Problem_Effect__c?.split(';');
+            const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
+            if (sdgNums?.length > 0) {
+                const developmentGoals = sdgNums.map(num => {
+                    return { title: sdgs[num].label, amount: num };
+                });
+                setDevelopmentGoals(developmentGoals);
+            }
 
-            // If initiative have multiple currencies - Hide donutChart!
-            if (!hasMultipleCurrencies) {
-                const currency = Object.values(initiative._funders)[0]
-                    .CurrencyIsoCode;
-                const totalAmount = Object.values(initiative._funders).reduce(
-                    (total, funder) => {
+            // Make sure data is loaded
+            if (
+                initiative?._funders &&
+                Object.keys(initiative?._funders).length !== 0
+            ) {
+                // 🍩 Donut data 🍩
+                // Build donut slices using color gradient
+                // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
+                const currencies = Object.values(initiative._funders).reduce(
+                    (acc, funder) => {
+                        acc.push(funder.CurrencyIsoCode);
+                        return acc;
+                    },
+                    []
+                );
+
+                const hasMultipleCurrencies =
+                    new Set(currencies).size !== 1 ? true : false;
+
+                // If initiative have multiple currencies - Hide donutChart!
+                if (!hasMultipleCurrencies) {
+                    const currency = Object.values(initiative._funders)[0]
+                        .CurrencyIsoCode;
+                    const totalAmount = Object.values(
+                        initiative._funders
+                    ).reduce((total, funder) => {
                         console.log(
                             'CurrencyIsoCode: ',
                             funder.CurrencyIsoCode
                         );
                         return total + funder.Amount__c;
-                    },
-                    0
-                );
-                setTotalAmount(totalAmount);
-                setCurrency(currency);
+                    }, 0);
+                    setTotalAmount(totalAmount);
+                    setCurrency(currency);
 
-                const donutData = Object.values(initiative._funders).map(
-                    (funder, index) => {
-                        return {
-                            color: donutColors[index],
-                            hex: donutHex[index],
-                            name: funder.Account__r.Name,
-                            currency: funder.CurrencyIsoCode,
-                            amount: funder.Amount__c,
-                            totalAmount: totalAmount,
-                            percentage: funder.Amount__c / totalAmount,
-                        };
-                    }
-                );
-
-                if (donutData?.length > 1) {
-                    const multiplier = 3.6; // 1% of 360
-
-                    // Create object array - add previous items "deg" (360 deg), to position current slice
-                    let donutStyles = donutData.reduce((previous, slice) => {
-                        const prevDeg = previous[previous.length - 1]
-                            ? previous[previous.length - 1].deg
-                            : 0;
-                        const deg = slice.percentage * 100 * multiplier;
-                        const obj = {
-                            deg: deg + prevDeg,
-                            hex: slice.hex,
-                        };
-                        previous.push(obj);
-                        return previous;
-                    }, []);
-                    // Create array of color / deg pairs, one per slice
-                    donutStyles = donutStyles.map((slice, index) => {
-                        // Last Slice uses '0' instead of 'X deg' - to close circle
-                        if (index == donutStyles.length - 1) {
-                            return `${slice.hex} 0`;
-                        } else {
-                            return `${slice.hex} 0 ${slice.deg}deg`;
+                    const donutData = Object.values(initiative._funders).map(
+                        (funder, index) => {
+                            return {
+                                color: donutColors[index],
+                                hex: donutHex[index],
+                                name: funder.Account__r.Name,
+                                currency: funder.CurrencyIsoCode,
+                                amount: funder.Amount__c,
+                                totalAmount: totalAmount,
+                                percentage: funder.Amount__c / totalAmount,
+                            };
                         }
-                    });
-                    // Construct gradient string
-                    // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
-                    const gradient = `conic-gradient(${donutStyles.join(
-                        ', '
-                    )})`;
-                    setPieChartStyle({ backgroundImage: gradient });
-                } else {
-                    setPieChartStyle({ backgroundColor: donutData[0].hex });
-                }
-                setDonutData(donutData);
-            }
-        }
+                    );
 
-        setInitiativeData(initiative);
+                    if (donutData?.length > 1) {
+                        const multiplier = 3.6; // 1% of 360
+
+                        // Create object array - add previous items "deg" (360 deg), to position current slice
+                        let donutStyles = donutData.reduce(
+                            (previous, slice) => {
+                                const prevDeg = previous[previous.length - 1]
+                                    ? previous[previous.length - 1].deg
+                                    : 0;
+                                const deg = slice.percentage * 100 * multiplier;
+                                const obj = {
+                                    deg: deg + prevDeg,
+                                    hex: slice.hex,
+                                };
+                                previous.push(obj);
+                                return previous;
+                            },
+                            []
+                        );
+                        // Create array of color / deg pairs, one per slice
+                        donutStyles = donutStyles.map((slice, index) => {
+                            // Last Slice uses '0' instead of 'X deg' - to close circle
+                            if (index == donutStyles.length - 1) {
+                                return `${slice.hex} 0`;
+                            } else {
+                                return `${slice.hex} 0 ${slice.deg}deg`;
+                            }
+                        });
+                        // Construct gradient string
+                        // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
+                        const gradient = `conic-gradient(${donutStyles.join(
+                            ', '
+                        )})`;
+                        setPieChartStyle({ backgroundImage: gradient });
+                    } else {
+                        setPieChartStyle({ backgroundColor: donutData[0].hex });
+                    }
+                    setDonutData(donutData);
+                }
+            }
+
+            setInitiativeData(initiative);
+        }
     }, [initiative]);
 
     return (
         <>
+            {/* Preloading - Show loading */}
+            {!initiativeData && <Preloader hasBg={true} />}
+
+            {/* Data Loaded - Show initiative */}
             {initiativeData && (
-                <div
-                    className={cc([
-                        'flex flex-col mb-32 transition-slow bg-clip-text bg-gradient-to-r from-teal-80 to-teal-10',
-                        {
-                            'opacity-80 text-transparent title-preamble-preload-animate': !initiativeData?.Id,
-                            'opacity-100 text-teal-100': initiativeData?.Id,
-                        },
-                    ])}>
+                <div className="animate-fade-in">
                     <SectionWrapper>
                         <h1 className="t-h1">
                             {label('custom.FA_InitiativeViewOverviewHeading')}
@@ -888,6 +889,8 @@ const ProjectComponent = ({ pageProps }) => {
                             <SectionEmpty type="initiative" />
                         )}
                     </SectionWrapper>
+
+                    <Footer />
                 </div>
             )}
         </>

@@ -11,6 +11,8 @@ import { useInitiativeDataStore } from 'utilities/store';
 import { stripUndefined } from 'utilities';
 
 // Components
+import Preloader from 'components/preloader';
+import Footer from 'components/_layout/footer';
 import UpdateButton from 'components/updateButton';
 import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
@@ -185,58 +187,83 @@ const DevelopmentsComponent = ({ pageProps }) => {
 
     return (
         <>
-            <SectionWrapper>
-                <div className="t-h1">
-                    {label('custom.FA_MenuDevelopments')}
-                </div>
-            </SectionWrapper>
-            <SectionWrapper className="mt-32 bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">
-                        {label('custom.FA_InitiativeViewIndicatorsHeading')}
-                    </h2>
-                    <UpdateButton mode="initiative" baseUrl="indicators" />
-                </div>
-                {/* Loop - by activity */}
-                {activities?.length > 0 &&
-                    activities?.map((item, index) => (
-                        <div key={`i-${index}`} className="mt-32">
-                            <h3 className="t-h4">{item.title}</h3>
-                            {/* Split by type "People" && "Custom"*/}
-                            <ChartCard items={item.indicators} />
-                            {index < activities.length - 1 && <DividerLine />}
+            {/* Preloading - Show loading */}
+            {!initiative?.Id && <Preloader hasBg={true} />}
+
+            {/* Data Loaded - Show initiative */}
+            {initiative?.Id && (
+                <div className="animate-fade-in">
+                    <SectionWrapper>
+                        <div className="t-h1">
+                            {label('custom.FA_MenuDevelopments')}
                         </div>
-                    ))}
-                {/* Empty state - No activities */}
-                {activities?.length < 1 && <SectionEmpty type="initiative" />}
-            </SectionWrapper>
-            <SectionWrapper className="mt-32 bg-white rounded-8">
-                <div className="flex justify-between">
-                    <h2 className="t-h3">
-                        {label('custom.FA_ReportViewSubHeadingSharingOverall')}
-                    </h2>
-                    <UpdateButton mode="initiative" baseUrl="sharing-results" />
-                </div>
-                {results?.length > 0 &&
-                    results?.map((item, index) => (
-                        <div key={`a-${index}`} className="mt-24">
-                            <ReportSharingCard
-                                key={`r-${index}`}
-                                headline={item.headline}
-                                description={item.label}
-                                tags={item.tags}
-                                items={item.items}
+                    </SectionWrapper>
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_InitiativeViewIndicatorsHeading'
+                                )}
+                            </h2>
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="indicators"
                             />
-                            {index < results.length - 1 && (
-                                <div className="py-24">
-                                    <DividerLine />
-                                </div>
-                            )}
                         </div>
-                    ))}
-                {/* Empty state - No results */}
-                {results?.length < 1 && <SectionEmpty type="initiative" />}
-            </SectionWrapper>
+                        {/* Loop - by activity */}
+                        {activities?.length > 0 &&
+                            activities?.map((item, index) => (
+                                <div key={`i-${index}`} className="mt-32">
+                                    <h3 className="t-h4">{item.title}</h3>
+                                    {/* Split by type "People" && "Custom"*/}
+                                    <ChartCard items={item.indicators} />
+                                    {index < activities.length - 1 && (
+                                        <DividerLine />
+                                    )}
+                                </div>
+                            ))}
+                        {/* Empty state - No activities */}
+                        {activities?.length < 1 && (
+                            <SectionEmpty type="initiative" />
+                        )}
+                    </SectionWrapper>
+                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label(
+                                    'custom.FA_ReportViewSubHeadingSharingOverall'
+                                )}
+                            </h2>
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="sharing-results"
+                            />
+                        </div>
+                        {results?.length > 0 &&
+                            results?.map((item, index) => (
+                                <div key={`a-${index}`} className="mt-24">
+                                    <ReportSharingCard
+                                        key={`r-${index}`}
+                                        headline={item.headline}
+                                        description={item.label}
+                                        tags={item.tags}
+                                        items={item.items}
+                                    />
+                                    {index < results.length - 1 && (
+                                        <div className="py-24">
+                                            <DividerLine />
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        {/* Empty state - No results */}
+                        {results?.length < 1 && (
+                            <SectionEmpty type="initiative" />
+                        )}
+                    </SectionWrapper>
+                    <Footer />
+                </div>
+            )}
         </>
     );
 };

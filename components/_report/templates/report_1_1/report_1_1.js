@@ -11,19 +11,22 @@ import { useMetadata } from 'utilities/hooks';
 import SectionWrapper from 'components/sectionWrapper';
 
 // Report sections
-import ReportHeader from './reportHeader';
-import ReportOverview from './reportOverview';
-import ReportSummary from './reportSummary';
-import ReportGoals from './reportGoals';
-import ReportFunders from './reportFunders';
-import ReportApplicants from './reportApplicants';
-import ReportCollaborators from './reportCollaborators';
-import ReportEmployeesFunded from './reportEmployeesFunded';
-import ReportActivities from './reportActivities';
-import ReportResults from './reportResults';
-import ReportInfluences from './reportInfluences';
-import ReportEvaluations from './reportEvaluations';
-import ReportReflection from './reportReflection';
+
+import Preloader from 'components/preloader';
+import Footer from 'components/_layout/footer';
+import ReportHeader from 'components/_report/templates/report_1_1/reportHeader';
+import ReportOverview from 'components/_report/templates/report_1_1/reportOverview';
+import ReportSummary from 'components/_report/templates/report_1_1/reportSummary';
+import ReportGoals from 'components/_report/templates/report_1_1/reportGoals';
+import ReportFunders from 'components/_report/templates/report_1_1/reportFunders';
+import ReportApplicants from 'components/_report/templates/report_1_1/reportApplicants';
+import ReportCollaborators from 'components/_report/templates/report_1_1/reportCollaborators';
+import ReportEmployeesFunded from 'components/_report/templates/report_1_1/reportEmployeesFunded';
+import ReportActivities from 'components/_report/templates/report_1_1/reportActivities';
+import ReportResults from 'components/_report/templates/report_1_1/reportResults';
+import ReportInfluences from 'components/_report/templates/report_1_1/reportInfluences';
+import ReportEvaluations from 'components/_report/templates/report_1_1/reportEvaluations';
+import ReportReflection from 'components/_report/templates/report_1_1/reportReflection';
 
 const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     // Hook: Metadata
@@ -45,8 +48,12 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
 
     return (
         <>
+            {/* Preloading - Show loading */}
+            {!initiativeData && <Preloader />}
+
+            {/* Data Loaded - Show report */}
             {initiativeData && (
-                <>
+                <div className="animate-fade-in">
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Header */}
                     <ReportHeader
@@ -202,6 +209,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             />
                         )}
 
+                    {/* Todo - Implement + wrap in component */}
                     {/* Post project activities */}
                     {/* {report.Post_Project_Activities__c && (
                         <SectionWrapper>
@@ -226,7 +234,6 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             />
                         </SectionWrapper>
                     )} */}
-
                     {/* Additional Info */}
                     <SectionWrapper>
                         <SectionWrapper>
@@ -242,7 +249,9 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             </p>
                         </SectionWrapper>
                     </SectionWrapper>
-                </>
+
+                    <Footer />
+                </div>
             )}
         </>
     );
