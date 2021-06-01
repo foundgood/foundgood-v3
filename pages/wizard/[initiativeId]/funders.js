@@ -81,7 +81,7 @@ const FundersComponent = ({ pageProps }) => {
                 GrantDate,
                 Account__c,
                 Type__c,
-                Approval_date__c,
+                Approval_Date__c,
                 Application_Id__c,
             } = formData;
 
@@ -94,7 +94,7 @@ const FundersComponent = ({ pageProps }) => {
                 Type__c,
                 Amount__c: Contribution[0]?.textValue,
                 CurrencyIsoCode: Contribution[0]?.selectValue,
-                Approval_date__c,
+                Approval_Date__c,
                 Grant_Start_Date__c: GrantDate.from,
                 Grant_End_Date__c: GrantDate.to,
                 Application_Id__c,
@@ -199,7 +199,7 @@ const FundersComponent = ({ pageProps }) => {
             Account__c,
             CurrencyIsoCode,
             Amount__c,
-            Approval_date__c,
+            Approval_Date__c,
             Application_Id__c,
             Grant_Start_Date__c,
             Grant_End_Date__c,
@@ -210,7 +210,7 @@ const FundersComponent = ({ pageProps }) => {
         setValue('Contribution', [
             { selectValue: CurrencyIsoCode, textValue: Amount__c },
         ]);
-        setValue('Approval_date__c', Approval_date__c);
+        setValue('Approval_Date__c', Approval_Date__c);
         setValue('GrantDate', {
             from: Grant_Start_Date__c,
             to: Grant_End_Date__c,
