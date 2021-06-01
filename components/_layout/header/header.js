@@ -115,7 +115,7 @@ const HeaderComponent = ({ showUserControls }) => {
             <div
                 ref={userNavigationRef}
                 className={cc([
-                    'bg-white p-16 rounded-8 absolute header-t right-0 page-mr flex flex-col space-y-16 min-w-[192px] mt-8 z-logo transform transition-default print:hidden',
+                    'fixed bg-white p-16 rounded-8 header-t right-0 page-mr flex flex-col space-y-16 min-w-[192px] mt-8 z-logo transform transition-default print:hidden',
                     {
                         'opacity-100 translate-x-0 pointer-events-auto': userNavActive,
                         'opacity-0 -translate-y-10 pointer-events-none': !userNavActive,
