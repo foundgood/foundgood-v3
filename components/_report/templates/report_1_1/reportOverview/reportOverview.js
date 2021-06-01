@@ -61,7 +61,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             const reportFunder = Object.values(initiative._funders)
                 .filter(item => item.Application_Id__c === funderId)
                 .map(item => ({
-                    name: item.Account__r.Name,
+                    name: item.Account__r?.Name,
                     amount: `${
                         item.CurrencyIsoCode
                     } ${item.Amount__c?.toLocaleString('de-DE')}`,
