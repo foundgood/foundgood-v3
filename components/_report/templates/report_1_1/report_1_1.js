@@ -201,6 +201,32 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 constants={CONSTANTS}
                             />
                         )}
+
+                    {/* Post project activities */}
+                    {/* {report.Post_Project_Activities__c && (
+                        <SectionWrapper>
+                            <TextCard
+                                className="mt-32"
+                                hasBackground={true}
+                                headline={label(
+                                    'objects.initiativeReport.Post_Project_Activities__c'
+                                )}
+                                body={report.Post_Project_Activities__c}
+                            />
+                        </SectionWrapper>
+                    )} */}
+                    {/* Empty state - Post project activities */}
+                    {/* {!report.Post_Project_Activities__c && (
+                        <SectionWrapper>
+                            <SectionEmpty
+                                type="report"
+                                headline={label(
+                                    'objects.initiativeReport.Post_Project_Activities__c'
+                                )}
+                            />
+                        </SectionWrapper>
+                    )} */}
+
                     {/* Additional Info */}
                     <SectionWrapper>
                         <SectionWrapper>

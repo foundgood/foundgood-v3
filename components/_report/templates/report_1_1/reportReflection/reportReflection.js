@@ -98,27 +98,6 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     )}
                 />
             )}
-
-            {/* Post project activities */}
-            {report.Post_Project_Activities__c && (
-                <TextCard
-                    className="mt-32"
-                    hasBackground={true}
-                    headline={label(
-                        'objects.initiativeReport.Post_Project_Activities__c'
-                    )}
-                    body={report.Post_Project_Activities__c}
-                />
-            )}
-            {/* Empty state - Post project activities */}
-            {!report.Post_Project_Activities__c && (
-                <SectionEmpty
-                    type="report"
-                    headline={label(
-                        'objects.initiativeReport.Post_Project_Activities__c'
-                    )}
-                />
-            )}
         </SectionWrapper>
     );
 };

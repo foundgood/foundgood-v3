@@ -12,12 +12,13 @@ const ReportHeaderComponent = ({ initiative, report }) => {
     return (
         <SectionWrapper>
             <SectionWrapper>
-                <div className="w-64 h-64 overflow-hidden rounded-4">
+                <div className="relative w-64 h-64 overflow-hidden rounded-4 bg-blue-10">
                     {initiative.Hero_Image_URL__c && (
                         <Image
                             src={initiative.Hero_Image_URL__c}
-                            width="64"
-                            height="64"></Image>
+                            layout="fill"
+                            objectFit="cover"
+                        />
                         // <img
                         //     className="w-full h-full"
                         //     src={initiative.Hero_Image_URL__c}
