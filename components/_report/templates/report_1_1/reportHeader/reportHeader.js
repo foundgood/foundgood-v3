@@ -32,7 +32,6 @@ const ReportHeaderComponent = ({ initiative, report }) => {
                     {report.Due_Date__c?.substring(0, 4)}
                 </div>
                 <div className="flex mt-16 t-caption text-blue-60">
-                    {/* Which id to show? */}
                     {report.Funder_Report__r.Application_Id__c}
                     {initiative.Stage__c && ` • ${initiative.Stage__c}`}
                 </div>

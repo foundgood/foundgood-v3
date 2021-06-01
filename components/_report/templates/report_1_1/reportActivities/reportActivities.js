@@ -51,7 +51,7 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                 (accumulator, activity) => {
                     const title = activity.Things_To_Do__c;
                     const description = activity.Things_To_Do_Description__c;
-                    const location = activity.Initiative_Location__c.split(
+                    const location = activity.Initiative_Location__c?.split(
                         ';'
                     ).join(', ');
                     const reportReflection = activity.reportReflection;

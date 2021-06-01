@@ -19,7 +19,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
     const [developmentGoals, setDevelopmentGoals] = useState();
     const [coApplicants, setCoApplicants] = useState();
     const [coFunders, setCoFunders] = useState();
-    const [leadFunder, setLeadFunder] = useState();
+    const [reportFunder, setReportFunder] = useState();
 
     const sdgsColors = [
         '#E32840',
@@ -77,9 +77,10 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                 0
             );
 
-            // Header - Lead funder
-            const leadFunder = Object.values(initiative._funders)
-                .filter(item => item.Type__c === constants.TYPES.LEAD_FUNDER)
+            // Header - Report funder details
+            const funderId = report.Funder_Report__r.Application_Id__c;
+            const reportFunder = Object.values(initiative._funders)
+                .filter(item => item.Application_Id__c === funderId)
                 .map(item => ({
                     name: item.Account__r.Name,
                     amount: `${
@@ -89,7 +90,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         (item.Amount__c / totalAmount) * 100
                     )}%`,
                 }))[0];
-            setLeadFunder(leadFunder);
+            setReportFunder(reportFunder);
         }
     }, []);
 
@@ -187,18 +188,18 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         <div>{label('custom.FA_ReportEmptyCoApplicants')}</div>
                     )}
                 </div>
-                {leadFunder && (
+                {reportFunder && (
                     <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                         <div className="t-sh6 text-blue-60">
                             {label('custom.FA_ReportViewAmountByFunder')}{' '}
-                            {leadFunder.name}
+                            {reportFunder.name}
                         </div>
-                        <h3 className="t-h5">{leadFunder.amount}</h3>
+                        <h3 className="t-h5">{reportFunder.amount}</h3>
 
                         <div className="mt-16 t-sh6 text-blue-60">
                             {label('custom.FA_ReportViewShareOfTotalFunding')}
                         </div>
-                        <h3 className="t-h5">{leadFunder.share}</h3>
+                        <h3 className="t-h5">{reportFunder.share}</h3>
                     </div>
                 )}
             </div>
