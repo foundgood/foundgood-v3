@@ -67,7 +67,7 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
                     <div key={`a-${index}`}>
                         <SectionWrapper>
                             <ReportDetailCard
-                                headline={item.Account__r.Name}
+                                headline={item.Account__r?.Name}
                                 image="" // Collaborators don't have an image
                                 description="" // Collaborators don't have a description
                                 items={[

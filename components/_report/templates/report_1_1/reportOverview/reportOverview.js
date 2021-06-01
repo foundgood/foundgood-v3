@@ -51,12 +51,12 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             // Co-Funders & Co-Applicants (used in Header)
             const coFunders = Object.values(initiative._funders)
                 .filter(item => item.Type__c == 'Co funder')
-                .map(item => item.Account__r.Name);
+                .map(item => item.Account__r?.Name);
             setCoFunders(coFunders);
 
             const coApplicants = Object.values(initiative._collaborators)
                 .filter(item => item.Type__c == 'Co applicant')
-                .map(item => item.Account__r.Name);
+                .map(item => item.Account__r?.Name);
             setCoApplicants(coApplicants);
 
             // Header - Merge goal data, to signel array
@@ -82,7 +82,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             const reportFunder = Object.values(initiative._funders)
                 .filter(item => item.Application_Id__c === funderId)
                 .map(item => ({
-                    name: item.Account__r.Name,
+                    name: item.Account__r?.Name,
                     amount: `${
                         item.CurrencyIsoCode
                     } ${item.Amount__c?.toLocaleString('de-DE')}`,

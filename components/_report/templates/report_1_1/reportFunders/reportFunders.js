@@ -78,7 +78,7 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                     return {
                         color: donutColors[index],
                         hex: donutHex[index],
-                        name: funder.Account__r.Name,
+                        name: funder.Account__r?.Name,
                         currency: funder.CurrencyIsoCode,
                         amount: funder.Amount__c,
                         totalAmount: totalAmount,
@@ -203,7 +203,7 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                     <div key={`f-${index}`}>
                         <SectionWrapper>
                             <ReportDetailCard
-                                headline={item.Account__r.Name}
+                                headline={item.Account__r?.Name}
                                 image="" // Funders don't have logo/image
                                 description="" // Funders don't have a description
                                 items={[
