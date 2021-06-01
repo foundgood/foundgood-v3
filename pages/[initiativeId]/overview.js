@@ -175,64 +175,84 @@ const ProjectComponent = ({ pageProps }) => {
             // 🍩 Donut data 🍩
             // Build donut slices using color gradient
             // See here: https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
-            const currency = Object.values(initiative._funders)[0]
-                .CurrencyIsoCode;
-            const totalAmount = Object.values(initiative._funders).reduce(
-                (total, funder) => {
-                    return total + funder.Amount__c;
+            const currencies = Object.values(initiative._funders).reduce(
+                (acc, funder) => {
+                    acc.push(funder.CurrencyIsoCode);
+                    return acc;
                 },
-                0
-            );
-            setTotalAmount(totalAmount);
-            setCurrency(currency);
-
-            const donutData = Object.values(initiative._funders).map(
-                (funder, index) => {
-                    return {
-                        color: donutColors[index],
-                        hex: donutHex[index],
-                        name: funder.Account__r.Name,
-                        currency: funder.CurrencyIsoCode,
-                        amount: funder.Amount__c,
-                        totalAmount: totalAmount,
-                        percentage: funder.Amount__c / totalAmount,
-                    };
-                }
+                []
             );
 
-            if (donutData.length > 1) {
-                const multiplier = 3.6; // 1% of 360
+            const hasMultipleCurrencies =
+                new Set(currencies).size !== 1 ? true : false;
 
-                // Create object array - add previous items "deg" (360 deg), to position current slice
-                let donutStyles = donutData.reduce((previous, slice) => {
-                    const prevDeg = previous[previous.length - 1]
-                        ? previous[previous.length - 1].deg
-                        : 0;
-                    const deg = slice.percentage * 100 * multiplier;
-                    const obj = {
-                        deg: deg + prevDeg,
-                        hex: slice.hex,
-                    };
-                    previous.push(obj);
-                    return previous;
-                }, []);
-                // Create array of color / deg pairs, one per slice
-                donutStyles = donutStyles.map((slice, index) => {
-                    // Last Slice uses '0' instead of 'X deg' - to close circle
-                    if (index == donutStyles.length - 1) {
-                        return `${slice.hex} 0`;
-                    } else {
-                        return `${slice.hex} 0 ${slice.deg}deg`;
+            // If initiative have multiple currencies - Hide donutChart!
+            if (!hasMultipleCurrencies) {
+                const currency = Object.values(initiative._funders)[0]
+                    .CurrencyIsoCode;
+                const totalAmount = Object.values(initiative._funders).reduce(
+                    (total, funder) => {
+                        console.log(
+                            'CurrencyIsoCode: ',
+                            funder.CurrencyIsoCode
+                        );
+                        return total + funder.Amount__c;
+                    },
+                    0
+                );
+                setTotalAmount(totalAmount);
+                setCurrency(currency);
+
+                const donutData = Object.values(initiative._funders).map(
+                    (funder, index) => {
+                        return {
+                            color: donutColors[index],
+                            hex: donutHex[index],
+                            name: funder.Account__r.Name,
+                            currency: funder.CurrencyIsoCode,
+                            amount: funder.Amount__c,
+                            totalAmount: totalAmount,
+                            percentage: funder.Amount__c / totalAmount,
+                        };
                     }
-                });
-                // Construct gradient string
-                // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
-                const gradient = `conic-gradient(${donutStyles.join(', ')})`;
-                setPieChartStyle({ backgroundImage: gradient });
-            } else {
-                setPieChartStyle({ backgroundColor: donutData[0].hex });
+                );
+
+                if (donutData?.length > 1) {
+                    const multiplier = 3.6; // 1% of 360
+
+                    // Create object array - add previous items "deg" (360 deg), to position current slice
+                    let donutStyles = donutData.reduce((previous, slice) => {
+                        const prevDeg = previous[previous.length - 1]
+                            ? previous[previous.length - 1].deg
+                            : 0;
+                        const deg = slice.percentage * 100 * multiplier;
+                        const obj = {
+                            deg: deg + prevDeg,
+                            hex: slice.hex,
+                        };
+                        previous.push(obj);
+                        return previous;
+                    }, []);
+                    // Create array of color / deg pairs, one per slice
+                    donutStyles = donutStyles.map((slice, index) => {
+                        // Last Slice uses '0' instead of 'X deg' - to close circle
+                        if (index == donutStyles.length - 1) {
+                            return `${slice.hex} 0`;
+                        } else {
+                            return `${slice.hex} 0 ${slice.deg}deg`;
+                        }
+                    });
+                    // Construct gradient string
+                    // Example output: `conic-gradient(red 72deg, green 0 110deg, pink 0 130deg, blue 0 234deg, cyan 0)`,
+                    const gradient = `conic-gradient(${donutStyles.join(
+                        ', '
+                    )})`;
+                    setPieChartStyle({ backgroundImage: gradient });
+                } else {
+                    setPieChartStyle({ backgroundColor: donutData[0].hex });
+                }
+                setDonutData(donutData);
             }
-            setDonutData(donutData);
         }
 
         setInitiativeData(initiative);
@@ -241,7 +261,14 @@ const ProjectComponent = ({ pageProps }) => {
     return (
         <>
             {initiativeData && (
-                <>
+                <div
+                    className={cc([
+                        'flex flex-col mb-32 transition-slow bg-clip-text bg-gradient-to-r from-teal-80 to-teal-10',
+                        {
+                            'opacity-80 text-transparent title-preamble-preload-animate': !initiativeData?.Id,
+                            'opacity-100 text-teal-100': initiativeData?.Id,
+                        },
+                    ])}>
                     <SectionWrapper>
                         <h1 className="t-h1">
                             {label('custom.FA_InitiativeViewOverviewHeading')}
@@ -387,120 +414,118 @@ const ProjectComponent = ({ pageProps }) => {
                             <UpdateButton mode="initiative" baseUrl="funders" />
                         </div>
                         {donutData && (
-                            <>
-                                <div className="flex flex-col items-center p-16 md:flex-row">
-                                    <div className="w-full p-32 md:w-1/2">
-                                        {/* Donut chart */}
-                                        <div
-                                            className="pie"
-                                            style={pieChartStyle}>
-                                            <div className="absolute w-full -mt-16 text-center top-1/2">
-                                                <p className="t-sh7 text-blue-60">
-                                                    {label(
-                                                        'custom.FA_InitiativeViewTotalFunded'
-                                                    )}
-                                                </p>
-                                                <p className="t-h6">
-                                                    {currency}{' '}
-                                                    {totalAmount?.toLocaleString(
-                                                        'de-DE'
-                                                    )}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="md:w-1/2">
-                                        {/* Headline */}
-                                        <div className="t-caption-bold">
-                                            {label(
-                                                'custom.FA_InitiativeViewFundingOverview'
-                                            )}
-                                        </div>
-                                        {/* List of funders */}
-                                        {donutData?.map((item, index) => (
-                                            <div
-                                                key={`d-${index}`}
-                                                className="flex mt-8 t-caption">
-                                                <span
-                                                    className={`w-16 h-16 mr-8 rounded-2 ${item.color}`}></span>
-                                                {`${item.name} - ${
-                                                    item.currency
-                                                } ${item.amount?.toLocaleString(
+                            <div className="flex flex-col items-center p-16 md:flex-row">
+                                <div className="w-full p-32 md:w-1/2">
+                                    {/* Donut chart */}
+                                    <div className="pie" style={pieChartStyle}>
+                                        <div className="absolute w-full -mt-16 text-center top-1/2">
+                                            <p className="t-sh7 text-blue-60">
+                                                {label(
+                                                    'custom.FA_InitiativeViewTotalFunded'
+                                                )}
+                                            </p>
+                                            <p className="t-h6">
+                                                {currency}{' '}
+                                                {totalAmount?.toLocaleString(
                                                     'de-DE'
-                                                )}`}
-                                            </div>
-                                        ))}
+                                                )}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <div className="mt-32 overflow-x-scroll md:overflow-hidden">
-                                    {/* BUG: min-width breaks the margins on mobile! min-w-[680px] */}
-                                    <div className="mt-32 min-w-[768px]">
-                                        {/* Table header */}
-                                        <div className="flex pb-8">
-                                            <div className="w-full t-footnote-bold">
-                                                {label(
-                                                    'custom.FA_InitiativeViewFunderTableColumnHeadersFunder'
+                                <div className="md:w-1/2">
+                                    {/* Headline */}
+                                    <div className="t-caption-bold">
+                                        {label(
+                                            'custom.FA_InitiativeViewFundingOverview'
+                                        )}
+                                    </div>
+                                    {/* List of funders */}
+                                    {donutData?.map((item, index) => (
+                                        <div
+                                            key={`d-${index}`}
+                                            className="flex mt-8 t-caption">
+                                            <span
+                                                className={`w-16 h-16 mr-8 rounded-2 ${item.color}`}></span>
+                                            {`${item.name} - ${
+                                                item.currency
+                                            } ${item.amount?.toLocaleString(
+                                                'de-DE'
+                                            )}`}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        <div className="mt-32 overflow-x-scroll md:overflow-hidden">
+                            {/* BUG: min-width breaks the margins on mobile! min-w-[680px] */}
+                            <div className="mt-32 min-w-[768px]">
+                                {/* Table header */}
+                                <div className="flex pb-8">
+                                    <div className="w-full t-footnote-bold">
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersFunder'
+                                        )}
+                                    </div>
+                                    <div className="w-full t-footnote-bold">
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersType'
+                                        )}
+                                    </div>
+                                    <div className="w-full t-footnote-bold">
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersAmount'
+                                        )}
+                                    </div>
+                                    <div className="w-full t-footnote-bold">
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersApprovalDate'
+                                        )}
+                                    </div>
+                                    <div className="w-full t-footnote-bold">
+                                        {label(
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersGrantPeriod'
+                                        )}
+                                    </div>
+                                </div>
+                                {/* Table Rows */}
+                                {Object.values(initiativeData._funders).map(
+                                    (item, index) => (
+                                        <div
+                                            key={`f-${index}`}
+                                            className="flex pt-16 pb-16 border-t-2 border-amber-10">
+                                            <div className="w-full t-h6">
+                                                {item.Account__r.Name}
+                                            </div>
+                                            <div className="w-full">
+                                                <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
+                                                    {item.Type__c}
+                                                </span>
+                                            </div>
+                                            <div className="w-full t-caption">
+                                                {item.CurrencyIsoCode}{' '}
+                                                {item.Amount__c?.toLocaleString(
+                                                    'de-DE'
                                                 )}
                                             </div>
-                                            <div className="w-full t-footnote-bold">
-                                                {label(
-                                                    'custom.FA_InitiativeViewFunderTableColumnHeadersType'
-                                                )}
+                                            <div className="w-full t-caption">
+                                                {item.Approval_Date__c}
                                             </div>
-                                            <div className="w-full t-footnote-bold">
-                                                {label(
-                                                    'custom.FA_InitiativeViewFunderTableColumnHeadersAmount'
-                                                )}
-                                            </div>
-                                            <div className="w-full t-footnote-bold">
-                                                {label(
-                                                    'custom.FA_InitiativeViewFunderTableColumnHeadersApprovalDate'
-                                                )}
-                                            </div>
-                                            <div className="w-full t-footnote-bold">
-                                                {label(
-                                                    'custom.FA_InitiativeViewFunderTableColumnHeadersGrantPeriod'
-                                                )}
+                                            <div className="w-full t-caption">
+                                                {item.Grant_Start_Date__c}
+                                                {' - '}
+                                                {item.Grant_End_Date__c}
                                             </div>
                                         </div>
-                                        {/* Table Rows */}
-                                        {Object.values(
-                                            initiativeData._funders
-                                        ).map((item, index) => (
-                                            <div
-                                                key={`f-${index}`}
-                                                className="flex pt-16 pb-16 border-t-2 border-amber-10">
-                                                <div className="w-full t-h6">
-                                                    {item.Account__r.Name}
-                                                </div>
-                                                <div className="w-full">
-                                                    <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
-                                                        {item.Type__c}
-                                                    </span>
-                                                </div>
-                                                <div className="w-full t-caption">
-                                                    {item.CurrencyIsoCode}{' '}
-                                                    {item.Amount__c?.toLocaleString(
-                                                        'de-DE'
-                                                    )}
-                                                </div>
-                                                <div className="w-full t-caption">
-                                                    {item.Approval_Date__c}
-                                                </div>
-                                                <div className="w-full t-caption">
-                                                    {item.Grant_Start_Date__c}
-                                                    {' - '}
-                                                    {item.Grant_End_Date__c}
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </>
-                        )}
+                                    )
+                                )}
+                            </div>
+                        </div>
+
                         {/* Empty state - No funders */}
-                        {!donutData && <SectionEmpty type="initiative" />}
+                        {Object.values(initiativeData._funders).length < 1 && (
+                            <SectionEmpty type="initiative" />
+                        )}
                     </SectionWrapper>
                     {/* Goals */}
                     <SectionWrapper className="mt-32 bg-white rounded-8">
@@ -863,7 +888,7 @@ const ProjectComponent = ({ pageProps }) => {
                             <SectionEmpty type="initiative" />
                         )}
                     </SectionWrapper>
-                </>
+                </div>
             )}
         </>
     );
