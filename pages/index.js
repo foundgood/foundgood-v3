@@ -110,20 +110,22 @@ const HomeComponent = () => {
 
             // Optional start date
             nextFiltered = startDate
-                ? nextFiltered.filter(
-                      item =>
-                          dayjs(startDate).format('YYYY-MM-DD') ===
-                          item.Grant_Start_Date__c
-                  )
+                ? nextFiltered.filter(item => {
+                      // Check if grantStart happens AFTER filterStart
+                      const grantStart = dayjs(item.Grant_Start_Date__c);
+                      const filterStart = dayjs(startDate).format('YYYY-MM-DD');
+                      return grantStart.diff(filterStart) >= 0;
+                  })
                 : nextFiltered;
 
             // Optional end date
             nextFiltered = endDate
-                ? nextFiltered.filter(
-                      item =>
-                          dayjs(endDate).format('YYYY-MM-DD') ===
-                          item.Grant_End_Date__c
-                  )
+                ? nextFiltered.filter(item => {
+                      // Check if grantEnd happens BEFORE filterEnd
+                      const grantEnd = dayjs(item.Grant_End_Date__c);
+                      const filterEnd = dayjs(endDate).format('YYYY-MM-DD');
+                      return grantEnd.diff(filterEnd) <= 0;
+                  })
                 : nextFiltered;
 
             setFiltered(nextFiltered);
