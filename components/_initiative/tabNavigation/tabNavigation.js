@@ -1,5 +1,5 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 // Packages
 import cc from 'classcat';
@@ -30,10 +30,35 @@ const TabNavigationComponent = () => {
         setMenuActive(!menuActive);
     };
 
+    // Ref: Mobile navigation wrapper
+    const navigationRef = useRef(null);
+
+    // Effect: Catch outside clicks and close
+    useEffect(() => {
+        document.addEventListener('click', handleClick);
+        return () => {
+            document.removeEventListener('click', handleClick);
+        };
+    }, [menuActive]);
+
+    // Function: Event wrapper for closing outside click
+    const handleClick = event => {
+        if (
+            menuActive &&
+            navigationRef.current &&
+            !navigationRef.current.contains(event.target)
+        ) {
+            setMenuActive(false);
+        }
+    };
+    const testActive = true;
+
     return (
         <>
             {INITIATIVE_ID && (
-                <div className="relative items-start justify-end hidden space-x-16 md:flex page-px tab-nav-bg">
+                <div
+                    className="relative items-start justify-end hidden space-x-16 md:flex page-px tab-nav-bg"
+                    ref={navigationRef}>
                     {navigation.map((item, index) => {
                         // Submenu
                         if (!item.slug) {
@@ -41,9 +66,10 @@ const TabNavigationComponent = () => {
                                 <div
                                     key={index}
                                     className={cc([
-                                        'flex flex-col px-16 pb-16 pt-[14px] mt-4 items-start rounded-8 text-blue-300 hover:text-blue-200 transition-default',
+                                        'flex flex-col px-16 pb-16 pt-[14px] mt-4 items-start text-blue-300 hover:text-blue-200 transition-default',
                                         {
-                                            'bg-blue-20': menuActive,
+                                            'bg-blue-20 rounded-8': menuActive,
+                                            // 'text-blue-100 border-t-2 border-blue-100': testActive,
                                         },
                                     ])}>
                                     <button
