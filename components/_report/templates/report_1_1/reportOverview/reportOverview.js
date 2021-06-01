@@ -14,14 +14,14 @@ import UpdateButton from 'components/updateButton';
 
 const ReportOverviewComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label, valueSet } = useMetadata();
 
     const [developmentGoals, setDevelopmentGoals] = useState();
     const [coApplicants, setCoApplicants] = useState();
     const [coFunders, setCoFunders] = useState();
     const [leadFunder, setLeadFunder] = useState();
 
-    const sdgs = [
+    const sdgsColors = [
         '#E32840',
         '#DCA545',
         '#4F9E3E',
@@ -60,13 +60,11 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             setCoApplicants(coApplicants);
 
             // Header - Merge goal data, to signel array
-            const goalAmounts = initiative.Problem_Effect__c?.split(';');
-            const goalTitles = initiative.Translated_Problem_Effect__c?.split(
-                ';'
-            );
-            if (goalTitles && goalTitles.length > 0) {
-                const developmentGoals = goalTitles.map((title, index) => {
-                    return { title: title, amount: goalAmounts[index] };
+            const sdgNums = initiative?.Problem_Effect__c?.split(';');
+            const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
+            if (sdgNums?.length > 0) {
+                const developmentGoals = sdgNums.map(num => {
+                    return { title: sdgs[num].label, amount: num };
                 });
                 setDevelopmentGoals(developmentGoals);
             }
@@ -124,7 +122,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                                         className={`px-6 pt-4 mr-8 leading-none text-white rounded-4`}
                                         style={{
                                             backgroundColor:
-                                                sdgs[problem.amount],
+                                                sdgsColors[problem.amount],
                                         }}>
                                         {problem.amount}
                                     </span>
