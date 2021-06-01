@@ -270,8 +270,8 @@ const reportWizardDictionary = {
             return `/wizard/${initiativeId}/sharing-results/${reportId}`;
         },
     },
-    logbookEntry: {},
     outcomes: {},
+    logbookEntry: {},
     influenceOnPolicy: {
         title: 'custom.FA_ReportWizardMenuInfluence',
         labels: {
@@ -327,7 +327,7 @@ const reportWizardDictionary = {
         },
     },
     postProjectActivities: {
-        title: 'custom.FA_ReportWizardMenuInfluence',
+        title: 'custom.FA_ReportWizardMenuPostProjectActivities',
         labels: {
             form: {
                 title: 'custom.FA_ReportWizardPostProjectActivitiesHeading',
