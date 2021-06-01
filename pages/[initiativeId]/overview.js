@@ -30,7 +30,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label, valueSet } = useMetadata();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -50,7 +50,7 @@ const ProjectComponent = ({ pageProps }) => {
     const [collaborators, setCollaborators] = useState();
     const [employeeGroups, setEmployeeGroups] = useState();
 
-    const sdgs = [
+    const sdgsColors = [
         '#E32840',
         '#DCA545',
         '#4F9E3E',
@@ -157,12 +157,12 @@ const ProjectComponent = ({ pageProps }) => {
         setApplicants(applicants);
         setCollaborators(collaborators);
 
-        // Merge goal data, to signel array
-        const goalAmounts = initiative?.Problem_Effect__c?.split(';');
-        const goalTitles = initiative?.Translated_Problem_Effect__c?.split(';');
-        if (goalTitles && goalTitles.length > 0) {
-            const developmentGoals = goalTitles.map((title, index) => {
-                return { title: title, amount: goalAmounts[index] };
+        // Merge goal data, to single array
+        const sdgNums = initiative?.Problem_Effect__c?.split(';');
+        const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
+        if (sdgNums?.length > 0) {
+            const developmentGoals = sdgNums.map(num => {
+                return { title: sdgs[num].label, amount: num };
             });
             setDevelopmentGoals(developmentGoals);
         }
@@ -333,11 +333,11 @@ const ProjectComponent = ({ pageProps }) => {
                                                 'custom.FA_ReportViewInitiativePeriod'
                                             )}
                                         </h4>
-                                        <h3 className="t-h5">
-                                            {initiativeData.Grant_Start_Date__c}
-                                            {' - '}
-                                            {initiativeData.Grant_End_Date__c}
-                                        </h3>
+                                        {initiativeData.Grant_Start_Date__c && (
+                                            <h3 className="t-h5">
+                                                {`${initiativeData.Grant_Start_Date__c} - ${initiativeData.Grant_End_Date__c}`}
+                                            </h3>
+                                        )}
                                     </div>
 
                                     <div className="p-16 border-4 lg:ml-12 lg:w-1/2 border-gray-10 rounded-8">
@@ -379,7 +379,7 @@ const ProjectComponent = ({ pageProps }) => {
                                                                 className={`px-6 pt-4 mr-8 leading-none text-white rounded-4`}
                                                                 style={{
                                                                     backgroundColor:
-                                                                        sdgs[
+                                                                        sdgsColors[
                                                                             problem
                                                                                 .amount
                                                                         ],
