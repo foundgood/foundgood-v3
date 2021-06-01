@@ -17,7 +17,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import Button from 'components/button';
 
-const UpdateButtonComponent = ({ mode, baseUrl }) => {
+const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
     // Hook: Context
     const { INITIATIVE_ID, REPORT_ID } = useContext();
 
@@ -67,7 +67,7 @@ const UpdateButtonComponent = ({ mode, baseUrl }) => {
 
     return (
         <Button
-            variant="secondary"
+            variant={variant}
             action={
                 mode === 'report'
                     ? reportInProgress
@@ -90,6 +90,8 @@ const UpdateButtonComponent = ({ mode, baseUrl }) => {
 UpdateButtonComponent.propTypes = {
     mode: t.oneOf(['initiative', 'report']).isRequired,
     baseUrl: t.string.isRequired,
+    // Button variant (primary, secondary...)
+    variant: t.string,
 };
 
 UpdateButtonComponent.defaultProps = {};

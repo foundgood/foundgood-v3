@@ -58,9 +58,20 @@ const ReportsComponent = ({ pageProps }) => {
     return (
         <>
             <SectionWrapper>
-                <h1 className="t-h1">
-                    {label('custom.FA_InitiativeViewReportsScheduleHeading')}
-                </h1>
+                <div className="flex justify-between">
+                    <h1 className="t-h1">
+                        {label(
+                            'custom.FA_InitiativeViewReportsScheduleHeading'
+                        )}
+                    </h1>
+                    {reportGroups?.length < 1 && (
+                        <UpdateButton
+                            mode="initiative"
+                            baseUrl="report-schedule"
+                            variant="primary"
+                        />
+                    )}
+                </div>
             </SectionWrapper>
 
             {reportGroups?.length > 0 &&
