@@ -48,28 +48,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             Object.values(initiative._funders).length > 0 &&
             Object.values(initiative._collaborators).length > 0
         ) {
-            // Co-Funders & Co-Applicants (used in Header)
-            const coFunders = Object.values(initiative._funders)
-                .filter(item => item.Type__c == 'Co funder')
-                .map(item => item.Account__r.Name);
-            setCoFunders(coFunders);
-
-            const coApplicants = Object.values(initiative._collaborators)
-                .filter(item => item.Type__c == 'Co applicant')
-                .map(item => item.Account__r.Name);
-            setCoApplicants(coApplicants);
-
-            // Header - Merge goal data, to signel array
-            const sdgNums = initiative?.Problem_Effect__c?.split(';');
-            const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
-            if (sdgNums?.length > 0) {
-                const developmentGoals = sdgNums.map(num => {
-                    return { title: sdgs[num].label, amount: num };
-                });
-                setDevelopmentGoals(developmentGoals);
-            }
-
-            // Funders - Total Amount
+            // Total Amount
             const totalAmount = Object.values(initiative._funders).reduce(
                 (total, funder) => {
                     return total + funder.Amount__c;
@@ -77,7 +56,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                 0
             );
 
-            // Header - Report funder details
+            // Report funder details
             const funderId = report.Funder_Report__r.Application_Id__c;
             const reportFunder = Object.values(initiative._funders)
                 .filter(item => item.Application_Id__c === funderId)
@@ -91,6 +70,29 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                     )}%`,
                 }))[0];
             setReportFunder(reportFunder);
+
+            // Co-Funders & Co-Applicants (used in Header)
+            const coFunders = Object.values(initiative._funders)
+                .filter(item => item.Application_Id__c !== funderId)
+                .map(item => item.Account__r.Name);
+            setCoFunders(coFunders);
+
+            const coApplicants = Object.values(initiative._collaborators)
+                .filter(item =>
+                    constants.TYPES.APPLICANTS_CREATE.includes(item.Type__c)
+                )
+                .map(item => item.Account__r.Name);
+            setCoApplicants(coApplicants);
+
+            // Header - Merge goal data, to signel array
+            const sdgNums = initiative?.Problem_Effect__c?.split(';');
+            const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
+            if (sdgNums?.length > 0) {
+                const developmentGoals = sdgNums.map(num => {
+                    return { title: sdgs[num].label, amount: num };
+                });
+                setDevelopmentGoals(developmentGoals);
+            }
         }
     }, []);
 
