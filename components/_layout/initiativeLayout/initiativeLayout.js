@@ -7,9 +7,10 @@ import t from 'prop-types';
 
 // Utilities
 import { useInitiativeDataStore } from 'utilities/store';
-import { useContext, useAuth } from 'utilities/hooks';
+import { useContext, useAuth, useMetadata } from 'utilities/hooks';
 
 // Components
+import Button from 'components/button';
 import Footer from 'components/_layout/footer';
 import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
@@ -17,6 +18,9 @@ import TabNavigation from 'components/_initiative/tabNavigation';
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
     // Store: Initiative data store
     const { populateInitiative, initiative } = useInitiativeDataStore();
+
+    // Hook: Metadata
+    const { label } = useMetadata();
 
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
@@ -39,10 +43,17 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
             {/* Initiative title and initiative navigation wrapper */}
             <div className="fixed left-0 right-0 flex flex-col header-t z-below-aside">
                 {/* Iniative title */}
-                <div className="flex items-center justify-start py-16 bg-blue-20 page-px">
+                <div className="flex items-center justify-between py-16 bg-blue-20 page-px">
                     <p className="font-medium text-blue-100 t-sh5 md:flex line-clamp-3">
                         {initiative.Name}
                     </p>
+
+                    <Button
+                        theme="blue"
+                        variant="secondary"
+                        action={`/wizard/${INITIATIVE_ID}/overview`}>
+                        {label('custom.FA_ButtonRunWizard')}
+                    </Button>
                 </div>
 
                 {/* Initiative navigation */}
