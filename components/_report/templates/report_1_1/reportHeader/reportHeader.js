@@ -13,7 +13,7 @@ const ReportHeaderComponent = ({ initiative, report }) => {
 
     useEffect(() => {
         // Report funder details
-        const funderId = report.Funder_Report__r.Application_Id__c;
+        const funderId = report.Funder_Report__r?.Application_Id__c;
         const reportFunder = Object.values(initiative._funders)
             .filter(item => item.Application_Id__c === funderId)
             .map(item => item.Account__r?.Name)[0];

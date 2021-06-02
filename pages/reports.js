@@ -21,15 +21,14 @@ const ReportComponent = ({ pageProps }) => {
     const { verifyLoggedIn, logout } = useAuth();
     verifyLoggedIn();
 
-    // Reset initiative data
-    const { CONSTANTS } = useInitiativeDataStore();
-
     // Hook: Metadata
-    const { label, valueSet, log } = useMetadata();
+    const { label, valueSet } = useMetadata();
 
     // Hook: Get sales force data methods
-    const { sfGetInitiativeList, sfQuery, queries } = useSalesForce();
-    const { data } = sfGetInitiativeList();
+    const { sfQuery, queries } = useSalesForce();
+
+    // Get all reports data
+    const { data } = sfQuery(queries.reports.getAll());
 
     // Get data for form
     const { data: accountFoundations } = sfQuery(
@@ -65,27 +64,12 @@ const ReportComponent = ({ pageProps }) => {
     const [initial, setInitial] = useState(null);
     const [filtered, setFiltered] = useState(null);
 
-    // Add data results to initial data set
     useEffect(() => {
-        // Remap data so reports are the main item and initiative is the child
-        const reportsData = data?.reduce((acc, item) => {
-            const reports = item.Initiative_Reports__r?.records ?? [];
-            acc = [
-                ...acc,
-                ...reports.map(reportItem => ({
-                    ...reportItem,
-                    initiative: item,
-                    funders:
-                        item.Initiative_Funders__r?.records?.map(
-                            funder => funder
-                        ) ?? [],
-                })),
-            ];
-            return acc;
-        }, []);
-
-        setInitial(reportsData);
-        setFiltered(reportsData);
+        const reports = data?.records.filter(
+            item => item.Initiative__c !== null && item.Report_Type__c !== null
+        );
+        setInitial(reports);
+        setFiltered(reports);
     }, [data]);
 
     function onFilter(data) {
@@ -100,8 +84,10 @@ const ReportComponent = ({ pageProps }) => {
             nextFiltered = text
                 ? initial.filter(
                       item =>
-                          item.initiative.Name.toLowerCase().includes(text) ||
-                          item.initiative.Application_Id__c?.includes(text)
+                          item.Initiative__r.Name.toLowerCase().includes(
+                              text
+                          ) ||
+                          item.Initiative__r.Application_Id__c?.includes(text)
                   )
                 : initial;
 
@@ -109,7 +95,7 @@ const ReportComponent = ({ pageProps }) => {
             nextFiltered =
                 category.length > 0
                     ? nextFiltered.filter(item =>
-                          category.includes(item.initiative.Category__c)
+                          category.includes(item.Initiative__r.Category__c)
                       )
                     : nextFiltered;
 
@@ -133,12 +119,11 @@ const ReportComponent = ({ pageProps }) => {
             nextFiltered =
                 foundation.length > 0
                     ? nextFiltered.filter(item =>
-                          item.funders.some(f =>
-                              foundation.includes(f.Account__c)
+                          foundation.includes(
+                              item.Funder_Report__r?.Account__r?.Id
                           )
                       )
                     : nextFiltered;
-
             setFiltered(nextFiltered);
         }
     }
@@ -221,19 +206,13 @@ const ReportComponent = ({ pageProps }) => {
                     {filtered?.map(item => (
                         <ReportRow
                             key={item.Id}
-                            initiativeId={item.initiative.Id}
+                            initiativeId={item.Initiative__c}
                             reportId={item.Id}
-                            applicationId={item.initiative.Application_Id__c}
+                            funderId={item.Funder_Report__r?.Application_Id__c}
+                            funderName={item.Funder_Report__r?.Account__r?.Name}
                             type={item.Report_Type__c}
-                            grantee={item.initiative.Lead_Grantee__r?.Name}
-                            headline={item.initiative.Name}
-                            leadFunder={
-                                item.funders?.filter(
-                                    item =>
-                                        item.Type__c ===
-                                        CONSTANTS.TYPES.LEAD_FUNDER
-                                )[0]?.Account__r.Name
-                            }
+                            grantee={item.Initiative__r?.Lead_Grantee__r?.Name}
+                            headline={item.Initiative__r?.Name}
                             dueDate={item.Due_Date__c}
                             status={item.Status__c}
                         />
