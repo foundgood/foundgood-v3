@@ -61,7 +61,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
 
             // Data for sf
             const data = {
-                Name: `${initiative.Name} - ${funder.Account__r.Name} - ${Report_Type__c} ${Due_Date__c}`,
+                Name: `${initiative.Id} - ${funder.Account__r.Name} - ${Report_Type__c} ${Due_Date__c}`,
                 Report_Period_Start_Date__c: ReportDates.from,
                 Report_Period_End_Date__c: ReportDates.to,
                 Report_Type__c,
