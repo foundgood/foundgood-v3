@@ -163,7 +163,7 @@ const ProjectComponent = ({ pageProps }) => {
             const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
             if (sdgNums?.length > 0) {
                 const developmentGoals = sdgNums.map(num => {
-                    return { title: sdgs[num]?.label, amount: num };
+                    return { title: sdgs[num - 1].label, amount: num };
                 });
                 setDevelopmentGoals(developmentGoals);
             }
@@ -381,8 +381,8 @@ const ProjectComponent = ({ pageProps }) => {
                                                                 style={{
                                                                     backgroundColor:
                                                                         sdgsColors[
-                                                                            problem
-                                                                                .amount
+                                                                            problem.amount -
+                                                                                1
                                                                         ],
                                                                 }}>
                                                                 {problem.amount}
