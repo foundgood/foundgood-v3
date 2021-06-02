@@ -100,7 +100,9 @@ const IntroductionComponent = ({ pageProps }) => {
             bodyTexts = label('custom.FA_InitiativeWizardWelcomeMain');
             bodyTexts = bodyTexts?.split('\n');
         }
-        setBodyTexts(bodyTexts);
+        if (bodyTexts) {
+            setBodyTexts(bodyTexts);
+        }
     }, []);
 
     return MODE === CONTEXTS.REPORT ? (
@@ -113,15 +115,17 @@ const IntroductionComponent = ({ pageProps }) => {
                 <Image src="/images/new-report.png" width="600" height="471" />
             </div>
             {/* Show bullet list? */}
-            {bodyTexts.length > 1 && (
+            {bodyTexts?.length > 1 && (
                 <ul className="pl-16 list-disc list-outside">
-                    {bodyTexts.map(item => (
-                        <li className="mt-8 t-body">{item}</li>
+                    {bodyTexts.map((item, index) => (
+                        <li key={index} className="mt-8 t-body">
+                            {item}
+                        </li>
                     ))}
                 </ul>
             )}
             {/* Single paragraph */}
-            {bodyTexts.lenght < 2 && <p className="t-body">{bodyTexts[0]}</p>}
+            {bodyTexts?.lenght < 2 && <p className="t-body">{bodyTexts[0]}</p>}
         </>
     ) : (
         <>
@@ -138,15 +142,17 @@ const IntroductionComponent = ({ pageProps }) => {
             </div>
 
             {/* Show bullet list? */}
-            {bodyTexts.length > 1 && (
+            {bodyTexts?.length > 1 && (
                 <ul className="pl-16 list-disc list-outside">
-                    {bodyTexts.map(item => (
-                        <li className="mt-8 t-body">{item}</li>
+                    {bodyTexts?.map((item, index) => (
+                        <li key={index} className="mt-8 t-body">
+                            {item}
+                        </li>
                     ))}
                 </ul>
             )}
             {/* Single paragraph */}
-            {bodyTexts.lenght < 2 && <p className="t-body">{bodyTexts[0]}</p>}
+            {bodyTexts?.lenght < 2 && <p className="t-body">{bodyTexts[0]}</p>}
         </>
     );
 };

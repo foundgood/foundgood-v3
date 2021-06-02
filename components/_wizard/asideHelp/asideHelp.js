@@ -26,11 +26,15 @@ const AsideHelpComponent = ({ data }) => {
     useEffect(() => {
         let helpGuideTexts = label(currentItem?.item?.labels?.help?.guide);
         helpGuideTexts = helpGuideTexts?.split('\n');
-        setHelpGuideTexts(helpGuideTexts);
+        if (helpWhatTexts) {
+            setHelpGuideTexts(helpGuideTexts);
+        }
 
         let helpWhatTexts = label(currentItem?.item?.labels?.help?.what);
         helpWhatTexts = helpWhatTexts?.split('\n');
-        setHelpWhatTexts(helpWhatTexts);
+        if (helpWhatTexts) {
+            setHelpWhatTexts(helpWhatTexts);
+        }
     }, [currentItem]);
 
     return (
@@ -78,8 +82,12 @@ const AsideHelpComponent = ({ data }) => {
                             {/* Show bullet list? */}
                             {helpGuideTexts.length > 1 && (
                                 <ul className="pl-16 list-disc list-outside">
-                                    {helpGuideTexts.map(item => (
-                                        <li className="mt-8 t-small">{item}</li>
+                                    {helpGuideTexts.map((item, index) => (
+                                        <li
+                                            key={index}
+                                            className="mt-8 t-small">
+                                            {item}
+                                        </li>
                                     ))}
                                 </ul>
                             )}
