@@ -15,11 +15,11 @@ import { FiFileText } from 'react-icons/fi';
 const ReportRowComponent = ({
     initiativeId,
     reportId,
-    applicationId,
+    funderName,
+    funderId,
     type,
     grantee,
     headline,
-    leadFunder,
     status,
     dueDate,
 }) => {
@@ -38,11 +38,11 @@ const ReportRowComponent = ({
                         <div className="t-sh6">{type}</div>
                         <div className="mt-8 t-h6 text-blue-60">{grantee}</div>
                         <div className="mt-4 t-h5">{headline}</div>
-                        {leadFunder && (
+                        {funderName && funderId && (
                             <div className="mt-8 t-sh6 text-blue-60">
-                                {leadFunder}
+                                {funderName}
                                 {' • '}
-                                {applicationId}
+                                {funderId}
                             </div>
                         )}
                     </div>

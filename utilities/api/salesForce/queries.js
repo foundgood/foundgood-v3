@@ -62,7 +62,6 @@ const queries = {
         },
     },
     initiativeReport: {
-        // bajs
         _query: `SELECT Id, Summary_Of_Initiative_Risks__c, Exported_Report_URL__c, Initiative__c, CreatedById, LastModifiedDate, Name, Report_Viewer_Version__c, Project_Purpose__c, Progress_Towards_Grant_Area_Themes__c, Important_Results__c, Post_Project_Activities__c, Summary_Of_Activities__c, Summary_Of_Challenges_And_Learnings__c, Executive_Summary__c, Funder_Report__c, Funder_Report__r.Account__r.Name, Funder_Report__r.Application_ID__c, Report_Type__c, Report_Period_Start_Date__c, Report_Period_End_Date__c, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Report__c`,
         get(id) {
             return `${this._query} WHERE Id = '${id}'`;
@@ -74,6 +73,7 @@ const queries = {
             return `${this._query} WHERE Initiative__c = '${initiativeId}'`;
         },
     },
+
     initiativeGoal: {
         _query: `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, KPI_Category__c, toLabel(KPI_Category__c) Translated_KPI_Category__c, Funder_Objective__c, toLabel(Funder_Objective__c) Translated_Funder_Objective__c, Type__c, toLabel(Type__c) Translated_Type__c, Goal__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Goal__c`,
         get(id) {
@@ -168,6 +168,14 @@ const queries = {
             )}') ORDER BY Initiative_Activity__r.Name`;
         },
     },
+    reports: {
+        // Lead_Grantee__r.Name,
+        _query: `SELECT Id, Initiative__c, Initiative__r.Category__c, Initiative__r.Application_Id__c, Initiative__r.Name, Initiative__r.Lead_Grantee__r.Name, Funder_Report__r.Account__r.Id, Funder_Report__r.Account__r.Name, Funder_Report__r.Application_ID__c, CreatedById, LastModifiedDate, Name, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, Executive_Summary__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess, Funder_Report__c, Report_Type__c, toLabel(Report_Type__c) Translated_Report_Type__c, Report_Period_End_Date__c ,Report_Period_Start_Date__c, Report_Viewer_Version__c FROM Initiative_Report__c`,
+        getAll() {
+            return `${this._query} ORDER BY Initiative__c, Due_Date__c`;
+        },
+    },
+    // S
 };
 
 export { queries };
