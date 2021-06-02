@@ -173,6 +173,9 @@ const useAuth = () => {
                     setUserInitiativeRights({
                         canView: data?.data.bHasCreateRelatedRecordsAccess,
                         canEdit: data?.data.bHasCreateTeamMemberAccess,
+                        other: {
+                            ...data?.data,
+                        },
                     });
                 }
             })
