@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import t from 'prop-types';
@@ -64,6 +64,10 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
             console.warn(error);
         }
     }
+
+    useEffect(() => {
+        console.log('userInitiativeRights: ', userInitiativeRights);
+    }, [userInitiativeRights]);
 
     return (
         <Button

@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Packages
 import t from 'prop-types';
@@ -9,6 +9,17 @@ import Image from 'next/image';
 import SectionWrapper from 'components/sectionWrapper';
 
 const ReportHeaderComponent = ({ initiative, report }) => {
+    const [reportFunder, setReportFunder] = useState();
+
+    useEffect(() => {
+        // Report funder details
+        const funderId = report.Funder_Report__r.Application_Id__c;
+        const reportFunder = Object.values(initiative._funders)
+            .filter(item => item.Application_Id__c === funderId)
+            .map(item => item.Account__r?.Name)[0];
+        setReportFunder(reportFunder);
+    }, []);
+
     return (
         <SectionWrapper>
             <SectionWrapper>
@@ -25,7 +36,7 @@ const ReportHeaderComponent = ({ initiative, report }) => {
                         // />
                     )}
                 </div>
-                <div className="mt-16">{initiative.Lead_Grantee__r?.Name}</div>
+                <div className="mt-16">{reportFunder}</div>
 
                 <h1 className="mt-48 t-h1">{initiative.Name}</h1>
                 <div className="mt-16 t-sh2">
