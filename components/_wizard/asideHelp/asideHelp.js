@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 
@@ -18,6 +18,20 @@ const AsideHelpComponent = ({ data }) => {
 
     // Hook: WizardLayoutStore
     const { currentItem } = useWizardNavigationStore();
+
+    const [helpGuideTexts, setHelpGuideTexts] = useState([]);
+    const [helpWhatTexts, setHelpWhatTexts] = useState([]);
+
+    // Effect: Set value based on modal elements based on updateId
+    useEffect(() => {
+        let helpGuideTexts = label(currentItem?.item?.labels?.help?.guide);
+        helpGuideTexts = helpGuideTexts?.split('\n');
+        setHelpGuideTexts(helpGuideTexts);
+
+        let helpWhatTexts = label(currentItem?.item?.labels?.help?.what);
+        helpWhatTexts = helpWhatTexts?.split('\n');
+        setHelpWhatTexts(helpWhatTexts);
+    }, [currentItem]);
 
     return (
         <div className="flex flex-col">
@@ -41,9 +55,18 @@ const AsideHelpComponent = ({ data }) => {
                         <p className="mb-16 t-h6">
                             {label('custom.FA_InitiativeWizardHeadingWhat')}
                         </p>
-                        <p className="t-small">
-                            {label(currentItem?.item?.labels?.help?.what)}
-                        </p>
+                        {/* Show bullet list? */}
+                        {helpWhatTexts.length > 1 && (
+                            <ul className="pl-16 list-disc list-outside">
+                                {helpWhatTexts.map(item => (
+                                    <li className="mt-8 t-small">{item}</li>
+                                ))}
+                            </ul>
+                        )}
+                        {/* Single paragraph */}
+                        {helpWhatTexts.lenght < 2 && (
+                            <p className="t-small">{helpWhatTexts[0]}</p>
+                        )}
                     </div>
                 )}
                 {label(currentItem?.item?.labels?.help?.guide) && (
@@ -52,9 +75,18 @@ const AsideHelpComponent = ({ data }) => {
                             {label('custom.FA_InitiativeWizardHeadingGuide')}
                         </p>
                         <div className="p-16 text-blue-300 bg-white">
-                            <p className="t-small">
-                                {label(currentItem?.item?.labels?.help?.guide)}
-                            </p>
+                            {/* Show bullet list? */}
+                            {helpGuideTexts.length > 1 && (
+                                <ul className="pl-16 list-disc list-outside">
+                                    {helpGuideTexts.map(item => (
+                                        <li className="mt-8 t-small">{item}</li>
+                                    ))}
+                                </ul>
+                            )}
+                            {/* Single paragraph */}
+                            {helpGuideTexts.lenght < 2 && (
+                                <p className="t-small">{helpGuideTexts[0]}</p>
+                            )}
                         </div>
                     </div>
                 )}

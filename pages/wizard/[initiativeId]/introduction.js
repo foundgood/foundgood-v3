@@ -1,5 +1,5 @@
 // React
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import Image from 'next/image';
@@ -32,6 +32,8 @@ const IntroductionComponent = ({ pageProps }) => {
 
     // Hook: Salesforce setup
     const { sfCreate } = useSalesForce();
+
+    const [bodyTexts, setBodyTexts] = useState([]);
 
     // Store: Wizard navigation
     const {
@@ -89,6 +91,18 @@ const IntroductionComponent = ({ pageProps }) => {
         }, 100);
     }, [initiative]);
 
+    useEffect(() => {
+        let bodyTexts = [];
+        if (MODE === CONTEXTS.REPORT) {
+            bodyTexts = label('custom.FA_ReportWizardWelcomeMain');
+            bodyTexts = bodyTexts?.split('\n');
+        } else {
+            bodyTexts = label('custom.FA_InitiativeWizardWelcomeMain');
+            bodyTexts = bodyTexts?.split('\n');
+        }
+        setBodyTexts(bodyTexts);
+    }, []);
+
     return MODE === CONTEXTS.REPORT ? (
         <>
             <TitlePreamble
@@ -98,9 +112,16 @@ const IntroductionComponent = ({ pageProps }) => {
             <div className="flex justify-center">
                 <Image src="/images/new-report.png" width="600" height="471" />
             </div>
-            <p className="t-body">
-                {label('custom.FA_ReportWizardWelcomeMain')}
-            </p>
+            {/* Show bullet list? */}
+            {bodyTexts.length > 1 && (
+                <ul className="pl-16 list-disc list-outside">
+                    {bodyTexts.map(item => (
+                        <li className="mt-8 t-body">{item}</li>
+                    ))}
+                </ul>
+            )}
+            {/* Single paragraph */}
+            {bodyTexts.lenght < 2 && <p className="t-body">{bodyTexts[0]}</p>}
         </>
     ) : (
         <>
@@ -115,9 +136,17 @@ const IntroductionComponent = ({ pageProps }) => {
                     height="374"
                 />
             </div>
-            <p className="t-body">
-                {label('custom.FA_InitiativeWizardWelcomeMain')}
-            </p>
+
+            {/* Show bullet list? */}
+            {bodyTexts.length > 1 && (
+                <ul className="pl-16 list-disc list-outside">
+                    {bodyTexts.map(item => (
+                        <li className="mt-8 t-body">{item}</li>
+                    ))}
+                </ul>
+            )}
+            {/* Single paragraph */}
+            {bodyTexts.lenght < 2 && <p className="t-body">{bodyTexts[0]}</p>}
         </>
     );
 };
