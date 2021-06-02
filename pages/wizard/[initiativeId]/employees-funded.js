@@ -210,6 +210,19 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
+                {MODE === CONTEXTS.REPORT && (
+                    <Reflection
+                        name="Employees_Funded_Overview"
+                        defaultValue={currentReflection.Description__c}
+                        label={label(
+                            'custom.FA_ReportWizardEmployeesReflectionSubHeading'
+                        )}
+                        placeholder={labelTodo('Enter reflections')}
+                        maxLength={750}
+                        required
+                        controller={controlReflections}
+                    />
+                )}
                 {Object.keys(initiative._employeesFunded).map(employeeKey => {
                     const employee = initiative._employeesFunded[employeeKey];
                     return (
@@ -241,19 +254,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     }}>
                     {label('custom.FA_ButtonAddEmployee')}
                 </Button>
-                {MODE === CONTEXTS.REPORT && (
-                    <Reflection
-                        name="Employees_Funded_Overview"
-                        defaultValue={currentReflection.Description__c}
-                        label={label(
-                            'custom.FA_ReportWizardEmployeesReflectionSubHeading'
-                        )}
-                        placeholder={labelTodo('Enter reflections')}
-                        maxLength={750}
-                        required
-                        controller={controlReflections}
-                    />
-                )}
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
