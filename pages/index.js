@@ -201,7 +201,7 @@ const HomeComponent = () => {
                                     item =>
                                         item.Type__c ===
                                         CONSTANTS.TYPES.LEAD_FUNDER
-                                )[0]?.Account__r.Name
+                                )[0]?.Account__r?.Name
                             }
                             otherFunders={
                                 item.funders?.filter(
