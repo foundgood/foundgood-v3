@@ -60,27 +60,29 @@ const HomeComponent = () => {
 
     // Add data results to initial data set
     useEffect(() => {
-        // Remap data so reports are the main item and initiative is the child
-        const initiativeData = data?.reduce((acc, item) => {
-            acc = [
-                ...acc,
-                {
-                    ...item,
-                    reports:
-                        item.Initiative_Reports__r?.records.map(
-                            report => report
-                        ) ?? [],
-                    funders:
-                        item.Initiative_Funders__r?.records?.map(
-                            funder => funder
-                        ) ?? [],
-                },
-            ];
-            return acc;
-        }, []);
+        if (typeof type === 'object') {
+            // Remap data so reports are the main item and initiative is the child
+            const initiativeData = data?.reduce((acc, item) => {
+                acc = [
+                    ...acc,
+                    {
+                        ...item,
+                        reports:
+                            item.Initiative_Reports__r?.records.map(
+                                report => report
+                            ) ?? [],
+                        funders:
+                            item.Initiative_Funders__r?.records?.map(
+                                funder => funder
+                            ) ?? [],
+                    },
+                ];
+                return acc;
+            }, []);
 
-        setInitial(initiativeData);
-        setFiltered(initiativeData);
+            setInitial(initiativeData);
+            setFiltered(initiativeData);
+        }
     }, [data]);
 
     function onFilter(data) {

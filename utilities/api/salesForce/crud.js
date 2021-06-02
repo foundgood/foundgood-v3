@@ -70,9 +70,6 @@ async function update({ object, id, data }) {
     }
 }
 
-// curl https://yourInstance.salesforce.com/services/data/v52.0/sobjects/Account/001D000000INjVe -H "Authorization: Bearer token" -H "Content-Type: application/json" -d @patchaccount.json -X PATCH
-// curl https://yourInstance.salesforce.com/services/data/v52.0/sobjects/Account/001D000000INjVe -H "Authorization: Bearer token" -X DELETE
-
 // Delete any Salesforce object
 async function remove({ object, id }) {
     try {
