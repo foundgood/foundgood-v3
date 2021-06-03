@@ -26,7 +26,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
     const { INITIATIVE_ID } = useContext();
 
     // Hook: Auth
-    const { getUserInitiativeRights } = useAuth();
+    const { getUserInitiativeRights, userInitiativeRights } = useAuth();
 
     useEffect(() => {
         populateInitiative(INITIATIVE_ID);
@@ -48,12 +48,14 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                         {initiative.Name}
                     </p>
 
-                    <Button
-                        theme="blue"
-                        variant="secondary"
-                        action={`/wizard/${INITIATIVE_ID}/overview`}>
-                        {label('custom.FA_ButtonRunWizard')}
-                    </Button>
+                    {userInitiativeRights.canEdit && (
+                        <Button
+                            theme="blue"
+                            variant="secondary"
+                            action={`/wizard/${INITIATIVE_ID}/overview`}>
+                            {label('custom.FA_ButtonRunWizard')}
+                        </Button>
+                    )}
                 </div>
 
                 {/* Initiative navigation */}

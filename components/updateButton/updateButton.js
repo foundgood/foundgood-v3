@@ -1,5 +1,5 @@
 // React
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import t from 'prop-types';
@@ -36,6 +36,8 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
     // Initiative data
     const { updateReport, getReport, CONSTANTS } = useInitiativeDataStore();
 
+    const [canUpdate, setCanUpdate] = useState(true);
+
     // method: set report to in progress
     async function reportInProgress() {
         try {
@@ -66,28 +68,45 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
     }
 
     useEffect(() => {
-        console.log('userInitiativeRights: ', userInitiativeRights);
-    }, [userInitiativeRights]);
+        // User needs to have rights to edit
+        // If "report" page, then the status cannot be published
+        const reportPage = mode === 'report' ? true : false;
+        const canUpdate =
+            userInitiativeRights.canEdit &&
+            (reportPage
+                ? getReport(REPORT_ID).Status__c !==
+                  CONSTANTS.TYPES.REPORT_PUBLISHED
+                    ? true
+                    : false
+                : true);
+        setCanUpdate(canUpdate);
+    }, []);
 
     return (
-        <Button
-            variant={variant}
-            action={
-                mode === 'report'
-                    ? reportInProgress
-                    : `/wizard/${INITIATIVE_ID}/${baseUrl}`
-            }
-            disabled={
-                !userInitiativeRights.canEdit ||
-                (mode === 'report' &&
-                    ![
-                        CONSTANTS.TYPES.REPORT_NOT_STARTED,
-                        CONSTANTS.TYPES.REPORT_IN_PROGRESS,
-                        CONSTANTS.TYPES.REPORT_IN_REVIEW,
-                    ].includes(getReport(REPORT_ID).Status__c))
-            }>
-            {label('custom.FA_Update')}
-        </Button>
+        <>
+            {canUpdate && (
+                <Button
+                    variant={variant}
+                    action={
+                        mode === 'report'
+                            ? reportInProgress
+                            : `/wizard/${INITIATIVE_ID}/${baseUrl}`
+                    }
+                    // HIDE/SHOW button instead
+                    // disabled={
+                    //     !userInitiativeRights.canEdit ||
+                    //     (mode === 'report' &&
+                    //         ![
+                    //             CONSTANTS.TYPES.REPORT_NOT_STARTED,
+                    //             CONSTANTS.TYPES.REPORT_IN_PROGRESS,
+                    //             CONSTANTS.TYPES.REPORT_IN_REVIEW,
+                    //         ].includes(getReport(REPORT_ID).Status__c))
+                    // }
+                >
+                    {label('custom.FA_Update')}
+                </Button>
+            )}
+        </>
     );
 };
 

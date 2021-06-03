@@ -74,7 +74,7 @@ const WizardStatusComponent = () => {
 
             // Data for sf
             const data = {
-                Status__c: CONSTANTS.TYPES.REPORT_PUBLISHED,
+                Status__c: CONSTANTS.TYPES.REPORT_IN_REVIEW,
             };
 
             // Update
@@ -101,42 +101,51 @@ const WizardStatusComponent = () => {
                 </p>
                 {/* TODO: Out for now */}
                 {/* <p className="mb-12 mr-12 lg:mr-24 t-small text-teal-60 md:flex md:mb-0 line-clamp-2">
-                <span className="mr-4 font-bold">
-                    {labelTodo('6 more sections')}
-                </span>
-                <span>{labelTodo('needed before you can submit')}</span>
-            </p>
-             */}
+                    <span className="mr-4 font-bold">
+                        {labelTodo('6 more sections')}
+                    </span>
+                    <span>{labelTodo('needed before you can submit')}</span>
+                </p>
+                */}
                 <div className="flex items-center self-end space-x-12">
-                    <Button
-                        theme="teal"
-                        variant={
-                            [
-                                CONSTANTS.TYPES.REPORT_IN_REVIEW,
-                                CONSTANTS.TYPES.REPORT_PUBLISHED,
-                            ].includes(currentReport.Status__c)
-                                ? 'tertiary'
-                                : 'primary'
-                        }
-                        disabled={
-                            [CONSTANTS.TYPES.REPORT_PUBLISHED].includes(
-                                currentReport.Status__c
-                            ) || !userInitiativeRights.canEdit
-                        }
-                        action={reportInProgress}>
-                        {label('custom.FA_ButtonRunWizard')}
-                    </Button>
-                    <Button
-                        theme="teal"
-                        variant="primary"
-                        disabled={
-                            currentReport.Status__c !==
-                                CONSTANTS.TYPES.REPORT_IN_PROGRESS ||
-                            !userInitiativeRights.canEdit
-                        }
-                        action={() => setShowModal(true)}>
-                        {label('custom.FA_ButtonSubmit')}
-                    </Button>
+                    {userInitiativeRights.canEdit &&
+                        currentReport.Status__c !==
+                            CONSTANTS.TYPES.REPORT_PUBLISHED && (
+                            <Button
+                                theme="teal"
+                                variant="primary"
+                                // variant={
+                                //     [
+                                //         CONSTANTS.TYPES.REPORT_IN_REVIEW,
+                                //         CONSTANTS.TYPES.REPORT_PUBLISHED,
+                                //     ].includes(currentReport.Status__c)
+                                //         ? 'tertiary'
+                                //         : 'primary'
+                                // }
+                                // SHOW/HIDE btn instead
+                                // disabled={
+                                //     [CONSTANTS.TYPES.REPORT_PUBLISHED].includes(
+                                //         currentReport.Status__c
+                                //     ) || !userInitiativeRights.canEdit
+                                // }
+                                action={reportInProgress}>
+                                {label('custom.FA_ButtonRunWizard')}
+                            </Button>
+                        )}
+                    {userInitiativeRights.canEdit &&
+                        currentReport.Status__c !==
+                            CONSTANTS.TYPES.REPORT_PUBLISHED && (
+                            <Button
+                                theme="teal"
+                                variant="primary"
+                                disabled={
+                                    currentReport.Status__c ===
+                                    CONSTANTS.TYPES.REPORT_IN_REVIEW
+                                }
+                                action={() => setShowModal(true)}>
+                                {label('custom.FA_ButtonSubmit')}
+                            </Button>
+                        )}
                 </div>
             </div>
             <Modal
