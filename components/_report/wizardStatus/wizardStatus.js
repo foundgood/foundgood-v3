@@ -114,14 +114,14 @@ const WizardStatusComponent = () => {
                             <Button
                                 theme="teal"
                                 variant="primary"
-                                // variant={
-                                //     [
-                                //         CONSTANTS.TYPES.REPORT_IN_REVIEW,
-                                //         CONSTANTS.TYPES.REPORT_PUBLISHED,
-                                //     ].includes(currentReport.Status__c)
-                                //         ? 'tertiary'
-                                //         : 'primary'
-                                // }
+                                variant={
+                                    [
+                                        CONSTANTS.TYPES.REPORT_IN_REVIEW,
+                                        CONSTANTS.TYPES.REPORT_PUBLISHED,
+                                    ].includes(currentReport.Status__c)
+                                        ? 'tertiary'
+                                        : 'primary'
+                                }
                                 // SHOW/HIDE btn instead
                                 // disabled={
                                 //     [CONSTANTS.TYPES.REPORT_PUBLISHED].includes(
@@ -137,7 +137,12 @@ const WizardStatusComponent = () => {
                             CONSTANTS.TYPES.REPORT_PUBLISHED && (
                             <Button
                                 theme="teal"
-                                variant="primary"
+                                variant={
+                                    currentReport.Status__c ===
+                                    CONSTANTS.TYPES.REPORT_NOT_STARTED
+                                        ? 'tertiary'
+                                        : 'primary'
+                                }
                                 disabled={
                                     currentReport.Status__c ===
                                     CONSTANTS.TYPES.REPORT_IN_REVIEW
