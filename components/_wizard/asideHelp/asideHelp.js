@@ -19,22 +19,22 @@ const AsideHelpComponent = ({ data }) => {
     // Hook: WizardLayoutStore
     const { currentItem } = useWizardNavigationStore();
 
-    const [helpGuideTexts, setHelpGuideTexts] = useState([]);
-    const [helpWhatTexts, setHelpWhatTexts] = useState([]);
+    const [helpGuide, setHelpGuide] = useState([]);
+    const [helpWhat, setHelpWhat] = useState([]);
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        let helpGuideTexts = label(currentItem?.item?.labels?.help?.guide);
-        helpGuideTexts = helpGuideTexts?.split('\n');
-        if (helpWhatTexts) {
-            setHelpGuideTexts(helpGuideTexts);
-        }
+        let helpGuide = label(currentItem?.item?.labels?.help?.guide)?.split(
+            '\n'
+        );
+        helpGuide = helpGuide === undefined ? [] : helpGuide;
+        setHelpGuide(helpGuide);
 
-        let helpWhatTexts = label(currentItem?.item?.labels?.help?.what);
-        helpWhatTexts = helpWhatTexts?.split('\n');
-        if (helpWhatTexts) {
-            setHelpWhatTexts(helpWhatTexts);
-        }
+        let helpWhat = label(currentItem?.item?.labels?.help?.what)?.split(
+            '\n'
+        );
+        helpWhat = helpWhat === undefined ? [] : helpWhat;
+        setHelpWhat(helpWhat);
     }, [currentItem]);
 
     return (
@@ -54,35 +54,37 @@ const AsideHelpComponent = ({ data }) => {
                         </p>
                     </div>
                 )}
-                {label(currentItem?.item?.labels?.help?.what) && (
+                {helpWhat.length > 0 && (
                     <div>
                         <p className="mb-16 t-h6">
                             {label('custom.FA_InitiativeWizardHeadingWhat')}
                         </p>
-                        {/* Show bullet list? */}
-                        {helpWhatTexts.length > 1 && (
+                        {/* Show bullet list */}
+                        {helpWhat.length > 1 && (
                             <ul className="pl-16 list-disc list-outside">
-                                {helpWhatTexts.map(item => (
-                                    <li className="mt-8 t-small">{item}</li>
+                                {helpWhat.map((item, index) => (
+                                    <li key={index} className="mt-8 t-small">
+                                        {item}
+                                    </li>
                                 ))}
                             </ul>
                         )}
                         {/* Single paragraph */}
-                        {helpWhatTexts.lenght < 2 && (
-                            <p className="t-small">{helpWhatTexts[0]}</p>
+                        {helpWhat.length == 1 && (
+                            <p className="t-small">{helpWhat[0]}</p>
                         )}
                     </div>
                 )}
-                {label(currentItem?.item?.labels?.help?.guide) && (
+                {helpGuide.length > 0 && (
                     <div>
                         <p className="mb-16 t-h6">
                             {label('custom.FA_InitiativeWizardHeadingGuide')}
                         </p>
                         <div className="p-16 text-blue-300 bg-white">
-                            {/* Show bullet list? */}
-                            {helpGuideTexts.length > 1 && (
+                            {/* Show bullet list */}
+                            {helpGuide.length > 1 && (
                                 <ul className="pl-16 list-disc list-outside">
-                                    {helpGuideTexts.map((item, index) => (
+                                    {helpGuide.map((item, index) => (
                                         <li
                                             key={index}
                                             className="mt-8 t-small">
@@ -92,8 +94,8 @@ const AsideHelpComponent = ({ data }) => {
                                 </ul>
                             )}
                             {/* Single paragraph */}
-                            {helpGuideTexts.lenght < 2 && (
-                                <p className="t-small">{helpGuideTexts[0]}</p>
+                            {helpGuide.length == 1 && (
+                                <p className="t-small">{helpGuide[0]}</p>
                             )}
                         </div>
                     </div>

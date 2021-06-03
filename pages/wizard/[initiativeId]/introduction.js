@@ -92,17 +92,16 @@ const IntroductionComponent = ({ pageProps }) => {
     }, [initiative]);
 
     useEffect(() => {
-        let bodyTexts = [];
+        let bodyTexts;
         if (MODE === CONTEXTS.REPORT) {
-            bodyTexts = label('custom.FA_ReportWizardWelcomeMain');
-            bodyTexts = bodyTexts?.split('\n');
+            bodyTexts = label('custom.FA_ReportWizardWelcomeMain')?.split('\n');
         } else {
-            bodyTexts = label('custom.FA_InitiativeWizardWelcomeMain');
-            bodyTexts = bodyTexts?.split('\n');
+            bodyTexts = label('custom.FA_InitiativeWizardWelcomeMain')?.split(
+                '\n'
+            );
         }
-        if (bodyTexts) {
-            setBodyTexts(bodyTexts);
-        }
+        bodyTexts = bodyTexts === undefined ? [] : bodyTexts;
+        setBodyTexts(bodyTexts);
     }, []);
 
     return MODE === CONTEXTS.REPORT ? (
@@ -125,7 +124,7 @@ const IntroductionComponent = ({ pageProps }) => {
                 </ul>
             )}
             {/* Single paragraph */}
-            {bodyTexts?.lenght < 2 && <p className="t-body">{bodyTexts[0]}</p>}
+            {bodyTexts?.length == 1 && <p className="t-body">{bodyTexts[0]}</p>}
         </>
     ) : (
         <>
@@ -152,7 +151,7 @@ const IntroductionComponent = ({ pageProps }) => {
                 </ul>
             )}
             {/* Single paragraph */}
-            {bodyTexts?.lenght < 2 && <p className="t-body">{bodyTexts[0]}</p>}
+            {bodyTexts?.length == 1 && <p className="t-body">{bodyTexts[0]}</p>}
         </>
     );
 };
