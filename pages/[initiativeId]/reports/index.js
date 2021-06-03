@@ -8,6 +8,9 @@ import t from 'prop-types';
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
+import { query } from 'utilities/api/salesForce/fetchers';
+import { queries } from 'utilities/api/salesForce/queries';
+
 // Components
 import Preloader from 'components/preloader';
 import UpdateButton from 'components/updateButton';
@@ -28,25 +31,16 @@ const ReportsComponent = ({ pageProps }) => {
     // Hook: Metadata
     const { label } = useMetadata();
 
+    // Store: Auth
+    const { user, userInitiativeRights } = useAuth();
+
     useEffect(() => {
-        // Make sure data it loaded
         if (
+            user?.user_id &&
             initiative?._funders &&
             Object.keys(initiative?._funders).length > 0
         ) {
-            // Group reports by funder
-            const funders = Object.values(initiative._funders).map(item => {
-                // Get reports
-                const reports = Object.values(initiative._reports).filter(
-                    report => report.Funder_Report__c == item.Id
-                );
-                return { ...item, ...{ reports: reports } };
-            });
-            // Filter out funders without reports
-            const reports = funders.filter(funder => {
-                return funder.reports.length > 0;
-            });
-            setReportGroups(reports);
+            filterReports();
         }
         // Set empty state
         else if (
@@ -55,7 +49,57 @@ const ReportsComponent = ({ pageProps }) => {
         ) {
             setReportGroups([]);
         }
-    }, [initiative]);
+    }, [user, userInitiativeRights, initiative]);
+
+    const filterReports = async () => {
+        // Get the current logged in User's linked Account_Id
+        // If user doesn't have edit access, they are a FOUNDATION
+
+        let accountId;
+        if (!userInitiativeRights.canEdit) {
+            accountId = await getAccountId(user.user_id);
+        }
+
+        // Group reports by funder
+        const funders = Object.values(initiative._funders).map(item => {
+            // Get reports
+
+            const reports = Object.values(initiative._reports).filter(
+                report => {
+                    // Only show reports related to user accountId
+                    if (accountId) {
+                        return (
+                            report.Funder_Report__c == item.Id &&
+                            accountId == report.Funder_Report__r.Account__r.Id
+                        );
+                    }
+                    // Show all funders reports
+                    else {
+                        return report.Funder_Report__c == item.Id;
+                    }
+                }
+            );
+
+            return { ...item, ...{ reports: reports } };
+        });
+        // Filter out funders without reports
+        const reports = funders.filter(funder => {
+            return funder.reports.length > 0;
+        });
+        setReportGroups(reports);
+    };
+
+    const getAccountId = async id => {
+        try {
+            const data = await query(queries.user.getUser(id));
+            if (data?.totalSize === 1) {
+                const accountId = data.records[0]?.AccountId;
+                return accountId;
+            }
+        } catch (error) {
+            console.warn(error);
+        }
+    };
 
     return (
         <>

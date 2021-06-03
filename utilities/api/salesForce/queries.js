@@ -10,6 +10,11 @@ const queries = {
             return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Organization'`;
         },
     },
+    user: {
+        getUser(id) {
+            return `SELECT Id, Name, AccountId FROM User WHERE Id = '${id}'`;
+        },
+    },
     initiative: {
         _query: `SELECT Id, Configuration_Type__c, LastModifiedDate, CreatedById, Name, Situation_Today__c, Approach_Thinking__c, Problem_Effect__c, toLabel(Problem_Effect__c) Translated_Problem_Effect__c, Problem_Resolutions__c, Problem_Causes__c, Ultimate_Outcome__c, Stage__c, toLabel(Stage__c) Translated_Stage__c, Where_Is_Problem__c, toLabel(Where_Is_Problem__c) Translated_Where_Is_Problem__c, Who_Effect__c, Why_Problem_Solving__c, Lead_Grantee__r.Name, Initiator_Foundation__r.Name, Access_Level__c, toLabel(Access_Level__c) Translated_Access_Level__c, Hero_Image_URL__c, Summary__c, Application_Id__c, Grant_Start_Date__c, Grant_End_Date__c, Category__c, toLabel(Category__c) Translated_Category__c, Subcategory__c, toLabel(Subcategory__c) Translated_Subcategory__c, Collaborators__c, Partners__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative__c`,
         get(id) {
@@ -20,7 +25,7 @@ const queries = {
         },
     },
     initiativeFunder: {
-        _query: `SELECT Id, Name, CurrencyIsoCode, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Account__c, Account__r.Name, Application_ID__c, Grant_Start_Date__c, Grant_End_Date__c, Approval_Date__c, Amount__c, Type__c,  toLabel(Type__c) Translated_Type__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Funder__c`,
+        _query: `SELECT Id, Name, CurrencyIsoCode, CreatedById, CreatedDate, LastModifiedDate, LastModifiedById, Initiative__c, Account__c, Account__r.Name, Account__r.Id, Application_ID__c, Grant_Start_Date__c, Grant_End_Date__c, Approval_Date__c, Amount__c, Type__c,  toLabel(Type__c) Translated_Type__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Funder__c`,
         get(id) {
             return `${this._query} WHERE Id = '${id}'`;
         },
@@ -62,7 +67,7 @@ const queries = {
         },
     },
     initiativeReport: {
-        _query: `SELECT Id, Summary_Of_Initiative_Risks__c, Exported_Report_URL__c, Initiative__c, CreatedById, LastModifiedDate, Name, Report_Viewer_Version__c, Project_Purpose__c, Progress_Towards_Grant_Area_Themes__c, Important_Results__c, Post_Project_Activities__c, Summary_Of_Activities__c, Summary_Of_Challenges_And_Learnings__c, Executive_Summary__c, Funder_Report__c, Funder_Report__r.Account__r.Name, Funder_Report__r.Application_ID__c, Report_Type__c, Report_Period_Start_Date__c, Report_Period_End_Date__c, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Report__c`,
+        _query: `SELECT Id, Summary_Of_Initiative_Risks__c, Exported_Report_URL__c, Initiative__c, CreatedById, LastModifiedDate, Name, Report_Viewer_Version__c, Project_Purpose__c, Progress_Towards_Grant_Area_Themes__c, Important_Results__c, Post_Project_Activities__c, Summary_Of_Activities__c, Summary_Of_Challenges_And_Learnings__c, Executive_Summary__c, Funder_Report__c, Funder_Report__r.Account__r.Name, Funder_Report__r.Account__r.Id, Funder_Report__r.Application_ID__c, Report_Type__c, Report_Period_Start_Date__c, Report_Period_End_Date__c, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Report__c`,
         get(id) {
             return `${this._query} WHERE Id = '${id}'`;
         },
