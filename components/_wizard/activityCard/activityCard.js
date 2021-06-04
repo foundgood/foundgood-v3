@@ -56,7 +56,14 @@ const ActivityCardComponent = ({
     );
 };
 
-const ActivityCard = ({ headline, tags, locations, goals, action }) => {
+const ActivityCard = ({
+    headline,
+    tags,
+    locations,
+    goals,
+    action,
+    description,
+}) => {
     // Hook: Metadata
     const { labelTodo, label } = useMetadata();
 
@@ -69,6 +76,8 @@ const ActivityCard = ({ headline, tags, locations, goals, action }) => {
                             <h4 className="t-sh4">{headline}</h4>
                         </div>
                     )}
+                    {description && <p className="t-small">{description}</p>}
+
                     {tags && tags.length > 0 && (
                         <>
                             <div className="mt-8 t-caption-bold">
@@ -85,7 +94,6 @@ const ActivityCard = ({ headline, tags, locations, goals, action }) => {
                             </div>
                         </>
                     )}
-
                     {locations && (
                         <>
                             <div className="mt-16 t-caption-bold">

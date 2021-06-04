@@ -333,7 +333,6 @@ const ApplicantsComponent = ({ pageProps }) => {
                         subLabel={helpText(
                             'objects.initiativeCollaborator.Description__c'
                         )}
-                        label={labelTodo('Description of collaboration')}
                         placeholder={label(
                             'custom.FA_FormCaptureTextEntryEmpty'
                         )}

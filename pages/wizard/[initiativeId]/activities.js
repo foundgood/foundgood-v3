@@ -21,7 +21,7 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import { InputWrapper, SelectList, Text } from 'components/_inputs';
+import { InputWrapper, SelectList, Text, LongText } from 'components/_inputs';
 import ActivityCard from 'components/_wizard/activityCard';
 
 const ActivitiesComponent = ({ pageProps }) => {
@@ -72,7 +72,13 @@ const ActivitiesComponent = ({ pageProps }) => {
         // Modal save button state
         setModalIsSaving(true);
         try {
-            const { Things_To_Do__c, Activities, Location, Goals } = formData;
+            const {
+                Things_To_Do__c,
+                Things_To_Do_Description__c,
+                Activities,
+                Location,
+                Goals,
+            } = formData;
 
             // Object name
             const object = 'Initiative_Activity__c';
@@ -81,6 +87,7 @@ const ActivitiesComponent = ({ pageProps }) => {
             const data = {
                 Activity_Type__c: CONSTANTS.TYPES.ACTIVITY_INTERVENTION,
                 Things_To_Do__c,
+                Things_To_Do_Description__c,
                 Initiative_Location__c: Location[0]?.selectValue,
                 Additional_Location_Information__c: Location[0]?.textValue,
                 Activity_Tag__c: Activities.map(item => item.selectValue).join(
@@ -217,11 +224,13 @@ const ActivitiesComponent = ({ pageProps }) => {
         const {
             Id,
             Things_To_Do__c,
+            Things_To_Do_Description__c,
             Activity_Tag__c,
             Initiative_Location__c,
             Additional_Location_Information__c,
         } = initiative?._activities[updateId] ?? {};
 
+        setValue('Things_To_Do_Description__c', Things_To_Do_Description__c);
         setValue('Things_To_Do__c', Things_To_Do__c);
         setValue('Location', [
             {
@@ -289,6 +298,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                         const headline =
                             _get(activity, 'Things_To_Do__c') || '';
 
+                        const description =
+                            _get(activity, 'Things_To_Do_Description__c') || '';
+
                         const tagsString = activity?.Activity_Tag__c ?? null;
                         const tags = tagsString ? tagsString.split(';') : [];
 
@@ -310,6 +322,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                             <ActivityCard
                                 key={activityKey}
                                 headline={headline}
+                                description={description}
                                 tags={tags}
                                 goals={goals}
                                 action={() => {
@@ -364,6 +377,20 @@ const ActivitiesComponent = ({ pageProps }) => {
                         controller={control}
                         required
                     />
+                    <LongText
+                        name="Things_To_Do_Description__c"
+                        label={label(
+                            'objects.initiativeActivity.Things_To_Do_Description__c'
+                        )}
+                        subLabel={helpText(
+                            'objects.initiativeActivity.Things_To_Do_Description__c'
+                        )}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
+                        maxLength={400}
+                        controller={control}
+                    />
                     <SelectList
                         name="Activities"
                         label={label(
@@ -383,7 +410,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                         listMaxLength={4}
                         controller={control}
                     />
-
                     <SelectList
                         name="Location"
                         label={label(
@@ -404,7 +430,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                         textLabel={label('custom.FA_FormCaptureRegion')}
                         controller={control}
                     />
-
                     {Object.keys(initiative?._goals).length > 0 && (
                         <SelectList
                             name="Goals"
