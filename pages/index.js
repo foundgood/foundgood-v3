@@ -20,7 +20,7 @@ import { SearchFilterMultiselect, SearchFilterDate } from 'components/_inputs';
 
 const HomeComponent = () => {
     // Hook: Verify logged in
-    const { verifyLoggedIn } = useAuth();
+    const { verifyLoggedIn, userInitiativeRights } = useAuth();
     verifyLoggedIn();
 
     // Reset initiative data
@@ -148,9 +148,11 @@ const HomeComponent = () => {
                         <h2 className="t-h2">
                             {label('custom.FA_InitiativeManagerHeading')}
                         </h2>
-                        <Button theme="teal" action="/wizard/introduction">
-                            {label('custom.FA_InitiativeManagerCreate')}
-                        </Button>
+                        {userInitiativeRights.canEdit && (
+                            <Button theme="teal" action="/wizard/introduction">
+                                {label('custom.FA_InitiativeManagerCreate')}
+                            </Button>
+                        )}
                     </div>
                     <div className="flex flex-col">
                         <input
