@@ -21,7 +21,7 @@ const AsideNavigationComponent = () => {
     const { label } = useMetadata();
 
     // Store: Initiative data
-    const { initiative } = useInitiativeDataStore();
+    const { initiative, isNovoLeadFunder } = useInitiativeDataStore();
 
     // Store: Report navigation
     const { buildReportNavigationItems, items } = useReportNavigationStore();
@@ -83,7 +83,11 @@ const AsideNavigationComponent = () => {
                                                 href={`#${asId(
                                                     label(childItem.title)
                                                 )}`}>
-                                                {label(childItem.title)}
+                                                {/* Title "Goals" needs to be replaced for NNF */}
+                                                {isNovoLeadFunder() &&
+                                                childItem.titleNNF
+                                                    ? label(childItem.titleNNF)
+                                                    : label(childItem.title)}
                                             </a>
                                         ))}
                                     </Scrollspy>

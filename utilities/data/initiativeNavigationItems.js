@@ -240,6 +240,7 @@ const initiativeWizardDictionary = {
             return `/wizard/${initiativeId}/goals`;
         },
         title: 'custom.FA_InitiativeViewGoalsHeading',
+        titleNNF: 'custom.FA_ReportViewHeadingFunderObjectives', // Show different title to NNF
         labels: {
             form: {
                 title: 'custom.FA_InitiativeWizardGoalsHeading',

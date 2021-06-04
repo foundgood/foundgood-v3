@@ -8,7 +8,10 @@ import Link from 'next/link';
 import t from 'prop-types';
 
 // Utilities
-import { useWizardNavigationStore } from 'utilities/store';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
 import { useMetadata, useContext } from 'utilities/hooks';
 
 // Components
@@ -17,7 +20,7 @@ import { useMetadata, useContext } from 'utilities/hooks';
 import { FiCircle, FiCheckCircle, FiMinusCircle } from 'react-icons/fi';
 
 const SubLevelItemComponent = ({ item }) => {
-    const { baseUrl, title, url } = item;
+    const { baseUrl, title, url, titleNNF } = item;
 
     // Hook: Metadata
     const { label } = useMetadata();
@@ -27,6 +30,9 @@ const SubLevelItemComponent = ({ item }) => {
 
     // Hook: Router
     const { asPath, push } = useRouter();
+
+    // Store: Initiative data
+    const { isNovoLeadFunder } = useInitiativeDataStore();
 
     // Store: Wizard navigation
     const { completedItems, handleSubmit } = useWizardNavigationStore();
@@ -68,7 +74,10 @@ const SubLevelItemComponent = ({ item }) => {
                             <FiCircle />
                         )}
                     </i> */}
-                    {label(title)}
+                    {/* Title "Goals" needs to be replaced for NNF */}
+                    {isNovoLeadFunder() && titleNNF
+                        ? label(titleNNF)
+                        : label(title)}
                 </span>
             </button>
         </li>

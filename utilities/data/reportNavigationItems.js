@@ -182,6 +182,7 @@ const reportWizardDictionary = {
     },
     goals: {
         title: 'custom.FA_ReportWizardMenuGoals',
+        titleNNF: 'custom.FA_ReportViewHeadingFunderObjectives', // Show different title to NNF
         labels: {
             form: {
                 title: 'custom.FA_ReportWizardGoalsHeading',
