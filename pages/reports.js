@@ -22,7 +22,7 @@ const ReportComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { label, valueSet } = useMetadata();
+    const { label, labelTodo, valueSet } = useMetadata();
 
     // Hook: Get sales force data methods
     const { sfQuery, queries } = useSalesForce();
@@ -169,9 +169,10 @@ const ReportComponent = ({ pageProps }) => {
                             />
                             <SearchFilterMultiselect
                                 name="filter.status"
-                                label={label(
-                                    'custom.FA_ReportManagerFilterReportStatus'
-                                )}
+                                // label={label(
+                                //     'custom.FA_ReportManagerFilterReportStatus'
+                                // )}
+                                label={labelTodo('Report status is')}
                                 controller={control}
                                 options={valueSet('initiativeReport.Status__c')}
                             />
