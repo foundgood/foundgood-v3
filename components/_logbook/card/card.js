@@ -23,10 +23,15 @@ const CardComponent = ({
     fileName,
     className,
 }) => {
-    const downloadFile = () => {
-        window.location.href = filePath;
-    };
+    // const downloadFile = () => {
+    //     window.location.href = filePath;
+    // };
 
+    const createMarkup = text => {
+        return {
+            __html: text,
+        };
+    };
     return (
         <SectionWrapper
             className={cc([
@@ -38,7 +43,14 @@ const CardComponent = ({
                 },
             ])}>
             <p className="t-sh6 text-blue-60">{summary}</p>
-            {body && <p className="mt-16 t-preamble">{body}</p>}
+            {/* {body && <p className="mt-16 t-preamble">{body}</p>} */}
+            {body && (
+                <div
+                    className="mt-16 t-preamble"
+                    dangerouslySetInnerHTML={createMarkup(body)}
+                />
+            )}
+
             {image && (
                 <div className="relative mt-16 bg-blue-10 imageContainer">
                     {/* 

@@ -45,6 +45,7 @@ const defaultInitiative = {
     _activitySuccessMetrics: {},
     _reportDetails: {},
     _initiativeUpdates: {},
+    _logbook: {},
 };
 
 const constants = {
@@ -77,6 +78,8 @@ const constants = {
         COLLABORATOR_OVERVIEW: 'Collaborator Overview',
         ACTIVITY_OVERVIEW: 'Activity Overview',
         OUTCOME_OVERVIEW: 'Outcome',
+        LOGBOOK_TYPE_METRICS: 'Success Metric Update',
+        LOGBOOK_TYPE_UPDATE: 'Update',
     },
     IDS: {
         NNF_ACCOUNT: '0011x000002rJb4AAE',
@@ -439,6 +442,7 @@ const useInitiativeDataStore = create((set, get) => ({
             const activitySuccessMetricsData = await sfQuery(
                 queries.initiativeActivitySuccessMetric.getAll(id)
             );
+            const logbookData = await sfQuery(queries.logbook.getAll(id));
 
             // Update state
             set(state => ({
@@ -455,6 +459,7 @@ const useInitiativeDataStore = create((set, get) => ({
                         activitySuccessMetricsData
                     ),
                     _activityGoals: _returnAsKeys(activityGoalsData),
+                    _logbook: _returnAsKeys(logbookData),
                 },
             }));
 

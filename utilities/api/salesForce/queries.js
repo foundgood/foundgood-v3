@@ -173,8 +173,15 @@ const queries = {
             )}') ORDER BY Initiative_Activity__r.Name`;
         },
     },
+    logbook: {
+        _query: `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, CurrencyIsoCode, (SELECT Id, URL__c, Type__c FROM Initiative_Update_Content__r), Description__c, Type__c, Access_Level__c, Initiative_Activity__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Update__c`,
+
+        getAll(initiativeId) {
+            // return `${this._query} WHERE Initiative__c = '${initiativeId}' ORDER BY Current_Status_Last_Modified_Date__c`;
+            return `${this._query} WHERE Initiative__c = '${initiativeId}' ORDER BY LastModifiedDate DESC`;
+        },
+    },
     reports: {
-        // Lead_Grantee__r.Name,
         _query: `SELECT Id, Initiative__c, Initiative__r.Category__c, Initiative__r.Application_Id__c, Initiative__r.Name, Initiative__r.Lead_Grantee__r.Name, Funder_Report__r.Account__r.Id, Funder_Report__r.Account__r.Name, Funder_Report__r.Application_ID__c, CreatedById, LastModifiedDate, Name, Status__c, toLabel(Status__c) Translated_Status__c, Due_Date__c, Executive_Summary__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess, Funder_Report__c, Report_Type__c, toLabel(Report_Type__c) Translated_Report_Type__c, Report_Period_End_Date__c ,Report_Period_Start_Date__c, Report_Viewer_Version__c FROM Initiative_Report__c`,
         getAll() {
             return `${this._query} ORDER BY Initiative__c, Due_Date__c`;

@@ -1,14 +1,19 @@
 // React
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import t from 'prop-types';
+import dayjs from 'dayjs';
 
 // Utilities
 import { useMetadata, useAuth } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
+import Preloader from 'components/preloader';
+import SectionEmpty from 'components/sectionEmpty';
+import Footer from 'components/_layout/footer';
 import TextCard from 'components/_logbook/textCard';
 import ImageCard from 'components/_logbook/imageCard';
 import VideoCard from 'components/_logbook/videoCard';
@@ -20,83 +25,139 @@ const LogbookComponent = ({ pageProps }) => {
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
+    // Fetch initiative data
+    const { initiative, CONSTANTS } = useInitiativeDataStore();
+    const [logs, setLogs] = useState([]);
+    // const [results, setResults] = useState();
+
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { labelTodo, label } = useMetadata();
+
+    useEffect(() => {
+        // Make sure data it loaded
+        if (
+            initiative?._logbook &&
+            Object.keys(initiative?._logbook).length !== 0
+        ) {
+            const logs = Object.values(initiative._logbook)
+                .filter(
+                    item =>
+                        item.Type__c !== CONSTANTS.TYPES.LOGBOOK_TYPE_METRICS // Ignore metrics updates
+                )
+                .map(item => {
+                    // Media Types: Picture || Video || Document
+                    const type = item.Initiative_Update_Content__r
+                        ? item.Initiative_Update_Content__r?.records[0]?.Type__c
+                        : 'Text';
+                    const summary =
+                        initiative._activities[item.Initiative_Activity__c]
+                            ?.Things_To_Do__c;
+                    // Wrap links in <a> tag
+                    const description = item.Description__c?.replace(
+                        /\bhttps?:\/\/\S+/gi,
+                        '<a href="$&" target="_blank" class="color: text-blue-200">$&</a>'
+                    );
+                    // Get clean filenames from URL
+                    const fileName = decodeURIComponent(
+                        item.Initiative_Update_Content__r?.records[0]?.URL__c?.split(
+                            '/'
+                        ).pop()
+                    );
+
+                    return {
+                        type: type,
+                        url:
+                            item.Initiative_Update_Content__r?.records[0]
+                                ?.URL__c,
+                        fileName: fileName,
+                        description: description,
+                        summary: summary,
+                        date: dayjs(item.LastModifiedDate).format('DD/MM/YYYY'),
+                        time: dayjs(item.LastModifiedDate).format('HH:mm'),
+                    };
+                });
+
+            setLogs(logs);
+        }
+    }, [initiative]);
 
     return (
         <>
-            <SectionWrapper>
-                <div className="flex justify-between mr-48 md:mr-0">
-                    <h1 className="t-h1">{label('custom.FA_MenuLogbook')}</h1>
-                    {/*
-                    <Button variant="primary" theme="teal">
-                        {label('custom.FA_ButtonUpdate')}
-                    </Button>
-                    */}
-                </div>
-            </SectionWrapper>
-            <FileCard
-                hasBackground={true}
-                summary="Download my file"
-                body="This is an example of someone attaching some sort of document to their update"
-                date="26/06/2019 at 13:03"
-                fileName="My-great-name.pdf"
-                filePath="/files/fg-pdf-test.pdf"
-            />
-            <TextCard
-                hasBackground={true}
-                body="Project field officers and national office emergency coordinator have periodically monitored the progress of the project and provided constructive feedback to the government level supervisors and to the artesian."
-                date="26/06/2019 at 13:03"
-            />
-            <TextCard
-                hasBackground={true}
-                summary="Develop new water points by constructing 5 hand dug wells and 5 shallow well"
-                body="Project field officers and national office emergency coordinator have periodically monitored the progress of the project and provided constructive feedback to the government level supervisors and to the artesian."
-                date="26/06/2019 at 13:03"
-            />
-            <TextCard
-                hasBackground={true}
-                summary="Develop new water points by constructing 5 hand dug wells and 5 shallow well"
-                body="This is what a link https://imgur.com/r/Otters/2H8HCxc looks like"
-                date="26/06/2019 at 13:03"
-            />
+            {/* Preloading - Show loading */}
+            {!initiative?.Id && <Preloader hasBg={true} />}
 
-            <ImageCard
-                hasBackground={true}
-                summary="Image test 1"
-                body="lorem ipsum"
-                date="26/06/2019 at 13:03"
-                image="/images/fg-portrait-1.jpg"
-            />
-            <ImageCard
-                hasBackground={true}
-                summary="Image test 2"
-                date="26/06/2019 at 13:03"
-                image="/images/fg-landscape-1.jpg"
-            />
-            <VideoCard
-                hasBackground={true}
-                summary="Video test 1"
-                body="Landscape - This is an example of a video which has been uploaded"
-                date="26/06/2019 at 13:03"
-                video="/videos/video-landscape-1.mp4"
-            />
-            <VideoCard
-                hasBackground={true}
-                summary="Develop new water points by constructing 5 hand dug wells and 5 shallow well"
-                body="Portrait - This is an example of a video which has been uploaded"
-                date="26/06/2019 at 13:03"
-                video="/videos/video-portrait-1.mp4"
-            />
+            {/* Data Loaded - Show initiative */}
+            {initiative?.Id && (
+                <div className="animate-fade-in">
+                    <SectionWrapper>
+                        <div className="flex justify-between mr-48 md:mr-0">
+                            <h1 className="t-h1">
+                                {label('custom.FA_MenuLogbook')}
+                            </h1>
+                            {/*
+                            <Button variant="primary" theme="teal">
+                                {label('custom.FA_ButtonUpdate')}
+                            </Button>
+                            */}
+                        </div>
+                    </SectionWrapper>
+                    {logs.map((item, index) => {
+                        if (item.type == 'Text') {
+                            return (
+                                <TextCard
+                                    key={index}
+                                    hasBackground={true}
+                                    summary={item.summary}
+                                    body={item.description}
+                                    date={`${item.date} - ${item.time}`}
+                                />
+                            );
+                        } else if (item.type == 'Picture') {
+                            return (
+                                <ImageCard
+                                    key={index}
+                                    hasBackground={true}
+                                    summary={item.summary}
+                                    body={item.description}
+                                    date={`${item.date} - ${item.time}`}
+                                    image={item.url}
+                                />
+                            );
+                        } else if (item.type == 'Video') {
+                            return (
+                                <VideoCard
+                                    key={index}
+                                    hasBackground={true}
+                                    summary={item.summary}
+                                    body={item.description}
+                                    date={`${item.date} - ${item.time}`}
+                                    video={item.url}
+                                />
+                            );
+                        } else if (item.type == 'Document') {
+                            return (
+                                <FileCard
+                                    key={index}
+                                    hasBackground={true}
+                                    summary={item.summary}
+                                    body={item.description}
+                                    date={`${item.date} - ${item.time}`}
+                                    fileName={item.fileName}
+                                    filePath={item.url}
+                                />
+                            );
+                        } else {
+                            <p>Missing card</p>;
+                        }
+                    })}
+
+                    {logs.length < 1 && <SectionEmpty type="initiative" />}
+                    <Footer />
+                </div>
+            )}
         </>
     );
 };
-
-// export async function getStaticProps(context) {
-//     return {
-//         props: {}, // will be passed to the page component as props
-//     };
-// }
 
 LogbookComponent.propTypes = {
     pageProps: t.object,
