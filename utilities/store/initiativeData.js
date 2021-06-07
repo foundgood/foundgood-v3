@@ -50,6 +50,8 @@ const defaultInitiative = {
 
 const constants = {
     TYPES: {
+        ACCOUNT_TYPE_FOUNDATION: 'Foundation',
+        ACCOUNT_TYPE_GRANTEE: 'Grantee',
         COLLABORATORS: ['Additional collaborator'],
         APPLICANTS_ALL: ['Co applicant', 'Main applicant'],
         APPLICANTS_CREATE: ['Co applicant'],
@@ -72,14 +74,14 @@ const constants = {
         REPORT_IN_PROGRESS: 'In progress',
         REPORT_IN_REVIEW: 'In review',
         REPORT_PUBLISHED: 'Published',
+        LOGBOOK_TYPE_METRICS: 'Success Metric Update',
+        LOGBOOK_TYPE_UPDATE: 'Update',
         // REPORT DETAIL OVERVIEW TYPES
         EMPLOYEES_FUNDED_OVERVIEW: 'Employees Funded Overview',
         FUNDER_OVERVIEW: 'Funder Overview',
         COLLABORATOR_OVERVIEW: 'Collaborator Overview',
         ACTIVITY_OVERVIEW: 'Activity Overview',
         OUTCOME_OVERVIEW: 'Outcome',
-        LOGBOOK_TYPE_METRICS: 'Success Metric Update',
-        LOGBOOK_TYPE_UPDATE: 'Update',
     },
     IDS: {
         NNF_ACCOUNT: '0011x000002rJb4AAE',

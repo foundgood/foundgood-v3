@@ -12,7 +12,7 @@ const queries = {
     },
     user: {
         getUser(id) {
-            return `SELECT Id, Name, AccountId FROM User WHERE Id = '${id}'`;
+            return `SELECT Id, Name, User_Account_Type__c, AccountId FROM User WHERE Id = '${id}'`;
         },
     },
     initiative: {

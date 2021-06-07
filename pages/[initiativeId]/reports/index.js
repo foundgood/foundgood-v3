@@ -8,9 +8,6 @@ import t from 'prop-types';
 import { useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
-import { query } from 'utilities/api/salesForce/fetchers';
-import { queries } from 'utilities/api/salesForce/queries';
-
 // Components
 import Preloader from 'components/preloader';
 import UpdateButton from 'components/updateButton';
@@ -21,23 +18,20 @@ import SectionEmpty from 'components/sectionEmpty';
 
 const ReportsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
-    const { verifyLoggedIn } = useAuth();
+    const { user, verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Fetch initiative data
-    const { initiative } = useInitiativeDataStore();
+    const { initiative, CONSTANTS } = useInitiativeDataStore();
     const [reportGroups, setReportGroups] = useState();
 
     // Hook: Metadata
     const { label } = useMetadata();
 
-    // Store: Auth
-    const { user, userInitiativeRights } = useAuth();
-
     useEffect(() => {
         if (
             user?.user_id &&
-            initiative?._funders &&
+            initiative?.Id &&
             Object.keys(initiative?._funders).length > 0
         ) {
             filterReports();
@@ -49,28 +43,24 @@ const ReportsComponent = ({ pageProps }) => {
         ) {
             setReportGroups([]);
         }
-    }, [user, userInitiativeRights, initiative]);
+    }, [user, initiative]);
 
     const filterReports = async () => {
-        // Get the current logged in User's linked Account_Id
-        // If user doesn't have edit access, they are a FOUNDATION
-
-        let accountId;
-        if (!userInitiativeRights.canEdit) {
-            accountId = await getAccountId(user.user_id);
-        }
-
         // Group reports by funder
         const funders = Object.values(initiative._funders).map(item => {
             // Get reports
-
             const reports = Object.values(initiative._reports).filter(
                 report => {
-                    // Only show reports related to user accountId
-                    if (accountId) {
+                    // If account type is 'Foundation'
+                    // Only show reports related to users accountId
+                    if (
+                        user.User_Account_Type__c ===
+                        CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
+                    ) {
                         return (
                             report.Funder_Report__c == item.Id &&
-                            accountId == report.Funder_Report__r.Account__r.Id
+                            user.AccountId ==
+                                report.Funder_Report__r.Account__r.Id
                         );
                     }
                     // Show all funders reports
@@ -87,18 +77,6 @@ const ReportsComponent = ({ pageProps }) => {
             return funder.reports.length > 0;
         });
         setReportGroups(reports);
-    };
-
-    const getAccountId = async id => {
-        try {
-            const data = await query(queries.user.getUser(id));
-            if (data?.totalSize === 1) {
-                const accountId = data.records[0]?.AccountId;
-                return accountId;
-            }
-        } catch (error) {
-            console.warn(error);
-        }
     };
 
     return (
