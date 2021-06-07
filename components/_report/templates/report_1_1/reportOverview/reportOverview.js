@@ -17,8 +17,8 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
     const { label, valueSet } = useMetadata();
 
     const [developmentGoals, setDevelopmentGoals] = useState();
-    const [coApplicants, setCoApplicants] = useState();
-    const [coFunders, setCoFunders] = useState();
+    const [coApplicants, setCoApplicants] = useState([]);
+    const [coFunders, setCoFunders] = useState([]);
     const [reportFunder, setReportFunder] = useState();
 
     const sdgsColors = [
@@ -169,24 +169,25 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
 
                     <div>
                         {/* List of co-funders */}
-                        {coFunders &&
-                            coFunders.map((item, index) => (
+                        {coFunders?.length > 0 &&
+                            coFunders?.map((item, index) => (
                                 <h3 key={`f-${index}`} className="t-h5">
                                     {item}
                                 </h3>
                             ))}
                         {/* Empty state - NO co-funders */}
-                        {!coFunders && label('custom.FA_ReportEmptyCoFunders')}
+                        {coFunders?.length < 1 &&
+                            label('custom.FA_ReportEmptyCoFunders')}
                     </div>
                     <div className="mt-16 t-sh6 text-blue-60">
                         {label('custom.FA_ReportViewCoApplicants')}
                     </div>
                     {/* List of co-applicants */}
-                    {coApplicants && (
+                    {coApplicants?.length > 0 && (
                         <h3 className="t-h5">{coApplicants.join(', ')}</h3>
                     )}
                     {/* Empty state - NO co-applicants */}
-                    {!coApplicants && (
+                    {coApplicants?.length < 1 && (
                         <div>{label('custom.FA_ReportEmptyCoApplicants')}</div>
                     )}
                 </div>
