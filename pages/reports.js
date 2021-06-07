@@ -18,11 +18,14 @@ import { SearchFilterMultiselect } from 'components/_inputs';
 
 const ReportComponent = ({ pageProps }) => {
     // Hook: Verify logged in
-    const { verifyLoggedIn, logout } = useAuth();
+    const { user, verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
     // Hook: Metadata
     const { label, labelTodo, valueSet } = useMetadata();
+
+    // Reset initiative data
+    const { CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Get sales force data methods
     const { sfQuery, queries } = useSalesForce();
@@ -65,12 +68,26 @@ const ReportComponent = ({ pageProps }) => {
     const [filtered, setFiltered] = useState(null);
 
     useEffect(() => {
-        const reports = data?.records.filter(
-            item => item.Initiative__c !== null && item.Report_Type__c !== null
-        );
+        const reports = data?.records.filter(item => {
+            if (
+                user.User_Account_Type__c ===
+                CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
+            ) {
+                return (
+                    item.Initiative__c !== null &&
+                    item.Report_Type__c !== null &&
+                    item.Funder_Report__r?.Account__r?.Id === user.AccountId
+                );
+            } else {
+                return (
+                    item.Initiative__c !== null && item.Report_Type__c !== null
+                );
+            }
+        });
+
         setInitial(reports);
         setFiltered(reports);
-    }, [data]);
+    }, [data, user]);
 
     function onFilter(data) {
         if (initial) {
@@ -115,13 +132,25 @@ const ReportComponent = ({ pageProps }) => {
                       )
                     : nextFiltered;
 
-            // Optional foundation
+            // Optional foundation (hidden if user type is 'Foundation')
             nextFiltered =
-                foundation.length > 0
+                foundation?.length > 0
                     ? nextFiltered.filter(item =>
                           foundation.includes(
                               item.Funder_Report__r?.Account__r?.Id
                           )
+                      )
+                    : nextFiltered;
+
+            // Foundation users
+            // Always filter by users Foundation
+            nextFiltered =
+                user?.User_Account_Type__c ===
+                CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
+                    ? nextFiltered.filter(
+                          item =>
+                              user.AccountId ===
+                              item.Funder_Report__r?.Account__r?.Id
                       )
                     : nextFiltered;
             setFiltered(nextFiltered);
@@ -186,19 +215,25 @@ const ReportComponent = ({ pageProps }) => {
                                     'initiativeReport.Report_Type__c'
                                 )}
                             />
-                            <SearchFilterMultiselect
-                                name="filter.foundation"
-                                label={label(
-                                    'custom.FA_ReportManagerFilterFoundation'
-                                )}
-                                controller={control}
-                                options={
-                                    accountFoundations?.records?.map(item => ({
-                                        label: item.Name,
-                                        value: item.Id,
-                                    })) ?? []
-                                }
-                            />
+
+                            {user?.User_Account_Type__c !==
+                                CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION && (
+                                <SearchFilterMultiselect
+                                    name="filter.foundation"
+                                    label={label(
+                                        'custom.FA_ReportManagerFilterFoundation'
+                                    )}
+                                    controller={control}
+                                    options={
+                                        accountFoundations?.records?.map(
+                                            item => ({
+                                                label: item.Name,
+                                                value: item.Id,
+                                            })
+                                        ) ?? []
+                                    }
+                                />
+                            )}
                         </div>
                     </div>
                 </SectionWrapper>
