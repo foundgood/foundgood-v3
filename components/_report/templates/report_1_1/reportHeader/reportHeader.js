@@ -8,16 +8,15 @@ import Image from 'next/image';
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 
-const ReportHeaderComponent = ({ initiative, report }) => {
-    const [reportFunder, setReportFunder] = useState();
+const ReportHeaderComponent = ({ initiative, report, constants }) => {
+    const [mainApplicant, setMainApplicant] = useState();
 
     useEffect(() => {
-        // Report funder details
-        const funderId = report.Funder_Report__r?.Application_Id__c;
-        const reportFunder = Object.values(initiative._funders)
-            .filter(item => item.Application_Id__c === funderId)
-            .map(item => item.Account__r?.Name)[0];
-        setReportFunder(reportFunder);
+        // Report main applicant
+        const applicant = Object.values(initiative?._collaborators).filter(
+            item => item.Type__c === constants.TYPES.MAIN_COLLABORATOR
+        );
+        setMainApplicant(applicant[0]?.Account__r?.Name);
     }, []);
 
     return (
@@ -36,7 +35,7 @@ const ReportHeaderComponent = ({ initiative, report }) => {
                         // />
                     )}
                 </div>
-                <div className="mt-16">{reportFunder}</div>
+                <div className="mt-16">{mainApplicant}</div>
 
                 <h1 className="mt-48 t-h1">{initiative.Name}</h1>
                 <div className="mt-16 t-sh2">
