@@ -69,6 +69,8 @@ const ReportComponent = ({ pageProps }) => {
 
     useEffect(() => {
         const reports = data?.records.filter(item => {
+            // If User type is Foundation
+            // Only show reports with same Id as users AccountId
             if (
                 user.User_Account_Type__c ===
                 CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
@@ -142,17 +144,6 @@ const ReportComponent = ({ pageProps }) => {
                       )
                     : nextFiltered;
 
-            // Foundation users
-            // Always filter by users Foundation
-            nextFiltered =
-                user?.User_Account_Type__c ===
-                CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
-                    ? nextFiltered.filter(
-                          item =>
-                              user.AccountId ===
-                              item.Funder_Report__r?.Account__r?.Id
-                      )
-                    : nextFiltered;
             setFiltered(nextFiltered);
         }
     }
