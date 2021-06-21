@@ -269,12 +269,15 @@ const ActivitiesComponent = ({ pageProps }) => {
                 setCurrentSubmitHandler(null);
             }, 100);
         }
-
-        console.log('initiative: ', initiative);
     }, [initiative]);
 
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);
+
+    // Custom goals
+    const customGoals = Object.values(initiative?._goals).filter(
+        goal => goal.Type__c === CONSTANTS.TYPES.GOAL_CUSTOM
+    );
 
     return (
         <>
@@ -430,23 +433,17 @@ const ActivitiesComponent = ({ pageProps }) => {
                         textLabel={label('custom.FA_FormCaptureRegion')}
                         controller={control}
                     />
-                    {Object.keys(initiative?._goals).length > 0 && (
+                    {customGoals.length > 0 && (
                         <SelectList
                             name="Goals"
                             label={label('objects.initiativeGoal.Goal__c')}
                             subLabel={helpText(
                                 'objects.initiativeGoal.Goal__c'
                             )}
-                            // listMaxLength={1}
-                            options={Object.keys(initiative?._goals).map(
-                                goalKey => {
-                                    const goal = initiative?._goals[goalKey];
-                                    return {
-                                        value: goal.Id,
-                                        label: goal.Goal__c,
-                                    };
-                                }
-                            )}
+                            options={customGoals.map(goal => ({
+                                value: goal.Id,
+                                label: goal.Goal__c,
+                            }))}
                             selectPlaceholder={label(
                                 'custom.FA_FormCaptureSelectEmpty'
                             )}
