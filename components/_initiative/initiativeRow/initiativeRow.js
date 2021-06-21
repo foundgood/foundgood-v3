@@ -56,7 +56,7 @@ const InitiativeRowComponent = ({
                         <div className="mt-4 t-h5">{headline}</div>
                         <div className="mt-8 t-sh6 text-blue-60">
                             {leadFunder}{' '}
-                            {otherFunders && (
+                            {otherFunders > 0 && (
                                 <span>
                                     + {otherFunders}{' '}
                                     {label('custom.FA_ReportManagerCardOthers')}
