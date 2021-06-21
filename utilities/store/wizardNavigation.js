@@ -132,7 +132,6 @@ const useWizardNavigationStore = create((set, get) => ({
                             d.applicants,
                             d.collaborators,
                             d.employeesFunded,
-                            d.goals,
                             d.activities,
                             d.indicators,
                             d.progressSoFar,
