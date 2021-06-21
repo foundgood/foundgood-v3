@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Packages
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 
 // Utilities
 import {
@@ -37,10 +37,17 @@ const OverviewComponent = () => {
     const { MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log, helpText } = useMetadata();
+    const {
+        labelTodo,
+        label,
+        valueSet,
+        controlledValueSet,
+        helpText,
+    } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
+    const CategoryWatch = useWatch({ control, name: 'Category__c' });
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
@@ -55,6 +62,7 @@ const OverviewComponent = () => {
         isNovoLeadFunder,
         updateInitiative,
         updateCollaborator,
+        updateGoal,
     } = useInitiativeDataStore();
 
     // Get data for form
@@ -72,7 +80,10 @@ const OverviewComponent = () => {
                 GrantDate,
                 Problem_Effect__c,
                 Hero_Image__c,
+                Funder_Objective__c,
             } = formData;
+
+            console.log({ Funder_Objective__c });
 
             await sfUpdate({
                 object: 'Initiative__c',
@@ -106,7 +117,36 @@ const OverviewComponent = () => {
                 await updateCollaborator(collaboratorId);
             }
 
+            // Update initiative
             await updateInitiative(initiative.Id);
+
+            // Create / update funder funder objective based on Category
+            const goalId = funderObjective.Id
+                ? await sfUpdate({
+                      object: 'Initiative_Goal__c',
+                      data: {
+                          Goal__c: Funder_Objective__c,
+                          Type__c: CONSTANTS.TYPES.GOAL_PREDEFINED,
+                          Funder_Objective__c,
+                          KPI_Category__c: Category__c,
+                      },
+                      id: funderObjective.Id,
+                  })
+                : await sfCreate({
+                      object: 'Initiative_Goal__c',
+                      data: {
+                          ...{
+                              Goal__c: Funder_Objective__c,
+                              Type__c: CONSTANTS.TYPES.GOAL_PREDEFINED,
+                              Funder_Objective__c,
+                              KPI_Category__c: Category__c,
+                          },
+                          Initiative__c: initiative.Id,
+                      },
+                  });
+
+            // Update store
+            await updateGoal(goalId);
         } catch (error) {
             console.warn(error);
         }
@@ -129,6 +169,12 @@ const OverviewComponent = () => {
     const mainCollaborator =
         Object.values(initiative?._collaborators).find(
             item => item.Type__c === CONSTANTS.TYPES.MAIN_COLLABORATOR
+        ) || {};
+
+    // Funder objective
+    const funderObjective =
+        Object.values(initiative?._goals).find(
+            item => item.Type__c === CONSTANTS.TYPES.GOAL_PREDEFINED
         ) || {};
 
     return (
@@ -233,6 +279,23 @@ const OverviewComponent = () => {
                         required
                     />
                 )}
+
+                <Select
+                    name="Funder_Objective__c"
+                    defaultValue={funderObjective.Funder_Objective__c}
+                    label={label('objects.initiativeGoal.Funder_Objective__c')}
+                    subLabel={helpText(
+                        'objects.initiativeGoal.Funder_Objective__c'
+                    )}
+                    placeholder={label('custom.FA_FormCaptureSelectEmpty')}
+                    options={controlledValueSet(
+                        'initiativeGoal.Funder_Objective__c',
+                        CategoryWatch ? CategoryWatch : initiative?.Category__c
+                    )}
+                    disabled={!CategoryWatch && !initiative?.Category__c}
+                    controller={control}
+                    required
+                />
 
                 <LongText
                     name="Summary__c"

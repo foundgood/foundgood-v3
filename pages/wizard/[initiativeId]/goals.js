@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import { useForm, useFormState, useWatch } from 'react-hook-form';
+import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
@@ -25,22 +25,14 @@ const GoalsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const {
-        labelTodo,
-        label,
-        valueSet,
-        log,
-        helpText,
-        controlledValueSet,
-    } = useMetadata();
+    const { label, valueSet, log, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
     const { isDirty } = useFormState({ control });
-    const goalTypeSelect = useWatch({ control, name: 'Type__c' });
 
     // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    const { sfCreate, sfUpdate } = useSalesForce();
 
     // Store: Wizard navigation
     const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
@@ -53,7 +45,7 @@ const GoalsComponent = ({ pageProps }) => {
         // Modal save button state
         setModalIsSaving(true);
         try {
-            const { Type__c, Goal__c, Funder_Objective__c } = formData;
+            const { Goal__c } = formData;
 
             // Object name
             const object = 'Initiative_Goal__c';
@@ -61,26 +53,17 @@ const GoalsComponent = ({ pageProps }) => {
             // Data for sf
             // Get type of submission based on goalType
             const data = {
-                [CONSTANTS.TYPES.GOAL_CUSTOM]: {
-                    Type__c,
-                    Goal__c,
-                    Funder_Objective__c: '',
-                    KPI_Category__c: initiative?.Category__c,
-                },
-                [CONSTANTS.TYPES.GOAL_PREDEFINED]: {
-                    Goal__c: Funder_Objective__c,
-                    Type__c,
-                    Funder_Objective__c,
-                    KPI_Category__c: initiative?.Category__c,
-                },
+                Type__c: CONSTANTS.TYPES.GOAL_CUSTOM,
+                Goal__c,
+                KPI_Category__c: initiative?.Category__c,
             };
 
             // Update / Save
             const goalId = updateId
-                ? await sfUpdate({ object, data: data[goalType], id: updateId })
+                ? await sfUpdate({ object, data: data, id: updateId })
                 : await sfCreate({
                       object,
-                      data: { ...data[goalType], Initiative__c: initiative.Id },
+                      data: { ...data, Initiative__c: initiative.Id },
                   });
 
             // Update store
@@ -107,25 +90,12 @@ const GoalsComponent = ({ pageProps }) => {
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
-    const [goalType, setGoalType] = useState(null);
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        const { Type__c, Goal__c, Funder_Objective__c } =
-            initiative?._goals[updateId] ?? {};
-
-        setValue('Type__c', Type__c);
+        const { Goal__c } = initiative?._goals[updateId] ?? {};
         setValue('Goal__c', Goal__c);
-        setValue('Funder_Objective__c', Funder_Objective__c);
-
-        // Set goal type
-        setGoalType(Type__c);
     }, [updateId, modalIsOpen]);
-
-    // Watch the change of goal type
-    useEffect(() => {
-        setGoalType(goalTypeSelect);
-    }, [goalTypeSelect]);
 
     // Reset submithandler
     useEffect(() => {
@@ -144,21 +114,17 @@ const GoalsComponent = ({ pageProps }) => {
             <InputWrapper preload={!initiative.Id}>
                 {Object.keys(initiative?._goals).map(goalKey => {
                     const goal = initiative?._goals[goalKey];
-                    return (
+                    return goal.Type__c === CONSTANTS.TYPES.GOAL_CUSTOM ? (
                         <GoalCard
                             key={goalKey}
-                            headline={
-                                goal.Type__c === CONSTANTS.TYPES.GOAL_CUSTOM
-                                    ? _get(goal, 'Goal__c') || ''
-                                    : _get(goal, 'Funder_Objective__c') || ''
-                            }
+                            headline={_get(goal, 'Goal__c') || ''}
                             footnote={_get(goal, 'Type__c') || ''}
                             action={() => {
                                 setUpdateId(goalKey);
                                 setModalIsOpen(true);
                             }}
                         />
-                    );
+                    ) : null;
                 })}
                 <Button
                     theme="teal"
@@ -177,53 +143,16 @@ const GoalsComponent = ({ pageProps }) => {
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
-                    <Select
-                        name="Type__c"
-                        label={label('objects.initiativeGoal.Type__c')}
-                        subLabel={helpText('objects.initiativeGoal.Type__c')}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
-                        options={valueSet('initiativeGoal.Type__c')}
+                    <LongText
+                        name="Goal__c"
+                        label={label('objects.initiativeGoal.Goal__c')}
+                        subLabel={helpText('objects.initiativeGoal.Goal__c')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
+                        maxLength={200}
                         controller={control}
-                        required
                     />
-
-                    {/* Custom goal */}
-                    {goalType === CONSTANTS.TYPES.GOAL_CUSTOM && (
-                        <LongText
-                            name="Goal__c"
-                            label={label('objects.initiativeGoal.Goal__c')}
-                            subLabel={helpText(
-                                'objects.initiativeGoal.Goal__c'
-                            )}
-                            placeholder={label(
-                                'custom.FA_FormCaptureTextEntryEmpty'
-                            )}
-                            maxLength={200}
-                            controller={control}
-                        />
-                    )}
-
-                    {/* Predefined goal */}
-                    {/* If not any predefined goals show them all (controlled valueset) */}
-                    {goalType === CONSTANTS.TYPES.GOAL_PREDEFINED && (
-                        <Select
-                            name="Funder_Objective__c"
-                            label={label(
-                                'objects.initiativeGoal.Funder_Objective__c'
-                            )}
-                            subLabel={helpText(
-                                'objects.initiativeGoal.Funder_Objective__c'
-                            )}
-                            placeholder={label(
-                                'custom.FA_FormCaptureSelectEmpty'
-                            )}
-                            options={controlledValueSet(
-                                'initiativeGoal.Funder_Objective__c',
-                                initiative?.Category__c
-                            )}
-                            controller={control}
-                        />
-                    )}
                 </InputWrapper>
             </Modal>
         </>
