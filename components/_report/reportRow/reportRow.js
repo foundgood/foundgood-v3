@@ -25,7 +25,6 @@ const ReportRowComponent = ({
 }) => {
     // Hook: Metadata
     const { label } = useMetadata();
-
     return (
         <Link href={`/${initiativeId}/reports/${reportId}`}>
             <a className="flex flex-col justify-between p-16 mt-24 bg-white cursor-pointer md:flex-row rounded-8">
