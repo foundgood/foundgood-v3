@@ -95,10 +95,13 @@ const HomeComponent = () => {
             nextFiltered = text
                 ? initial.filter(
                       item =>
-                          item.Name.toLowerCase().includes(
+                          item.Name?.toLowerCase().includes(
                               text.toLowerCase()
                           ) ||
                           item.Application_Id__c?.toLowerCase().includes(
+                              text.toLowerCase()
+                          ) ||
+                          item.Lead_Grantee__r?.Name?.toLowerCase().includes(
                               text.toLowerCase()
                           )
                   )
@@ -139,8 +142,6 @@ const HomeComponent = () => {
     useEffect(() => {
         onFilter(getValues());
     }, [filterCategory, filterText, filterStartDate, filterEndDate]);
-
-    console.log(filtered);
 
     return (
         <div

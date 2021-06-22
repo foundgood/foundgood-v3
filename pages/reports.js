@@ -103,10 +103,13 @@ const ReportComponent = ({ pageProps }) => {
             nextFiltered = text
                 ? initial.filter(
                       item =>
-                          item.Initiative__r.Name.toLowerCase().includes(
+                          item.Initiative__r?.Name?.toLowerCase().includes(
                               text.toLowerCase()
                           ) ||
-                          item.Funder_Report__r.Application_Id__c?.toLowerCase().includes(
+                          item.Funder_Report__r?.Application_Id__c?.toLowerCase().includes(
+                              text.toLowerCase()
+                          ) ||
+                          item.Initiative__r?.Lead_Grantee__r?.Name?.toLowerCase().includes(
                               text.toLowerCase()
                           )
                   )
