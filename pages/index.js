@@ -12,6 +12,7 @@ import { useSalesForce, useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import Preloader from 'components/preloader';
 import Button from 'components/button';
 import SectionWrapper from 'components/sectionWrapper';
 import Footer from 'components/_layout/footer';
@@ -198,37 +199,42 @@ const HomeComponent = () => {
                     </div>
                 </SectionWrapper>
 
-                <SectionWrapper>
-                    {filtered?.map(item => (
-                        <InitiativeRow
-                            key={item.Id}
-                            initiativeId={item.Id}
-                            type={item.Category__c}
-                            grantee={item.Lead_Grantee__r?.Name}
-                            headline={item.Name}
-                            leadFunder={
-                                item.funders?.filter(
-                                    item =>
-                                        item.Type__c ===
-                                        CONSTANTS.TYPES.LEAD_FUNDER
-                                )[0]?.Account__r?.Name
-                            }
-                            otherFunders={
-                                item.funders?.filter(
-                                    item =>
-                                        item.Type__c !==
-                                        CONSTANTS.TYPES.LEAD_FUNDER
-                                ).length
-                            }
-                            dueDate={item.reports[0]?.Due_Date__c}
-                            startDate={item.Grant_Start_Date__c}
-                            endDate={item.Grant_End_Date__c}
-                            image={item.Hero_Image_URL__c}
-                        />
-                    ))}
-                </SectionWrapper>
-
-                <Footer />
+                {data ? (
+                    <>
+                        <SectionWrapper>
+                            {filtered?.map(item => (
+                                <InitiativeRow
+                                    key={item.Id}
+                                    initiativeId={item.Id}
+                                    type={item.Category__c}
+                                    grantee={item.Lead_Grantee__r?.Name}
+                                    headline={item.Name}
+                                    leadFunder={
+                                        item.funders?.filter(
+                                            item =>
+                                                item.Type__c ===
+                                                CONSTANTS.TYPES.LEAD_FUNDER
+                                        )[0]?.Account__r?.Name
+                                    }
+                                    otherFunders={
+                                        item.funders?.filter(
+                                            item =>
+                                                item.Type__c !==
+                                                CONSTANTS.TYPES.LEAD_FUNDER
+                                        ).length
+                                    }
+                                    dueDate={item.reports[0]?.Due_Date__c}
+                                    startDate={item.Grant_Start_Date__c}
+                                    endDate={item.Grant_End_Date__c}
+                                    image={item.Hero_Image_URL__c}
+                                />
+                            ))}
+                        </SectionWrapper>
+                        <Footer />
+                    </>
+                ) : (
+                    <Preloader />
+                )}
             </div>
         </div>
     );

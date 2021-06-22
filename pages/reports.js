@@ -11,6 +11,7 @@ import { useSalesForce, useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import Preloader from 'components/preloader';
 import SectionWrapper from 'components/sectionWrapper';
 import Footer from 'components/_layout/footer';
 import ReportRow from 'components/_report/reportRow';
@@ -234,24 +235,37 @@ const ReportComponent = ({ pageProps }) => {
                     </div>
                 </SectionWrapper>
 
-                <SectionWrapper>
-                    {filtered?.map(item => (
-                        <ReportRow
-                            key={item.Id}
-                            initiativeId={item.Initiative__c}
-                            reportId={item.Id}
-                            funderId={item.Funder_Report__r?.Application_Id__c}
-                            funderName={item.Funder_Report__r?.Account__r?.Name}
-                            type={item.Report_Type__c}
-                            grantee={item.Initiative__r?.Lead_Grantee__r?.Name}
-                            headline={item.Initiative__r?.Name}
-                            dueDate={item.Due_Date__c}
-                            status={item.Status__c}
-                        />
-                    ))}
-                </SectionWrapper>
+                {data ? (
+                    <>
+                        <SectionWrapper>
+                            {filtered?.map(item => (
+                                <ReportRow
+                                    key={item.Id}
+                                    initiativeId={item.Initiative__c}
+                                    reportId={item.Id}
+                                    funderId={
+                                        item.Funder_Report__r?.Application_Id__c
+                                    }
+                                    funderName={
+                                        item.Funder_Report__r?.Account__r?.Name
+                                    }
+                                    type={item.Report_Type__c}
+                                    grantee={
+                                        item.Initiative__r?.Lead_Grantee__r
+                                            ?.Name
+                                    }
+                                    headline={item.Initiative__r?.Name}
+                                    dueDate={item.Due_Date__c}
+                                    status={item.Status__c}
+                                />
+                            ))}
+                        </SectionWrapper>
 
-                <Footer />
+                        <Footer />
+                    </>
+                ) : (
+                    <Preloader />
+                )}
             </div>
         </div>
     );
