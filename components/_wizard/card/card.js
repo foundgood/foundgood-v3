@@ -24,6 +24,8 @@ const CardComponent = ({
     goals,
     action,
     selected,
+    onChange,
+    reflectionMode,
     children,
 }) => {
     // Hook: Metadata
@@ -43,7 +45,7 @@ const CardComponent = ({
                         <Image src={image} layout="fill" objectFit="contain" />
                     </div>
                 )}
-                <div className="w-full mr-16 flex-start">
+                <div className="w-full flex-start">
                     {headline && (
                         <div className="flex items-center">
                             <h4 className="t-sh4">{headline}</h4>
@@ -57,7 +59,7 @@ const CardComponent = ({
                     {subHeadline && (
                         <h4 className="mt-8 t-h6">{subHeadline}</h4>
                     )}
-                    {body && <p className="mt-8 mr-16">{body}</p>}
+                    {body && <p className="mt-8">{body}</p>}
                     {footnote && (
                         <p className="mt-8 t-footnote text-teal-60">
                             {footnote}
@@ -94,12 +96,27 @@ const CardComponent = ({
                         </>
                     )}
                 </div>
+            </div>
 
-                <div className="self-center">
-                    <Button theme="teal" variant="secondary" action={action}>
-                        {label('custom.FA_Update')}
+            <div className="flex justify-end mt-32 space-x-12">
+                <Button
+                    theme="teal"
+                    variant={reflectionMode ? 'tertiary' : 'secondary'}
+                    action={action}>
+                    {label('custom.FA_ButtonEditDetails')}
+                </Button>
+                {reflectionMode && (
+                    <Button
+                        theme="teal"
+                        variant="secondary"
+                        action={() => onChange(!selected)}>
+                        {label(
+                            selected
+                                ? 'custom.FA_ButtonCancel'
+                                : 'custom.FA_ButtonProvideUpdate'
+                        )}
                     </Button>
-                </div>
+                )}
             </div>
         </div>
     );
@@ -126,10 +143,16 @@ CardComponent.propTypes = {
     action: t.func,
     // Is card selected
     selected: t.bool,
+    // Reflection mode onchange
+    onChange: t.func,
+    // Is card in reflection mode
+    reflectionMode: t.bool,
 };
 
 CardComponent.defaultProps = {
     selected: false,
+    onChange: () => {},
+    reflectionMode: false,
 };
 
 export default CardComponent;

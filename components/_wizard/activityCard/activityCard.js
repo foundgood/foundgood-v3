@@ -2,6 +2,7 @@
 import React from 'react';
 
 // Packages
+import cc from 'classcat';
 import t from 'prop-types';
 import { useWatch } from 'react-hook-form';
 import AnimateHeight from 'react-animate-height';
@@ -63,12 +64,21 @@ const ActivityCard = ({
     goals,
     action,
     description,
+    selected,
+    onChange,
+    reflectionMode,
 }) => {
     // Hook: Metadata
     const { labelTodo, label } = useMetadata();
 
     return (
-        <div className="p-16 max-w-[600px] border-4 border-teal-20 rounded-8 text-teal-100">
+        <div
+            className={cc([
+                'p-16 max-w-[600px] border-4 border-teal-20 rounded-8 text-teal-100 transition-default',
+                {
+                    '!border-teal-40': selected,
+                },
+            ])}>
             <div className="flex items-start justify-between">
                 <div className="w-full flex-start">
                     {headline && (
@@ -127,12 +137,26 @@ const ActivityCard = ({
                         </>
                     )}
                 </div>
-
-                <div className="self-center">
-                    <Button theme="teal" variant="secondary" action={action}>
-                        {label('custom.FA_Update')}
+            </div>
+            <div className="flex justify-end mt-32 space-x-12">
+                <Button
+                    theme="teal"
+                    variant={reflectionMode ? 'tertiary' : 'secondary'}
+                    action={action}>
+                    {label('custom.FA_ButtonEditDetails')}
+                </Button>
+                {reflectionMode && (
+                    <Button
+                        theme="teal"
+                        variant="secondary"
+                        action={() => onChange(!selected)}>
+                        {label(
+                            selected
+                                ? 'custom.FA_ButtonCancel'
+                                : 'custom.FA_ButtonProvideUpdate'
+                        )}
                     </Button>
-                </div>
+                )}
             </div>
         </div>
     );

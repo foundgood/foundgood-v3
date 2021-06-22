@@ -9,9 +9,6 @@ import { Controller } from 'react-hook-form';
 
 // Components
 
-// Icons
-import { FiCheckCircle, FiCircle } from 'react-icons/fi';
-
 const ComponentSelectorWrapperComponent = ({
     children,
     controller,
@@ -26,24 +23,13 @@ const ComponentSelectorWrapperComponent = ({
             control={controller}
             defaultValue={defaultValue}
             name={name}
-            render={({ field: { onChange, value } }) => (
-                <div
-                    className="flex items-center text-left outline-none cursor-pointer focus:outline-none group"
-                    onClick={() => onChange(!value)}>
-                    <div className="flex-grow">
-                        {React.cloneElement(child, {
-                            selected: value,
-                        })}
-                    </div>
-                    <div className="ml-16 text-teal-300">
-                        {value ? (
-                            <FiCheckCircle className="w-24 h-24 stroke-current" />
-                        ) : (
-                            <FiCircle className="w-24 h-24 stroke-current" />
-                        )}
-                    </div>
-                </div>
-            )}
+            render={({ field: { onChange, value } }) =>
+                React.cloneElement(child, {
+                    selected: value,
+                    onChange,
+                    reflectionMode: true,
+                })
+            }
         />
     ) : null;
 };
