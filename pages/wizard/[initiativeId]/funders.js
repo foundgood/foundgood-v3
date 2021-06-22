@@ -259,7 +259,9 @@ const FundersComponent = ({ pageProps }) => {
                             } ${_get(funder, 'Amount__c') || ''}`}
                             footnote={`${
                                 _get(funder, 'Grant_Start_Date__c') || ''
-                            } - ${_get(funder, 'Grant_End_Date__c') || ''}`}
+                            } - ${_get(funder, 'Grant_End_Date__c') || ''} • ${
+                                _get(funder, 'Application_Id__c') || ''
+                            }`}
                             action={() => {
                                 setUpdateId(funderKey);
                                 setFunder(funder);

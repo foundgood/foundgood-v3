@@ -83,8 +83,6 @@ const OverviewComponent = () => {
                 Funder_Objective__c,
             } = formData;
 
-            console.log({ Funder_Objective__c });
-
             await sfUpdate({
                 object: 'Initiative__c',
                 id: initiative.Id,
