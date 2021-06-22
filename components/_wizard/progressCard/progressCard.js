@@ -35,7 +35,7 @@ const ProgressCardComponent = ({ headline, items, controller }) => {
                                 </div> */}
                             </div>
 
-                            <div>
+                            <div className="w-5/12">
                                 <InputWrapper>
                                     <Number
                                         name={item.id}

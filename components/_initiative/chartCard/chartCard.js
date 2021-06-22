@@ -6,6 +6,7 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 const ChartCardComponent = ({ items, headline, useBorder }) => {
+    console.log(items);
     return (
         <div
             className={cc([

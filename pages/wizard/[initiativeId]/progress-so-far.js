@@ -140,9 +140,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                                                       item.Gender_Other__c
                                                           ? `(${item.Gender_Other__c})`
                                                           : ''
-                                                  } ${item.KPI__c} ${
-                                                      item.Lowest_Age__c
-                                                  }-${item.Highest_Age__c}`,
+                                                  } ${item.KPI__c}`,
                                         label: item.Type__c,
                                         currently: item.Current_Status__c,
                                     }))}

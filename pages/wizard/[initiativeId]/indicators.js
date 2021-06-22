@@ -43,8 +43,6 @@ const IndicatorsComponent = ({ pageProps }) => {
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset, unregister } = useForm();
     const { isDirty } = useFormState({ control });
-    const indicatorTypeSelect = useWatch({ control, name: 'Type__c' });
-    const kpiTypeSelect = useWatch({ control, name: 'KPI__c' });
 
     // Hook: Salesforce setup
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
@@ -76,21 +74,29 @@ const IndicatorsComponent = ({ pageProps }) => {
             // Object name
             const object = 'Initiative_Activity_Success_Metric__c';
 
+            // Get age
+            const indicatorWithAge =
+                CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
+                    i => KPI__c === i.value
+                )[0] ?? false;
+
             // Data for sf
             const data = {
                 [CONSTANTS.TYPES.INDICATOR_CUSTOM]: {
-                    Type__c,
+                    Type__c: indicatorType,
                     Name,
                     KPI_Category__c: initiative?.Category__c,
                 },
                 [CONSTANTS.TYPES.INDICATOR_PREDEFINED]: {
-                    Type__c,
+                    Type__c: indicatorType,
                     KPI__c,
                     Name: KPI__c,
                     Gender__c: Gender ? Gender[0].selectValue : '',
                     Gender_Other__c: Gender ? Gender[0].textValue : '',
-                    Highest_Age__c,
-                    Lowest_Age__c,
+                    Highest_Age__c: indicatorWithAge
+                        ? indicatorWithAge.max
+                        : '',
+                    Lowest_Age__c: indicatorWithAge ? indicatorWithAge.min : '',
                     KPI_Category__c: initiative?.Category__c,
                 },
             };
@@ -99,13 +105,13 @@ const IndicatorsComponent = ({ pageProps }) => {
             const ActivitySuccessMetricId = updateId
                 ? await sfUpdate({
                       object,
-                      data: data[indicatorTypeSelect],
+                      data: data[indicatorType],
                       id: updateId,
                   })
                 : await sfCreate({
                       object,
                       data: {
-                          ...data[indicatorTypeSelect],
+                          ...data[indicatorType],
                           Initiative_Activity__c: activity.Id,
                       },
                   });
@@ -133,6 +139,7 @@ const IndicatorsComponent = ({ pageProps }) => {
     // Local state to handle modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [indicatorType, setIndiciatorType] = useState(null);
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
@@ -140,15 +147,8 @@ const IndicatorsComponent = ({ pageProps }) => {
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        const {
-            KPI__c,
-            Gender__c,
-            Gender_Other__c,
-            Highest_Age__c,
-            Lowest_Age__c,
-            Type__c,
-            Name,
-        } = initiative?._activitySuccessMetrics[updateId] ?? {};
+        const { KPI__c, Gender__c, Gender_Other__c, Type__c, Name } =
+            initiative?._activitySuccessMetrics[updateId] ?? {};
 
         setValue('Type__c', Type__c);
 
@@ -160,8 +160,6 @@ const IndicatorsComponent = ({ pageProps }) => {
                 textValue: Gender_Other__c,
             },
         ]);
-        setValue('Highest_Age__c', Highest_Age__c);
-        setValue('Lowest_Age__c', Lowest_Age__c);
     }, [updateId, modalIsOpen]);
 
     // Activities
@@ -174,22 +172,6 @@ const IndicatorsComponent = ({ pageProps }) => {
             );
         }
     );
-
-    // Do crazy shit when kpi has something with age in it
-    useEffect(() => {
-        const currentKpi = CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
-            item => item.value === kpiTypeSelect
-        );
-
-        // If we have a custom aged indicator please set it
-        if (currentKpi.length > 0) {
-            setValue('Highest_Age__c', currentKpi[0].max);
-            setValue('Lowest_Age__c', currentKpi[0].min);
-        } else {
-            setValue('Highest_Age__c', null);
-            setValue('Lowest_Age__c', null);
-        }
-    }, [kpiTypeSelect]);
 
     // Reset submithandler
     useEffect(() => {
@@ -222,15 +204,14 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 headline={
                                     _get(activity, 'Things_To_Do__c') || ''
                                 }
-                                items={successMetricItems.map(item => {
-                                    let headline;
-
-                                    if (
-                                        item.Type__c ===
-                                        CONSTANTS.TYPES.INDICATOR_CUSTOM
-                                    ) {
-                                        headline = item.Name;
-                                    } else {
+                                peopleItems={successMetricItems
+                                    .filter(
+                                        item =>
+                                            item.Type__c ===
+                                            CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                                    )
+                                    .map(item => {
+                                        let headline;
                                         // Get gender
                                         const gender = item.Gender__c
                                             ? item.Gender__c
@@ -244,39 +225,42 @@ const IndicatorsComponent = ({ pageProps }) => {
                                             ? ` ${item.KPI__c} `
                                             : '';
 
-                                        // Get age
-                                        const lowestAge =
-                                            CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
-                                                i => item.KPI__c === i.value
-                                            ).length === 0 && item.Lowest_Age__c
-                                                ? `${item.Lowest_Age__c}`
-                                                : '';
+                                        headline = `${gender}${genderOther}${kpi}`;
 
-                                        const highestAge =
-                                            CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
-                                                i => item.KPI__c === i.value
-                                            ).length === 0 &&
-                                            item.Highest_Age__c
-                                                ? `${item.Highest_Age__c}`
-                                                : '';
+                                        return {
+                                            id: item.Id,
+                                            headline,
+                                            label: item.Type__c,
+                                        };
+                                    })}
+                                metricItems={successMetricItems
+                                    .filter(
+                                        item =>
+                                            item.Type__c ===
+                                            CONSTANTS.TYPES.INDICATOR_CUSTOM
+                                    )
+                                    .map(item => {
+                                        let headline = item.Name;
 
-                                        const age =
-                                            lowestAge && highestAge
-                                                ? `${lowestAge}-${highestAge}`
-                                                : `${lowestAge}${highestAge}`;
-
-                                        headline = `${gender}${genderOther}${kpi}${age}`;
-                                    }
-
-                                    return {
-                                        id: item.Id,
-                                        headline,
-                                        label: item.Type__c,
-                                    };
-                                })}
-                                actionCreate={() => {
+                                        return {
+                                            id: item.Id,
+                                            headline,
+                                            label: item.Type__c,
+                                        };
+                                    })}
+                                actionCreatePeople={() => {
                                     setModalIsOpen(true);
                                     setActivity(activity);
+                                    setIndiciatorType(
+                                        CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                                    );
+                                }}
+                                actionCreateMetric={() => {
+                                    setModalIsOpen(true);
+                                    setActivity(activity);
+                                    setIndiciatorType(
+                                        CONSTANTS.TYPES.INDICATOR_CUSTOM
+                                    );
                                 }}
                                 actionUpdate={item => {
                                     setModalIsOpen(true);
@@ -299,25 +283,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
-                    <Select
-                        name="Type__c"
-                        label={label(
-                            'objects.initiativeActivitySuccessMetric.Type__c'
-                        )}
-                        subLabel={helpText(
-                            'objects.initiativeActivitySuccessMetric.Type__c'
-                        )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
-                        options={valueSet(
-                            'initiativeActivitySuccessMetric.Type__c'
-                        )}
-                        controller={control}
-                        required
-                    />
-
                     {/* Custom indicator */}
-                    {indicatorTypeSelect ===
-                        CONSTANTS.TYPES.INDICATOR_CUSTOM && (
+                    {indicatorType === CONSTANTS.TYPES.INDICATOR_CUSTOM && (
                         <Text
                             name="Name"
                             label={label(
@@ -331,8 +298,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                         />
                     )}
                     {/* Predefined indicator */}
-                    {indicatorTypeSelect ===
-                        CONSTANTS.TYPES.INDICATOR_PREDEFINED && (
+                    {indicatorType === CONSTANTS.TYPES.INDICATOR_PREDEFINED && (
                         <>
                             <Select
                                 name="KPI__c"
@@ -372,42 +338,6 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 listMaxLength={1}
                                 controller={control}
                             />
-                            {CONSTANTS.CUSTOM.INDICATOR_KPI_AGED.filter(
-                                item => item.value === kpiTypeSelect
-                            ).length === 0 && (
-                                <>
-                                    <Number
-                                        name="Lowest_Age__c"
-                                        label={label(
-                                            'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
-                                        )}
-                                        subLabel={helpText(
-                                            'objects.initiativeActivitySuccessMetric.Lowest_Age__c'
-                                        )}
-                                        placeholder={label(
-                                            'custom.FA_FormCaptureNumberEmpty'
-                                        )}
-                                        minValue={0}
-                                        maxValue={150}
-                                        controller={control}
-                                    />
-                                    <Number
-                                        name="Highest_Age__c"
-                                        label={label(
-                                            'objects.initiativeActivitySuccessMetric.Highest_Age__c'
-                                        )}
-                                        subLabel={helpText(
-                                            'objects.initiativeActivitySuccessMetric.Highest_Age__c'
-                                        )}
-                                        placeholder={label(
-                                            'custom.FA_FormCaptureNumberEmpty'
-                                        )}
-                                        minValue={0}
-                                        maxValue={150}
-                                        controller={control}
-                                    />
-                                </>
-                            )}
                         </>
                     )}
                 </InputWrapper>

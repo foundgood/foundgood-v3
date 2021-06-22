@@ -78,15 +78,24 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                         item.Type__c ===
                                         CONSTANTS.TYPES.INDICATOR_PREDEFINED
                                     ) {
-                                        // If gender is "Other" -> use "Gender_Other__c" field
-                                        const gender =
-                                            item.Gender__c ==
-                                            CONSTANTS.TYPES
-                                                .INDICATOR_GENDER_OTHER
-                                                ? item.Gender_Other__c
-                                                : item.Gender__c;
+                                        let headline;
+                                        // Get gender
+                                        const gender = item.Gender__c
+                                            ? item.Gender__c
+                                            : '';
+                                        const genderOther = item.Gender_Other__c
+                                            ? ` ${item.Gender_Other__c}`
+                                            : '';
+
+                                        // Get KPI
+                                        const kpi = item.KPI__c
+                                            ? ` ${item.KPI__c} `
+                                            : '';
+
+                                        headline = `${gender}${genderOther}${kpi}`;
+
                                         return {
-                                            title: `${gender} (age ${item.Lowest_Age__c}-${item.Highest_Age__c})`,
+                                            title: headline,
                                             value: value,
                                             label: label(
                                                 'custom.FA_InitiativeViewMetricsTotal'
