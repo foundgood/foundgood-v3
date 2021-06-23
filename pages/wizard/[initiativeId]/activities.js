@@ -61,6 +61,7 @@ const ActivitiesComponent = ({ pageProps }) => {
         updateActivityGoals,
         removeActivityGoals,
         updateReportDetails,
+        isNovoLeadFunder,
         CONSTANTS,
     } = useInitiativeDataStore();
 
@@ -410,8 +411,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                             initiative?.Category__c
                         )}
                         buttonLabel={label('custom.FA_ButtonAddActivityTag')}
-                        listMaxLength={4}
+                        listMaxLength={isNovoLeadFunder() ? 1 : 4}
                         controller={control}
+                        required={isNovoLeadFunder()}
                     />
                     <SelectList
                         name="Location"
