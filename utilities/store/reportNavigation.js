@@ -37,26 +37,29 @@ const useReportNavigationStore = create((set, get) => ({
                         items: [
                             // d.reportDetails,
                             d.overview,
-                            d.reportSummary,
                             d.goals, // Moved from Key changes
+                            d.reportSummary,
                         ],
                     },
                     {
                         ...d.keyChanges,
                         items: [
+                            d.activities,
                             d.funders, // Moved from Summary
-                            d.applicants,
+                            // d.applicants,
                             d.collaborators,
                             d.employeesFunded,
-                            d.activities,
                             // d.indicators,
                             // d.progressSoFar,
-                            d.sharingResults,
                         ],
                     },
                     {
                         ...d.keyResults,
-                        items: [d.influenceOnPolicy, d.evaluations],
+                        items: [
+                            d.sharingResults,
+                            d.influenceOnPolicy,
+                            d.evaluations,
+                        ],
                     },
                     { ...d.reflections, items: [d.endOfGrantReflections] },
                 ];
@@ -71,26 +74,29 @@ const useReportNavigationStore = create((set, get) => ({
                         items: [
                             // d.reportDetails,
                             d.overview,
-                            d.reportSummary,
                             d.goals, // Moved from Key changes
+                            d.reportSummary,
                         ],
                     },
                     {
                         ...d.keyChanges,
                         items: [
+                            d.activities,
                             d.funders, // Moved from Summary
-                            d.applicants,
+                            // d.applicants,
                             d.collaborators,
                             d.employeesFunded,
-                            d.activities,
                             // d.indicators,
                             // d.progressSoFar,
-                            d.sharingResults,
                         ],
                     },
                     {
                         ...d.keyResults,
-                        items: [d.influenceOnPolicy, d.evaluations],
+                        items: [
+                            d.sharingResults,
+                            d.influenceOnPolicy,
+                            d.evaluations,
+                        ],
                     },
                 ];
                 break;

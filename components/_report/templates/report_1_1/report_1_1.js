@@ -69,15 +69,15 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         constants={CONSTANTS}
                     />
                     {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Report Summary */}
-                    <ReportSummary
+                    {/* Goals */}
+                    <ReportGoals
                         initiative={initiativeData}
                         report={currentReport}
                         constants={CONSTANTS}
                     />
                     {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Goals */}
-                    <ReportGoals
+                    {/* Report Summary */}
+                    <ReportSummary
                         initiative={initiativeData}
                         report={currentReport}
                         constants={CONSTANTS}
@@ -92,6 +92,16 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     </SectionWrapper>
 
                     {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Activities */}
+                    {currentReport?.Report_Type__c !== 'Status' && (
+                        <ReportActivities
+                            initiative={initiativeData}
+                            report={currentReport}
+                            constants={CONSTANTS}
+                        />
+                    )}
+
+                    {/* ------------------------------------------------------------------------------------------ */}
                     {/* Funders */}
                     <ReportFunders
                         initiative={initiativeData}
@@ -101,11 +111,13 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Applicants */}
-                    <ReportApplicants
-                        initiative={initiativeData}
-                        report={currentReport}
-                        constants={CONSTANTS}
-                    />
+                    {currentReport?.Report_Type__c === 'Status' && (
+                        <ReportApplicants
+                            initiative={initiativeData}
+                            report={currentReport}
+                            constants={CONSTANTS}
+                        />
+                    )}
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Collaborators */}
@@ -123,24 +135,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             constants={CONSTANTS}
                         />
                     )}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Activities */}
-                    {currentReport?.Report_Type__c !== 'Status' && (
-                        <ReportActivities
-                            initiative={initiativeData}
-                            report={currentReport}
-                            constants={CONSTANTS}
-                        />
-                    )}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Sharing of results */}
-                    {currentReport?.Report_Type__c !== 'Status' && (
-                        <ReportResults
-                            initiative={initiativeData}
-                            report={currentReport}
-                            constants={CONSTANTS}
-                        />
-                    )}
+
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Logbook entries - TBD */}
                     {/*
@@ -180,6 +175,15 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             ))}
                         </SectionWrapper>
                     )} */}
+                    {/* ------------------------------------------------------------------------------------------ */}
+                    {/* Sharing of results */}
+                    {currentReport?.Report_Type__c !== 'Status' && (
+                        <ReportResults
+                            initiative={initiativeData}
+                            report={currentReport}
+                            constants={CONSTANTS}
+                        />
+                    )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Influences on policy */}
                     {currentReport?.Report_Type__c !== 'Status' && (
