@@ -263,6 +263,8 @@ Report_1_1Component.propTypes = {
     CONSTANTS: t.object.isRequired,
 };
 
-Report_1_1Component.defaultProps = {};
+Report_1_1Component.defaultProps = {
+    report: {},
+};
 
 export default Report_1_1Component;

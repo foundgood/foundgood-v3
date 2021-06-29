@@ -75,7 +75,7 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
             }, {});
             setEmployeeGroups(employeeGroups);
         }
-    }, []);
+    }, [initiative]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuEmployees'))}>
@@ -89,44 +89,57 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
                     <UpdateButton mode="report" baseUrl="employees-funded" />
                 </div>
             </SectionWrapper>
-            {employeesFundedReflection && (
-                <>
-                    <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
-                        {Object.values(employeeGroups).map((group, index) => {
-                            const males = group.male
-                                ? `${group.male} Male`
-                                : null;
-                            const females = group.female
-                                ? `${group.female} Female`
-                                : null;
-                            const other = group.other
-                                ? `${group.other} Other`
-                                : null;
-                            const description = [males, females, other]
-                                .filter(item => item)
-                                .join(', ');
-                            return (
-                                <NumberCard
-                                    key={`e-${index}`}
-                                    number={group.total}
-                                    headline={group.role}
-                                    description={description}
-                                />
-                            );
-                        })}
-                    </div>
+            {/*
+                1. Items but no reflections
+                2. Items with reflection
+                3. No Items
+            */}
+            {employeesFundedReflection ? (
+                employeesFundedReflection ===
+                constants.CUSTOM.NO_REFLECTIONS ? (
+                    <SectionEmpty type="noReflections" />
+                ) : (
+                    <>
+                        <div className="inline-grid w-full grid-cols-2 gap-16 mt-16 md:grid-cols-4 xl:grid-cols-4">
+                            {Object.values(employeeGroups).map(
+                                (group, index) => {
+                                    const males = group.male
+                                        ? `${group.male} Male`
+                                        : null;
+                                    const females = group.female
+                                        ? `${group.female} Female`
+                                        : null;
+                                    const other = group.other
+                                        ? `${group.other} Other`
+                                        : null;
+                                    const description = [males, females, other]
+                                        .filter(item => item)
+                                        .join(', ');
+                                    return (
+                                        <NumberCard
+                                            key={`e-${index}`}
+                                            number={group.total}
+                                            headline={group.role}
+                                            description={description}
+                                        />
+                                    );
+                                }
+                            )}
+                        </div>
 
-                    <TextCard
-                        className="mt-32"
-                        hasBackground={true}
-                        headline={label(
-                            'custom.FA_ReportViewSubHeadingEmployeesReflections'
-                        )}
-                        body={employeesFundedReflection}
-                    />
-                </>
+                        <TextCard
+                            className="mt-32"
+                            hasBackground={true}
+                            headline={label(
+                                'custom.FA_ReportViewSubHeadingEmployeesReflections'
+                            )}
+                            body={employeesFundedReflection}
+                        />
+                    </>
+                )
+            ) : (
+                <SectionEmpty type="report" />
             )}
-            {!employeesFundedReflection && <SectionEmpty type="report" />}
         </SectionWrapper>
     );
 };

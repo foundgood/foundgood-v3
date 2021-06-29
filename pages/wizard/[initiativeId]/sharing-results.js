@@ -30,6 +30,7 @@ import {
     DatePicker,
 } from 'components/_inputs';
 import ResultCard from 'components/_wizard/resultCard';
+import NoReflections from 'components/_wizard/noReflections';
 
 const SharingResultsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -201,6 +202,37 @@ const SharingResultsComponent = ({ pageProps }) => {
         await updateReportDetails(reportDetailIds);
     }
 
+    // Method: Submits no reflections flag
+    async function submitNoReflections() {
+        // Object name
+        const object = 'Initiative_Report_Detail__c';
+
+        // Create or update report detail ids based on reformatted form data
+        // Update if reportDetailId exist in item - this means we have it already in the store
+        const reportDetailIds = await Promise.all(
+            Object.values(initiative?._activities)
+                .filter(
+                    item =>
+                        item.Activity_Type__c ===
+                        CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
+                )
+                .map(activity =>
+                    sfCreate({
+                        object,
+                        data: {
+                            Type__c: CONSTANTS.TYPES.ACTIVITY_OVERVIEW,
+                            Initiative_Activity__c: activity.Id,
+                            Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
+                            Initiative_Report__c: REPORT_ID,
+                        },
+                    })
+                )
+        );
+
+        // Bulk update affected activity goals
+        await updateReportDetails(reportDetailIds);
+    }
+
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
@@ -273,6 +305,24 @@ const SharingResultsComponent = ({ pageProps }) => {
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);
 
+    // Check if there is relevant report details yet
+    const reportDetailsItems = currentReportDetails
+        .filter(item =>
+            Object.keys(initiative?._activities).includes(
+                item.Initiative_Activity__c
+            )
+        )
+        .filter(item => {
+            // Activity
+            const activity =
+                initiative?._activities[item.Initiative_Activity__c];
+            console.log({ activityDiss: activity });
+            return (
+                activity.Activity_Type__c ===
+                CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
+            );
+        });
+
     return (
         <>
             <TitlePreamble
@@ -281,6 +331,25 @@ const SharingResultsComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
+                {MODE === CONTEXTS.REPORT && (
+                    <NoReflections
+                        onClick={submitNoReflections}
+                        show={
+                            reportDetailsItems.filter(
+                                item =>
+                                    item.Description__c !==
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length < 1
+                        }
+                        submitted={
+                            reportDetailsItems.filter(
+                                item =>
+                                    item.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length > 0
+                        }
+                    />
+                )}
                 {Object.keys(initiative?._activities)
                     .filter(activityKey => {
                         const activity = initiative?._activities[activityKey];
@@ -332,8 +401,15 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 name={activityKey}
                                 defaultValue={{
                                     selected:
-                                        reflection[0] ?? false ? true : false,
-                                    value: reflection[0]?.Description__c ?? '',
+                                        reflection[0] &&
+                                        (reflection[0]?.Description__c !==
+                                            CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                                            false),
+                                    value:
+                                        reflection[0]?.Description__c ===
+                                        CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                            ? ''
+                                            : reflection[0]?.Description__c,
                                 }}
                                 journalPublication={
                                     showJournalPublication

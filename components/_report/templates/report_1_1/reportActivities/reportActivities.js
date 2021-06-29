@@ -30,7 +30,7 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
             // Activies are split between:
             // Activities == "Intervention"
             // Sharing of results == "Dissimination"
-            const allActivities = Object.values(initiative._reportDetails)
+            const activities = Object.values(initiative._reportDetails)
                 .filter(item => {
                     return item.Type__c == constants.TYPES.ACTIVITY_OVERVIEW
                         ? true
@@ -38,23 +38,33 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                 })
                 .map(item => {
                     // Get Activity based on key
-                    const activity =
-                        initiative._activities[item.Initiative_Activity__c];
-                    // Add Report Reflection text to activities
-                    activity.reportReflection = item.Description__c;
-                    return activity;
-                });
+                    let activity = {
+                        ...initiative._activities[item.Initiative_Activity__c],
+                    };
 
-            // Create list of indicators per "Activity"
-            // Type == "Intervention"
-            const activities = Object.values(allActivities).reduce(
-                (accumulator, activity) => {
+                    // Report reflection
+                    const reflection =
+                        item.Description__c === constants.CUSTOM.NO_REFLECTIONS
+                            ? null
+                            : item.Description__c;
+
+                    // Add to Activity
+                    if (reflection) {
+                        activity = {
+                            ...activity,
+                            reportReflection: reflection,
+                        };
+                    }
+
+                    return activity;
+                })
+                .reduce((accumulator, activity) => {
                     const title = activity.Things_To_Do__c;
                     const description = activity.Things_To_Do_Description__c;
                     const location = activity.Initiative_Location__c?.split(
                         ';'
                     ).join(', ');
-                    const reportReflection = activity.reportReflection;
+                    const reportReflection = activity.reportReflection ?? null;
 
                     // Loop indicators
                     // Add indicators if it matches the activity ID
@@ -74,21 +84,28 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                 item.Type__c ===
                                 constants.TYPES.INDICATOR_PREDEFINED
                             ) {
-                                // If gender is "Other" -> use "Gender_Other__c" field
-                                const gender =
-                                    item.Gender__c ==
-                                    constants.TYPES.INDICATOR_GENDER_OTHER
-                                        ? item.Gender_Other__c
-                                        : item.Gender__c;
+                                let headline;
+                                // Get gender
+                                const gender = item.Gender__c
+                                    ? item.Gender__c
+                                    : '';
+                                const genderOther = item.Gender_Other__c
+                                    ? ` ${item.Gender_Other__c}`
+                                    : '';
+
+                                // Get KPI
+                                const kpi = item.KPI__c
+                                    ? ` ${item.KPI__c} `
+                                    : '';
+
+                                headline = `${gender}${genderOther}${kpi}`;
 
                                 return {
                                     type: item.Type__c,
                                     groupTitle: label(
                                         'custom.FA_InitiativeViewIndicatorsPeopleReached'
                                     ),
-                                    title: `${gender} (${labelTodo('age')} ${
-                                        item.Lowest_Age__c
-                                    }-${item.Highest_Age__c})`,
+                                    title: headline,
                                     value: value,
                                     label: label(
                                         'custom.FA_ReportViewActivitiesGraphKeyDuring'
@@ -128,25 +145,27 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                     // Only add activities - if they have indicators
                     if (
                         activity.Activity_Type__c ==
-                            constants.TYPES.ACTIVITY_INTERVENTION &&
-                        stripUndefined(indicators).length > 0
+                        constants.TYPES.ACTIVITY_INTERVENTION
                     ) {
-                        accumulator.push({
-                            title: title,
-                            description: description,
-                            location: location,
-                            peopleIndicators: peopleIndicators,
-                            customIndicators: customIndicators,
-                            reportReflection: reportReflection,
-                        });
+                        let accObj = {
+                            title,
+                            description,
+                            location,
+                            peopleIndicators,
+                            customIndicators,
+                        };
+
+                        if (reportReflection) {
+                            accObj = { ...accObj, reportReflection };
+                        }
+
+                        accumulator.push(accObj);
                     }
                     return accumulator;
-                },
-                []
-            );
+                }, []);
             setActivities(activities);
         }
-    }, []);
+    }, [initiative]);
 
     return (
         <SectionWrapper
@@ -162,7 +181,18 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                 </div>
             </SectionWrapper>
 
+            {/*
+                1. Items but no reflections
+                2. No items
+                3. Items with reflection
+            */}
+
             {activities?.length > 0 &&
+            activities?.filter(item => item.reportReflection).length < 1 ? (
+                <SectionEmpty type="noReflections" />
+            ) : activities?.length < 1 ? (
+                <SectionEmpty type="report" />
+            ) : (
                 activities?.map((item, index) => (
                     <div key={`a-${index}`}>
                         <SectionWrapper>
@@ -202,6 +232,7 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                 />
                             </SectionWrapper>
                         )}
+
                         <TextCard
                             hasBackground={true}
                             className="mt-32"
@@ -210,10 +241,11 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                             )}
                             body={item.reportReflection}
                         />
+
                         {index < activities.length - 1 && <DividerLine />}
                     </div>
-                ))}
-            {activities?.length < 1 && <SectionEmpty type="report" />}
+                ))
+            )}
         </SectionWrapper>
     );
 };

@@ -27,28 +27,43 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
             // Collaborators are split in two groups
             // "Co-applicants" & "Additional Collaborator"
             // Get all and then split them
-            const allCollaborators = Object.values(initiative._reportDetails)
+            const applicants = Object.values(initiative._reportDetails)
                 .filter(item => {
                     return item.Type__c == constants.TYPES.COLLABORATOR_OVERVIEW
                         ? true
                         : false;
                 })
                 .map(item => {
-                    // Get funder based on key
-                    const collaborator =
-                        initiative._collaborators[
+                    // Get collaborator based on key
+                    let collaborator = {
+                        ...initiative._collaborators[
                             item.Initiative_Collaborator__c
-                        ];
-                    // Add Report Reflection text to collaborators
-                    collaborator.reportReflection = item.Description__c;
+                        ],
+                    };
+
+                    // Report reflection
+                    const reflection =
+                        item.Description__c === constants.CUSTOM.NO_REFLECTIONS
+                            ? null
+                            : item.Description__c;
+
+                    // Add to collaborator
+                    if (reflection) {
+                        collaborator = {
+                            ...collaborator,
+                            reportReflection: reflection,
+                        };
+                    }
+
                     return collaborator;
-                });
-            const applicants = allCollaborators.filter(
-                item => !constants.TYPES.COLLABORATORS.includes(item.Type__c)
-            );
+                })
+                .filter(
+                    item =>
+                        !constants.TYPES.COLLABORATORS.includes(item.Type__c)
+                );
             setApplicants(applicants);
         }
-    }, []);
+    }, [initiative]);
 
     return (
         <SectionWrapper
@@ -62,7 +77,17 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
                 </div>
             </SectionWrapper>
 
+            {/*
+                1. Items but no reflections
+                2. No items
+                3. Items
+            */}
             {applicants?.length > 0 &&
+            applicants?.filter(item => item.reportReflection).length < 1 ? (
+                <SectionEmpty type="noReflections" />
+            ) : applicants?.length < 1 ? (
+                <SectionEmpty type="report" />
+            ) : (
                 applicants?.map((item, index) => (
                     <div key={`a-${index}`}>
                         <SectionWrapper>
@@ -86,6 +111,7 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
                                 ]}
                             />
                         </SectionWrapper>
+
                         <TextCard
                             hasBackground={true}
                             headline={label(
@@ -94,8 +120,8 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
                             body={item.reportReflection}
                         />
                     </div>
-                ))}
-            {applicants?.length < 1 && <SectionEmpty type="report" />}
+                ))
+            )}
         </SectionWrapper>
     );
 };

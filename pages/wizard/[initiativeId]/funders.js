@@ -30,6 +30,7 @@ import {
     DatePicker,
 } from 'components/_inputs';
 import FunderCard from 'components/_wizard/founderCard';
+import NoReflections from 'components/_wizard/noReflections';
 
 const FundersComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -178,6 +179,31 @@ const FundersComponent = ({ pageProps }) => {
         await updateReportDetails(reportDetailIds);
     }
 
+    // Method: Submits no reflections flag
+    async function submitNoReflections() {
+        // Object name
+        const object = 'Initiative_Report_Detail__c';
+
+        // Create or update report detail ids based on reformatted form data
+        // Update if reportDetailId exist in item - this means we have it already in the store
+        const reportDetailIds = await Promise.all(
+            Object.keys(initiative?._funders).map(funderKey =>
+                sfCreate({
+                    object,
+                    data: {
+                        Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
+                        Initiative_Funder__c: funderKey,
+                        Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
+                        Initiative_Report__c: REPORT_ID,
+                    },
+                })
+            )
+        );
+
+        // Bulk update affected activity goals
+        await updateReportDetails(reportDetailIds);
+    }
+
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
@@ -236,6 +262,11 @@ const FundersComponent = ({ pageProps }) => {
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);
 
+    // Check if there is relevant report details yet
+    const reportDetailsItems = currentReportDetails.filter(item =>
+        Object.keys(initiative?._funders).includes(item.Initiative_Funder__c)
+    );
+
     return (
         <>
             <TitlePreamble
@@ -244,11 +275,31 @@ const FundersComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
+                {MODE === CONTEXTS.REPORT && (
+                    <NoReflections
+                        onClick={submitNoReflections}
+                        show={
+                            reportDetailsItems.filter(
+                                item =>
+                                    item.Description__c !==
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length < 1
+                        }
+                        submitted={
+                            reportDetailsItems.filter(
+                                item =>
+                                    item.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length > 0
+                        }
+                    />
+                )}
                 {Object.keys(initiative?._funders).map(funderKey => {
                     const funder = initiative?._funders[funderKey];
                     const reflection = currentReportDetails.filter(
                         item => item.Initiative_Funder__c === funderKey
                     );
+
                     return (
                         <FunderCard
                             key={funderKey}
@@ -272,8 +323,16 @@ const FundersComponent = ({ pageProps }) => {
                             }
                             name={funderKey}
                             defaultValue={{
-                                selected: reflection[0] ?? false ? true : false,
-                                value: reflection[0]?.Description__c ?? '',
+                                selected:
+                                    reflection[0] &&
+                                    (reflection[0]?.Description__c !==
+                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                                        false),
+                                value:
+                                    reflection[0]?.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                        ? ''
+                                        : reflection[0]?.Description__c,
                             }}
                             inputLabel={label(
                                 'custom.FA_ReportWizardFunderReflectionSubHeading'

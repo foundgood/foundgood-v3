@@ -23,6 +23,7 @@ import Button from 'components/button';
 import Modal from 'components/modal';
 import { InputWrapper, SelectList, Text, LongText } from 'components/_inputs';
 import ActivityCard from 'components/_wizard/activityCard';
+import NoReflections from 'components/_wizard/noReflections';
 
 const ActivitiesComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -207,6 +208,37 @@ const ActivitiesComponent = ({ pageProps }) => {
         await updateReportDetails(reportDetailIds);
     }
 
+    // Method: Submits no reflections flag
+    async function submitNoReflections() {
+        // Object name
+        const object = 'Initiative_Report_Detail__c';
+
+        // Create or update report detail ids based on reformatted form data
+        // Update if reportDetailId exist in item - this means we have it already in the store
+        const reportDetailIds = await Promise.all(
+            Object.values(initiative?._activities)
+                .filter(
+                    item =>
+                        item.Activity_Type__c ===
+                        CONSTANTS.TYPES.ACTIVITY_INTERVENTION
+                )
+                .map(activity =>
+                    sfCreate({
+                        object,
+                        data: {
+                            Type__c: CONSTANTS.TYPES.ACTIVITY_OVERVIEW,
+                            Initiative_Activity__c: activity.Id,
+                            Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
+                            Initiative_Report__c: REPORT_ID,
+                        },
+                    })
+                )
+        );
+
+        // Bulk update affected activity goals
+        await updateReportDetails(reportDetailIds);
+    }
+
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
@@ -280,6 +312,23 @@ const ActivitiesComponent = ({ pageProps }) => {
         goal => goal.Type__c === CONSTANTS.TYPES.GOAL_CUSTOM
     );
 
+    // Check if there is relevant report details yet
+    const reportDetailsItems = currentReportDetails
+        .filter(item =>
+            Object.keys(initiative?._activities).includes(
+                item.Initiative_Activity__c
+            )
+        )
+        .filter(item => {
+            // Activity
+            const activity =
+                initiative?._activities[item.Initiative_Activity__c];
+            return (
+                activity.Activity_Type__c ===
+                CONSTANTS.TYPES.ACTIVITY_INTERVENTION
+            );
+        });
+
     return (
         <>
             <TitlePreamble
@@ -288,6 +337,25 @@ const ActivitiesComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
+                {MODE === CONTEXTS.REPORT && (
+                    <NoReflections
+                        onClick={submitNoReflections}
+                        show={
+                            reportDetailsItems.filter(
+                                item =>
+                                    item.Description__c !==
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length < 1
+                        }
+                        submitted={
+                            reportDetailsItems.filter(
+                                item =>
+                                    item.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length > 0
+                        }
+                    />
+                )}
                 {Object.keys(initiative?._activities)
                     .filter(activityKey => {
                         const activity = initiative?._activities[activityKey];
@@ -340,8 +408,15 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 name={activityKey}
                                 defaultValue={{
                                     selected:
-                                        reflection[0] ?? false ? true : false,
-                                    value: reflection[0]?.Description__c ?? '',
+                                        reflection[0] &&
+                                        (reflection[0]?.Description__c !==
+                                            CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                                            false),
+                                    value:
+                                        reflection[0]?.Description__c ===
+                                        CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                            ? ''
+                                            : reflection[0]?.Description__c,
                                 }}
                                 inputLabel={label(
                                     'custom.FA_ReportWizardActivitiesReflectionSubHeading'

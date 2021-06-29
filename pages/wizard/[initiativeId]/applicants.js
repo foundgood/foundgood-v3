@@ -23,6 +23,7 @@ import Button from 'components/button';
 import Modal from 'components/modal';
 import { InputWrapper, Select, DateRange, LongText } from 'components/_inputs';
 import CollaboratorCard from 'components/_wizard/collaboratorCard';
+import NoReflections from 'components/_wizard/noReflections';
 
 const ApplicantsComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -163,6 +164,35 @@ const ApplicantsComponent = ({ pageProps }) => {
         await updateReportDetails(reportDetailIds);
     }
 
+    // Method: Submits no reflections flag
+    async function submitNoReflections() {
+        // Object name
+        const object = 'Initiative_Report_Detail__c';
+
+        // Create or update report detail ids based on reformatted form data
+        // Update if reportDetailId exist in item - this means we have it already in the store
+        const reportDetailIds = await Promise.all(
+            Object.keys(initiative?._collaborators)
+                .filter(item =>
+                    CONSTANTS.TYPES.APPLICANTS_ALL.includes(item.Type__c)
+                )
+                .map(collaboratorKey =>
+                    sfCreate({
+                        object,
+                        data: {
+                            Type__c: CONSTANTS.TYPES.COLLABORATOR_OVERVIEW,
+                            Initiative_Collaborator__c: collaboratorKey,
+                            Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
+                            Initiative_Report__c: REPORT_ID,
+                        },
+                    })
+                )
+        );
+
+        // Bulk update affected activity goals
+        await updateReportDetails(reportDetailIds);
+    }
+
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
@@ -222,6 +252,22 @@ const ApplicantsComponent = ({ pageProps }) => {
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);
 
+    // Check if there is relevant report details yet
+    const reportDetailsItems = currentReportDetails
+        .filter(item =>
+            Object.keys(initiative?._collaborators).includes(
+                item.Initiative_Collaborator__c
+            )
+        )
+        .filter(item => {
+            // Collaborator
+            const collaborator =
+                initiative?._collaborators[item.Initiative_Collaborator__c];
+            return CONSTANTS.TYPES.APPLICANTS_ALL.includes(
+                collaborator.Type__c
+            );
+        });
+
     return (
         <>
             <TitlePreamble
@@ -230,6 +276,25 @@ const ApplicantsComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
+                {MODE === CONTEXTS.REPORT && (
+                    <NoReflections
+                        onClick={submitNoReflections}
+                        show={
+                            reportDetailsItems.filter(
+                                item =>
+                                    item.Description__c !==
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length < 1
+                        }
+                        submitted={
+                            reportDetailsItems.filter(
+                                item =>
+                                    item.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length > 0
+                        }
+                    />
+                )}
                 {Object.keys(initiative._collaborators).map(collaboratorKey => {
                     const collaborator =
                         initiative._collaborators[collaboratorKey];
@@ -256,8 +321,16 @@ const ApplicantsComponent = ({ pageProps }) => {
                             }
                             name={collaboratorKey}
                             defaultValue={{
-                                selected: reflection[0] ?? false ? true : false,
-                                value: reflection[0]?.Description__c ?? '',
+                                selected:
+                                    reflection[0] &&
+                                    (reflection[0]?.Description__c !==
+                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                                        false),
+                                value:
+                                    reflection[0]?.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                        ? ''
+                                        : reflection[0]?.Description__c,
                             }}
                             inputLabel={label(
                                 'custom.FA_ReportWizardCoApplicantReflectionSubHeading'

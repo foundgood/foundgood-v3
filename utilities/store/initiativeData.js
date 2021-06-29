@@ -84,9 +84,10 @@ const constants = {
         OUTCOME_OVERVIEW: 'Outcome',
     },
     IDS: {
-        NNF_ACCOUNT: '0011x000002rJb4AAE',
+        NNF_ACCOUNT: process.env.NEXT_PUBLIC_NNF_ACCOUNT,
     },
     CUSTOM: {
+        NO_REFLECTIONS: '__NO__REFLECTIONS__',
         INDICATOR_KPI_AGED: [
             { value: 'Children (ages 0-2)', min: 0, max: 2 },
             { value: 'Children (ages 3-5)', min: 3, max: 4 },

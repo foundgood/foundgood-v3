@@ -133,17 +133,30 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                     })
                     .map(item => {
                         // Get funder based on key
-                        const funder =
-                            initiative._funders[item.Initiative_Funder__c];
+                        let funder = null;
+                        // Report reflection
+                        const reflection =
+                            item.Description__c ===
+                            constants.CUSTOM.NO_REFLECTIONS
+                                ? null
+                                : item.Description__c;
 
-                        // Add reflection to funder
-                        funder.reportReflection = item.Description__c;
+                        if (reflection) {
+                            funder = {
+                                ...initiative._funders[
+                                    item.Initiative_Funder__c
+                                ],
+                                reportReflection: reflection,
+                            };
+                        }
+
                         return funder;
-                    });
+                    })
+                    .filter(item => item);
                 setFunders(funders);
             }
         }
-    }, []);
+    }, [initiative]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuFunders'))}>
@@ -196,10 +209,9 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
             )}
             {/* Empty state - No funders */}
             {!donutData && <SectionEmpty type="report" />}
-
             {/* List of funders */}
-            {funders &&
-                funders.map((item, index) => (
+            {funders?.length > 0 ? (
+                funders?.map((item, index) => (
                     <div key={`f-${index}`}>
                         <SectionWrapper>
                             <ReportDetailCard
@@ -227,19 +239,24 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                             />
                         </SectionWrapper>
                         <SectionWrapper className="bg-blue-10 rounded-8">
-                            <div className="t-h5">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingFundersReflections'
-                                )}
-                            </div>
-                            <p className="mt-8 t-body">
-                                {item.reportReflection}
-                            </p>
+                            <>
+                                <div className="t-h5">
+                                    {label(
+                                        'custom.FA_ReportViewSubHeadingFundersReflections'
+                                    )}
+                                </div>
+                                <p className="mt-8 t-body">
+                                    {item.reportReflection}
+                                </p>
+                            </>
                         </SectionWrapper>
 
                         {index < funders.length - 1 && <DividerLine />}
                     </div>
-                ))}
+                ))
+            ) : (
+                <SectionEmpty type="noReflections" />
+            )}
         </SectionWrapper>
     );
 };

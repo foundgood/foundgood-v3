@@ -23,14 +23,18 @@ const SectionEmptyComponent = ({ headline, type }) => {
             )}
             <div
                 className={cc([
-                    'p-16 text-center bg-white border-4 t-body border-teal-20 rounded-8',
+                    'p-16 text-center border-4 t-body  rounded-8',
                     {
                         'mt-16': !headline,
+                        'bg-blue-10 border-blue-10': type == 'noReflections',
+                        'bg-white border-teal-20': type != 'noReflections',
                     },
                 ])}>
                 {type == 'initiative' &&
                     label('custom.FA_InitiativeEmptyState')}
                 {type == 'report' && label('custom.FA_ReportEmptyState')}
+                {type == 'noReflections' &&
+                    label('custom.FA_NothingToReportReportView')}
             </div>
         </>
     );

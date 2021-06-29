@@ -30,6 +30,7 @@ import {
     Reflection,
 } from 'components/_inputs';
 import ProjectMemberCard from 'components/_wizard/projectMemberCard';
+import NoReflections from 'components/_wizard/noReflections';
 
 const EmployeesFundedComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -124,25 +125,48 @@ const EmployeesFundedComponent = ({ pageProps }) => {
 
         // Check if reflection exist - then update
 
-        const reportDetailId =
-            currentReflection && currentReflection.Id
-                ? await sfUpdate({
-                      object,
-                      id: currentReflection.Id,
-                      data: {
-                          Description__c: Employees_Funded_Overview,
-                      },
-                  })
-                : await sfCreate({
-                      object,
-                      data: {
-                          Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
-                          Description__c: Employees_Funded_Overview,
-                          Initiative_Report__c: REPORT_ID,
-                      },
-                  });
+        if (Employees_Funded_Overview) {
+            const reportDetailId =
+                currentReflection && currentReflection.Id
+                    ? await sfUpdate({
+                          object,
+                          id: currentReflection.Id,
+                          data: {
+                              Description__c: Employees_Funded_Overview,
+                          },
+                      })
+                    : await sfCreate({
+                          object,
+                          data: {
+                              Type__c:
+                                  CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
+                              Description__c: Employees_Funded_Overview,
+                              Initiative_Report__c: REPORT_ID,
+                          },
+                      });
 
-        // Update affected activity goals
+            // Update affected activity goals
+            await updateReportDetails([reportDetailId]);
+        }
+    }
+
+    // Method: Submits no reflections flag
+    async function submitNoReflections() {
+        // Object name
+        const object = 'Initiative_Report_Detail__c';
+
+        // Create or update report detail ids based on reformatted form data
+        // Update if reportDetailId exist in item - this means we have it already in the store
+        const reportDetailId = await sfCreate({
+            object,
+            data: {
+                Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
+                Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
+                Initiative_Report__c: REPORT_ID,
+            },
+        });
+
+        // Bulk update affected activity goals
         await updateReportDetails([reportDetailId]);
     }
 
@@ -201,7 +225,8 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         currentReportDetails.find(
             detail =>
                 detail.Type__c === CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
-        ) || {};
+        ) || null;
+
     return (
         <>
             <TitlePreamble
@@ -211,15 +236,33 @@ const EmployeesFundedComponent = ({ pageProps }) => {
             />
             <InputWrapper preload={!initiative.Id}>
                 {MODE === CONTEXTS.REPORT && (
+                    <NoReflections
+                        onClick={submitNoReflections}
+                        show={
+                            !currentReflection ||
+                            currentReflection?.Description__c ===
+                                CONSTANTS.CUSTOM.NO_REFLECTIONS
+                        }
+                        submitted={
+                            currentReflection?.Description__c ===
+                            CONSTANTS.CUSTOM.NO_REFLECTIONS
+                        }
+                    />
+                )}
+                {MODE === CONTEXTS.REPORT && (
                     <Reflection
                         name="Employees_Funded_Overview"
-                        defaultValue={currentReflection.Description__c}
+                        defaultValue={
+                            currentReflection?.Description__c ===
+                            CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                ? ''
+                                : currentReflection?.Description__c
+                        }
                         label={label(
                             'custom.FA_ReportWizardEmployeesReflectionSubHeading'
                         )}
                         placeholder={labelTodo('Enter reflections')}
                         maxLength={750}
-                        required
                         controller={controlReflections}
                     />
                 )}

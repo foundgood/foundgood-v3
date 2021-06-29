@@ -23,6 +23,7 @@ import Button from 'components/button';
 import Modal from 'components/modal';
 import { InputWrapper, Text, LongText } from 'components/_inputs';
 import ListCard from 'components/_wizard/listCard';
+import NoReflections from 'components/_wizard/noReflections';
 
 const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // Hook: Verify logged in
@@ -128,6 +129,26 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
         await updateReportDetails(reportDetailIds);
     }
 
+    // Method: Submits no reflections flag
+    async function submitNoReflections() {
+        // Object name
+        const object = 'Initiative_Report_Detail__c';
+
+        // Create or update report detail ids based on reformatted form data
+        // Update if reportDetailId exist in item - this means we have it already in the store
+        const reportDetailId = await sfCreate({
+            object,
+            data: {
+                Type__c: CONSTANTS.TYPES.INFLUENCE_ON_POLICY,
+                Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
+                Initiative_Report__c: REPORT_ID,
+            },
+        });
+
+        // Bulk update affected activity goals
+        await updateReportDetails([reportDetailId]);
+    }
+
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
@@ -163,6 +184,11 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
         }
     }, [initiative]);
 
+    // Current report details
+    const currentReportDetails = getReportDetails(REPORT_ID).filter(
+        item => item.Type__c === CONSTANTS.TYPES.INFLUENCE_ON_POLICY
+    );
+
     return (
         <>
             <TitlePreamble
@@ -171,10 +197,32 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {getReportDetails(REPORT_ID)
+                {MODE === CONTEXTS.REPORT && (
+                    <NoReflections
+                        onClick={submitNoReflections}
+                        show={
+                            currentReportDetails.length === 0 ||
+                            currentReportDetails.filter(
+                                item =>
+                                    item.Description__c &&
+                                    item.Description__c !==
+                                        CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length < 1
+                        }
+                        submitted={
+                            currentReportDetails.filter(
+                                item =>
+                                    item.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ).length > 0
+                        }
+                    />
+                )}
+                {currentReportDetails
                     .filter(
                         item =>
-                            item.Type__c === CONSTANTS.TYPES.INFLUENCE_ON_POLICY
+                            item.Description__c !==
+                            CONSTANTS.CUSTOM.NO_REFLECTIONS
                     )
                     .map(item => {
                         return (
@@ -194,10 +242,14 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                 name={item.Id}
                                 defaultValue={{
                                     selected:
-                                        item.Description__c ?? false
-                                            ? true
-                                            : false,
-                                    value: item.Description__c ?? '',
+                                        item?.Description__c !==
+                                            CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                                        false,
+                                    value:
+                                        item?.Description__c ===
+                                        CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                            ? ''
+                                            : item?.Description__c,
                                 }}
                                 inputLabel={label(
                                     'custom.FA_ReportWizardInfluencesReflectionSubHeading'

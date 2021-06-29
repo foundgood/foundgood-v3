@@ -32,7 +32,13 @@ const ReportEvaluationsComponent = ({ initiative, report, constants }) => {
                         : false;
                 })
                 .map(item => {
-                    return item.Description__c;
+                    // Report reflection
+                    const reflection =
+                        item.Description__c === constants.CUSTOM.NO_REFLECTIONS
+                            ? null
+                            : item.Description__c;
+
+                    return reflection ? { reportReflection: reflection } : {};
                 });
             setEvaluations(evaluations);
         }
@@ -51,21 +57,33 @@ const ReportEvaluationsComponent = ({ initiative, report, constants }) => {
                     <UpdateButton mode="report" baseUrl="evaluations" />
                 </div>
             </SectionWrapper>
+            {/*
+                1. Items but no reflections
+                2. No items
+                3. Items with reflection
+            */}
             {evaluations?.length > 0 &&
-                evaluations?.map((item, index) => (
-                    <div key={`i-${index}`}>
-                        <TextCard
-                            hasBackground={true}
-                            headline={label(
-                                'custom.FA_ReportViewSubHeadingEvaluationsReflections'
-                            )}
-                            body={item}
-                        />
+            evaluations?.filter(item => item.reportReflection).length < 1 ? (
+                <SectionEmpty type="noReflections" />
+            ) : evaluations?.length < 1 ? (
+                <SectionEmpty type="report" />
+            ) : (
+                evaluations
+                    ?.filter(item => item.reportReflection)
+                    ?.map((item, index) => (
+                        <div key={`i-${index}`}>
+                            <TextCard
+                                hasBackground={true}
+                                headline={label(
+                                    'custom.FA_ReportViewSubHeadingEvaluationsReflections'
+                                )}
+                                body={item.reportReflection}
+                            />
 
-                        {index < evaluations.length - 1 && <DividerLine />}
-                    </div>
-                ))}
-            {evaluations?.length < 1 && <SectionEmpty type="report" />}
+                            {index < evaluations.length - 1 && <DividerLine />}
+                        </div>
+                    ))
+            )}
         </SectionWrapper>
     );
 };

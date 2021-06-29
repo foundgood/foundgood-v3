@@ -32,7 +32,13 @@ const ReportInfluencesComponent = ({ initiative, report, constants }) => {
                         : false;
                 })
                 .map(item => {
-                    return item.Description__c;
+                    // Report reflection
+                    const reflection =
+                        item.Description__c === constants.CUSTOM.NO_REFLECTIONS
+                            ? null
+                            : item.Description__c;
+
+                    return reflection ? { reportReflection: reflection } : {};
                 });
             setInfluences(influences);
         }
@@ -50,21 +56,35 @@ const ReportInfluencesComponent = ({ initiative, report, constants }) => {
                     <UpdateButton mode="report" baseUrl="influence-on-policy" />
                 </div>
             </SectionWrapper>
-            {influences?.length > 0 &&
-                influences?.map((item, index) => (
-                    <div key={`i-${index}`}>
-                        <TextCard
-                            hasBackground={true}
-                            headline={label(
-                                'custom.FA_ReportViewSubHeadingInfluencesReflections'
-                            )}
-                            body={item}
-                        />
 
-                        {index < influences.length - 1 && <DividerLine />}
-                    </div>
-                ))}
-            {influences?.length < 1 && <SectionEmpty type="report" />}
+            {/*
+                1. Items but no reflections
+                2. No items
+                3. Items with reflection
+            */}
+            {console.log(influences)}
+            {influences?.length > 0 &&
+            influences?.filter(item => item.reportReflection).length < 1 ? (
+                <SectionEmpty type="noReflections" />
+            ) : influences?.length < 1 ? (
+                <SectionEmpty type="report" />
+            ) : (
+                influences
+                    ?.filter(item => item.reportReflection)
+                    .map((item, index) => (
+                        <div key={`i-${index}`}>
+                            <TextCard
+                                hasBackground={true}
+                                headline={label(
+                                    'custom.FA_ReportViewSubHeadingInfluencesReflections'
+                                )}
+                                body={item.reportReflection}
+                            />
+
+                            {index < influences.length - 1 && <DividerLine />}
+                        </div>
+                    ))
+            )}
         </SectionWrapper>
     );
 };

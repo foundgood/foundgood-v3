@@ -29,7 +29,7 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
             // Activies are split between:
             // Activities == "Intervention"
             // Sharing of results == "Dissimination"
-            const allActivities = Object.values(initiative._reportDetails)
+            const results = Object.values(initiative._reportDetails)
                 .filter(item => {
                     return item.Type__c == constants.TYPES.ACTIVITY_OVERVIEW
                         ? true
@@ -37,15 +37,26 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                 })
                 .map(item => {
                     // Get Activity based on key
-                    const activity =
-                        initiative._activities[item.Initiative_Activity__c];
-                    // Add Report Reflection text to activities
-                    activity.reportReflection = item.Description__c;
-                    return activity;
-                });
+                    let activity = {
+                        ...initiative._activities[item.Initiative_Activity__c],
+                    };
 
-            // Sharing of results == "Dissimination"
-            const results = Object.values(allActivities)
+                    // Report reflection
+                    const reflection =
+                        item.Description__c === constants.CUSTOM.NO_REFLECTIONS
+                            ? null
+                            : item.Description__c;
+
+                    // Add to Activity
+                    if (reflection) {
+                        activity = {
+                            ...activity,
+                            reportReflection: reflection,
+                        };
+                    }
+
+                    return activity;
+                })
                 .filter(item => {
                     // "Dissemination" or "Intervention"
                     return item.Activity_Type__c ==
@@ -91,17 +102,25 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                             },
                         ];
                     }
-                    return {
+
+                    let returnObj = {
                         headline: item.Things_To_Do__c,
                         label: item.Dissemination_Method__c,
                         tags: item.Audience_Tag__c?.split(';'),
-                        reportReflection: item.reportReflection,
                         items: items,
                     };
+
+                    if (item.reportReflection) {
+                        returnObj = {
+                            ...returnObj,
+                            reportReflection: item.reportReflection,
+                        };
+                    }
+                    return returnObj;
                 });
             setResults(results);
         }
-    }, []);
+    }, [initiative]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuSharing'))}>
@@ -114,7 +133,19 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                 </div>
             </SectionWrapper>
 
+            {/*
+                1. Items but no reflections
+                2. No items
+                3. Items with reflection
+            */}
+
             {results?.length > 0 &&
+            results?.filter(item => item.reportReflection).length < 1 ? (
+                <SectionEmpty type="noReflections" />
+            ) : results?.length < 1 ? (
+                <SectionEmpty type="report" />
+            ) : (
+                results?.length > 0 &&
                 results?.map((item, index) => (
                     <div key={`r-${index}`}>
                         <SectionWrapper>
@@ -136,8 +167,8 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
 
                         {index < results.length - 1 && <DividerLine />}
                     </div>
-                ))}
-            {results?.length < 1 && <SectionEmpty type="report" />}
+                ))
+            )}
         </SectionWrapper>
     );
 };
