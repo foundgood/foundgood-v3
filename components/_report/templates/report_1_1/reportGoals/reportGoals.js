@@ -43,7 +43,9 @@ const ReportGoalsComponent = ({ initiative, report, constants }) => {
                                 'custom.FA_ReportViewHeadingFunderObjectives'
                             )}
                     </h3>
-                    <UpdateButton mode="report" baseUrl="goals" />
+                    {!isNnfLeadFunder && (
+                        <UpdateButton mode="report" baseUrl="goals" />
+                    )}
                 </div>
             </SectionWrapper>
 
