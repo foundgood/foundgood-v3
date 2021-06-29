@@ -303,6 +303,7 @@ const OverviewComponent = () => {
                     placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={400}
                     controller={control}
+                    required
                 />
                 <DateRange
                     name="GrantDate"
