@@ -366,12 +366,12 @@ const initiativeWizardDictionary = {
         labels: {
             form: {
                 title: 'custom.FA_InitiativeWizardReportsScheduleHeading',
-                preamble: 'FA_InitiativeWizardReportsScheduleSubheading',
+                preamble: 'custom.FA_InitiativeWizardReportsScheduleSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardReportsScheduleHelpWhy',
-                what: 'custom.FA_InitiativeWizardReportsScheduleHelpWhat',
-                guide: 'custom.FA_InitiativeWizardReportsScheduleHelpGuide',
+                why: 'custom.FA_InitiativeWizardReportScheduleHelpWhy',
+                what: 'custom.FA_InitiativeWizardReportScheduleHelpWhat',
+                guide: 'custom.FA_InitiativeWizardReportScheduleHelpGuide',
             },
         },
         baseUrl: 'report-schedule',
