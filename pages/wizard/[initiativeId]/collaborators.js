@@ -170,16 +170,16 @@ const CollaboratorsComponent = ({ pageProps }) => {
         // Create or update report detail ids based on reformatted form data
         // Update if reportDetailId exist in item - this means we have it already in the store
         const reportDetailIds = await Promise.all(
-            Object.keys(initiative?._collaborators)
+            Object.values(initiative?._collaborators)
                 .filter(item =>
                     CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)
                 )
-                .map(collaboratorKey =>
+                .map(item =>
                     sfCreate({
                         object,
                         data: {
                             Type__c: CONSTANTS.TYPES.COLLABORATOR_OVERVIEW,
-                            Initiative_Collaborator__c: collaboratorKey,
+                            Initiative_Collaborator__c: item.Id,
                             Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
                             Initiative_Report__c: REPORT_ID,
                         },

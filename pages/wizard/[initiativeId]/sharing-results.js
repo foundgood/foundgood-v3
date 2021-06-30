@@ -316,7 +316,6 @@ const SharingResultsComponent = ({ pageProps }) => {
             // Activity
             const activity =
                 initiative?._activities[item.Initiative_Activity__c];
-            console.log({ activityDiss: activity });
             return (
                 activity.Activity_Type__c ===
                 CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
