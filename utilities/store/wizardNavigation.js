@@ -157,7 +157,7 @@ const useWizardNavigationStore = create((set, get) => ({
                             d.funders,
                             d.overview,
                             d.reportSummary,
-                            d.risksAndChallenges,
+                            // d.risksAndChallenges,
                         ],
                     },
                     {

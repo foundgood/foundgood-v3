@@ -169,12 +169,6 @@ const ApplicantsComponent = ({ pageProps }) => {
         // Object name
         const object = 'Initiative_Report_Detail__c';
 
-        console.log(
-            Object.values(initiative?._collaborators).filter(item =>
-                CONSTANTS.TYPES.APPLICANTS_ALL.includes(item.Type__c)
-            )
-        );
-
         // Create or update report detail ids based on reformatted form data
         // Update if reportDetailId exist in item - this means we have it already in the store
         const reportDetailIds = await Promise.all(
