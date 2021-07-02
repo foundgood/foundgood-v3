@@ -290,7 +290,7 @@ const OverviewComponent = () => {
                         'initiativeGoal.Funder_Objective__c',
                         CategoryWatch ? CategoryWatch : initiative?.Category__c
                     )}
-                    disabled={!CategoryWatch && !initiative?.Category__c}
+                    disabled={(!CategoryWatch && !initiative?.Category__c) || isNovoLeadFunder()}
                     controller={control}
                     required
                 />
