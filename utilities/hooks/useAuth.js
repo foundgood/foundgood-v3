@@ -42,8 +42,12 @@ const useAuth = () => {
         const redirectUrl = encodeURIComponent(
             `${process.env.NEXT_PUBLIC_LOGIN_REDIRECT_URL_PREFIX}/login_callback`
         );
-        // const state = encodeURIComponent(`${router.asPath}`); // TODO Tech dept unable to get params
-        const state = encodeURIComponent('/');
+        const state = encodeURIComponent(
+            window.location.href.replace(
+                process.env.NEXT_PUBLIC_LOGIN_REDIRECT_URL_PREFIX,
+                ''
+            )
+        );
         return `${authUrl}/services/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=${redirectUrl}&state=${state}`;
     }
 
