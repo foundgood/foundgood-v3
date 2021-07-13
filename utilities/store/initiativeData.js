@@ -45,7 +45,6 @@ const defaultInitiative = {
     _activitySuccessMetrics: {},
     _reportDetails: {},
     _initiativeUpdates: {},
-    _logbook: {},
 };
 
 const constants = {
@@ -82,6 +81,7 @@ const constants = {
         COLLABORATOR_OVERVIEW: 'Collaborator Overview',
         ACTIVITY_OVERVIEW: 'Activity Overview',
         OUTCOME_OVERVIEW: 'Outcome',
+        LOGBOOK_UPDATE: 'Update',
     },
     IDS: {
         NNF_ACCOUNT: process.env.NEXT_PUBLIC_NNF_ACCOUNT,
@@ -285,6 +285,24 @@ const useInitiativeDataStore = create((set, get) => ({
         _updateAuth();
     },
 
+    async updateInitiativeUpdate(id) {
+        const data = await sfQuery(queries.initiativeUpdate.get(id));
+        if (data) {
+            set(state => ({
+                initiative: {
+                    ...state.initiative,
+                    _initiativeUpdates: {
+                        ...state.initiative._initiativeUpdates,
+                        [id]: data,
+                    },
+                },
+            }));
+        }
+
+        // Update auth
+        _updateAuth();
+    },
+
     // Bulk update multiple ids
     async updateActivityGoals(ids) {
         const data = await sfQuery(
@@ -445,7 +463,9 @@ const useInitiativeDataStore = create((set, get) => ({
             const activitySuccessMetricsData = await sfQuery(
                 queries.initiativeActivitySuccessMetric.getAll(id)
             );
-            const logbookData = await sfQuery(queries.logbook.getAll(id));
+            const initiativeUpdatesData = await sfQuery(
+                queries.initiativeUpdate.getAll(id)
+            );
 
             // Update state
             set(state => ({
@@ -462,7 +482,7 @@ const useInitiativeDataStore = create((set, get) => ({
                         activitySuccessMetricsData
                     ),
                     _activityGoals: _returnAsKeys(activityGoalsData),
-                    _logbook: _returnAsKeys(logbookData),
+                    _initiativeUpdates: _returnAsKeys(initiativeUpdatesData),
                 },
             }));
 

@@ -36,10 +36,10 @@ const LogbookComponent = ({ pageProps }) => {
     useEffect(() => {
         // Make sure data it loaded
         if (
-            initiative?._logbook &&
-            Object.keys(initiative?._logbook).length !== 0
+            initiative?._initiativeUpdates &&
+            Object.keys(initiative?._initiativeUpdates).length !== 0
         ) {
-            const logs = Object.values(initiative._logbook)
+            const logs = Object.values(initiative._initiativeUpdates)
                 .filter(
                     item =>
                         item.Type__c !== CONSTANTS.TYPES.LOGBOOK_TYPE_METRICS // Ignore metrics updates

@@ -96,7 +96,7 @@ const useWizardNavigationStore = create((set, get) => ({
                 ...d.developments,
                 items: [d.sharingResults],
             },
-            // {...d.logbook, items: [d.logbook]},
+            { ...d.logbook, items: [d.logbookEntry] },
             { ...d.reports, items: [d.reportSchedule] },
             d.done,
         ];

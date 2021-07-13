@@ -173,9 +173,11 @@ const queries = {
             )}') ORDER BY Initiative_Activity__r.Name`;
         },
     },
-    logbook: {
-        _query: `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, CurrencyIsoCode, (SELECT Id, URL__c, Type__c FROM Initiative_Update_Content__r), Description__c, Type__c, Access_Level__c, Initiative_Activity__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Update__c`,
-
+    initiativeUpdate: {
+        _query: `SELECT Id, Name, CreatedById, CreatedDate, LastModifiedDate, CurrencyIsoCode, (SELECT Id, URL__c, Type__c FROM Initiative_Update_Content__r), Description__c, Type__c, Access_Level__c, Initiative_Activity__c, Initiative_Activity__r.Things_To_Do__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative_Update__c`,
+        get(id) {
+            return `${this._query} WHERE Id = '${id}'`;
+        },
         getAll(initiativeId) {
             // return `${this._query} WHERE Initiative__c = '${initiativeId}' ORDER BY Current_Status_Last_Modified_Date__c`;
             return `${this._query} WHERE Initiative__c = '${initiativeId}' ORDER BY LastModifiedDate DESC`;
