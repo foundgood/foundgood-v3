@@ -417,7 +417,7 @@ const LogbookComponent = ({ pageProps }) => {
                                         (typeof attachImage === 'string' &&
                                             attachImage) ||
                                         initiative?._initiativeUpdates[updateId]
-                                            .Initiative_Update_Content__r
+                                            ?.Initiative_Update_Content__r
                                             ?.records[0].URL__c
                                     }
                                 />
@@ -430,7 +430,7 @@ const LogbookComponent = ({ pageProps }) => {
                                         (typeof attachVideo === 'string' &&
                                             attachVideo) ||
                                         initiative?._initiativeUpdates[updateId]
-                                            .Initiative_Update_Content__r
+                                            ?.Initiative_Update_Content__r
                                             ?.records[0].URL__c
                                     }
                                 />
@@ -442,7 +442,7 @@ const LogbookComponent = ({ pageProps }) => {
                                         (typeof attachDocument === 'string' &&
                                             attachDocument) ||
                                         initiative?._initiativeUpdates[updateId]
-                                            .Initiative_Update_Content__r
+                                            ?.Initiative_Update_Content__r
                                             ?.records[0].URL__c
                                     }>
                                     View document
