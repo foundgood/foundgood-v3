@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm, useWatch, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
@@ -49,6 +49,12 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         handleSubmit: handleSubmitReflections,
         control: controlReflections,
     } = useForm();
+
+    const reflectSelected = useWatch({
+        control: controlReflections,
+        name: 'Employees_Funded_Overview',
+    });
+
     const { isDirty } = useFormState({ control });
 
     // Hook: Salesforce setup
@@ -180,6 +186,16 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsSaving, setModalIsSaving] = useState(false);
 
+    // Local state to handle reflection
+    const [reflecting, setReflecting] = useState(false);
+    // Effect: Run reflectAction on reflectSelected change in order to propagate event up
+    useEffect(() => {
+        console.log(reflectSelected);
+        setReflecting(
+            reflectSelected && reflectSelected.length > 0 ? true : false
+        );
+    }, [reflectSelected]);
+
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
 
@@ -239,6 +255,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     <NoReflections
                         onClick={submitNoReflections}
                         reflectionItems={[currentReflection?.Description__c]}
+                        reflecting={reflecting}
                     />
                 )}
                 {MODE === CONTEXTS.REPORT && (

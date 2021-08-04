@@ -13,7 +13,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 import Button from 'components/button';
 import Modal from 'components/modal';
 
-const NoReflectionsComponent = ({ onClick, updating, reflectionItems }) => {
+const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
     // Hook: Metadata
     const { label } = useMetadata();
 
@@ -64,7 +64,9 @@ const NoReflectionsComponent = ({ onClick, updating, reflectionItems }) => {
     };
 
     // Sort out all null or undefined reflections
-    const realReflectionItems = reflectionItems.filter(item => item);
+    const realReflectionItems = Array.isArray(reflectionItems)
+        ? reflectionItems.filter(item => item)
+        : [];
 
     // Find all with no reflections
     const noReflectionItems = realReflectionItems.filter(
@@ -72,17 +74,19 @@ const NoReflectionsComponent = ({ onClick, updating, reflectionItems }) => {
     );
 
     // Default: No reflectionItems
-    const _default = realReflectionItems.length === 0;
+    const _default = realReflectionItems.length === 0 && !reflecting;
 
     // No updates: All reflectionItems === NO REFLECTION
     const noUpdates =
         realReflectionItems.length > 0 &&
-        noReflectionItems.length === realReflectionItems.length;
+        noReflectionItems.length === realReflectionItems.length &&
+        !reflecting;
 
     // Updates: 1 or more reflectionItems exist, but not all reflectionItems === NO REFLECTION
     const updates =
-        realReflectionItems.length > 0 &&
-        noReflectionItems.length !== realReflectionItems.length;
+        reflecting ||
+        (realReflectionItems.length > 0 &&
+            noReflectionItems.length !== realReflectionItems.length);
 
     return (
         <>
@@ -113,14 +117,12 @@ const NoReflectionsComponent = ({ onClick, updating, reflectionItems }) => {
 
 NoReflectionsComponent.propTypes = {
     onClick: t.func,
-    noUpdates: t.bool,
-    updates: t.bool,
+    reflecting: t.bool,
     reflectionItems: t.array,
 };
 
 NoReflectionsComponent.defaultProps = {
-    noUpdates: false,
-    updates: false,
+    reflecting: false,
     reflectionItems: [],
 };
 

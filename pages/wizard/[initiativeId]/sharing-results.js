@@ -243,6 +243,9 @@ const SharingResultsComponent = ({ pageProps }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsSaving, setModalIsSaving] = useState(false);
 
+    // Local state to handle reflection
+    const [reflecting, setReflecting] = useState(false);
+
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
     const [disseminationType, setDisseminationType] = useState(null);
@@ -336,6 +339,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         reflectionItems={reportDetailsItems.map(
                             item => item.Description__c
                         )}
+                        reflecting={reflecting}
                     />
                 )}
                 {Object.keys(initiative?._activities)
@@ -382,6 +386,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                     setUpdateId(activityKey);
                                     setModalIsOpen(true);
                                 }}
+                                reflectAction={setReflecting}
                                 controller={
                                     MODE === CONTEXTS.REPORT &&
                                     controlReflections

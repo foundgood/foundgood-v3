@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import t from 'prop-types';
@@ -16,15 +16,21 @@ const EvaluationCardComponent = ({
     controller,
     name,
     inputLabel,
+    reflectAction,
     ...rest
 }) => {
-    const selected = controller
+    const reflectSelected = controller
         ? useWatch({
               control: controller,
               name: `${name}-selector`,
               defaultValue: defaultValue.selected,
           })
         : false;
+
+    // Effect: Run reflectAction on reflectSelected change in order to propagate event up
+    useEffect(() => {
+        reflectAction(reflectSelected);
+    }, [reflectSelected]);
 
     return controller ? (
         <div>
@@ -37,13 +43,13 @@ const EvaluationCardComponent = ({
             <AnimateHeight
                 duration={300}
                 animateOpacity={true}
-                height={selected ? 'auto' : 0}>
+                height={reflectSelected ? 'auto' : 0}>
                 <Reflection
                     controller={controller}
                     name={`${name}-reflection`}
                     label={inputLabel}
                     defaultValue={defaultValue.value}
-                    required={selected}
+                    required={reflectSelected}
                     maxLength={750}
                 />
             </AnimateHeight>

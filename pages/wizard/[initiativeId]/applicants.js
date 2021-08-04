@@ -203,6 +203,9 @@ const ApplicantsComponent = ({ pageProps }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsSaving, setModalIsSaving] = useState(false);
 
+    // Local state to handle reflection
+    const [reflecting, setReflecting] = useState(false);
+
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
 
@@ -282,6 +285,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                         reflectionItems={reportDetailsItems.map(
                             item => item.Description__c
                         )}
+                        reflecting={reflecting}
                     />
                 )}
                 {Object.keys(initiative._collaborators).map(collaboratorKey => {
@@ -305,6 +309,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                                 setUpdateId(collaboratorKey);
                                 setModalIsOpen(true);
                             }}
+                            reflectAction={setReflecting}
                             controller={
                                 MODE === CONTEXTS.REPORT && controlReflections
                             }

@@ -166,6 +166,9 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsSaving, setModalIsSaving] = useState(false);
 
+    // Local state to handle reflection
+    const [reflecting, setReflecting] = useState(false);
+
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
 
@@ -211,6 +214,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         reflectionItems={currentReportDetails.map(
                             item => item.Description__c
                         )}
+                        reflecting={reflecting}
                     />
                 )}
                 {currentReportDetails
@@ -230,6 +234,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                     setUpdateId(item.Id);
                                     setModalIsOpen(true);
                                 }}
+                                reflectAction={setReflecting}
                                 controller={
                                     MODE === CONTEXTS.REPORT &&
                                     controlReflections
