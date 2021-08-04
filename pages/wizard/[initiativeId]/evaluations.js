@@ -208,22 +208,9 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 {MODE === CONTEXTS.REPORT && (
                     <NoReflections
                         onClick={submitNoReflections}
-                        show={
-                            currentReportDetails.length === 0 ||
-                            currentReportDetails.filter(
-                                item =>
-                                    item.Description__c &&
-                                    item.Description__c !==
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS
-                            ).length < 1
-                        }
-                        submitted={
-                            currentReportDetails.filter(
-                                item =>
-                                    item.Description__c ===
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
-                            ).length > 0
-                        }
+                        reflectionItems={currentReportDetails.map(
+                            item => item.Description__c
+                        )}
                     />
                 )}
                 {currentReportDetails

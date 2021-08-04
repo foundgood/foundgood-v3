@@ -238,15 +238,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 {MODE === CONTEXTS.REPORT && (
                     <NoReflections
                         onClick={submitNoReflections}
-                        show={
-                            !currentReflection ||
-                            currentReflection?.Description__c ===
-                                CONSTANTS.CUSTOM.NO_REFLECTIONS
-                        }
-                        submitted={
-                            currentReflection?.Description__c ===
-                            CONSTANTS.CUSTOM.NO_REFLECTIONS
-                        }
+                        reflectionItems={[currentReflection?.Description__c]}
                     />
                 )}
                 {MODE === CONTEXTS.REPORT && (

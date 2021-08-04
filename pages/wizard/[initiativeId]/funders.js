@@ -278,20 +278,9 @@ const FundersComponent = ({ pageProps }) => {
                 {MODE === CONTEXTS.REPORT && (
                     <NoReflections
                         onClick={submitNoReflections}
-                        show={
-                            reportDetailsItems.filter(
-                                item =>
-                                    item.Description__c !==
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
-                            ).length < 1
-                        }
-                        submitted={
-                            reportDetailsItems.filter(
-                                item =>
-                                    item.Description__c ===
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
-                            ).length > 0
-                        }
+                        reflectionItems={reportDetailsItems.map(
+                            item => item.Description__c
+                        )}
                     />
                 )}
                 {Object.keys(initiative?._funders).map(funderKey => {
