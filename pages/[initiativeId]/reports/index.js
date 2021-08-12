@@ -79,6 +79,11 @@ const ReportsComponent = ({ pageProps }) => {
         setReportGroups(reports);
     };
 
+    // Is NNF only founder
+    const isOnlyNNF =
+        reportGroups?.length === 1 &&
+        reportGroups[0]?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT;
+
     return (
         <>
             {/* Preloading - Show loading */}
@@ -94,7 +99,7 @@ const ReportsComponent = ({ pageProps }) => {
                                     'custom.FA_InitiativeViewReportsScheduleHeading'
                                 )}
                             </h1>
-                            {reportGroups?.length < 1 && (
+                            {reportGroups?.length < 1 && !isOnlyNNF && (
                                 <UpdateButton
                                     mode="initiative"
                                     baseUrl="report-schedule"
@@ -112,10 +117,13 @@ const ReportsComponent = ({ pageProps }) => {
                                     <h2 className="t-h3">
                                         {item.Account__r.Name}
                                     </h2>
-                                    <UpdateButton
-                                        mode="initiative"
-                                        baseUrl="report-schedule"
-                                    />
+                                    {item.Account__c !==
+                                        CONSTANTS.IDS.NNF_ACCOUNT && (
+                                        <UpdateButton
+                                            mode="initiative"
+                                            baseUrl="report-schedule"
+                                        />
+                                    )}
                                 </div>
 
                                 <div className="flex flex-wrap">
