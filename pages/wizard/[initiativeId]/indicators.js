@@ -227,6 +227,12 @@ const IndicatorsComponent = ({ pageProps }) => {
 
                                         headline = `${gender}${genderOther}${kpi}`;
 
+                                        // Remove Unspecified
+                                        headline = headline.replace(
+                                            'Unspecified ',
+                                            ''
+                                        );
+
                                         return {
                                             id: item.Id,
                                             headline,
