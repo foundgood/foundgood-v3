@@ -6,6 +6,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
@@ -20,6 +21,9 @@ const KpiCardComponent = ({
 }) => {
     // Hook: Metadata
     const { label } = useMetadata();
+
+    // Store: Initiative data
+    const { CONSTANTS } = useInitiativeDataStore();
 
     return (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100 space-y-32">
@@ -68,7 +72,12 @@ const KpiCardComponent = ({
                                 <Button
                                     theme="teal"
                                     variant="secondary"
-                                    action={() => actionUpdate(item)}>
+                                    action={() =>
+                                        actionUpdate(
+                                            item,
+                                            CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                                        )
+                                    }>
                                     {label('custom.FA_Update')}
                                 </Button>
                             </div>
@@ -109,7 +118,12 @@ const KpiCardComponent = ({
                                 <Button
                                     theme="teal"
                                     variant="secondary"
-                                    action={() => actionUpdate(item)}>
+                                    action={() =>
+                                        actionUpdate(
+                                            item,
+                                            CONSTANTS.TYPES.INDICATOR_CUSTOM
+                                        )
+                                    }>
                                     {label('custom.FA_Update')}
                                 </Button>
                             </div>

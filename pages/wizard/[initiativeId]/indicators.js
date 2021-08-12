@@ -268,10 +268,11 @@ const IndicatorsComponent = ({ pageProps }) => {
                                         CONSTANTS.TYPES.INDICATOR_CUSTOM
                                     );
                                 }}
-                                actionUpdate={item => {
+                                actionUpdate={(item, indicator) => {
                                     setModalIsOpen(true);
                                     setUpdateId(item.id);
                                     setActivity(activity);
+                                    setIndiciatorType(indicator);
                                 }}
                             />
                         );
