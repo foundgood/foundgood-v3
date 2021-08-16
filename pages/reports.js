@@ -32,12 +32,35 @@ const ReportComponent = ({ pageProps }) => {
     const { sfQuery, queries } = useSalesForce();
 
     // Get all reports data
-    const { data } = sfQuery(queries.reports.getAll());
+    const { data: reportsData } = sfQuery(queries.reports.getAll());
 
     // Get data for form
     const { data: accountFoundations } = sfQuery(
         queries.account.allFoundations()
     );
+
+    // Effect: Control which accountFoundations is used
+    const [
+        controlledAccountFoundations,
+        setControlledAccountFoundations,
+    ] = useState([]);
+    useEffect(() => {
+        if (reportsData) {
+            const reportsDataFunders = new Set([
+                ...reportsData?.records
+                    .map(item => item.Funder_Report__r?.Account__r?.Id)
+                    .filter(item => item),
+            ]);
+
+            const test = accountFoundations?.records.filter(item =>
+                [...reportsDataFunders].includes(item.Id)
+            );
+
+            setControlledAccountFoundations(test);
+
+            console.log(test);
+        }
+    }, [accountFoundations, reportsData]);
 
     // Hook: useForm setup
     const { control, register, getValues } = useForm({
@@ -69,7 +92,7 @@ const ReportComponent = ({ pageProps }) => {
     const [filtered, setFiltered] = useState(null);
 
     useEffect(() => {
-        const reports = data?.records.filter(item => {
+        const reports = reportsData?.records.filter(item => {
             // If User type is Foundation
             // Only show reports with same Id as users AccountId
             if (
@@ -90,7 +113,7 @@ const ReportComponent = ({ pageProps }) => {
 
         setInitial(reports);
         setFiltered(reports);
-    }, [data, user]);
+    }, [reportsData, user]);
 
     function onFilter(data) {
         if (initial) {
@@ -212,7 +235,6 @@ const ReportComponent = ({ pageProps }) => {
                                     'initiativeReport.Report_Type__c'
                                 )}
                             />
-
                             {user?.User_Account_Type__c !==
                                 CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION && (
                                 <SearchFilterMultiselect
@@ -222,7 +244,7 @@ const ReportComponent = ({ pageProps }) => {
                                     )}
                                     controller={control}
                                     options={
-                                        accountFoundations?.records?.map(
+                                        controlledAccountFoundations?.map(
                                             item => ({
                                                 label: item.Name,
                                                 value: item.Id,
@@ -235,7 +257,7 @@ const ReportComponent = ({ pageProps }) => {
                     </div>
                 </SectionWrapper>
 
-                {data ? (
+                {reportsData ? (
                     <>
                         <SectionWrapper>
                             {filtered?.map(item => (
