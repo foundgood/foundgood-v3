@@ -164,7 +164,6 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                             )}
                             body={item.reportReflection}
                         />
-
                         {index < results.length - 1 && <DividerLine />}
                     </div>
                 ))

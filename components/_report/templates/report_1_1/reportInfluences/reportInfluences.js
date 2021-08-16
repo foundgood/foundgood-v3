@@ -38,7 +38,12 @@ const ReportInfluencesComponent = ({ initiative, report, constants }) => {
                             ? null
                             : item.Description__c;
 
-                    return reflection ? { reportReflection: reflection } : {};
+                    return reflection
+                        ? {
+                              reportReflection: reflection,
+                              subHeading: item.Type_Of_Influence__c,
+                          }
+                        : {};
                 });
             setInfluences(influences);
         }
@@ -62,7 +67,6 @@ const ReportInfluencesComponent = ({ initiative, report, constants }) => {
                 2. No items
                 3. Items with reflection
             */}
-            {console.log(influences)}
             {influences?.length > 0 &&
             influences?.filter(item => item.reportReflection).length < 1 ? (
                 <SectionEmpty type="noReflections" />
@@ -73,6 +77,9 @@ const ReportInfluencesComponent = ({ initiative, report, constants }) => {
                     ?.filter(item => item.reportReflection)
                     .map((item, index) => (
                         <div key={`i-${index}`}>
+                            <SectionWrapper paddingY={false}>
+                                <p className="mb-24 t-h6">{item.subHeading}</p>
+                            </SectionWrapper>
                             <TextCard
                                 hasBackground={true}
                                 headline={label(
