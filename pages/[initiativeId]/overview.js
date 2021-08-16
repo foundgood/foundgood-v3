@@ -480,7 +480,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     </div>
                                     <div className="w-full t-footnote-bold">
                                         {label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersApprovalDate'
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersApplicationId'
                                         )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
@@ -495,6 +495,7 @@ const ProjectComponent = ({ pageProps }) => {
                                         <div
                                             key={`f-${index}`}
                                             className="flex pt-16 pb-16 border-t-2 border-amber-10">
+                                            {console.log(item)}
                                             <div className="w-full t-h6">
                                                 {item.Account__r.Name}
                                             </div>
@@ -510,7 +511,7 @@ const ProjectComponent = ({ pageProps }) => {
                                                 )}
                                             </div>
                                             <div className="w-full t-caption">
-                                                {item.Approval_Date__c}
+                                                {item.Application_Id__c}
                                             </div>
                                             <div className="w-full t-caption">
                                                 {item.Grant_Start_Date__c}

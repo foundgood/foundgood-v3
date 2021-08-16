@@ -231,9 +231,9 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                                     },
                                     {
                                         label: label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersApprovalDate'
+                                            'custom.FA_InitiativeViewFunderTableColumnHeadersApplicationId'
                                         ),
-                                        text: item.Grant_Start_Date__c,
+                                        text: item.Application_Id__c,
                                     },
                                 ]}
                             />

@@ -1,5 +1,5 @@
 // React
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import cc from 'classcat';
@@ -19,6 +19,12 @@ const ReflectionComponent = ({
     // Local state for handling char count
     const [value, setValue] = useState(defaultValue || '');
 
+    useEffect(() => {
+        if (required) {
+            document.getElementById(`${name}-textarea`).focus();
+        }
+    }, [required]);
+
     return (
         <label className="flex flex-col p-16 mt-16 rounded-4 bg-teal-10">
             {label && <span className="input-label">{label}</span>}
@@ -36,6 +42,7 @@ const ReflectionComponent = ({
                 }) => (
                     <textarea
                         ref={ref}
+                        id={`${name}-textarea`}
                         defaultValue={defaultValue}
                         maxLength={maxLength}
                         onChange={event => {
