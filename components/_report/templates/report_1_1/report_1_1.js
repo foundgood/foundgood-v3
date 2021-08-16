@@ -1,11 +1,14 @@
 // React
 import React, { useEffect, useState } from 'react';
 
+// Next
+import Link from 'next/link';
+
 // Packages
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useMetadata, useContext } from 'utilities/hooks';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -31,6 +34,9 @@ import ReportReflection from 'components/_report/templates/report_1_1/reportRefl
 const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     // Hook: Metadata
     const { label } = useMetadata();
+
+    // Hook: Context
+    const { INITIATIVE_ID, REPORT_ID } = useContext();
 
     const [initiativeData, setInitiativeData] = useState();
     const [currentReport, setCurrentReport] = useState([]);
@@ -247,9 +253,13 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 )}
                             </h3>
                             <p className="mt-32 t-small">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingLogAdditionalSubHeading'
-                                )}
+                                <Link href={`/${INITIATIVE_ID}/logbook`}>
+                                    <a className="underline">
+                                        {label(
+                                            'custom.FA_ReportViewSubHeadingLogAdditionalSubHeading'
+                                        )}
+                                    </a>
+                                </Link>
                             </p>
                         </SectionWrapper>
                     </SectionWrapper>
