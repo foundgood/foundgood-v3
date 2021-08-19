@@ -119,12 +119,7 @@ const useWizardNavigationStore = create((set, get) => ({
                     d.introduction,
                     {
                         ...d.summary,
-                        items: [
-                            d.reportDetails,
-                            d.funders,
-                            d.overview,
-                            d.reportSummary,
-                        ],
+                        items: [d.reportDetails, d.funders, d.overview],
                     },
                     {
                         ...d.keyChanges,
@@ -142,7 +137,10 @@ const useWizardNavigationStore = create((set, get) => ({
                         ...d.keyResults,
                         items: [d.influenceOnPolicy, d.evaluations],
                     },
-                    { ...d.reflections, items: [d.endOfGrantReflections] },
+                    {
+                        ...d.reflections,
+                        items: [d.endOfGrantReflections, d.reportSummary],
+                    },
                     d.done,
                 ];
                 break;
@@ -156,7 +154,6 @@ const useWizardNavigationStore = create((set, get) => ({
                             d.reportDetails,
                             d.funders,
                             d.overview,
-                            d.reportSummary,
                             // d.risksAndChallenges,
                         ],
                     },
@@ -164,6 +161,7 @@ const useWizardNavigationStore = create((set, get) => ({
                         ...d.keyChanges,
                         items: [d.applicants, d.collaborators],
                     },
+                    { ...d.reflections, items: [d.reportSummary] },
                     d.done,
                 ];
                 break;
@@ -174,12 +172,7 @@ const useWizardNavigationStore = create((set, get) => ({
                     d.introduction,
                     {
                         ...d.summary,
-                        items: [
-                            d.reportDetails,
-                            d.funders,
-                            d.overview,
-                            d.reportSummary,
-                        ],
+                        items: [d.reportDetails, d.funders, d.overview],
                     },
                     {
                         ...d.keyChanges,
@@ -187,7 +180,6 @@ const useWizardNavigationStore = create((set, get) => ({
                             d.applicants,
                             d.collaborators,
                             d.employeesFunded,
-                            d.goals,
                             d.activities,
                             d.indicators,
                             d.progressSoFar,
@@ -198,6 +190,8 @@ const useWizardNavigationStore = create((set, get) => ({
                         ...d.keyResults,
                         items: [d.influenceOnPolicy, d.evaluations],
                     },
+
+                    { ...d.reflections, items: [d.reportSummary] },
                     d.done,
                 ];
                 break;
