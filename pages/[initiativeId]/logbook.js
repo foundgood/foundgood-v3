@@ -91,7 +91,7 @@ const LogbookComponent = ({ pageProps }) => {
             {initiative?.Id && (
                 <div className="animate-fade-in">
                     <SectionWrapper>
-                        <div className="flex justify-between mt-24 mr-48 md:mr-0">
+                        <div className="flex justify-between mr-48 md:mr-0">
                             <h1 className="pointer-events-none t-h1">
                                 {label('custom.FA_MenuLogbook')}
                             </h1>

@@ -51,7 +51,6 @@ const TabNavigationComponent = () => {
             setMenuActive(false);
         }
     };
-    const testActive = true;
 
     return (
         <>
@@ -69,7 +68,6 @@ const TabNavigationComponent = () => {
                                         'flex flex-col px-16 pb-16 pt-[14px] mt-4 items-start text-blue-300 hover:text-blue-200 transition-default',
                                         {
                                             'bg-blue-20 rounded-8': menuActive,
-                                            // 'text-blue-100 border-t-2 border-blue-100': testActive,
                                         },
                                     ])}>
                                     <button
@@ -88,7 +86,7 @@ const TabNavigationComponent = () => {
                                             'transition-default flex flex-col',
                                             {
                                                 'opacity-100 pointer-events-auto': menuActive,
-                                                'opacity-0 pointer-events-none': !menuActive,
+                                                'hidden opacity-0 pointer-events-none': !menuActive,
                                             },
                                         ])}>
                                         {item.subItems.map((subItem, i) => (
