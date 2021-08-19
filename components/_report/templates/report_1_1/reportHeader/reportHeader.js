@@ -5,11 +5,17 @@ import React, { useState, useEffect } from 'react';
 import t from 'prop-types';
 import Image from 'next/image';
 
+// Utilities
+import { useMetadata } from 'utilities/hooks';
+
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 
 const ReportHeaderComponent = ({ initiative, report, constants }) => {
     const [mainApplicant, setMainApplicant] = useState();
+
+    // Hook: Metadata
+    const { label } = useMetadata();
 
     useEffect(() => {
         // Report main applicant
