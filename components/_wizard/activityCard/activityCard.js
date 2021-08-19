@@ -97,7 +97,9 @@ const ActivityCard = ({
                     {tags && tags.length > 0 && (
                         <>
                             <div className="mt-8 t-caption-bold">
-                                {labelTodo('Success indicators')}
+                                {label(
+                                    'objects.initiativeActivity.Things_To_Do_Description__c'
+                                )}
                             </div>
                             <div className="flex flex-col items-start">
                                 {tags.map((tag, index) => (
@@ -113,7 +115,9 @@ const ActivityCard = ({
                     {locations && (
                         <>
                             <div className="mt-16 t-caption-bold">
-                                {labelTodo('Locations')}
+                                {label(
+                                    'objects.initiativeActivity.Initiative_Location__c'
+                                )}
                             </div>
                             <ul>
                                 {locations.map((location, index) => (
@@ -129,7 +133,7 @@ const ActivityCard = ({
                     {goals && goals.length > 0 && (
                         <>
                             <div className="mt-16 t-caption-bold">
-                                {labelTodo('Related goals')}
+                                {label('objects.initiativeGoal.Goal__c')}
                             </div>
                             <div className="flex flex-col items-start">
                                 {goals.map((goal, index) => (
