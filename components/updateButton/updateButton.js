@@ -79,6 +79,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
                     ? true
                     : false
                 : true);
+
         setCanUpdate(canUpdate);
     }, []);
 

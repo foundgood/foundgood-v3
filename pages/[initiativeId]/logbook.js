@@ -14,6 +14,7 @@ import Button from 'components/button';
 import Preloader from 'components/preloader';
 import SectionEmpty from 'components/sectionEmpty';
 import Footer from 'components/_layout/footer';
+import UpdateButton from 'components/updateButton';
 import TextCard from 'components/_logbook/textCard';
 import ImageCard from 'components/_logbook/imageCard';
 import VideoCard from 'components/_logbook/videoCard';
@@ -90,15 +91,15 @@ const LogbookComponent = ({ pageProps }) => {
             {initiative?.Id && (
                 <div className="animate-fade-in">
                     <SectionWrapper>
-                        <div className="flex justify-between mr-48 md:mr-0">
-                            <h1 className="t-h1">
+                        <div className="flex justify-between mt-24 mr-48 md:mr-0">
+                            <h1 className="pointer-events-none t-h1">
                                 {label('custom.FA_MenuLogbook')}
                             </h1>
-                            {/*
-                            <Button variant="primary" theme="teal">
-                                {label('custom.FA_ButtonUpdate')}
-                            </Button>
-                            */}
+                            <UpdateButton
+                                mode="initiative"
+                                baseUrl="logbook-entry"
+                                variant="primary"
+                            />
                         </div>
                     </SectionWrapper>
                     {logs.map((item, index) => {
