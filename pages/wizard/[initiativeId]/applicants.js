@@ -279,15 +279,22 @@ const ApplicantsComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {MODE === CONTEXTS.REPORT && (
-                    <NoReflections
-                        onClick={submitNoReflections}
-                        reflectionItems={reportDetailsItems.map(
-                            item => item.Description__c
-                        )}
-                        reflecting={reflecting}
-                    />
-                )}
+                {MODE === CONTEXTS.REPORT &&
+                    Object.values(
+                        initiative._collaborators
+                    ).filter(collaborator =>
+                        CONSTANTS.TYPES.APPLICANTS_ALL.includes(
+                            collaborator.Type__c
+                        )
+                    ).length > 0 && (
+                        <NoReflections
+                            onClick={submitNoReflections}
+                            reflectionItems={reportDetailsItems.map(
+                                item => item.Description__c
+                            )}
+                            reflecting={reflecting}
+                        />
+                    )}
                 {Object.keys(initiative._collaborators).map(collaboratorKey => {
                     const collaborator =
                         initiative._collaborators[collaboratorKey];

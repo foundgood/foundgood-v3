@@ -340,15 +340,20 @@ const ActivitiesComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {MODE === CONTEXTS.REPORT && (
-                    <NoReflections
-                        onClick={submitNoReflections}
-                        reflectionItems={reportDetailsItems.map(
-                            item => item.Description__c
-                        )}
-                        reflecting={reflecting}
-                    />
-                )}
+                {MODE === CONTEXTS.REPORT &&
+                    Object.values(initiative._activities).filter(
+                        activity =>
+                            activity.Activity_Type__c ===
+                            CONSTANTS.TYPES.ACTIVITY_INTERVENTION
+                    ).length > 0 && (
+                        <NoReflections
+                            onClick={submitNoReflections}
+                            reflectionItems={reportDetailsItems.map(
+                                item => item.Description__c
+                            )}
+                            reflecting={reflecting}
+                        />
+                    )}
                 {Object.keys(initiative?._activities)
                     .filter(activityKey => {
                         const activity = initiative?._activities[activityKey];

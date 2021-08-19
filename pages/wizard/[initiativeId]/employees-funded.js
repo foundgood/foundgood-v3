@@ -251,13 +251,16 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {MODE === CONTEXTS.REPORT && (
-                    <NoReflections
-                        onClick={submitNoReflections}
-                        reflectionItems={[currentReflection?.Description__c]}
-                        reflecting={reflecting}
-                    />
-                )}
+                {MODE === CONTEXTS.REPORT &&
+                    Object.values(initiative._employeesFunded).length > 0 && (
+                        <NoReflections
+                            onClick={submitNoReflections}
+                            reflectionItems={[
+                                currentReflection?.Description__c,
+                            ]}
+                            reflecting={reflecting}
+                        />
+                    )}
                 {MODE === CONTEXTS.REPORT && (
                     <Reflection
                         name="Employees_Funded_Overview"

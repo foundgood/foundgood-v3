@@ -274,15 +274,16 @@ const FundersComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {MODE === CONTEXTS.REPORT && (
-                    <NoReflections
-                        onClick={submitNoReflections}
-                        reflectionItems={reportDetailsItems.map(
-                            item => item.Description__c
-                        )}
-                        reflecting={reflecting}
-                    />
-                )}
+                {MODE === CONTEXTS.REPORT &&
+                    Object.values(initiative?._funders).length > 0 && (
+                        <NoReflections
+                            onClick={submitNoReflections}
+                            reflectionItems={reportDetailsItems.map(
+                                item => item.Description__c
+                            )}
+                            reflecting={reflecting}
+                        />
+                    )}
                 {Object.keys(initiative?._funders).map(funderKey => {
                     const funder = initiative?._funders[funderKey];
                     const reflection = currentReportDetails.filter(
