@@ -72,7 +72,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                 await updateActivitySuccessMetrics(
                     Object.keys(formData).filter(key => formData[key])
                 );
-            }, 200);
+            }, 1000);
         } catch (error) {
             console.warn(error);
         }

@@ -349,6 +349,8 @@ const useInitiativeDataStore = create((set, get) => ({
         const data = await sfQuery(
             queries.initiativeActivitySuccessMetric.getMultiple(ids)
         );
+
+        console.log({ data });
         if (data) {
             set(state => ({
                 initiative: {
