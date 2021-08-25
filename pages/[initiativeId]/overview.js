@@ -31,7 +31,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, valueSet } = useMetadata();
+    const { label, valueSet, getValueLabel } = useMetadata();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -194,10 +194,6 @@ const ProjectComponent = ({ pageProps }) => {
                     const totalAmount = Object.values(
                         initiative._funders
                     ).reduce((total, funder) => {
-                        console.log(
-                            'CurrencyIsoCode: ',
-                            funder.CurrencyIsoCode
-                        );
                         return total + funder.Amount__c;
                     }, 0);
                     setTotalAmount(totalAmount);
@@ -495,7 +491,6 @@ const ProjectComponent = ({ pageProps }) => {
                                         <div
                                             key={`f-${index}`}
                                             className="flex pt-16 pb-16 border-t-2 border-amber-10">
-                                            {console.log(item)}
                                             <div className="w-full t-h6">
                                                 {item.Account__r.Name}
                                             </div>
@@ -543,7 +538,11 @@ const ProjectComponent = ({ pageProps }) => {
                                 const title =
                                     item.Type__c == 'Custom'
                                         ? item.Goal__c
-                                        : item.Funder_Objective__c;
+                                        : getValueLabel(
+                                              'initiativeGoal.Funder_Objective__c',
+                                              item.Funder_Objective__c,
+                                              true
+                                          );
 
                                 return (
                                     <TextCard

@@ -103,6 +103,26 @@ const useMetadata = () => {
         return [];
     }
 
+    function getValueLabel(path, value, controlled = false) {
+        log();
+        let valuesArray;
+        if (controlled) {
+            valuesArray = Object.values(
+                _get(
+                    metadata.valueSets,
+                    `${locale}.${path}.controlledValues`,
+                    {}
+                )
+            ).reduce((acc, values) => [...acc, ...values], []);
+        } else {
+            valuesArray = _get(metadata.valueSets, `${locale}.${path}`, {
+                values: [],
+            }).values;
+        }
+
+        return valuesArray.filter(v => v.fullName === value)[0]?.label ?? 'N/A';
+    }
+
     function labelTodo(label) {
         return label;
     }
@@ -119,6 +139,7 @@ const useMetadata = () => {
         helpText,
         log,
         controlledValueSet,
+        getValueLabel,
     };
 };
 

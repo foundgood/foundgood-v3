@@ -16,7 +16,7 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportGoalsComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label, getValueLabel } = useMetadata();
 
     const [isNnfLeadFunder, setIsNnfLeadFunder] = useState(false);
 
@@ -54,7 +54,11 @@ const ReportGoalsComponent = ({ initiative, report, constants }) => {
                     const title =
                         item.Type__c == constants.TYPES.GOAL_CUSTOM
                             ? item.Goal__c
-                            : item.Funder_Objective__c;
+                            : getValueLabel(
+                                  'initiativeGoal.Funder_Objective__c',
+                                  item.Funder_Objective__c,
+                                  true
+                              );
                     return (
                         <TextCard
                             key={`g-${index}`}
