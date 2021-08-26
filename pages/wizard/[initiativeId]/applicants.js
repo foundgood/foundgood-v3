@@ -366,10 +366,12 @@ const ApplicantsComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={
-                            accountGrantees?.records?.map(item => ({
-                                label: item.Name,
-                                value: item.Id,
-                            })) ?? []
+                            accountGrantees?.records
+                                ?.sort((a, b) => a.Name.localeCompare(b.Name))
+                                .map(item => ({
+                                    label: item.Name,
+                                    value: item.Id,
+                                })) ?? []
                         }
                         required
                         controller={control}
