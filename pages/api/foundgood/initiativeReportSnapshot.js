@@ -20,12 +20,12 @@ export default async (req, res) => {
             `${process.env.API_USER}:${process.env.API_PASSWORD}`,
         login: [process.env.API_USER, process.env.API_PASSWORD],
         validUser,
-        body,
+        body: JSON.parse(body),
     });
 
     console.log('check 1', {
         method,
-        body,
+        body: JSON.parse(body),
     });
 
     console.log('check 1.5', {
@@ -34,11 +34,11 @@ export default async (req, res) => {
     });
 
     console.log('check 2', {
-        a: Array.isArray(body?.ids),
+        a: Array.isArray(JSON.parse(body)?.ids),
     });
 
     console.log('check 3', {
-        b: body?.ids?.length > 0,
+        b: JSON.parse(body)?.ids?.length > 0,
     });
 
     try {
