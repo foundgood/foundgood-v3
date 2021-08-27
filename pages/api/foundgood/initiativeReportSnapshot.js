@@ -13,7 +13,14 @@ export default async (req, res) => {
         atob(req.headers.authorization.replace('Basic ', '')) ===
             `${process.env.API_USER}:${process.env.API_PASSWORD}`;
 
-    console.log({ validUser });
+    console.log({
+        re: req?.headers?.authorization ?? 'N/A',
+        at:
+            atob(req.headers.authorization.replace('Basic ', '')) ===
+            `${process.env.API_USER}:${process.env.API_PASSWORD}`,
+        login: [process.env.API_USER, process.env.API_PASSWORD],
+        validUser,
+    });
 
     try {
         // Chcek if valid user
