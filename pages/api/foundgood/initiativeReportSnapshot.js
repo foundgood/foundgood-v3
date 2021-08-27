@@ -53,7 +53,7 @@ export default async (req, res) => {
                 process.env.SYSTEM_LOGIN_PASSWORD
             );
 
-            console.log({ sfLoginData });
+            // console.log({ sfLoginData });
 
             // Reports object
             let initiatives;
@@ -205,7 +205,7 @@ export default async (req, res) => {
                 {}
             );
 
-            console.log({ initiatives });
+            // console.log({ initiatives });
 
             // Create array of promises based on results to send to S3
             const s3DataPromises = Object.values(initiatives)
@@ -225,12 +225,12 @@ export default async (req, res) => {
                 })
                 .flat();
 
-            console.log({ s3DataPromises });
+            // console.log({ s3DataPromises });
 
             // Resolve S3 promises to get URLs
             const s3Data = await Promise.all(s3DataPromises);
 
-            console.log({ s3Data });
+            // console.log({ s3Data });
 
             // Map data from s3 to fit SalesForce custom endpoint
             const exportResults = s3Data.map(item => ({
@@ -241,7 +241,7 @@ export default async (req, res) => {
                 exportedReportUrl: item.Location,
             }));
 
-            console.log({ exportResults });
+            // console.log({ exportResults });
 
             // Send to SalesForce custom endpoint
             const { data } = await salesForce.custom.setExportResults(
@@ -250,7 +250,7 @@ export default async (req, res) => {
                 sfLoginData.instance_url
             );
 
-            console.log({ data });
+            // console.log({ data });
 
             // Logout from SalesForce
             await salesForce.user.logout(sfLoginData.access_token);
