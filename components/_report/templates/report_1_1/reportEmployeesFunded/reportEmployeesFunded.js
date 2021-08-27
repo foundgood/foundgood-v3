@@ -75,7 +75,7 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
             }, {});
             setEmployeeGroups(employeeGroups);
         } else {
-            setEmployeesFundedReflection([]);
+            setEmployeeGroups([]);
         }
     }, [initiative, report.Id]);
 
