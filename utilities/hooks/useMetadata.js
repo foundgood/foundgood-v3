@@ -104,7 +104,6 @@ const useMetadata = () => {
     }
 
     function getValueLabel(path, value, controlled = false) {
-        log();
         let valuesArray;
         if (controlled) {
             valuesArray = Object.values(

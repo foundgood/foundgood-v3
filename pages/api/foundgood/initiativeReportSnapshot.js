@@ -22,32 +22,32 @@ export default async (req, res) => {
         validUser,
     });
 
+    console.log('check 1', {
+        method,
+        body,
+        a: Array.isArray(body.ids),
+        b: body.ids.length > 0,
+    });
+
+    console.log('check 1.5', {
+        user: process.env.SYSTEM_LOGIN_USERNAME,
+        pw: process.env.SYSTEM_LOGIN_PASSWORD,
+    });
+
+    console.log('check 2', {
+        a: Array.isArray(body.ids),
+    });
+
+    console.log('check 3', {
+        b: body.ids.length > 0,
+    });
+
     try {
         // Chcek if valid user
         if (!validUser) {
             res.status(401).send();
             return;
         }
-
-        console.log('check 1', {
-            method,
-            body,
-            a: Array.isArray(body.ids),
-            b: body.ids.length > 0,
-        });
-
-        console.log('check 1.5', {
-            user: process.env.SYSTEM_LOGIN_USERNAME,
-            pw: process.env.SYSTEM_LOGIN_PASSWORD,
-        });
-
-        console.log('check 2', {
-            a: Array.isArray(body.ids),
-        });
-
-        console.log('check 3', {
-            b: body.ids.length > 0,
-        });
 
         // Check for authentication, method and content
         if (

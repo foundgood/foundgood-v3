@@ -33,6 +33,8 @@ const ReportComponent = () => {
 
     // Effect: Populate report and reportDetails based on id
     useEffect(() => {
+        console.log({ REPORT_ID });
+        console.log(getReport(REPORT_ID));
         populateReport(REPORT_ID);
         populateReportDetails(REPORT_ID);
     }, [REPORT_ID]);
@@ -47,7 +49,7 @@ const ReportComponent = () => {
                 getReport(REPORT_ID)?.Report_Viewer_Version__c ?? 'default'
             );
         }
-    }, [getReport(REPORT_ID)]);
+    }, [REPORT_ID]);
 
     // Fetcher stand by for json data if report version number matches
     const { data: initiativeFromJson } = useSWR(
