@@ -23,7 +23,7 @@ const ReportHeaderComponent = ({ initiative, report, constants }) => {
             item => item.Type__c === constants.TYPES.MAIN_COLLABORATOR
         );
         setMainApplicant(applicant[0]?.Account__r?.Name);
-    }, []);
+    }, [initiative]);
 
     return (
         <SectionWrapper>

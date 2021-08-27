@@ -57,8 +57,6 @@ const ReportComponent = ({ pageProps }) => {
             );
 
             setControlledAccountFoundations(test);
-
-            console.log(test);
         }
     }, [accountFoundations, reportsData]);
 

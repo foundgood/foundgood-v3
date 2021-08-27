@@ -93,8 +93,13 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                 });
                 setDevelopmentGoals(developmentGoals);
             }
+        } else {
+            setReportFunder(null);
+            setCoFunders([]);
+            setCoApplicants([]);
+            setDevelopmentGoals(null);
         }
-    }, []);
+    }, [initiative]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuOverview'))}>

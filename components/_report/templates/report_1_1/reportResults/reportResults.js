@@ -119,6 +119,8 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                     return returnObj;
                 });
             setResults(results);
+        } else {
+            setResults([]);
         }
     }, [initiative]);
 

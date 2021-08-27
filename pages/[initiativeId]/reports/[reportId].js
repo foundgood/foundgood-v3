@@ -33,8 +33,6 @@ const ReportComponent = () => {
 
     // Effect: Populate report and reportDetails based on id
     useEffect(() => {
-        console.log({ REPORT_ID });
-        console.log(getReport(REPORT_ID));
         populateReport(REPORT_ID);
         populateReportDetails(REPORT_ID);
     }, [REPORT_ID]);

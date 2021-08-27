@@ -61,6 +61,8 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
                     constants.TYPES.COLLABORATORS.includes(item.Type__c)
                 );
             setCollaborators(collaborators);
+        } else {
+            setCollaborators([]);
         }
     }, [initiative]);
 

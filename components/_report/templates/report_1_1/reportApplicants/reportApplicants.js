@@ -62,6 +62,8 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
                         !constants.TYPES.COLLABORATORS.includes(item.Type__c)
                 );
             setApplicants(applicants);
+        } else {
+            setApplicants([]);
         }
     }, [initiative]);
 

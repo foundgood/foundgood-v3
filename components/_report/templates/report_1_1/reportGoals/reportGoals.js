@@ -28,7 +28,7 @@ const ReportGoalsComponent = ({ initiative, report, constants }) => {
         );
         const isNnfLeadFunder = nnfLeadFunder.length > 0 ? true : false;
         setIsNnfLeadFunder(isNnfLeadFunder);
-    }, []);
+    }, [initiative]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuGoals'))}>

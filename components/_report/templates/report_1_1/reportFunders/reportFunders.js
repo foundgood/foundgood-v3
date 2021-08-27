@@ -155,6 +155,8 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                     .filter(item => item);
                 setFunders(funders);
             }
+        } else {
+            setFunders([]);
         }
     }, [initiative]);
 
