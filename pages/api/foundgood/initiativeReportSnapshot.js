@@ -41,6 +41,14 @@ export default async (req, res) => {
             pw: process.env.SYSTEM_LOGIN_PASSWORD,
         });
 
+        console.log('check 2', {
+            a: Array.isArray(body.ids),
+        });
+
+        console.log('check 3', {
+            b: body.ids.length > 0,
+        });
+
         // Check for authentication, method and content
         if (
             method === 'POST' &&
