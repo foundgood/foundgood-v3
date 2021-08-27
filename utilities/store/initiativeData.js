@@ -419,7 +419,6 @@ const useInitiativeDataStore = create((set, get) => ({
                     initiative: {
                         ...state.initiative,
                         _reports: {
-                            ...state.initiative._reports,
                             [id]: data,
                         },
                     },
