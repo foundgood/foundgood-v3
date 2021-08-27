@@ -76,8 +76,10 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                             // let label;
                             // let groupTitle;
                             // Not all indicators have a "Target"
+
+                            // ? `${item.Current_Status__c} / ${item.Target__c}` // Removed until wizard section is built
                             const value = item.Target__c
-                                ? `${item.Current_Status__c} / ${item.Target__c}`
+                                ? `${item.Current_Status__c}`
                                 : item.Current_Status__c;
 
                             if (

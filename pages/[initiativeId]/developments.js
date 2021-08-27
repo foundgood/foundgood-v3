@@ -71,8 +71,9 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                 if (
                                     activity.Id == item.Initiative_Activity__c
                                 ) {
+                                    // ? `${item.Current_Status__c} / ${item.Target__c}` // Removed until wizard section is built
                                     const value = item.Target__c
-                                        ? `${item.Current_Status__c} / ${item.Target__c}`
+                                        ? `${item.Current_Status__c}`
                                         : item.Current_Status__c;
                                     if (
                                         item.Type__c ===
