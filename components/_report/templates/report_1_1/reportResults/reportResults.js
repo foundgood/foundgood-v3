@@ -122,7 +122,7 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
         } else {
             setResults([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuSharing'))}>

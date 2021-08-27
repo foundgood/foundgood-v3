@@ -64,7 +64,7 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
         } else {
             setCollaborators([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <SectionWrapper

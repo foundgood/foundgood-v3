@@ -65,7 +65,7 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
         } else {
             setApplicants([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <SectionWrapper

@@ -111,7 +111,7 @@ const ActivitiesComponent = ({ pageProps }) => {
         ) {
             setActivities([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <>

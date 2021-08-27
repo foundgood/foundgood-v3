@@ -49,7 +49,7 @@ const ReportEvaluationsComponent = ({ initiative, report, constants }) => {
         } else {
             setEvaluations([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <SectionWrapper

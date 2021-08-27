@@ -158,7 +158,7 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
         } else {
             setFunders([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuFunders'))}>

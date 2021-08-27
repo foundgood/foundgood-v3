@@ -77,7 +77,7 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
         } else {
             setEmployeesFundedReflection([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuEmployees'))}>

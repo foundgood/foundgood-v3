@@ -49,7 +49,7 @@ const ReportInfluencesComponent = ({ initiative, report, constants }) => {
         } else {
             setInfluences([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuInfluence'))}>
