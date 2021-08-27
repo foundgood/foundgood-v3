@@ -29,7 +29,17 @@ export default async (req, res) => {
             return;
         }
 
-        console.log('check 1', { method, body });
+        console.log('check 1', {
+            method,
+            body,
+            a: Array.isArray(body.ids),
+            b: body.ids.length > 0,
+        });
+
+        console.log('check 1.5', {
+            user: process.env.SYSTEM_LOGIN_USERNAME,
+            pw: process.env.SYSTEM_LOGIN_PASSWORD,
+        });
 
         // Check for authentication, method and content
         if (
@@ -37,12 +47,11 @@ export default async (req, res) => {
             Array.isArray(body.ids) &&
             body.ids.length > 0
         ) {
-            console.log(
-                console.log('check 2', {
-                    user: SYSTEM_LOGIN_USERNAME,
-                    pw: SYSTEM_LOGIN_PASSWORD,
-                })
-            );
+            console.log('check 2', {
+                user: process.env.SYSTEM_LOGIN_USERNAME,
+                pw: process.env.SYSTEM_LOGIN_PASSWORD,
+            });
+
             // Login to SalesForce with OAuth2
             const { data: sfLoginData } = await salesForce.user.login(
                 process.env.SYSTEM_LOGIN_USERNAME,
