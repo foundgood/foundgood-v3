@@ -14,18 +14,15 @@ export default async (req, res) => {
             `${process.env.API_USER}:${process.env.API_PASSWORD}`;
 
     console.log({
-        re: req?.headers?.authorization ?? 'N/A',
-        at:
-            atob(req.headers.authorization.replace('Basic ', '')) ===
-            `${process.env.API_USER}:${process.env.API_PASSWORD}`,
-        login: [process.env.API_USER, process.env.API_PASSWORD],
-        validUser,
-        body: JSON.parse(body),
+        body: body,
     });
 
-    console.log('check 1', {
-        method,
-        body: JSON.parse(body),
+    console.log({
+        bodyids: body.ids,
+    });
+
+    console.log({
+        bodyparse: JSON.parse(body),
     });
 
     console.log('check 1.5', {
@@ -34,11 +31,11 @@ export default async (req, res) => {
     });
 
     console.log('check 2', {
-        a: Array.isArray(JSON.parse(body)?.ids),
+        a: Array.isArray(body.ids),
     });
 
     console.log('check 3', {
-        b: JSON.parse(body)?.ids?.length > 0,
+        b: body.ids.length > 0,
     });
 
     try {
