@@ -193,7 +193,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
             setActivities([]);
             setResults([]);
         }
-    }, [initiative, report.Id]);
+    }, [initiative]);
 
     return (
         <>
