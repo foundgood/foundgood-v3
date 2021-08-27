@@ -18,7 +18,6 @@ import TextCard from 'components/_initiative/textCard';
 import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportActivitiesComponent = ({ initiative, report, constants }) => {
-    console.log({ report: report.Id });
     // Hook: Metadata
     const { labelTodo, label } = useMetadata();
 
@@ -170,7 +169,7 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
         } else {
             setActivities([]);
         }
-    }, [initiative]);
+    }, [initiative, report.Id]);
 
     return (
         <SectionWrapper
