@@ -22,20 +22,11 @@ export default async (req, res) => {
     });
 
     console.log({
-        bodyparse: JSON.parse(body),
+        bodyidslength: body.ids.length,
     });
 
-    console.log('check 1.5', {
-        user: process.env.SYSTEM_LOGIN_USERNAME,
-        pw: process.env.SYSTEM_LOGIN_PASSWORD,
-    });
-
-    console.log('check 2', {
-        a: Array.isArray(body.ids),
-    });
-
-    console.log('check 3', {
-        b: body.ids.length > 0,
+    console.log({
+        bodyidsarray: Array.isArray(body.ids),
     });
 
     try {
