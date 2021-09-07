@@ -127,23 +127,30 @@ const ReportsComponent = ({ pageProps }) => {
                                 </div>
 
                                 <div className="flex flex-wrap">
-                                    {item.reports.map((item, index) => {
-                                        const headline =
-                                            item.Report_Viewer_Version__c == '1'
-                                                ? 'Report'
-                                                : item.Report_Type__c;
-                                        const date = item.Due_Date__c;
-                                        return (
-                                            <ReportCard
-                                                key={`r-${index}`}
-                                                id={item.Id}
-                                                useBackground={false}
-                                                headline={headline}
-                                                date={date}
-                                                status={item.Status__c}
-                                            />
-                                        );
-                                    })}
+                                    {item.reports
+                                        .sort(
+                                            (a, b) =>
+                                                new Date(a.Due_Date__c) -
+                                                new Date(b.Due_Date__c)
+                                        )
+                                        .map((item, index) => {
+                                            const headline =
+                                                item.Report_Viewer_Version__c ==
+                                                '1'
+                                                    ? 'Report'
+                                                    : item.Report_Type__c;
+                                            const date = item.Due_Date__c;
+                                            return (
+                                                <ReportCard
+                                                    key={`r-${index}`}
+                                                    id={item.Id}
+                                                    useBackground={false}
+                                                    headline={headline}
+                                                    date={date}
+                                                    status={item.Status__c}
+                                                />
+                                            );
+                                        })}
                                 </div>
                             </SectionWrapper>
                         ))}
