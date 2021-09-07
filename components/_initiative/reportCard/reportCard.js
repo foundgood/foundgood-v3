@@ -5,6 +5,7 @@ import React from 'react';
 import Link from 'next/link';
 import cc from 'classcat';
 import t from 'prop-types';
+import dayjs from 'dayjs';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
@@ -54,7 +55,7 @@ const ReportCardComponent = ({
                     {status == 'Published'
                         ? label('custom.FA_InitiativeViewReportSubmitted')
                         : label('custom.FA_InitiativeViewReportDue')}{' '}
-                    {date}
+                    {dayjs(date).format('DD.MM.YYYY')}
                 </div>
                 {/* <div className="self-end mt-16">
                     <Button

@@ -147,9 +147,13 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         {label('custom.FA_ReportViewGrantStartEndDate')}
                     </div>
                     <h3 className="t-h5">
-                        {initiative.Grant_Start_Date__c}
+                        {dayjs(initiative.Grant_Start_Date__c).format(
+                            'DD.MM.YYYY'
+                        )}
                         {' - '}
-                        {initiative.Grant_End_Date__c}
+                        {dayjs(initiative.Grant_End_Date__c).format(
+                            'DD.MM.YYYY'
+                        )}
                     </h3>
                     <div className="mt-16 t-sh6 text-blue-60">
                         {label('custom.FA_InitiativeViewInitiativeLocation')}

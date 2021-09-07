@@ -332,7 +332,13 @@ const ProjectComponent = ({ pageProps }) => {
                                         </h4>
                                         {initiativeData.Grant_Start_Date__c && (
                                             <h3 className="t-h5">
-                                                {`${initiativeData.Grant_Start_Date__c} - ${initiativeData.Grant_End_Date__c}`}
+                                                {`${dayjs(
+                                                    initiativeData.Grant_Start_Date__c
+                                                ).format(
+                                                    'DD.MM.YYYY'
+                                                )} - ${dayjs(
+                                                    initiativeData.Grant_End_Date__c
+                                                ).format('DD.MM.YYYY')}`}
                                             </h3>
                                         )}
                                     </div>
@@ -509,9 +515,13 @@ const ProjectComponent = ({ pageProps }) => {
                                                 {item.Application_Id__c}
                                             </div>
                                             <div className="w-full t-caption">
-                                                {item.Grant_Start_Date__c}
+                                                {dayjs(
+                                                    item.Grant_Start_Date__c
+                                                ).format('DD.MM.YYYY')}
                                                 {' - '}
-                                                {item.Grant_End_Date__c}
+                                                {dayjs(
+                                                    item.Grant_End_Date__c
+                                                ).format('DD.MM.YYYY')}
                                             </div>
                                         </div>
                                     )

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 // Packages
 import t from 'prop-types';
+import dayjs from 'dayjs';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
@@ -109,7 +110,11 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
                                         label: label(
                                             'custom.FA_ReportViewCollaborationPeriod'
                                         ),
-                                        text: `${item.Start_Date__c} - ${item.End_Date__c}`,
+                                        text: `${dayjs(
+                                            item.Start_Date__c
+                                        ).format('DD.MM.YYYY')} - ${dayjs(
+                                            item.End_Date__c
+                                        ).format('DD.MM.YYYY')}`,
                                     },
                                 ]}
                             />

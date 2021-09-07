@@ -88,7 +88,7 @@ const LogbookCardsComponent = ({
                                 )}
                                 <div className="mt-12 text-teal-60 t-sh6">
                                     {dayjs(item.CreatedDate).format(
-                                        'DD/MM/YYYY, HH:mm'
+                                        'DD.MM.YYYY, HH:mm'
                                     )}
                                 </div>
                                 <div className="self-end mt-16">
