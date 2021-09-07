@@ -34,14 +34,13 @@ const ReportRowComponent = ({
                     </div>
 
                     <div className="flex flex-col ml-16">
-                        <div className="t-sh6">{type}</div>
+                        S<div className="t-sh6">{type}</div>
                         <div className="mt-8 t-h6 text-blue-60">{grantee}</div>
                         <div className="mt-4 t-h5">{headline}</div>
-                        {funderName && funderId && (
+                        {funderName && (
                             <div className="mt-8 t-sh6 text-blue-60">
                                 {funderName}
-                                {' • '}
-                                {funderId}
+                                {funderId && ` • ${funderId}`}
                             </div>
                         )}
                     </div>
