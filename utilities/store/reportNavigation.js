@@ -37,7 +37,7 @@ const useReportNavigationStore = create((set, get) => ({
                         items: [
                             // d.reportDetails,
                             d.overview,
-                            d.goals, // Moved from Key changes
+                            // d.goals, // Moved from Key changes
                             d.reportSummary,
                         ],
                     },
@@ -74,7 +74,7 @@ const useReportNavigationStore = create((set, get) => ({
                         items: [
                             // d.reportDetails,
                             d.overview,
-                            d.goals, // Moved from Key changes
+                            // d.goals, // Moved from Key changes
                             d.reportSummary,
                         ],
                     },

@@ -15,7 +15,7 @@ import UpdateButton from 'components/updateButton';
 
 const ReportOverviewComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label, valueSet } = useMetadata();
+    const { label, valueSet, getValueLabel } = useMetadata();
 
     const [developmentGoals, setDevelopmentGoals] = useState();
     const [coApplicants, setCoApplicants] = useState([]);
@@ -102,6 +102,12 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
         }
     }, [initiative]);
 
+    // Funder objective
+    const funderObjective =
+        Object.values(initiative?._goals).find(
+            item => item.Type__c === constants.TYPES.GOAL_PREDEFINED
+        ) || {};
+
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuOverview'))}>
             <SectionWrapper>
@@ -115,11 +121,23 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             </SectionWrapper>
             {/* Information cards */}
             <div className="inline-grid items-start w-full grid-cols-1 md:grid-cols-2 md:gap-24">
-                <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
+                <div className="p-16 border-4 border-gray-10 rounded-8">
                     <div className="t-sh6 text-blue-60">
                         {label('custom.FA_InitiativeViewGrantGivingArea')}
                     </div>
-                    <h3 className="t-h5">{initiative.Category__c}</h3>
+                    <h3 className="mt-20 mb-16 t-h5">
+                        {initiative.Category__c}
+                    </h3>
+                    <div className="t-sh6 text-blue-60">
+                        {label('objects.initiativeGoal.Funder_Objective__c')}
+                    </div>
+                    <h3 className="t-h5">
+                        {getValueLabel(
+                            'initiativeGoal.Funder_Objective__c',
+                            funderObjective.Funder_Objective__c,
+                            true
+                        )}
+                    </h3>
                     <div className="mt-16 t-sh6 text-blue-60">
                         {label('custom.FA_InitiativeViewSDGSs')}
                     </div>

@@ -76,11 +76,11 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     />
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
-                    <ReportGoals
+                    {/* <ReportGoals
                         initiative={initiativeData}
                         report={currentReport}
                         constants={CONSTANTS}
-                    />
+                    /> */}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Report Summary */}
                     <ReportSummary

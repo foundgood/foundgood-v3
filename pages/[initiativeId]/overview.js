@@ -258,6 +258,12 @@ const ProjectComponent = ({ pageProps }) => {
         }
     }, [initiative]);
 
+    // Funder objective
+    const funderObjective =
+        Object.values(initiative?._goals).find(
+            item => item.Type__c === CONSTANTS.TYPES.GOAL_PREDEFINED
+        ) || {};
+
     return (
         <>
             {/* Preloading - Show loading */}
@@ -323,6 +329,19 @@ const ProjectComponent = ({ pageProps }) => {
                                         </h4>
                                         <h3 className="t-h5">
                                             {initiativeData.Category__c}
+                                        </h3>
+
+                                        <h4 className="mt-16 t-sh6 text-blue-60">
+                                            {label(
+                                                'objects.initiativeGoal.Funder_Objective__c'
+                                            )}
+                                        </h4>
+                                        <h3 className="t-h5">
+                                            {getValueLabel(
+                                                'initiativeGoal.Funder_Objective__c',
+                                                funderObjective.Funder_Objective__c,
+                                                true
+                                            )}
                                         </h3>
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
