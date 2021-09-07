@@ -27,7 +27,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label, getValueLabel } = useMetadata();
 
     const [activities, setActivities] = useState();
 
@@ -150,7 +150,10 @@ const ActivitiesComponent = ({ pageProps }) => {
                                                 label: label(
                                                     'custom.FA_InitiativeViewActivityLocation'
                                                 ),
-                                                text: item.location,
+                                                text: getValueLabel(
+                                                    'initiativeActivity.Initiative_Location__c',
+                                                    item.location
+                                                ),
                                             },
                                         ]}
                                     />

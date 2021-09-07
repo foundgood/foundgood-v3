@@ -19,7 +19,7 @@ import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportActivitiesComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { labelTodo, label, getValueLabel } = useMetadata();
 
     const [activities, setActivities] = useState([]);
 
@@ -208,7 +208,10 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                         label: label(
                                             'custom.FA_InitiativeViewActivityLocation'
                                         ),
-                                        text: item.location,
+                                        text: getValueLabel(
+                                            'initiativeActivity.Initiative_Location__c',
+                                            item.location
+                                        ),
                                     },
                                 ]}
                             />
