@@ -34,7 +34,7 @@ const ReportRowComponent = ({
                     </div>
 
                     <div className="flex flex-col ml-16">
-                        S<div className="t-sh6">{type}</div>
+                        <div className="t-sh6">{type}</div>
                         <div className="mt-8 t-h6 text-blue-60">{grantee}</div>
                         <div className="mt-4 t-h5">{headline}</div>
                         {funderName && (

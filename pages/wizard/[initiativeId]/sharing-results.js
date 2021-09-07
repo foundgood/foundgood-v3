@@ -48,6 +48,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     const {
         handleSubmit: handleSubmitReflections,
         control: controlReflections,
+        setValue: setValueReflections,
     } = useForm();
     const { isDirty } = useFormState({ control });
     const disseminationTypeSelect = useWatch({
@@ -143,6 +144,14 @@ const SharingResultsComponent = ({ pageProps }) => {
 
             // Clear content in form
             reset();
+
+            // Fold out shit when done if report
+            // setValue: setValueReflections,
+            setTimeout(() => {
+                if (MODE === CONTEXTS.REPORT) {
+                    setValueReflections(`${activityId}-selector`, true);
+                }
+            }, 500);
         } catch (error) {
             // Modal save button state
             setModalIsSaving(false);

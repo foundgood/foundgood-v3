@@ -31,7 +31,7 @@ const CollaboratorCardComponent = ({
     useEffect(() => {
         reflectAction(reflectSelected);
     }, [reflectSelected]);
-
+    console.log(`${name}-reflection`);
     return controller ? (
         <div>
             <ComponentSelectorWrapper
