@@ -20,6 +20,7 @@ const ReportCardComponent = ({
     actionCreate,
     actionUpdate,
     disableCreate,
+    disableUpdate,
 }) => {
     // Hook: Metadata
     const { label } = useMetadata();
@@ -60,12 +61,14 @@ const ReportCardComponent = ({
                                 {item.dueDate}
                             </div>
                             <div className="self-end mt-16">
-                                <Button
-                                    theme="teal"
-                                    variant="quaternary"
-                                    action={() => actionUpdate(item)}>
-                                    {label('custom.FA_Update')}
-                                </Button>
+                                {!disableUpdate && (
+                                    <Button
+                                        theme="teal"
+                                        variant="quaternary"
+                                        action={() => actionUpdate(item)}>
+                                        {label('custom.FA_Update')}
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     ))}

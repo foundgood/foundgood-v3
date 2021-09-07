@@ -163,6 +163,10 @@ const ReportScheduleComponent = ({ pageProps }) => {
                                     funder.Account__c ===
                                     CONSTANTS.IDS.NNF_ACCOUNT
                                 }
+                                disableUpdate={
+                                    funder.Account__c ===
+                                    CONSTANTS.IDS.NNF_ACCOUNT
+                                }
                                 actionCreate={() => {
                                     setModalIsOpen(true);
                                     setFunder(funder);
