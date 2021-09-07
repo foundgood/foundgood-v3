@@ -274,7 +274,7 @@ const ProjectComponent = ({ pageProps }) => {
                 <div className="animate-fade-in">
                     <SectionWrapper>
                         <h1 className="t-h1">
-                            {label('custom.FA_InitiativeViewOverviewHeading')}
+                            {label('custom.FA_MenuContext')}
                         </h1>
                     </SectionWrapper>
                     {/* Overview */}
