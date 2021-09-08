@@ -47,7 +47,7 @@ const ReportComponent = () => {
                 getReport(REPORT_ID)?.Report_Viewer_Version__c ?? 'default'
             );
         }
-    }, [REPORT_ID]);
+    }, [REPORT_ID, getReport(REPORT_ID)?.Report_Viewer_Version__c]);
 
     // Fetcher stand by for json data if report version number matches
     const { data: initiativeFromJson } = useSWR(
