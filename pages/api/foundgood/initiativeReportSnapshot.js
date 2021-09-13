@@ -251,7 +251,11 @@ export default async (req, res) => {
             await salesForce.user.logout(sfLoginData.access_token);
 
             // res.status(200).json(exportResults);
-            res.status(200).json({ Status: 'Complete' }); // For when it's done
+            res.status(200).json({
+                Status: 'Complete',
+                sf: data,
+                results: exportResults,
+            }); // For when it's done
 
             return;
         }
