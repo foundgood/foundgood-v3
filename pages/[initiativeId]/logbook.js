@@ -106,17 +106,7 @@ const LogbookComponent = ({ pageProps }) => {
                         </div>
                     </SectionWrapper>
                     {logs.map((item, index) => {
-                        if (item.type == 'Text') {
-                            return (
-                                <TextCard
-                                    key={index}
-                                    hasBackground={true}
-                                    summary={item.summary}
-                                    body={item.description}
-                                    date={`${item.date} - ${item.time}`}
-                                />
-                            );
-                        } else if (item.type == 'Picture') {
+                        if (item.type == 'Picture') {
                             return (
                                 <ImageCard
                                     key={index}
@@ -127,7 +117,7 @@ const LogbookComponent = ({ pageProps }) => {
                                     image={item.url}
                                 />
                             );
-                        } else if (item.type == 'Video') {
+                        } else if (item.type == 'Video' && item.url) {
                             return (
                                 <VideoCard
                                     key={index}
@@ -151,7 +141,15 @@ const LogbookComponent = ({ pageProps }) => {
                                 />
                             );
                         } else {
-                            <p>Missing card</p>;
+                            return (
+                                <TextCard
+                                    key={index}
+                                    hasBackground={true}
+                                    summary={item.summary}
+                                    body={item.description}
+                                    date={`${item.date} - ${item.time}`}
+                                />
+                            );
                         }
                     })}
 

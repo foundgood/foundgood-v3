@@ -264,7 +264,7 @@ const LogbookComponent = ({ pageProps }) => {
 
     // We set an update id when updating and remove when adding
     const [updateId, setUpdateId] = useState(null);
-    const [updateType, setUpdateType] = useState(null);
+    const [updateType, setUpdateType] = useState('text');
 
     // Local state to handle attach loading
     const [attachLoading, setAttachLoading] = useState(false);
@@ -281,7 +281,9 @@ const LogbookComponent = ({ pageProps }) => {
         const content = Initiative_Update_Content__r?.records[0];
 
         // Update type
-        setUpdateType(content?.Type__c.toLowerCase());
+        setUpdateType(
+            content?.Type__c ? content?.Type__c.toLowerCase() : 'text'
+        );
 
         setValue('Description__c', Description__c);
         setValue('Initiative_Activity__c', Initiative_Activity__c);
