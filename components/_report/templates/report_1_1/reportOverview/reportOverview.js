@@ -108,6 +108,11 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             item => item.Type__c === constants.TYPES.GOAL_PREDEFINED
         ) || {};
 
+    // Funder
+    const funder = Object.values(initiative._funders).find(
+        funder => funder.Account__c === report.Funder_Report__r.Account__r.Id
+    );
+
     return (
         <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuOverview'))}>
             <SectionWrapper>
@@ -166,13 +171,9 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         {label('custom.FA_ReportViewGrantStartEndDate')}
                     </div>
                     <h3 className="t-h5">
-                        {dayjs(initiative.Grant_Start_Date__c).format(
-                            'DD.MM.YYYY'
-                        )}
+                        {dayjs(funder.Grant_Start_Date__c).format('DD.MM.YYYY')}
                         {' - '}
-                        {dayjs(initiative.Grant_End_Date__c).format(
-                            'DD.MM.YYYY'
-                        )}
+                        {dayjs(funder.Grant_End_Date__c).format('DD.MM.YYYY')}
                     </h3>
                     <div className="mt-16 t-sh6 text-blue-60">
                         {label('custom.FA_InitiativeViewInitiativeLocation')}

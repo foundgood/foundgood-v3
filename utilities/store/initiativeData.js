@@ -123,6 +123,8 @@ const useInitiativeDataStore = create((set, get) => ({
         }));
     },
 
+    // GETTERS
+
     getInitiativeId() {
         return get().initiative.Id;
     },
