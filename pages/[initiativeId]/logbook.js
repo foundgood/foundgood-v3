@@ -67,6 +67,7 @@ const LogbookComponent = ({ pageProps }) => {
 
                     return {
                         type: type,
+                        CreatedDate: item.CreatedDate,
                         url:
                             item.Initiative_Update_Content__r?.records[0]
                                 ?.URL__c,
@@ -76,8 +77,10 @@ const LogbookComponent = ({ pageProps }) => {
                         date: dayjs(item.LastModifiedDate).format('DD/MM/YYYY'),
                         time: dayjs(item.LastModifiedDate).format('HH:mm'),
                     };
-                });
-
+                })
+                .sort(
+                    (a, b) => new Date(b.CreatedDate) - new Date(a.CreatedDate)
+                );
             setLogs(logs);
         }
     }, [initiative]);

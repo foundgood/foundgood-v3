@@ -21,6 +21,7 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
+import PreLoader from 'components/preloader';
 import {
     InputWrapper,
     Select,
@@ -265,6 +266,9 @@ const LogbookComponent = ({ pageProps }) => {
     const [updateId, setUpdateId] = useState(null);
     const [updateType, setUpdateType] = useState(null);
 
+    // Local state to handle attach loading
+    const [attachLoading, setAttachLoading] = useState(false);
+
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
         const {
@@ -317,9 +321,9 @@ const LogbookComponent = ({ pageProps }) => {
     );
 
     // Logbook entries
-    const logbookEntries = Object.values(initiative?._initiativeUpdates).filter(
-        update => update.Type__c === CONSTANTS.TYPES.LOGBOOK_UPDATE
-    );
+    const logbookEntries = Object.values(initiative?._initiativeUpdates)
+        .filter(update => update.Type__c === CONSTANTS.TYPES.LOGBOOK_UPDATE)
+        .sort((a, b) => new Date(b.CreatedDate) - new Date(a.CreatedDate));
 
     return (
         <>
@@ -355,7 +359,7 @@ const LogbookComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('custom.FA_ButtonAddLogEntry')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                disabledSave={!isDirty || modalIsSaving || attachLoading}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <LongText
@@ -379,6 +383,7 @@ const LogbookComponent = ({ pageProps }) => {
                                 accept=".png,.jpg,.jpeg"
                                 controller={control}
                                 onClick={() => setUpdateType('picture')}
+                                setAttachLoading={setAttachLoading}
                             />
                             <Attach
                                 name="AttachVideo"
@@ -387,6 +392,7 @@ const LogbookComponent = ({ pageProps }) => {
                                 accept="video/mp4,video/x-m4v,video/*"
                                 controller={control}
                                 onClick={() => setUpdateType('video')}
+                                setAttachLoading={setAttachLoading}
                             />
                             <Attach
                                 name="AttachDocument"
@@ -395,10 +401,12 @@ const LogbookComponent = ({ pageProps }) => {
                                 accept=".pdf"
                                 controller={control}
                                 onClick={() => setUpdateType('document')}
+                                setAttachLoading={setAttachLoading}
                             />
                         </div>
                         <div>
-                            {updateType === 'picture' && (
+                            {attachLoading && <PreLoader />}
+                            {updateType === 'picture' && !attachLoading && (
                                 <img
                                     className="w-1/2 rounded-4"
                                     src={
@@ -410,7 +418,7 @@ const LogbookComponent = ({ pageProps }) => {
                                     }
                                 />
                             )}
-                            {updateType === 'video' && (
+                            {updateType === 'video' && !attachLoading && (
                                 <video
                                     controls
                                     className="w-1/2 rounded-4"
@@ -423,7 +431,7 @@ const LogbookComponent = ({ pageProps }) => {
                                     }
                                 />
                             )}
-                            {updateType === 'document' && (
+                            {updateType === 'document' && !attachLoading && (
                                 <a
                                     target="_blank"
                                     href={

@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useState } from 'react';
 
 // Packages
 import cc from 'classcat';
@@ -20,6 +20,7 @@ const AttachComponent = ({
     controller,
     type,
     onClick,
+    setAttachLoading,
     ...rest
 }) => {
     // Controller from useForm
@@ -33,9 +34,11 @@ const AttachComponent = ({
 
     async function uploadFile(event) {
         if (event.target.files.length > 0) {
+            setAttachLoading(true);
             const file = event.target.files[0];
             const uploadData = await s3.uploadMediaFile(file);
             onChange(uploadData.Location);
+            setAttachLoading(false);
         }
     }
 
