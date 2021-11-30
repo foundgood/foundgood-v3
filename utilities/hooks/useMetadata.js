@@ -56,6 +56,7 @@ const useMetadata = () => {
                           label: item.label,
                           value: item.fullName,
                       }))
+                      .sort((a, b) => a.label.localeCompare(b.label))
                 : valuesParent.values.filter(item => !(item.isActive ?? false));
         }
 
@@ -84,6 +85,7 @@ const useMetadata = () => {
                           label: item.label,
                           value: item.fullName,
                       }))
+                      .sort((a, b) => a.label.localeCompare(b.label))
                 : Object.values(valuesObject)
                       .flat()
                       .filter(item => !(item.isActive ?? false));
@@ -97,6 +99,7 @@ const useMetadata = () => {
                           label: item.label,
                           value: item.fullName,
                       }))
+                      .sort((a, b) => a.label.localeCompare(b.label))
                 : valuesObject[key].filter(item => !(item.isActive ?? false));
         }
 

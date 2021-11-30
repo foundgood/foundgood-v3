@@ -57,14 +57,16 @@ const SelectComponent = ({
                             <option default value="" className="hidden">
                                 {placeholder}
                             </option>
-                            {options.map((option, index) => (
-                                <option
-                                    key={`${option.value}-${index}`}
-                                    value={option.value}
-                                    className="font-normal text-black">
-                                    {option.label}
-                                </option>
-                            ))}
+                            {options
+                                .sort((a, b) => a.label.localeCompare(b.label))
+                                .map((option, index) => (
+                                    <option
+                                        key={`${option.value}-${index}`}
+                                        value={option.value}
+                                        className="font-normal text-black">
+                                        {option.label}
+                                    </option>
+                                ))}
                         </select>
                         <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
                     </div>

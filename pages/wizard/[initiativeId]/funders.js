@@ -365,10 +365,14 @@ const FundersComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={
-                            accountFoundations?.records?.map(item => ({
-                                label: item.Name,
-                                value: item.Id,
-                            })) ?? []
+                            accountFoundations?.records
+                                ?.map(item => ({
+                                    label: item.Name,
+                                    value: item.Id,
+                                }))
+                                .sort((a, b) =>
+                                    a.label.localeCompare(b.label)
+                                ) ?? []
                         }
                         disabled={
                             isNovoLeadFunder() &&
