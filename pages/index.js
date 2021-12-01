@@ -205,7 +205,6 @@ const HomeComponent = () => {
                         </div>
                     </div>
                 </SectionWrapper>
-
                 {data ? (
                     <>
                         <SectionWrapper>
@@ -230,7 +229,7 @@ const HomeComponent = () => {
                                                 CONSTANTS.TYPES.LEAD_FUNDER
                                         ).length
                                     }
-                                    dueDate={item.reports[0]?.Due_Date__c}
+                                    reports={item.reports}
                                     startDate={item.Grant_Start_Date__c}
                                     endDate={item.Grant_End_Date__c}
                                     image={item.Hero_Image_URL__c}

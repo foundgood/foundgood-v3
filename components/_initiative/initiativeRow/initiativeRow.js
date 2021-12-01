@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import Link from 'next/link';
@@ -21,13 +21,56 @@ const InitiativeRowComponent = ({
     headline,
     leadFunder,
     otherFunders,
-    dueDate,
     image,
     startDate,
     endDate,
+    reports,
 }) => {
     // Hook: Metadata
     const { label } = useMetadata();
+
+    // State: Reports
+    const [sortedReports, setSortedReports] = useState([]);
+
+    // Effect: Make report date data
+    useEffect(() => {
+        if (Array.isArray(reports)) {
+            setSortedReports(
+                reports
+                    .sort(
+                        (a, b) =>
+                            new Date(a.Due_Date__c) - new Date(b.Due_Date__c)
+                    )
+                    .filter(
+                        report =>
+                            report.Status__c !== 'Published' &&
+                            report.Status__c !== 'Submitted'
+                    )
+                    .map(report => {
+                        const dueDate = dayjs(report.Due_Date__c).format(
+                            'DD.MM.YYYY'
+                        );
+                        const overdue = dayjs(report.Due_Date__c).isBefore(
+                            dayjs()
+                        );
+                        const overdueDays = dayjs(dayjs()).diff(
+                            report.Due_Date__c,
+                            'day'
+                        );
+                        return {
+                            ...report,
+                            dueDate,
+                            overdue,
+                            overdueDays,
+                        };
+                    })
+                    .filter(report => report.overdueDays < 120)
+            );
+        }
+    }, [reports]);
+
+    // Next report dates etc.
+    const nextReport = sortedReports[0] ?? null;
 
     return (
         <Link href={`/${initiativeId}/overview`}>
@@ -35,7 +78,6 @@ const InitiativeRowComponent = ({
                 <div className="flex justify-start">
                     {image ? (
                         <div className="relative flex-shrink-0 hidden overflow-hidden w-128 h-128 rounded-8 sm:flex">
-                            {/* <img className="w-full h-full" src={image} /> */}
                             <Image
                                 src={image}
                                 layout="fill"
@@ -66,16 +108,33 @@ const InitiativeRowComponent = ({
                     </div>
                 </div>
                 <div className="flex justify-end flex-shrink-0 mt-24 space-x-12 md:justify-start md:w-1/4 md:space-y-12 md:flex-col md:space-x-0 md:mt-0">
-                    {dueDate && (
+                    {nextReport && (
                         <div className="p-8 space-y-4 border-4 sm:w-2/5 md:w-auto border-amber-20 rounded-4">
                             <div className="t-sh7 text-teal-60">
                                 {label(
                                     'custom.FA_InitiativeManagerCardDeadline'
                                 )}
+                                <span className="px-6 pt-3 pb-1 ml-4 t-sh7 text-teal-60 bg-teal-10 rounded-4">
+                                    {nextReport.Translated_Report_Type__c}
+                                </span>
                             </div>
-                            <div className="text-teal-100 t-caption-bold">
+                            <div
+                                className={cc([
+                                    't-caption-bold',
+                                    {
+                                        'text-teal-100': !nextReport.overdue,
+                                        'text-coral-100': nextReport.overdue,
+                                    },
+                                ])}>
                                 <span className="mr-8">
-                                    {dayjs(dueDate).format('DD.MM.YYYY')}
+                                    {nextReport.dueDate}
+                                    {nextReport.overdue && (
+                                        <span className="px-6 pt-3 pb-1 ml-4 t-sh7 text-coral-100 bg-coral-20 rounded-4">
+                                            {label(
+                                                'custom.FA_InitiativeManagerCardDue'
+                                            )}
+                                        </span>
+                                    )}
                                 </span>
                             </div>
                         </div>
@@ -110,10 +169,10 @@ InitiativeRowComponent.propTypes = {
     leadFunder: t.string,
     otherFunders: t.number,
     status: t.string,
-    dueDate: t.string,
     image: t.string,
     startDate: t.string,
     endDate: t.string,
+    reports: t.array,
 };
 
 InitiativeRowComponent.defaultProps = {
