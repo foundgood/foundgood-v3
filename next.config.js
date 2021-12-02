@@ -20,6 +20,9 @@ module.exports = {
         ],
     },
     target: 'serverless',
+    experimental: {
+        scrollRestoration: true,
+    },
     async rewrites() {
         return [
             {

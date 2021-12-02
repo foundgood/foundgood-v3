@@ -10,6 +10,7 @@ import dayjs from 'dayjs';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Icons
 import { FiActivity } from 'react-icons/fi';
@@ -31,6 +32,9 @@ const InitiativeRowComponent = ({
 
     // State: Reports
     const [sortedReports, setSortedReports] = useState([]);
+
+    // Hook: Initiative
+    const { reset: resetInitiative } = useInitiativeDataStore();
 
     // Effect: Make report date data
     useEffect(() => {
@@ -74,7 +78,9 @@ const InitiativeRowComponent = ({
 
     return (
         <Link href={`/${initiativeId}/overview`}>
-            <a className="flex flex-col justify-between p-16 mt-24 bg-white cursor-pointer md:flex-row rounded-8">
+            <a
+                onClick={resetInitiative}
+                className="flex flex-col justify-between p-16 mt-24 bg-white cursor-pointer md:flex-row rounded-8">
                 <div className="flex justify-start">
                     {image ? (
                         <div className="relative flex-shrink-0 hidden overflow-hidden w-128 h-128 rounded-8 sm:flex">
