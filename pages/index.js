@@ -111,7 +111,9 @@ const HomeComponent = () => {
                           item.Lead_Grantee__r?.Name?.toLowerCase().includes(
                               text.toLowerCase()
                           ) ||
-                          item.applicationIds.includes(text.toLowerCase())
+                          item.applicationIds.filter(id =>
+                              id.includes(text.toLowerCase())
+                          ).length > 0
                   )
                 : initial;
 
