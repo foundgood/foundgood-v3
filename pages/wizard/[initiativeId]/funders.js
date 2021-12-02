@@ -27,7 +27,6 @@ import {
     SelectList,
     Text,
     DateRange,
-    DatePicker,
 } from 'components/_inputs';
 import FunderCard from 'components/_wizard/founderCard';
 import NoReflections from 'components/_wizard/noReflections';
@@ -275,6 +274,11 @@ const FundersComponent = ({ pageProps }) => {
         Object.keys(initiative?._funders).includes(item.Initiative_Funder__c)
     );
 
+    // Get list of already selected funders so they can be removed from accountFoundations records
+    const alreadySelectedFunders = Object.values(initiative?._funders).map(
+        funder => funder.Account__c
+    );
+
     return (
         <>
             <TitlePreamble
@@ -370,8 +374,11 @@ const FundersComponent = ({ pageProps }) => {
                                     label: item.Name,
                                     value: item.Id,
                                 }))
-                                .sort((a, b) =>
-                                    a.label.localeCompare(b.label)
+                                .filter(
+                                    item =>
+                                        !alreadySelectedFunders.includes(
+                                            item.value
+                                        )
                                 ) ?? []
                         }
                         disabled={

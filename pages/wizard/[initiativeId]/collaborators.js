@@ -267,6 +267,15 @@ const CollaboratorsComponent = ({ pageProps }) => {
             return CONSTANTS.TYPES.COLLABORATORS.includes(collaborator.Type__c);
         });
 
+    // Get list of already selected collaborators so they can be removed from accountOrganisations records
+    const alreadySelectedCollaborators = Object.values(
+        initiative?._collaborators
+    )
+        .filter(collaborator =>
+            CONSTANTS.TYPES.COLLABORATORS.includes(collaborator.Type__c)
+        )
+        .map(collaborator => collaborator.Account__c);
+
     return (
         <>
             <TitlePreamble
@@ -362,10 +371,17 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={
-                            accountOrganisations?.records?.map(item => ({
-                                label: item.Name,
-                                value: item.Id,
-                            })) ?? []
+                            accountOrganisations?.records
+                                ?.map(item => ({
+                                    label: item.Name,
+                                    value: item.Id,
+                                }))
+                                .filter(
+                                    item =>
+                                        !alreadySelectedCollaborators.includes(
+                                            item.value
+                                        )
+                                ) ?? []
                         }
                         required
                         controller={control}
