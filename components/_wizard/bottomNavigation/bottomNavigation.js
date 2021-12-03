@@ -71,6 +71,15 @@ const BottomNavigationComponent = () => {
         <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
             <div className="flex items-center justify-between w-full">
                 <Button
+                    className={cc([
+                        'transition-default',
+                        {
+                            'opacity-100 pointer-events-auto': !currentItem
+                                ?.item?.hideExit,
+                            'opacity-0 pointer-events-none':
+                                currentItem?.item?.hideExit,
+                        },
+                    ])}
                     theme="coral"
                     variant="secondary"
                     action={

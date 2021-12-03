@@ -28,6 +28,16 @@ const reportWizardDictionary = {
         visible: true,
         items: [],
     },
+    complete: {
+        title: 'Complete',
+        visible: false,
+        hideBack: true,
+        hideExit: true,
+        baseUrl: 'complete',
+        url(initiativeId, reportId) {
+            return `/wizard/${initiativeId}/complete/${reportId}`;
+        },
+    },
     done: {
         title: 'Done',
         visible: false,

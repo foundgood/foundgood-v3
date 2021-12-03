@@ -141,6 +141,7 @@ const useWizardNavigationStore = create((set, get) => ({
                         ...d.reflections,
                         items: [d.endOfGrantReflections, d.reportSummary],
                     },
+                    d.complete,
                     d.done,
                 ];
                 break;
@@ -162,6 +163,7 @@ const useWizardNavigationStore = create((set, get) => ({
                         items: [d.applicants, d.collaborators],
                     },
                     { ...d.reflections, items: [d.reportSummary] },
+                    d.complete,
                     d.done,
                 ];
                 break;
@@ -192,6 +194,7 @@ const useWizardNavigationStore = create((set, get) => ({
                     },
 
                     { ...d.reflections, items: [d.reportSummary] },
+                    d.complete,
                     d.done,
                 ];
                 break;
