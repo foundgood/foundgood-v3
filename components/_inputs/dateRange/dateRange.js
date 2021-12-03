@@ -95,7 +95,7 @@ const DateRangeComponent = ({
                                             error?.type === 'isDateFrom',
                                     },
                                 ]),
-                                overlay: 'absolute bg-white mt-12 z-above',
+                                overlay: 'bg-white mt-12 z-above',
                             }}
                         />
                     </div>
@@ -132,7 +132,7 @@ const DateRangeComponent = ({
                                     },
                                 ]),
                                 overlay: cc([
-                                    'absolute bg-white mt-12 z-above',
+                                    'bg-white mt-12 z-above',
                                     {
                                         'pointer-events-none opacity-0': !from,
                                     },
