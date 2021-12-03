@@ -61,7 +61,9 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
             }
 
             // Change location
-            router.push(`/wizard/${INITIATIVE_ID}/${baseUrl}/${REPORT_ID}`);
+            router.push(
+                `/wizard/${INITIATIVE_ID}/${baseUrl}/${REPORT_ID}/update`
+            );
         } catch (error) {
             console.warn(error);
         }
@@ -91,7 +93,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
                     action={
                         mode === 'report'
                             ? reportInProgress
-                            : `/wizard/${INITIATIVE_ID}/${baseUrl}`
+                            : `/wizard/${INITIATIVE_ID}/${baseUrl}/update`
                     }
                     // HIDE/SHOW button instead
                     // disabled={

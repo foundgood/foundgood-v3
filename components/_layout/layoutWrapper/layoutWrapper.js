@@ -4,6 +4,7 @@ import React from 'react';
 // Packages
 import Head from 'next/head';
 import t from 'prop-types';
+import { useRouter } from 'next/router';
 
 // Utilities
 
@@ -17,31 +18,46 @@ import BlankLayout from 'components/_layout/blankLayout';
 
 // Layouts and their settings
 const allLayouts = {
-    default: {
-        layout: DefaultLayout,
+    default() {
+        return { layout: DefaultLayout };
     },
-    wizard: {
-        layout: WizardLayout,
-        headerUserControls: false,
-        layoutSettings: { aside: true, help: true },
+    wizard(update) {
+        const updateLayout = update ? true : false;
+        return {
+            layout: WizardLayout,
+            headerUserControls: false,
+            layoutSettings: {
+                aside: !updateLayout,
+                help: true,
+                updateBottom: updateLayout,
+            },
+        };
     },
-    wizardBlank: {
-        layout: WizardLayout,
-        headerUserControls: false,
-        layoutSettings: { aside: false, help: false },
+    wizardBlank() {
+        return {
+            layout: WizardLayout,
+            headerUserControls: false,
+            layoutSettings: { aside: false, help: false },
+        };
     },
-    initiative: {
-        layout: InitiativeLayout,
-        layoutSettings: null,
+    initiative() {
+        return {
+            layout: InitiativeLayout,
+            layoutSettings: null,
+        };
     },
-    report: {
-        layout: ReportLayout,
-        layoutSettings: null,
+    report() {
+        return {
+            layout: ReportLayout,
+            layoutSettings: null,
+        };
     },
-    blank: {
-        layout: BlankLayout,
-        headerUserControls: false,
-        layoutSettings: null,
+    blank() {
+        return {
+            layout: BlankLayout,
+            headerUserControls: false,
+            layoutSettings: null,
+        };
     },
 };
 
@@ -50,8 +66,12 @@ const LayoutWrapperComponent = ({
     pageLayout = 'default',
     pageProps,
 }) => {
+    // Use router to get param "update"
+    // Could be expanded later with other params
+    const router = useRouter();
+
     // Get the layout based on component
-    const Layout = allLayouts[pageLayout];
+    const Layout = allLayouts[pageLayout](router.query?.update ?? false);
 
     return (
         <>

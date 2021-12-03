@@ -26,9 +26,19 @@ module.exports = {
     async rewrites() {
         return [
             {
+                source: '/wizard/:inititiativeId/:page/update',
+                destination:
+                    '/wizard/:inititiativeId/:page?initiativeId=:inititiativeId&update=true',
+            },
+            {
                 source: '/wizard/:inititiativeId/:page/:reportId',
                 destination:
                     '/wizard/:inititiativeId/:page?reportId=:reportId&initiativeId=:inititiativeId',
+            },
+            {
+                source: '/wizard/:inititiativeId/:page/:reportId/update',
+                destination:
+                    '/wizard/:inititiativeId/:page?reportId=:reportId&initiativeId=:inititiativeId&update=true',
             },
             {
                 source: '/wizard/introduction/:rest*',

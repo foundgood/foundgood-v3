@@ -12,6 +12,7 @@ import { useResponsive, useMetadata, useContext } from 'utilities/hooks';
 // Components
 import IconButton from 'components/iconButton';
 import Button from 'components/button';
+import UpdateBottomNavigation from 'components/_wizard/updateBottomNavigation';
 import BottomNavigation from 'components/_wizard/bottomNavigation';
 import { AsideNavigation } from 'components/_wizard/asideNavigation';
 import AsideHelp from 'components/_wizard/asideHelp';
@@ -107,6 +108,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                     </div>
                 </div>
             )}
+
             {/* Help wrapper */}
             {layoutSettings.help && (
                 <div
@@ -194,7 +196,11 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                             'xl:right-[25%] 3xl:right-[400px]': rightMenuActive,
                         },
                     ])}>
-                    <BottomNavigation />
+                    {layoutSettings.updateBottom ? (
+                        <UpdateBottomNavigation />
+                    ) : (
+                        <BottomNavigation />
+                    )}
                 </div>
             </div>
         </>
