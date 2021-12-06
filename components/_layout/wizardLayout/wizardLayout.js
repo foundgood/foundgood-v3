@@ -25,20 +25,10 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     const { MODE, CONTEXTS, REPORT_ID, INITIATIVE_ID } = useContext();
 
     // Store: wizardLayout
-    const {
-        rightMenuActive,
-        toggleRightMenu,
-        leftMenuActive,
-        toggleLeftMenu,
-    } = useWizardLayoutStore();
+    const { rightMenuActive, toggleRightMenu, leftMenuActive, toggleLeftMenu } = useWizardLayoutStore();
 
     // Store: Initiaitive Data
-    const {
-        populateReport,
-        populateReportDetails,
-        populateInitiative,
-        initiative,
-    } = useInitiativeDataStore();
+    const { populateReport, populateReportDetails, populateInitiative, initiative } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { label, log } = useMetadata();
@@ -70,11 +60,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
         }
 
         // Initiative mode - check to populate initiative
-        if (
-            MODE === CONTEXTS.INITIATIVE &&
-            INITIATIVE_ID !== 'new' &&
-            INITIATIVE_ID
-        ) {
+        if (MODE === CONTEXTS.INITIATIVE && INITIATIVE_ID !== 'new' && INITIATIVE_ID) {
             populateInitiative(INITIATIVE_ID);
         }
     }, [MODE, REPORT_ID, INITIATIVE_ID]);
@@ -82,58 +68,57 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     return (
         <>
             {/* Aside wrapper */}
-            {layoutSettings.aside && (
-                <div
-                    style={{ willChange: 'transform' }}
-                    className={cc([
-                        'fixed flex-col h-screen w-[300px] max-w-full xl:w-1/5 flex 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-aside border-r border-teal-10 page-px header-pt',
-                        {
-                            'pointer-events-auto': leftMenuActive,
-                            ' -translate-x-full pointer-events-none': !leftMenuActive,
-                        },
-                    ])}>
-                    {/* Aside navigation wrapper */}
-                    <div className="flex py-8">
-                        <IconButton
-                            className="self-start my-8 xl:hidden"
-                            icon={FiChevronsLeft}
-                            iconType="stroke"
-                            action={() => toggleLeftMenu(false)}
-                        />
-                    </div>
 
-                    {/* Aside content */}
-                    <div className="flex-grow mt-32 overflow-y-auto scrolling-touch">
-                        <AsideNavigation />
-                    </div>
+            <div
+                style={{ willChange: 'transform' }}
+                className={cc([
+                    'fixed flex-col h-screen w-[300px] max-w-full xl:w-1/5 flex 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-aside border-r border-teal-10 page-px header-pt',
+                    {
+                        'pointer-events-auto': leftMenuActive,
+                        ' -translate-x-full pointer-events-none': !leftMenuActive,
+                        '!hidden': !layoutSettings.aside,
+                    },
+                ])}>
+                {/* Aside navigation wrapper */}
+                <div className="flex py-8">
+                    <IconButton
+                        className="self-start my-8 xl:hidden"
+                        icon={FiChevronsLeft}
+                        iconType="stroke"
+                        action={() => toggleLeftMenu(false)}
+                    />
                 </div>
-            )}
+
+                {/* Aside content */}
+                <div className="flex-grow mt-32 overflow-y-auto scrolling-touch">
+                    <AsideNavigation />
+                </div>
+            </div>
 
             {/* Help wrapper */}
-            {layoutSettings.help && (
-                <div
-                    style={{ willChange: 'transform' }}
-                    className={cc([
-                        'fixed flex-col right-0 bottom-0 top-0 w-[400px] max-w-full xl:w-1/4 flex bg-amber-10 3xl:w-[400px] transition-slow transform z-aside p-20 sm:p-24',
-                        {
-                            'pointer-events-auto': rightMenuActive,
-                            'translate-x-full pointer-events-none': !rightMenuActive,
-                        },
-                    ])}>
-                    <Button
-                        variant="tertiary"
-                        className="self-end"
-                        action={() => {
-                            toggleRightMenu(false);
-                        }}>
-                        {label('custom.FA_ButtonCloseHelp')}
-                    </Button>
-                    {/* Help content */}
-                    <div className="mt-32 overflow-y-auto scrolling-touch">
-                        <AsideHelp />
-                    </div>
+            <div
+                style={{ willChange: 'transform' }}
+                className={cc([
+                    'fixed flex-col right-0 bottom-0 top-0 w-[400px] max-w-full xl:w-1/4 flex bg-amber-10 3xl:w-[400px] transition-slow transform z-aside p-20 sm:p-24',
+                    {
+                        'pointer-events-auto': rightMenuActive,
+                        'translate-x-full pointer-events-none': !rightMenuActive,
+                        '!hidden': !layoutSettings.help,
+                    },
+                ])}>
+                <Button
+                    variant="tertiary"
+                    className="self-end"
+                    action={() => {
+                        toggleRightMenu(false);
+                    }}>
+                    {label('custom.FA_ButtonCloseHelp')}
+                </Button>
+                {/* Help content */}
+                <div className="mt-32 overflow-y-auto scrolling-touch">
+                    <AsideHelp />
                 </div>
-            )}
+            </div>
 
             {/* Button navigation */}
             <div className="fixed left-0 right-0 flex justify-between py-8 bg-white pointer-events-none transition-default xl:bg-transparent xl:justify-end header-t page-px z-below-aside">
@@ -177,14 +162,12 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                 className={cc([
                     'absolute flex justify-center transition-slow left-0 right-0 mb-24 top-48 xl:top-0 sm:top-56',
                     {
-                        'xl:left-[20%] 3xl:left-[300px]': leftMenuActive,
-                        'xl:right-[25%] 3xl:right-[400px]': rightMenuActive,
+                        'xl:left-[20%] 3xl:left-[300px]': leftMenuActive && layoutSettings.aside,
+                        'xl:right-[25%] 3xl:right-[400px]': rightMenuActive && layoutSettings.help,
                     },
                 ])}>
                 {/* Content */}
-                <div className="w-full transition-slow max-w-[600px] page-mx mt-80 pb-64 lg:pb-96">
-                    {children}
-                </div>
+                <div className="w-full transition-slow max-w-[600px] page-mx mt-80 pb-64 lg:pb-96">{children}</div>
 
                 {/* Bottom bar wrapper for aligning */}
                 <div
@@ -192,15 +175,11 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                     className={cc([
                         'fixed bottom-0 left-0 right-0 h-48 lg:h-64 flex justify-center transition-slow z-below-aside',
                         {
-                            'xl:left-[20%] 3xl:left-[300px]': leftMenuActive,
-                            'xl:right-[25%] 3xl:right-[400px]': rightMenuActive,
+                            'xl:left-[20%] 3xl:left-[300px]': leftMenuActive && layoutSettings.aside,
+                            'xl:right-[25%] 3xl:right-[400px]': rightMenuActive && layoutSettings.help,
                         },
                     ])}>
-                    {layoutSettings.updateBottom ? (
-                        <UpdateBottomNavigation />
-                    ) : (
-                        <BottomNavigation />
-                    )}
+                    {layoutSettings.updateBottom ? <UpdateBottomNavigation /> : <BottomNavigation />}
                 </div>
             </div>
         </>

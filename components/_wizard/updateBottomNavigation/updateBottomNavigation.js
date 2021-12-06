@@ -1,9 +1,9 @@
 // React
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 // Packages
-import cc from 'classcat';
 import { useRouter } from 'next/router';
+import cc from 'classcat';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
@@ -22,7 +22,15 @@ const UpdateBottomNavigationComponent = () => {
     const { label } = useMetadata();
 
     // Store: Wizard navigation
-    const { handleSubmit } = useWizardNavigationStore();
+    const { handleSubmit, onUrlOrContextChange } = useWizardNavigationStore();
+
+    // Effect: Handle path change
+    useEffect(() => {
+        setTimeout(() => {
+            const splitRoute = router.pathname.split('/');
+            onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
+        }, 50);
+    }, [router.asPath]);
 
     async function onHandleSave() {
         setLoading(true);
@@ -55,10 +63,7 @@ const UpdateBottomNavigationComponent = () => {
                     {label('custom.FA_MessageSaved')}
                 </p>
                 <div className="flex space-x-12">
-                    <Button
-                        theme="coral"
-                        action={onHandleSave}
-                        disabled={loading}>
+                    <Button theme="coral" action={onHandleSave} disabled={loading}>
                         {label('custom.FA_ButtonSave')}
                     </Button>
                 </div>

@@ -11,11 +11,7 @@ function _goToNextSection(sectionIndex, items) {
     const nextSection = items[sectionIndex + 1];
 
     // Return url from next section or the first child in items
-    return nextSection ?? null
-        ? nextSection.url
-            ? nextSection.url
-            : nextSection.items[0].url
-        : null;
+    return nextSection ?? null ? (nextSection.url ? nextSection.url : nextSection.items[0].url) : null;
 }
 
 const useWizardNavigationStore = create((set, get) => ({
@@ -58,13 +54,7 @@ const useWizardNavigationStore = create((set, get) => ({
             // d.informationCapture,
             {
                 ...d.context,
-                items: [
-                    d.overview,
-                    d.funders,
-                    d.applicants,
-                    d.collaborators,
-                    d.employeesFunded,
-                ],
+                items: [d.overview, d.funders, d.applicants, d.collaborators, d.employeesFunded],
             },
             // If detailing is on
             ...(detailing
@@ -219,20 +209,14 @@ const useWizardNavigationStore = create((set, get) => ({
         // If no top level check for nested
         if (!item) {
             // Check for nested
-            parentItem = items.find(parentItem =>
-                parentItem.items?.some(childItem => childItem.baseUrl === url)
-            );
+            parentItem = items.find(parentItem => parentItem.items?.some(childItem => childItem.baseUrl === url));
             parentItemIndex = items.findIndex(parentItem =>
                 parentItem.items?.some(childItem => childItem.baseUrl === url)
             );
 
             // Look through children
-            item = parentItem?.items?.find(
-                childItem => childItem.baseUrl === url
-            );
-            itemIndex = parentItem?.items?.findIndex(
-                childItem => childItem.baseUrl === url
-            );
+            item = parentItem?.items?.find(childItem => childItem.baseUrl === url);
+            itemIndex = parentItem?.items?.findIndex(childItem => childItem.baseUrl === url);
         }
 
         const currentItem = {
