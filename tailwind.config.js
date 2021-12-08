@@ -6,11 +6,13 @@ const remInPx = (num, name = false) => ({
 });
 
 module.exports = {
-    important: true,
     mode: 'jit',
     purge: {
         options: {},
-        content: ['./components/**/*.{js,ts,jsx,tsx,md}', './pages/**/*.{js,ts,jsx,tsx}'],
+        content: [
+            './components/**/*.{js,ts,jsx,tsx,md}',
+            './pages/**/*.{js,ts,jsx,tsx}',
+        ],
     },
     darkMode: false,
     theme: {
@@ -222,7 +224,8 @@ module.exports = {
             },
             animation: {
                 'fade-in': 'fade-in 1s ease-out',
-                'preloader-colors': 'preloader-colors 4s ease-out 0s infinite alternate',
+                'preloader-colors':
+                    'preloader-colors 4s ease-out 0s infinite alternate',
             },
             // keyframes: {
             //     'preloader-colors-loop': {
@@ -252,5 +255,8 @@ module.exports = {
     variants: {
         extend: {},
     },
-    plugins: [require('@tailwindcss/line-clamp'), require('tailwindcss-debug-screens')],
+    plugins: [
+        require('@tailwindcss/line-clamp'),
+        require('tailwindcss-debug-screens'),
+    ],
 };

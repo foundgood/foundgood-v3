@@ -83,7 +83,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
                 : true);
 
         setCanUpdate(canUpdate);
-    }, []);
+    }, [userInitiativeRights]);
 
     return (
         <>
@@ -94,18 +94,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
                         mode === 'report'
                             ? reportInProgress
                             : `/wizard/${INITIATIVE_ID}/${baseUrl}/update`
-                    }
-                    // HIDE/SHOW button instead
-                    // disabled={
-                    //     !userInitiativeRights.canEdit ||
-                    //     (mode === 'report' &&
-                    //         ![
-                    //             CONSTANTS.TYPES.REPORT_NOT_STARTED,
-                    //             CONSTANTS.TYPES.REPORT_IN_PROGRESS,
-                    //             CONSTANTS.TYPES.REPORT_IN_REVIEW,
-                    //         ].includes(getReport(REPORT_ID).Status__c))
-                    // }
-                >
+                    }>
                     {label('custom.FA_Update')}
                 </Button>
             )}
