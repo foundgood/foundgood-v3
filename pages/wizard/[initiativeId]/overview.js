@@ -1,5 +1,5 @@
 // React
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import { useForm, useWatch } from 'react-hook-form';
@@ -18,44 +18,31 @@ import {
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import {
-    InputWrapper,
-    Select,
-    Text,
-    LongText,
-    SelectList,
-    DateRange,
-    Image,
-} from 'components/_inputs';
+import { InputWrapper, FormFields } from 'components/_inputs';
 
 const OverviewComponent = () => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Hook: Context
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { MODE, CONTEXTS } = useContext();
-
-    // Hook: Metadata
-    const {
-        labelTodo,
-        label,
-        valueSet,
-        controlledValueSet,
-        helpText,
-    } = useMetadata();
-
-    // Hook: useForm setup
-    const { handleSubmit, control } = useForm();
-    const CategoryWatch = useWatch({ control, name: 'Category__c' });
-
-    // Hook: Salesforce setup
+    const { label, valueSet, controlledValueSet, helpText } = useMetadata();
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Store: Initiative data
     const {
         CONSTANTS,
         initiative,
@@ -65,8 +52,25 @@ const OverviewComponent = () => {
         updateGoal,
     } = useInitiativeDataStore();
 
-    // Get data for form
-    const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
+    // Store: Wizard navigation
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
+    // Hook: useForm setup
+    const mainForm = useForm();
+    const CategoryWatch = useWatch({
+        control: mainForm.control,
+        name: 'Category__c',
+    });
+
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Submit page content
     async function submit(formData) {
@@ -156,12 +160,25 @@ const OverviewComponent = () => {
         throw error;
     }
 
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
     // Add submit handler to wizard navigation store
     useEffect(() => {
         setTimeout(() => {
-            setCurrentSubmitHandler(handleSubmit(submit, error));
+            setCurrentSubmitHandler(mainForm.handleSubmit(submit, error));
         }, 100);
     }, [initiative]);
+
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Get data for form
+    const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
 
     // Main collaborator
     const mainCollaborator =
@@ -175,6 +192,134 @@ const OverviewComponent = () => {
             item => item.Type__c === CONSTANTS.TYPES.GOAL_PREDEFINED
         ) || {};
 
+    // ///////////////////
+    // ///////////////////
+    // FIELDS
+    // ///////////////////
+
+    const fields = [
+        {
+            type: 'Select',
+            name: 'Account__c',
+            label: label('objects.initiative.Lead_Grantee__c'),
+            defaultValue: accountGrantees?.records?.find(
+                ag => ag.Id === mainCollaborator?.Account__c
+            )?.Id,
+            disabled: mainCollaborator?.Id ? true : isNovoLeadFunder(),
+            required: mainCollaborator?.Id ? false : true,
+            // Type options
+            subLabel: helpText('objects.initiative.Lead_Grantee__c'),
+            options: accountGrantees?.records.map(item => ({
+                label: item.Name,
+                value: item.Id,
+            })),
+        },
+        {
+            type: 'Text',
+            name: 'Name',
+            label: label('custom.FA_InitiativeName'),
+            defaultValue: initiative?.Name === '___' ? '' : initiative?.Name,
+            disabled: initiative?.Name === '___' ? isNovoLeadFunder() : true,
+            required: initiative?.Name === '___' ? !isNovoLeadFunder() : false,
+            // Type options
+            maxLength: 80,
+        },
+        {
+            type: 'Select',
+            name: 'Category__c',
+            label: label('objects.initiative.Category__c'),
+            defaultValue: initiative?.Category__c ? initiative.Category__c : '',
+            disabled: isNovoLeadFunder(),
+            required: true,
+            // Type options
+            options: valueSet('initiative.Category__c'),
+            subLabel: helpText('objects.initiative.Category__c'),
+        },
+        {
+            type: 'Select',
+            name: 'Funder_Objective__c',
+            label: label('objects.initiativeGoal.Funder_Objective__c'),
+            defaultValue: funderObjective.Funder_Objective__c,
+            disabled: !CategoryWatch && !initiative?.Category__c,
+            required: true,
+            // Type options
+            options: controlledValueSet(
+                'initiativeGoal.Funder_Objective__c',
+                CategoryWatch ? CategoryWatch : initiative?.Category__c
+            ),
+            subLabel: helpText('objects.initiativeGoal.Funder_Objective__c'),
+        },
+        {
+            type: 'LongText',
+            name: 'Summary__c',
+            label: label('objects.initiative.Summary__c'),
+            defaultValue: initiative?.Summary__c,
+            required: true,
+            // Type options
+            maxLength: 400,
+            subLabel: helpText('objects.initiative.Summary__c'),
+        },
+        {
+            type: 'DateRange',
+            name: 'GrantDate',
+            label: `${label(
+                'objects.initiative.Grant_Start_Date__c'
+            )} / ${label('objects.initiative.Grant_End_Date__c')}`,
+            defaultValue: {
+                from: initiative?.Grant_Start_Date__c,
+                to: initiative?.Grant_End_Date__c,
+            },
+            disabled: isNovoLeadFunder(),
+        },
+        {
+            type: 'SelectList',
+            name: 'Where_Is_Problem__c',
+            label: label('objects.initiative.Where_Is_Problem__c'),
+            defaultValue: initiative?.Where_Is_Problem__c?.split(';').map(
+                value => ({
+                    selectValue: value,
+                })
+            ),
+            // Type options
+            buttonLabel: label('custom.FA_ButtonAddLocation'),
+            listMaxLength: 3,
+            options: valueSet('account.Location__c'),
+            subLabel: helpText('objects.initiative.Where_Is_Problem__c'),
+        },
+        {
+            type: 'SelectList',
+            name: 'Problem_Effect__c',
+            label: label('objects.initiative.Problem_Effect__c'),
+            defaultValue: initiative?.Problem_Effect__c?.split(';').map(
+                value => ({
+                    selectValue: value,
+                })
+            ),
+            // Type options
+            buttonLabel: label('custom.FA_ButtonAddSDG'),
+            listMaxLength: 10,
+            options: valueSet('initiative.Problem_Effect__c'),
+            subLabel: helpText('objects.initiative.Problem_Effect__c'),
+        },
+        ...(MODE === CONTEXTS.INITIATIVE
+            ? [
+                  {
+                      type: 'Image',
+                      name: 'Hero_Image__c',
+                      label: label('objects.initiative.Hero_Image__c'),
+                      defaultValue: initiative?.Hero_Image_URL__c,
+                      // Type options
+                      subLabel: helpText('objects.initiative.Hero_Image__c'),
+                  },
+              ]
+            : []),
+    ];
+
+    // ///////////////////
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     return (
         <>
             <TitlePreamble
@@ -184,185 +329,12 @@ const OverviewComponent = () => {
             />
 
             <InputWrapper preload={!initiative.Id}>
-                {mainCollaborator.Id ? (
-                    <>
-                        <Text
-                            name="Account__c"
-                            defaultValue={
-                                accountGrantees?.records.find(
-                                    ag => ag.Id === mainCollaborator.Account__c
-                                ).Name
-                            }
-                            label={label('objects.initiative.Lead_Grantee__c')}
-                            subLabel={helpText(
-                                'objects.initiative.Lead_Grantee__c'
-                            )}
-                            placeholder={label(
-                                'custom.FA_FormCaptureSelectEmpty'
-                            )}
-                            disabled
-                            controller={control}
-                        />
-                    </>
-                ) : (
-                    <Select
-                        name="Account__c"
-                        label={label('objects.initiative.Lead_Grantee__c')}
-                        subLabel={helpText(
-                            'objects.initiative.Lead_Grantee__c'
-                        )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
-                        options={accountGrantees?.records.map(item => ({
-                            label: item.Name,
-                            value: item.Id,
-                        }))}
-                        disabled={isNovoLeadFunder()}
-                        required
-                        controller={control}
-                    />
-                )}
-                {initiative?.Name === '___' ? (
-                    <Text
-                        name="Name"
-                        label={label('custom.FA_InitiativeName')}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
-                        maxLength={80}
-                        required={!isNovoLeadFunder()}
-                        disabled={isNovoLeadFunder()}
-                        controller={control}
-                    />
-                ) : (
-                    <Text
-                        name="Name"
-                        defaultValue={initiative?.Name}
-                        label={label('custom.FA_InitiativeName')}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
-                        maxLength={80}
-                        disabled={true}
-                        controller={control}
-                    />
-                )}
-
-                {initiative?.Category__c ? (
-                    <>
-                        <Select
-                            name="Category__c"
-                            defaultValue={initiative.Category__c}
-                            label={label('objects.initiative.Category__c')}
-                            subLabel={helpText(
-                                'objects.initiative.Category__c'
-                            )}
-                            placeholder={label(
-                                'custom.FA_FormCaptureSelectEmpty'
-                            )}
-                            options={valueSet('initiative.Category__c')}
-                            controller={control}
-                            disabled={isNovoLeadFunder()}
-                            required
-                        />
-                    </>
-                ) : (
-                    <Select
-                        name="Category__c"
-                        label={label('objects.initiative.Category__c')}
-                        subLabel={helpText('objects.initiative.Category__c')}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
-                        options={valueSet('initiative.Category__c')}
-                        controller={control}
-                        disabled={isNovoLeadFunder()}
-                        required
-                    />
-                )}
-
-                <Select
-                    name="Funder_Objective__c"
-                    defaultValue={funderObjective.Funder_Objective__c}
-                    label={label('objects.initiativeGoal.Funder_Objective__c')}
-                    subLabel={helpText(
-                        'objects.initiativeGoal.Funder_Objective__c'
-                    )}
-                    placeholder={label('custom.FA_FormCaptureSelectEmpty')}
-                    options={controlledValueSet(
-                        'initiativeGoal.Funder_Objective__c',
-                        CategoryWatch ? CategoryWatch : initiative?.Category__c
-                    )}
-                    disabled={!CategoryWatch && !initiative?.Category__c}
-                    controller={control}
-                    required
-                />
-
-                <LongText
-                    name="Summary__c"
-                    defaultValue={initiative?.Summary__c}
-                    label={label('objects.initiative.Summary__c')}
-                    subLabel={helpText('objects.initiative.Summary__c')}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
-                    maxLength={400}
-                    controller={control}
-                    required
-                />
-                <DateRange
-                    name="GrantDate"
-                    label={labelTodo('Initiative period')}
-                    label={`${label(
-                        'objects.initiative.Grant_Start_Date__c'
-                    )} / ${label('objects.initiative.Grant_End_Date__c')}`}
-                    defaultValue={{
-                        from: initiative?.Grant_Start_Date__c,
-                        to: initiative?.Grant_End_Date__c,
+                <FormFields
+                    {...{
+                        fields,
+                        form: mainForm,
                     }}
-                    controller={control}
-                    disabled={isNovoLeadFunder()}
                 />
-                <SelectList
-                    name="Where_Is_Problem__c"
-                    defaultValue={initiative?.Where_Is_Problem__c?.split(
-                        ';'
-                    ).map(value => ({
-                        selectValue: value,
-                    }))}
-                    label={label('objects.initiative.Where_Is_Problem__c')}
-                    subLabel={helpText(
-                        'objects.initiative.Where_Is_Problem__c'
-                    )}
-                    listMaxLength={3}
-                    options={valueSet('account.Location__c')}
-                    selectPlaceholder={label(
-                        'custom.FA_FormCaptureSelectEmpty'
-                    )}
-                    controller={control}
-                    buttonLabel={label('custom.FA_ButtonAddLocation')}
-                />
-                <SelectList
-                    name="Problem_Effect__c"
-                    defaultValue={initiative?.Problem_Effect__c?.split(';').map(
-                        value => ({
-                            selectValue: value,
-                        })
-                    )}
-                    label={label('objects.initiative.Problem_Effect__c')}
-                    subLabel={helpText('objects.initiative.Problem_Effect__c')}
-                    listMaxLength={10}
-                    options={valueSet('initiative.Problem_Effect__c')}
-                    selectPlaceholder={label(
-                        'custom.FA_FormCaptureSelectEmpty'
-                    )}
-                    controller={control}
-                    buttonLabel={label('custom.FA_ButtonAddSDG')}
-                />
-                {MODE === CONTEXTS.INITIATIVE && (
-                    <Image
-                        name="Hero_Image__c"
-                        label={label('objects.initiative.Hero_Image__c')}
-                        subLabel={helpText('objects.initiative.Hero_Image__c')}
-                        defaultValue={initiative.Hero_Image_URL__c}
-                        controller={control}
-                    />
-                )}
             </InputWrapper>
         </>
     );

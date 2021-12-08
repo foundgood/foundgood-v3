@@ -18,43 +18,36 @@ import {
 } from 'utilities/store';
 
 // Components
-import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
-import Modal from 'components/modal';
-import {
-    InputWrapper,
-    Select,
-    SelectList,
-    Text,
-    DateRange,
-} from 'components/_inputs';
 import FunderCard from 'components/_wizard/founderCard';
+import Modal from 'components/modal';
 import NoReflections from 'components/_wizard/noReflections';
+import TitlePreamble from 'components/_wizard/titlePreamble';
+import { InputWrapper, FormFields } from 'components/_inputs';
 
 const FundersComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
 
-    // Hook: Metadata
-    const { labelTodo, label, helpText, valueSet } = useMetadata();
-
-    // Hook: useForm setup
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-        setValue: setValueReflections,
-    } = useForm();
-    const { isDirty } = useFormState({ control });
-
-    // Hook: Salesforce setup
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
+    const { label, helpText, valueSet } = useMetadata();
     const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
 
-    // Store: Initiative data
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
     const {
         initiative,
         getReportDetails,
@@ -64,13 +57,31 @@ const FundersComponent = ({ pageProps }) => {
         CONSTANTS,
     } = useInitiativeDataStore();
 
-    // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
-    // Get data for form
-    const { data: accountFoundations } = sfQuery(
-        queries.account.allFoundations()
-    );
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [reflecting, setReflecting] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+    const [funder, setFunder] = useState(null);
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
+    const mainForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
+    const reflectionForm = useForm();
+
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -117,13 +128,12 @@ const FundersComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
 
             // Fold out shit when done if report
-            // setValue: setValueReflections,
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    setValueReflections(`${funderId}-selector`, true);
+                    reflectionForm.setValue(`${funderId}-selector`, true);
                 }
             }, 500);
         } catch (error) {
@@ -216,16 +226,10 @@ const FundersComponent = ({ pageProps }) => {
         throw error;
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-
-    // Local state to handle reflection
-    const [reflecting, setReflecting] = useState(false);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
-    const [funder, setFunder] = useState(null);
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
@@ -239,24 +243,27 @@ const FundersComponent = ({ pageProps }) => {
             Grant_End_Date__c,
         } = initiative?._funders[updateId] ?? {};
 
-        setValue('Type__c', Type__c);
-        setValue('Account__c', Account__c);
-        setValue('Contribution', [
+        mainForm.setValue('Type__c', Type__c);
+        mainForm.setValue('Account__c', Account__c);
+        mainForm.setValue('Contribution', [
             { selectValue: CurrencyIsoCode, textValue: Amount__c },
         ]);
-        setValue('GrantDate', {
+        mainForm.setValue('GrantDate', {
             from: Grant_Start_Date__c,
             to: Grant_End_Date__c,
         });
-        setValue('Application_Id__c', Application_Id__c);
+        mainForm.setValue('Application_Id__c', Application_Id__c);
     }, [updateId, modalIsOpen]);
 
-    // Add submit handler to wizard navigation store
+    // Effect: Add submit handler to wizard navigation store
     useEffect(() => {
         if (MODE === CONTEXTS.REPORT) {
             setTimeout(() => {
                 setCurrentSubmitHandler(
-                    handleSubmitReflections(submitReflections, error)
+                    reflectionForm.handleSubmitReflections(
+                        submitReflections,
+                        error
+                    )
                 );
             }, 100);
         } else {
@@ -266,6 +273,16 @@ const FundersComponent = ({ pageProps }) => {
         }
     }, [initiative]);
 
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Get data for form
+    const { data: accountFoundations } = sfQuery(
+        queries.account.allFoundations()
+    );
+
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);
 
@@ -274,10 +291,78 @@ const FundersComponent = ({ pageProps }) => {
         Object.keys(initiative?._funders).includes(item.Initiative_Funder__c)
     );
 
-    // Get list of already selected funders so they can be removed from accountFoundations records
-    const alreadySelectedFunders = Object.values(initiative?._funders).map(
-        funder => funder.Account__c
-    );
+    // ///////////////////
+    // ///////////////////
+    // FIELDS
+    // ///////////////////
+
+    const fields = [
+        {
+            type: 'Select',
+            name: 'Account__c',
+            label: label('objects.initiativeFunder.Account__c'),
+            disabled:
+                isNovoLeadFunder() &&
+                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
+            required: true,
+            // Type options
+            subLabel: helpText('objects.initiativeFunder.Account__c'),
+            options: accountFoundations?.records?.map(item => ({
+                label: item.Name,
+                value: item.Id,
+            })),
+        },
+        {
+            type: 'Select',
+            name: 'Type__c',
+            label: label('objects.initiativeFunder.Type__c'),
+            disabled:
+                isNovoLeadFunder() &&
+                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
+            required: true,
+            // Type options
+            subLabel: helpText('objects.initiativeFunder.Type__c'),
+            options: valueSet('initiativeFunder.Type__c'),
+        },
+        {
+            type: 'SelectList',
+            name: 'Contribution',
+            label: label('objects.initiativeFunder.Amount__c'),
+            disabled:
+                isNovoLeadFunder() &&
+                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
+            // Type options
+            showText: true,
+            listMaxLength: 1,
+            options: [
+                { label: 'DKK', value: 'DKK' },
+                { label: 'EUR', value: 'EUR' },
+            ],
+            selectPlaceholder: label('custom.FA_FormCaptureSelectEmpty'),
+            subLabel: helpText('objects.initiativeFunder.Amount__c'),
+        },
+        {
+            type: 'DateRange',
+            name: 'GrantDate',
+            label: `${label(
+                'objects.initiativeFunder.Grant_Start_Date__c'
+            )} / ${label('objects.initiativeFunder.Grant_End_Date__c')}`,
+            disabled:
+                isNovoLeadFunder() &&
+                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
+        },
+        {
+            type: 'Text',
+            name: 'Application_Id__c',
+            label: label('objects.initiativeFunder.Application_Id__c'),
+            disabled:
+                isNovoLeadFunder() &&
+                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
+            // Type options
+            maxLength: 15,
+            subLabel: helpText('objects.initiativeFunder.Application_Id__c'),
+        },
+    ];
 
     return (
         <>
@@ -287,63 +372,31 @@ const FundersComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {MODE === CONTEXTS.REPORT &&
-                    Object.values(initiative?._funders).length > 0 && (
-                        <NoReflections
-                            onClick={submitNoReflections}
-                            reflectionItems={reportDetailsItems.map(
-                                item => item.Description__c
-                            )}
-                            reflecting={reflecting}
-                        />
-                    )}
-                {Object.keys(initiative?._funders).map(funderKey => {
-                    const funder = initiative?._funders[funderKey];
-                    const reflection = currentReportDetails.filter(
-                        item => item.Initiative_Funder__c === funderKey
-                    );
-
-                    return (
-                        <FunderCard
-                            key={funderKey}
-                            headline={_get(funder, 'Account__r.Name') || ''}
-                            label={_get(funder, 'Type__c') || ''}
-                            subHeadline={`${
-                                _get(funder, 'CurrencyIsoCode') || ''
-                            } ${_get(funder, 'Amount__c') || ''}`}
-                            footnote={`${
-                                _get(funder, 'Grant_Start_Date__c') || ''
-                            } - ${_get(funder, 'Grant_End_Date__c') || ''} • ${
-                                _get(funder, 'Application_Id__c') || ''
-                            }`}
-                            action={() => {
-                                setUpdateId(funderKey);
-                                setFunder(funder);
-                                setModalIsOpen(true);
-                            }}
-                            reflectAction={setReflecting}
-                            controller={
-                                MODE === CONTEXTS.REPORT && controlReflections
-                            }
-                            name={funderKey}
-                            defaultValue={{
-                                selected:
-                                    reflection[0] &&
-                                    (reflection[0]?.Description__c !==
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                        false),
-                                value:
-                                    reflection[0]?.Description__c ===
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                        ? ''
-                                        : reflection[0]?.Description__c,
-                            }}
-                            inputLabel={label(
-                                'custom.FA_ReportWizardFunderReflectionSubHeading'
-                            )}
-                        />
-                    );
-                })}
+                <RenderNoReflections
+                    {...{
+                        MODE,
+                        CONTEXTS,
+                        initiative,
+                        submitNoReflections,
+                        reportDetailsItems,
+                        reflecting,
+                    }}
+                />
+                <RenderFunderCard
+                    {...{
+                        MODE,
+                        CONTEXTS,
+                        CONSTANTS,
+                        initiative,
+                        currentReportDetails,
+                        setUpdateId,
+                        setFunder,
+                        setModalIsOpen,
+                        setReflecting,
+                        reflectionForm,
+                        label,
+                    }}
+                />
                 <Button
                     theme="teal"
                     className="self-start"
@@ -359,106 +412,100 @@ const FundersComponent = ({ pageProps }) => {
                 title={label('custom.FA_WizardModalHeadingFunders')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
-                    <Select
-                        name="Account__c"
-                        label={label('objects.initiativeFunder.Account__c')}
-                        subLabel={helpText(
-                            'objects.initiativeFunder.Account__c'
-                        )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
-                        options={
-                            accountFoundations?.records
-                                ?.map(item => ({
-                                    label: item.Name,
-                                    value: item.Id,
-                                }))
-                                .filter(
-                                    item =>
-                                        !alreadySelectedFunders.includes(
-                                            item.value
-                                        )
-                                ) ?? []
-                        }
-                        disabled={
-                            isNovoLeadFunder() &&
-                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
-                        }
-                        required
-                        controller={control}
-                    />
-                    <Select
-                        name="Type__c"
-                        label={label('objects.initiativeFunder.Type__c')}
-                        subLabel={helpText('objects.initiativeFunder.Type__c')}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
-                        options={valueSet('initiativeFunder.Type__c')}
-                        disabled={
-                            isNovoLeadFunder() &&
-                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
-                        }
-                        controller={control}
-                        required
-                    />
-                    <SelectList
-                        name="Contribution"
-                        showText
-                        label={label('objects.initiativeFunder.Amount__c')}
-                        subLabel={helpText(
-                            'objects.initiativeFunder.Amount__c'
-                        )}
-                        selectPlaceholder={label(
-                            'custom.FA_FormCaptureSelectEmpty'
-                        )}
-                        listMaxLength={1}
-                        options={[
-                            { label: 'DKK', value: 'DKK' },
-                            { label: 'EUR', value: 'EUR' },
-                        ]}
-                        controller={control}
-                        disabled={
-                            isNovoLeadFunder() &&
-                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
-                        }
-                    />
-                    <DateRange
-                        name="GrantDate"
-                        label={`${label(
-                            'objects.initiativeFunder.Grant_Start_Date__c'
-                        )} / ${label(
-                            'objects.initiativeFunder.Grant_End_Date__c'
-                        )}`}
-                        controller={control}
-                        disabled={
-                            isNovoLeadFunder() &&
-                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
-                        }
-                    />
-                    <Text
-                        name="Application_Id__c"
-                        label={label(
-                            'objects.initiativeFunder.Application_Id__c'
-                        )}
-                        subLabel={helpText(
-                            'objects.initiativeFunder.Application_Id__c'
-                        )}
-                        label={labelTodo('Application ID number')}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
-                        maxLength={15}
-                        disabled={
-                            isNovoLeadFunder() &&
-                            funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT
-                        }
-                        controller={control}
+                    <FormFields
+                        {...{
+                            fields,
+                            form: mainForm,
+                        }}
                     />
                 </InputWrapper>
             </Modal>
         </>
     );
 };
+
+// ///////////////////
+// ///////////////////
+// LOCAL COMPONENTS
+// ///////////////////
+
+const RenderNoReflections = ({
+    MODE,
+    CONTEXTS,
+    initiative,
+    submitNoReflections,
+    reportDetailsItems,
+    reflecting,
+}) =>
+    MODE === CONTEXTS.REPORT &&
+    Object.values(initiative?._funders).length > 0 && (
+        <NoReflections
+            onClick={submitNoReflections}
+            reflectionItems={reportDetailsItems.map(
+                item => item.Description__c
+            )}
+            reflecting={reflecting}
+        />
+    );
+
+const RenderFunderCard = ({
+    MODE,
+    CONTEXTS,
+    CONSTANTS,
+    initiative,
+    currentReportDetails,
+    setUpdateId,
+    setFunder,
+    setModalIsOpen,
+    setReflecting,
+    reflectionForm,
+    label,
+}) =>
+    Object.keys(initiative?._funders).map(funderKey => {
+        const funder = initiative?._funders[funderKey];
+        const reflection = currentReportDetails.filter(
+            item => item.Initiative_Funder__c === funderKey
+        );
+
+        return (
+            <FunderCard
+                key={funderKey}
+                headline={_get(funder, 'Account__r.Name') || ''}
+                label={_get(funder, 'Type__c') || ''}
+                subHeadline={`${_get(funder, 'CurrencyIsoCode') || ''} ${
+                    _get(funder, 'Amount__c') || ''
+                }`}
+                footnote={`${_get(funder, 'Grant_Start_Date__c') || ''} - ${
+                    _get(funder, 'Grant_End_Date__c') || ''
+                } • ${_get(funder, 'Application_Id__c') || ''}`}
+                action={() => {
+                    setUpdateId(funderKey);
+                    setFunder(funder);
+                    setModalIsOpen(true);
+                }}
+                reflectAction={setReflecting}
+                controller={MODE === CONTEXTS.REPORT && reflectionForm.control}
+                name={funderKey}
+                defaultValue={{
+                    selected:
+                        reflection[0] &&
+                        (reflection[0]?.Description__c !==
+                            CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                            false),
+                    value:
+                        reflection[0]?.Description__c ===
+                        CONSTANTS.CUSTOM.NO_REFLECTIONS
+                            ? ''
+                            : reflection[0]?.Description__c,
+                }}
+                inputLabel={label(
+                    'custom.FA_ReportWizardFunderReflectionSubHeading'
+                )}
+            />
+        );
+    });
 
 FundersComponent.propTypes = {};
 
