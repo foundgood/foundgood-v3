@@ -48,7 +48,7 @@ const InitiativeRowComponent = ({
                     .filter(
                         report =>
                             report.Status__c !== 'Published' &&
-                            report.Status__c !== 'Submitted'
+                            report.Status__c !== 'In review'
                     )
                     .map(report => {
                         const dueDate = dayjs(report.Due_Date__c).format(
@@ -121,7 +121,7 @@ const InitiativeRowComponent = ({
                                     'custom.FA_InitiativeManagerCardDeadline'
                                 )}
                                 <span className="px-6 pt-3 pb-1 ml-4 t-sh7 text-teal-60 bg-teal-10 rounded-4">
-                                    {nextReport.Translated_Report_Type__c}
+                                    {nextReport.Report_Type__c}
                                 </span>
                             </div>
                             <div
