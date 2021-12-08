@@ -1,10 +1,13 @@
 // React
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
 import { Controller } from 'react-hook-form';
+
+// Utilities
+import { useMetadata } from 'utilities/hooks';
 
 // Icons
 import { FiChevronDown } from 'react-icons/fi';
@@ -19,8 +22,19 @@ const SelectComponent = ({
     options,
     controller,
     required,
+    setValue,
     ...rest
 }) => {
+    // Hook: Metadata
+    const { label: metadataLabel } = useMetadata();
+
+    // Defaultvalue
+    useEffect(() => {
+        if (defaultValue && options) {
+            setValue(name, defaultValue);
+        }
+    }, [defaultValue]);
+
     return (
         <label className="flex flex-col">
             {label && <span className="input-label">{label}</span>}
@@ -55,7 +69,10 @@ const SelectComponent = ({
                             onChange={event => onChange(event)}
                             {...rest}>
                             <option default value="" className="hidden">
-                                {placeholder}
+                                {placeholder ||
+                                    metadataLabel(
+                                        'custom.FA_FormCaptureSelectEmpty'
+                                    )}
                             </option>
                             {options
                                 .sort((a, b) => a.label.localeCompare(b.label))
@@ -93,6 +110,7 @@ SelectComponent.propTypes = {
 SelectComponent.defaultProps = {
     options: [],
     required: false,
+    setValue() {},
 };
 
 export default SelectComponent;

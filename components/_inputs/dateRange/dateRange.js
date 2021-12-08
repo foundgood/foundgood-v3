@@ -21,6 +21,13 @@ const DateRangeComponent = ({
     required,
     disabled,
 }) => {
+    useEffect(() => {
+        if (defaultValue.from !== from) {
+            setFrom(defaultValue.from);
+            setTo(defaultValue.to);
+        }
+    }, [defaultValue]);
+
     // Hook: Metadata
     const { label } = useMetadata();
 

@@ -1,23 +1,39 @@
 // React
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
 import { Controller } from 'react-hook-form';
 
+// Utilities
+import { useMetadata } from 'utilities/hooks';
+
 const LongTextComponent = ({
     name,
     label,
     subLabel,
+    placeholder,
     defaultValue,
     maxLength,
     controller,
     required,
+    setValue,
     ...rest
 }) => {
-    // Local state for handling char count
-    const [value, setValue] = useState(defaultValue || '');
+    // Hook: Metadata
+    const { label: metadataLabel } = useMetadata();
+
+    // State: Local length
+    const [lengthValue, setLengthValue] = useState(0);
+
+    // Default value
+    useEffect(() => {
+        if (defaultValue) {
+            setValue(name, defaultValue);
+            setLengthValue(defaultValue.length);
+        }
+    }, [defaultValue]);
 
     return (
         <label className="flex flex-col">
@@ -38,9 +54,13 @@ const LongTextComponent = ({
                         ref={ref}
                         defaultValue={defaultValue}
                         maxLength={maxLength}
+                        placeholder={
+                            placeholder ||
+                            metadataLabel('custom.FA_FormCaptureTextEntryEmpty')
+                        }
                         onChange={event => {
                             // Local value state
-                            setValue(event.target.value);
+                            setLengthValue(event.target.value.length);
                             onChange(event);
                         }}
                         className={cc([
@@ -57,7 +77,7 @@ const LongTextComponent = ({
             />
             {maxLength > 0 && (
                 <div className="mt-4 -mb-16 text-right input-utility-text">
-                    {value.length} / {maxLength.toString()}
+                    {lengthValue} / {maxLength.toString()}
                 </div>
             )}
         </label>
@@ -77,6 +97,7 @@ LongTextComponent.propTypes = {
 LongTextComponent.defaultProps = {
     maxLength: null,
     required: false,
+    setValue() {},
 };
 
 export default LongTextComponent;

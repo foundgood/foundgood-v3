@@ -1,5 +1,5 @@
 // React
-import React, { useState } from 'react';
+import React from 'react';
 
 // Packages
 import cc from 'classcat';
@@ -36,8 +36,13 @@ const AttachComponent = ({
         if (event.target.files.length > 0) {
             setAttachLoading(true);
             const file = event.target.files[0];
-            const uploadData = await s3.uploadMediaFile(file);
-            onChange(uploadData.Location);
+            if (file.size > 199999999) {
+                alert('File size should be under 200 mb');
+            } else {
+                const uploadData = await s3.uploadMediaFile(file);
+                onChange(uploadData.Location);
+                onClick();
+            }
             setAttachLoading(false);
         }
     }
@@ -57,7 +62,6 @@ const AttachComponent = ({
                 accept={accept}
                 onChange={event => {
                     uploadFile(event);
-                    onClick();
                 }}
                 defaultValue={''}
                 className={cc([

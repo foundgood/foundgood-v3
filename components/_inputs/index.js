@@ -13,6 +13,7 @@ import SearchFilterMultiselect from './searchFilterMultiselect';
 import SearchFilterDate from './searchFilterDate';
 import Image from './image';
 import Attach from './attach';
+import FormFields from './formFields';
 
 export {
     InputWrapper,
@@ -30,4 +31,5 @@ export {
     SearchFilterDate,
     Image,
     Attach,
+    FormFields,
 };

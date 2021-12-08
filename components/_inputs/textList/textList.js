@@ -26,14 +26,25 @@ const TextListComponent = ({
     placeholder,
     subLabel,
     required,
+    buttonLabel,
+    setValue,
 }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label: metadataLabel } = useMetadata();
 
     // Local state
-    const [list, setList] = useState(
-        defaultValue.map(item => ({ value: item, id: nanoid() }))
-    );
+    const [list, setList] = useState([{ value: '', id: nanoid() }]);
+
+    // Set value from beginning
+    useEffect(() => {
+        if (defaultValue) {
+            setList(defaultValue.map(item => ({ value: item, id: nanoid() })));
+            setValue(
+                name,
+                defaultValue.map(item => ({ value: item, id: nanoid() }))
+            );
+        }
+    }, [defaultValue]);
 
     // Method: Handles add to list
     function addToList() {
@@ -87,7 +98,12 @@ const TextListComponent = ({
                                                 maxLength ? maxLength : 'none'
                                             }
                                             defaultValue={item.value}
-                                            placeholder={placeholder}
+                                            placeholder={
+                                                placeholder ||
+                                                metadataLabel(
+                                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                                )
+                                            }
                                             onChange={event => {
                                                 // Get next list
                                                 const nextList = getListWithNewValue(
@@ -149,7 +165,7 @@ const TextListComponent = ({
                         className="self-start mt-16"
                         disabled={list.length >= listMaxLength}
                         action={addToList}>
-                        {labelTodo('Add another')}
+                        {buttonLabel}
                     </Button>
                 )}
             </div>
@@ -165,12 +181,15 @@ TextListComponent.propTypes = {
     error: t.object,
     maxLength: t.number,
     required: t.bool,
+    buttonLabel: t.string,
 };
 
 TextListComponent.defaultProps = {
     maxLength: null,
     defaultValue: [],
     required: false,
+    buttonLabel: 'Add',
+    setValue() {},
 };
 
 export default TextListComponent;

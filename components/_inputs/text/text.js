@@ -1,5 +1,8 @@
 // React
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+// Utilities
+import { useMetadata } from 'utilities/hooks';
 
 // Packages
 import cc from 'classcat';
@@ -14,10 +17,23 @@ const TextComponent = ({
     maxLength,
     controller,
     required,
+    setValue,
+    placeholder,
     ...rest
 }) => {
-    // Local state for handling char count
-    const [value, setValue] = useState(defaultValue || '');
+    // Hook: Metadata
+    const { label: metadataLabel } = useMetadata();
+
+    // State: Local length
+    const [lengthValue, setLengthValue] = useState(0);
+
+    // Default value
+    useEffect(() => {
+        if (defaultValue) {
+            setValue(name, defaultValue);
+            setLengthValue(defaultValue.length);
+        }
+    }, [defaultValue]);
 
     return (
         <label className="flex flex-col">
@@ -40,6 +56,12 @@ const TextComponent = ({
                             type="text"
                             defaultValue={defaultValue}
                             maxLength={maxLength ? maxLength : 'none'}
+                            placeholder={
+                                placeholder ||
+                                metadataLabel(
+                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                )
+                            }
                             onChange={event => {
                                 // Local value state
                                 setValue(event.target.value);
@@ -59,7 +81,7 @@ const TextComponent = ({
             />
             {maxLength > 0 && (
                 <div className="mt-4 -mb-16 text-right input-utility-text">
-                    {value.length} / {maxLength.toString()}
+                    {lengthValue} / {maxLength.toString()}
                 </div>
             )}
         </label>
@@ -79,6 +101,7 @@ TextComponent.propTypes = {
 TextComponent.defaultProps = {
     maxLength: null,
     required: false,
+    setValue() {},
 };
 
 export default TextComponent;

@@ -8,6 +8,7 @@ import { useController } from 'react-hook-form';
 import { nanoid } from 'nanoid';
 
 // Utilities
+import { useMetadata } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -32,15 +33,36 @@ const SelectListComponent = ({
     required,
     disabled,
     buttonLabel,
+    setValue,
 }) => {
+    // Hook: Metadata
+    const { label: metadataLabel } = useMetadata();
+
     // Local state
-    const [list, setList] = useState(
-        defaultValue.map(item => ({
-            selectValue: item.selectValue,
-            textValue: item.textValue ?? '',
-            id: nanoid(),
-        }))
-    );
+    const [list, setList] = useState([
+        { selectValue: '', textValue: '', id: nanoid() },
+    ]);
+
+    // Set value from beginning
+    useEffect(() => {
+        if (defaultValue) {
+            setList(
+                defaultValue.map(item => ({
+                    selectValue: item.selectValue,
+                    textValue: item.textValue ?? '',
+                    id: nanoid(),
+                }))
+            );
+            setValue(
+                name,
+                defaultValue.map(item => ({
+                    selectValue: item.selectValue,
+                    textValue: item.textValue ?? '',
+                    id: nanoid(),
+                }))
+            );
+        }
+    }, [defaultValue]);
 
     // Method: Handles add to list
     function addToList() {
@@ -163,7 +185,10 @@ const SelectListComponent = ({
                                                 default
                                                 value=""
                                                 className="hidden">
-                                                {selectPlaceholder}
+                                                {selectPlaceholder ||
+                                                    metadataLabel(
+                                                        'custom.FA_FormCaptureSelectEmpty'
+                                                    )}
                                             </option>
                                             {options
                                                 .sort((a, b) =>
@@ -192,7 +217,12 @@ const SelectListComponent = ({
                                             }
                                             disabled={disabled}
                                             defaultValue={item.textValue}
-                                            placeholder={textPlaceholder}
+                                            placeholder={
+                                                textPlaceholder ||
+                                                metadataLabel(
+                                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                                )
+                                            }
                                             onChange={event => {
                                                 // Get next list
                                                 const nextList = getListWithNewTextValue(
@@ -297,6 +327,7 @@ SelectListComponent.defaultProps = {
     listMaxLength: 5,
     required: false,
     buttonLabel: 'Add',
+    setValue() {},
 };
 
 export default SelectListComponent;
