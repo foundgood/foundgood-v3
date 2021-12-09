@@ -31,7 +31,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
     const [results, setResults] = useState();
 
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { getValueLabel, label } = useMetadata();
 
     useEffect(() => {
         // Make sure data it loaded
@@ -82,7 +82,10 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                         let headline;
                                         // Get gender
                                         const gender = item.Gender__c
-                                            ? item.Gender__c
+                                            ? getValueLabel(
+                                                  'initiativeActivitySuccessMetric.Gender__c',
+                                                  item.Gender__c
+                                              )
                                             : '';
                                         const genderOther = item.Gender_Other__c
                                             ? ` ${item.Gender_Other__c}`
@@ -90,7 +93,11 @@ const DevelopmentsComponent = ({ pageProps }) => {
 
                                         // Get KPI
                                         const kpi = item.KPI__c
-                                            ? ` ${item.KPI__c} `
+                                            ? ` ${getValueLabel(
+                                                  'initiativeActivitySuccessMetric.KPI__c',
+                                                  item.KPI__c,
+                                                  true
+                                              )} `
                                             : '';
 
                                         headline = `${gender}${genderOther}${kpi}`;
@@ -140,6 +147,12 @@ const DevelopmentsComponent = ({ pageProps }) => {
                 })
                 .map(item => {
                     let items = [];
+                    console.log(item);
+
+                    getValueLabel(
+                        'initiativeActivitySuccessMetric.Gender__c',
+                        item.Gender__c
+                    );
 
                     // If activity has publications
                     if (item.Publication_Type__c) {
@@ -180,8 +193,16 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     }
                     return {
                         headline: item.Things_To_Do__c,
-                        label: item.Dissemination_Method__c,
-                        tags: item.Audience_Tag__c?.split(';'),
+                        label: getValueLabel(
+                            'initiativeActivity.Dissemination_Method__c',
+                            item.Dissemination_Method__c
+                        ),
+                        tags: item.Audience_Tag__c?.split(';').map(tag =>
+                            getValueLabel(
+                                'initiativeActivity.Audience_Tag__c',
+                                tag
+                            )
+                        ),
                         items: items,
                     };
                 });
@@ -252,6 +273,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                         {results?.length > 0 &&
                             results?.map((item, index) => (
                                 <div key={`a-${index}`} className="mt-24">
+                                    {console.log(item)}
                                     <ReportSharingCard
                                         key={`r-${index}`}
                                         headline={item.headline}

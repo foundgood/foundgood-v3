@@ -31,7 +31,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
     const { populateInitiative } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { label } = useMetadata();
 
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
@@ -88,7 +88,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
                         variant="secondary"
                         className="self-start hidden xl:flex"
                         action={`/${INITIATIVE_ID}/reports`}>
-                        {labelTodo('Back to reports')}
+                        {label('custom.FA_ButtonBackReports')}
                     </Button>
                 </div>
 
@@ -107,7 +107,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
                         action={() => toggleLeftMenu(true)}
                     />
                     <Button variant="secondary">
-                        {labelTodo('Back to reports')}
+                        {label('custom.FA_ButtonBackReports')}
                     </Button>
                 </div>
                 {/* Wizard status */}

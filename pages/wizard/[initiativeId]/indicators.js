@@ -36,6 +36,7 @@ const IndicatorsComponent = ({ pageProps }) => {
         label,
         valueSet,
         helpText,
+        getValueLabel,
         log,
         controlledValueSet,
     } = useMetadata();
@@ -70,6 +71,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                 Name,
                 Type__c,
             } = formData;
+
+            console.log(Gender);
 
             // Object name
             const object = 'Initiative_Activity_Success_Metric__c';
@@ -198,6 +201,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                             item => item.Initiative_Activity__c === activityKey
                         );
 
+                        // console.log(successMetricItems);
+
                         return (
                             <KpiCard
                                 key={activity.Id}
@@ -214,7 +219,10 @@ const IndicatorsComponent = ({ pageProps }) => {
                                         let headline;
                                         // Get gender
                                         const gender = item.Gender__c
-                                            ? item.Gender__c
+                                            ? getValueLabel(
+                                                  'initiativeActivitySuccessMetric.Gender__c',
+                                                  item.Gender__c
+                                              )
                                             : '';
                                         const genderOther = item.Gender_Other__c
                                             ? ` ${item.Gender_Other__c}`
@@ -222,7 +230,11 @@ const IndicatorsComponent = ({ pageProps }) => {
 
                                         // Get KPI
                                         const kpi = item.KPI__c
-                                            ? ` ${item.KPI__c} `
+                                            ? ` ${getValueLabel(
+                                                  'initiativeActivitySuccessMetric.KPI__c',
+                                                  item.KPI__c,
+                                                  true
+                                              )} `
                                             : '';
 
                                         headline = `${gender}${genderOther}${kpi}`;

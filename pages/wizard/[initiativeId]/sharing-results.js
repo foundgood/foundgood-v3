@@ -38,7 +38,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, log, label, helpText } = useMetadata();
+    const { getValueLabel, valueSet, log, label, helpText } = useMetadata();
 
     // Context for wizard pages
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
@@ -366,12 +366,16 @@ const SharingResultsComponent = ({ pageProps }) => {
                     })
                     .map(activityKey => {
                         const activity = initiative?._activities[activityKey];
+                        console.log(activity);
 
                         const headline =
                             _get(activity, 'Things_To_Do__c') || '';
 
                         const footnote = `${
-                            _get(activity, 'Dissemination_Method__c') || ''
+                            getValueLabel(
+                                'initiativeActivity.Dissemination_Method__c',
+                                _get(activity, 'Dissemination_Method__c')
+                            ) || ''
                         } ${
                             activity.Dissemination_Method__c &&
                             activity.KPI_Category__c
@@ -380,7 +384,16 @@ const SharingResultsComponent = ({ pageProps }) => {
                         } ${_get(activity, 'KPI_Category__c') || ''}`;
 
                         const tagsString = activity?.Audience_Tag__c ?? null;
-                        const tags = tagsString ? tagsString.split(';') : [];
+                        const tags = tagsString
+                            ? tagsString
+                                  .split(';')
+                                  .map(tag =>
+                                      getValueLabel(
+                                          'initiativeActivity.Audience_Tag__c',
+                                          tag
+                                      )
+                                  )
+                            : [];
 
                         const reflection = currentReportDetails.filter(
                             item => item.Initiative_Activity__c === activityKey

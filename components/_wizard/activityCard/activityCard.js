@@ -98,7 +98,7 @@ const ActivityCard = ({
                         <>
                             <div className="mt-8 t-caption-bold">
                                 {label(
-                                    'objects.initiativeActivity.Things_To_Do_Description__c'
+                                    'objects.initiativeActivity.Activity_Tag__c'
                                 )}
                             </div>
                             <div className="flex flex-col items-start">

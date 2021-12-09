@@ -27,9 +27,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label(
-                            'custom.FA_ReportViewSubHeadingInfluencesReflections'
-                        )}
+                        {label('custom.FA_ReportViewHeadingEndReflections')}
                     </h3>
                     <UpdateButton
                         mode="report"
