@@ -18,7 +18,7 @@ const AsideNavigationComponent = () => {
     const { REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { getValueLabel, label } = useMetadata();
 
     // Store: Initiative data
     const { initiative, isNovoLeadFunder } = useInitiativeDataStore();
@@ -42,9 +42,10 @@ const AsideNavigationComponent = () => {
                     <>
                         <p className="mt-8 t-footnote">{initiative.Name}</p>
                         <h2 className="mt-16 t-h5">
-                            {`${
+                            {`${getValueLabel(
+                                'initiativeReport.Report_Type__c',
                                 initiative._reports[REPORT_ID]?.Report_Type__c
-                            } ${label('custom.FA_TitleReport')} ${dayjs(
+                            )} ${label('custom.FA_TitleReport')} ${dayjs(
                                 initiative._reports[REPORT_ID]?.Due_Date__c
                             ).format('YYYY')}`}
                         </h2>
