@@ -90,7 +90,10 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
             if (sdgNums?.length > 0) {
                 const developmentGoals = sdgNums.map(num => {
-                    return { title: sdgs[num - 1].label, amount: num };
+                    return {
+                        title: sdgs.find(sdg => sdg.value === num).label,
+                        amount: num,
+                    };
                 });
                 setDevelopmentGoals(developmentGoals);
             }
