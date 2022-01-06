@@ -63,31 +63,29 @@ const HomeComponent = () => {
     useEffect(() => {
         if (data && Array.isArray(data)) {
             // Remap data so reports are the main item and initiative is the child
-            const initiativeData = data
-                ?.reduce((acc, item) => {
-                    acc = [
-                        ...acc,
-                        {
-                            ...item,
-                            reports:
-                                item.Initiative_Reports__r?.records.map(
-                                    report => report
-                                ) ?? [],
-                            funders:
-                                item.Initiative_Funders__r?.records?.map(
-                                    funder => funder
-                                ) ?? [],
-                            applicationIds:
-                                item.Initiative_Funders__r?.records.map(
-                                    funder =>
-                                        funder.Application_Id__c?.toLowerCase() ??
-                                        'N/A'
-                                ) ?? [],
-                        },
-                    ];
-                    return acc;
-                }, [])
-                .filter(item => item.applicationIds.length > 0);
+            const initiativeData = data?.reduce((acc, item) => {
+                acc = [
+                    ...acc,
+                    {
+                        ...item,
+                        reports:
+                            item.Initiative_Reports__r?.records.map(
+                                report => report
+                            ) ?? [],
+                        funders:
+                            item.Initiative_Funders__r?.records?.map(
+                                funder => funder
+                            ) ?? [],
+                        applicationIds:
+                            item.Initiative_Funders__r?.records.map(
+                                funder =>
+                                    funder.Application_Id__c?.toLowerCase() ??
+                                    'N/A'
+                            ) ?? [],
+                    },
+                ];
+                return acc;
+            }, []);
 
             setInitial(initiativeData);
             setFiltered(initiativeData);
