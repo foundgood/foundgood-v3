@@ -75,7 +75,7 @@ const ActivityCard = ({
     reflectionMode,
 }) => {
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { labelTodo, label, getValueLabel } = useMetadata();
 
     return (
         <div
@@ -106,7 +106,11 @@ const ActivityCard = ({
                                     <p
                                         key={`t-${index}`}
                                         className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
-                                        {tag}
+                                        {getValueLabel(
+                                            'initiativeActivity.Activity_Tag__c',
+                                            tag,
+                                            true
+                                        )}
                                     </p>
                                 ))}
                             </div>

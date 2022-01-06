@@ -50,6 +50,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                         : false;
                 })
                 .map((item, index) => {
+                    console.log(item);
                     const title = item.Things_To_Do__c;
                     const location = item.Initiative_Location__c?.split(
                         ';'
@@ -101,7 +102,13 @@ const ActivitiesComponent = ({ pageProps }) => {
                         successIndicators: successIndicators,
                         goals: descriptions,
                         relatedGoals: stripUndefined(relatedGoals),
-                        activityType: item.Activity_Tag__c?.split(';'),
+                        activityType: item.Activity_Tag__c?.split(';').map(a =>
+                            getValueLabel(
+                                'initiativeActivity.Activity_Tag__c',
+                                a,
+                                true
+                            )
+                        ),
                     };
                 });
             setActivities(activities);
