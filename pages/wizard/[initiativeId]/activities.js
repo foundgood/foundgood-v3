@@ -124,7 +124,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                 })
             );
             // Store - remove deleted data
-            removeActivityGoals(deletedActivityGoalIds);
+            await removeActivityGoals(deletedActivityGoalIds);
 
             // Create Initiative activitie goals based on goal
             const addedActivityGoalIds = await Promise.all(

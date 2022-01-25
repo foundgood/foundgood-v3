@@ -338,7 +338,7 @@ const useInitiativeDataStore = create((set, get) => ({
             return {
                 initiative: {
                     ...state.initiative,
-                    _activityGoals: { activityGoals },
+                    _activityGoals: { ..._returnAsKeys(activityGoals) },
                 },
             };
         });
