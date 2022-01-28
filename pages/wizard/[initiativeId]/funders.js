@@ -260,10 +260,7 @@ const FundersComponent = ({ pageProps }) => {
         if (MODE === CONTEXTS.REPORT) {
             setTimeout(() => {
                 setCurrentSubmitHandler(
-                    reflectionForm.handleSubmitReflections(
-                        submitReflections,
-                        error
-                    )
+                    reflectionForm.handleSubmit(submitReflections, error)
                 );
             }, 100);
         } else {
