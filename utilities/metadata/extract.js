@@ -7,6 +7,8 @@ const _get = require('lodash.get');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
 
+// Overvej at skifte tii https://www.npmjs.com/package/fast-xml-parser i stedet for xml2json
+
 const config = {
     locales: ['da'],
     files: {
