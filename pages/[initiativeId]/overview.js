@@ -31,7 +31,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, valueSet, getValueLabel } = useMetadata();
+    const { label, valueSet, getValueLabel, log } = useMetadata();
 
     // Hook: Get breakpoint
     const bp = useResponsive();

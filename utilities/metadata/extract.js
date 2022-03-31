@@ -1,11 +1,13 @@
 const AdmZip = require('adm-zip');
 const axios = require('axios');
-const xmlParser = require('xml2json');
+// const xmlParser = require('xml2json');
 const fs = require('fs');
 const _uniq = require('lodash.uniq');
 const _get = require('lodash.get');
 const path = require('path');
 require('dotenv').config({ path: path.resolve(process.cwd(), '.env.local') });
+const { XMLParser, XMLBuilder, XMLValidator } = require('fast-xml-parser');
+const tailwindcssDebugScreens = require('tailwindcss-debug-screens');
 
 // Overvej at skifte tii https://www.npmjs.com/package/fast-xml-parser i stedet for xml2json
 
@@ -35,12 +37,11 @@ const config = {
 class zipExtractor {
     constructor(zipData) {
         this.zip = new AdmZip(zipData);
+        this.parser = new XMLParser();
     }
 
     _asJson(fileName) {
-        return JSON.parse(
-            xmlParser.toJson(this.zip.readAsText(`unpackaged/${fileName}`))
-        );
+        return this.parser.parse(this.zip.readAsText(`unpackaged/${fileName}`));
     }
 
     _asKeys(fileName, path, key) {
@@ -201,9 +202,9 @@ class zipExtractor {
                         (acc, uniqueValue) => {
                             const values = field.valueSet.valueSettings
                                 .filter(value =>
-                                    value.controllingFieldValue.includes(
-                                        uniqueValue
-                                    )
+                                    value.controllingFieldValue
+                                        .toString()
+                                        .includes(uniqueValue)
                                 )
                                 .map(item =>
                                     _get(externalValueSet, item.valueName, null)
@@ -356,9 +357,9 @@ class zipExtractor {
                         (acc, uniqueValue) => {
                             const values = field.valueSet.valueSettings
                                 .filter(value =>
-                                    value.controllingFieldValue.includes(
-                                        uniqueValue
-                                    )
+                                    value.controllingFieldValue
+                                        .toString()
+                                        .includes(uniqueValue)
                                 )
                                 .map(item =>
                                     _get(mergedValueSets, item.valueName, null)
