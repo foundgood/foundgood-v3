@@ -164,7 +164,9 @@ const ProjectComponent = ({ pageProps }) => {
             if (sdgNums?.length > 0) {
                 const developmentGoals = sdgNums.map(num => {
                     return {
-                        title: sdgs.find(sdg => sdg.value === num).label,
+                        title:
+                            sdgs.find(sdg => sdg.value === parseInt(num, 10))
+                                ?.label ?? null,
                         amount: num,
                     };
                 });
