@@ -8,7 +8,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useSalesForce, useMetadata, useAuth } from 'utilities/hooks';
+import { useElseware, useMetadata, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -30,9 +30,9 @@ const HomeComponent = () => {
     // Hook: Metadata
     const { label, valueSet } = useMetadata();
 
-    // Hook: Get sales force data methods
-    const { sfGetInitiativeList } = useSalesForce();
-    const { data } = sfGetInitiativeList();
+    // Hook: Get data from elseware
+    const { ewGet } = useElseware();
+    const { data } = ewGet('initiative/initiatives-overview');
 
     // Hook: useForm setup
     const { control, register, getValues } = useForm({
@@ -61,34 +61,9 @@ const HomeComponent = () => {
 
     // Add data results to initial data set
     useEffect(() => {
-        if (data && Array.isArray(data)) {
-            // Remap data so reports are the main item and initiative is the child
-            const initiativeData = data?.reduce((acc, item) => {
-                acc = [
-                    ...acc,
-                    {
-                        ...item,
-                        reports:
-                            item.Initiative_Reports__r?.records.map(
-                                report => report
-                            ) ?? [],
-                        funders:
-                            item.Initiative_Funders__r?.records?.map(
-                                funder => funder
-                            ) ?? [],
-                        applicationIds:
-                            item.Initiative_Funders__r?.records.map(
-                                funder =>
-                                    funder.Application_Id__c?.toLowerCase() ??
-                                    'N/A'
-                            ) ?? [],
-                    },
-                ];
-                return acc;
-            }, []);
-
-            setInitial(initiativeData);
-            setFiltered(initiativeData);
+        if (data) {
+            setInitial(data);
+            setFiltered(data);
         }
     }, [data]);
 
@@ -109,7 +84,7 @@ const HomeComponent = () => {
                           item.Lead_Grantee__r?.Name?.toLowerCase().includes(
                               text.toLowerCase()
                           ) ||
-                          item.applicationIds.filter(id =>
+                          item._applicationIds.filter(id =>
                               id.includes(text.toLowerCase())
                           ).length > 0
                   )
@@ -216,20 +191,20 @@ const HomeComponent = () => {
                                     grantee={item.Lead_Grantee__r?.Name}
                                     headline={item.Name}
                                     leadFunder={
-                                        item.funders?.filter(
+                                        item._funders?.filter(
                                             item =>
                                                 item.Type__c ===
                                                 CONSTANTS.TYPES.LEAD_FUNDER
                                         )[0]?.Account__r?.Name
                                     }
                                     otherFunders={
-                                        item.funders?.filter(
+                                        item._funders?.filter(
                                             item =>
                                                 item.Type__c !==
                                                 CONSTANTS.TYPES.LEAD_FUNDER
                                         ).length
                                     }
-                                    reports={item.reports}
+                                    reports={item._reports}
                                     startDate={item.Grant_Start_Date__c}
                                     endDate={item.Grant_End_Date__c}
                                     image={item.Hero_Image_URL__c}

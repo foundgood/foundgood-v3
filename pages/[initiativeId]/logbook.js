@@ -27,29 +27,31 @@ const LogbookComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Fetch initiative data
-    const { initiative, CONSTANTS } = useInitiativeDataStore();
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+
     const [logs, setLogs] = useState([]);
-    // const [results, setResults] = useState();
 
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { label } = useMetadata();
 
     useEffect(() => {
         // Make sure data it loaded
         if (
-            initiative?._initiativeUpdates &&
-            Object.keys(initiative?._initiativeUpdates).length !== 0
+            initiative?._updates &&
+            Object.keys(initiative?._updates).length !== 0
         ) {
-            const logs = Object.values(initiative._initiativeUpdates)
+            const logs = Object.values(initiative._updates)
                 .filter(
                     item =>
                         item.Type__c !== CONSTANTS.TYPES.LOGBOOK_TYPE_METRICS // Ignore metrics updates
                 )
                 .map(item => {
+                    const updateContent = utilities.getInitiativeUpdateContent(
+                        item.Id
+                    );
+
                     // Media Types: Picture || Video || Document
-                    const type = item.Initiative_Update_Content__r
-                        ? item.Initiative_Update_Content__r?.records[0]?.Type__c
-                        : 'Text';
+                    const type = updateContent ? updateContent.Type__c : 'Text';
                     const summary =
                         initiative._activities[item.Initiative_Activity__c]
                             ?.Things_To_Do__c;
@@ -60,17 +62,13 @@ const LogbookComponent = ({ pageProps }) => {
                     );
                     // Get clean filenames from URL
                     const fileName = decodeURIComponent(
-                        item.Initiative_Update_Content__r?.records[0]?.URL__c?.split(
-                            '/'
-                        ).pop()
+                        updateContent?.URL__c?.split('/').pop()
                     );
 
                     return {
                         type: type,
                         CreatedDate: item.CreatedDate,
-                        url:
-                            item.Initiative_Update_Content__r?.records[0]
-                                ?.URL__c,
+                        url: updateContent?.URL__c,
                         fileName: fileName,
                         description: description,
                         summary: summary,

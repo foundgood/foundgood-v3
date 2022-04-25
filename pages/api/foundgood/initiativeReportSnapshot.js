@@ -191,10 +191,6 @@ export default async (req, res) => {
                             _keyValues,
                             {}
                         ),
-
-                        // Not used according to Robin
-                        // _activityGoals: {},
-                        // _initiativeUpdates: {},
                     },
                 }),
                 {}

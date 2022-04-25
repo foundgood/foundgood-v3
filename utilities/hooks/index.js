@@ -3,5 +3,13 @@ import useResponsive from './useResponsive';
 import useAuth from './useAuth';
 import useSalesForce from './useSalesForce';
 import useContext from './useContext';
+import useElseware from './useElseware';
 
-export { useMetadata, useResponsive, useAuth, useSalesForce, useContext };
+export {
+    useElseware,
+    useMetadata,
+    useResponsive,
+    useAuth,
+    useSalesForce,
+    useContext,
+};

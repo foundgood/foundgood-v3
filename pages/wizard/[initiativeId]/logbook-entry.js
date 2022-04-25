@@ -6,12 +6,7 @@ import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useMetadata, useElseware } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -19,32 +14,21 @@ import {
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Button from 'components/button';
 import Modal from 'components/modal';
 import PreLoader from 'components/preloader';
-import {
-    InputWrapper,
-    Select,
-    LongText,
-    Image,
-    Attach,
-} from 'components/_inputs';
+import { InputWrapper, Select, LongText, Attach } from 'components/_inputs';
 import LogbookCard from 'components/_wizard/logbookCard';
-import NoReflections from 'components/_wizard/noReflections';
 
 const LogbookComponent = ({ pageProps }) => {
     // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
-
     // Hook: Metadata
-    const { labelTodo, label, helpText, valueSet } = useMetadata();
+    const { label, helpText } = useMetadata();
 
     // Hook: useForm setup
-    const { handleSubmit, control, setValue, reset, getValues } = useForm();
+    const { handleSubmit, control, setValue, reset } = useForm();
     const attachImage = useWatch({
         control,
         name: 'AttachImage',
@@ -58,31 +42,15 @@ const LogbookComponent = ({ pageProps }) => {
         name: 'AttachDocument',
     });
     const { isDirty } = useFormState({ control });
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-    } = useForm();
 
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    // Hook: Elseware setup
+    const { ewCreateUpdateWrapper } = useElseware();
 
     // Store: Initiative data
-    const {
-        initiative,
-        getReportDetails,
-        updateInitiativeUpdate,
-        updateReportDetails,
-        isNovoLeadFunder,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-
-    // Get data for form
-    const { data: accountFoundations } = sfQuery(
-        queries.account.allFoundations()
-    );
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -97,9 +65,6 @@ const LogbookComponent = ({ pageProps }) => {
                 AttachDocument,
             } = formData;
 
-            // Object name
-            const object = 'Initiative_Update__c';
-
             // Data for initiative update
             const data = {
                 Description__c,
@@ -107,19 +72,18 @@ const LogbookComponent = ({ pageProps }) => {
             };
 
             // Update / Save
-            const initiativeUpdateId = updateId
-                ? await sfUpdate({ object, data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative__c: initiative.Id },
-                  });
+            const initiativeUpdate = await ewCreateUpdateWrapper(
+                'initiative-update/initiative-update',
+                updateId,
+                data,
+                { Initiative__c: initiative.Id },
+                '_updates'
+            );
 
-            // Update store
-            await updateInitiativeUpdate(initiativeUpdateId);
-
-            // Get initiativeUpdate in question to see if there is any content
-            const currentInitiativeUpdate =
-                initiative?._initiativeUpdates[initiativeUpdateId];
+            // Get update content
+            const currentInitiativeUpdateContent = utilities.getInitiativeUpdateContent(
+                initiativeUpdate?.Id
+            );
 
             // Data for content update
             let updateUrl;
@@ -134,31 +98,24 @@ const LogbookComponent = ({ pageProps }) => {
                     updateUrl = AttachDocument;
                     break;
             }
-            const contentData = {
-                Type__c: updateType,
-                Url__c: updateUrl,
-            };
 
-            // Add initiative_updatecontent with content data and update id
-            const initiativeContentUpdateId = currentInitiativeUpdate
-                ?.Initiative_Update_Content__r?.records[0].Id
-                ? await sfUpdate({
-                      object: 'Initiative_Update_Content__c',
-                      data: contentData,
-                      id:
-                          currentInitiativeUpdate?.Initiative_Update_Content__r
-                              ?.records[0].Id,
-                  })
-                : await sfCreate({
-                      object: 'Initiative_Update_Content__c',
-                      data: {
-                          ...contentData,
-                          Initiative_Update__c: initiativeUpdateId,
-                      },
-                  });
+            // Update if anything present
+            if (updateUrl) {
+                const contentData = {
+                    Type__c: updateType,
+                    Url__c: updateUrl,
+                };
 
-            // Update store
-            await updateInitiativeUpdate(initiativeUpdateId);
+                // Update / Save
+                // Add initiative_updatecontent with content data and update id
+                await ewCreateUpdateWrapper(
+                    'initiative-update-content/initiative-update-content',
+                    currentInitiativeUpdateContent?.Id,
+                    contentData,
+                    { Initiative_Update__c: initiativeUpdate?.Id },
+                    '_updateContents'
+                );
+            }
 
             // Close modal
             setModalIsOpen(false);
@@ -175,89 +132,6 @@ const LogbookComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Adds reflections
-    async function submitReflections(formData) {
-        // Reformat form data based on topic keys
-        const reportDetails = Object.keys(initiative?._funders)
-            .reduce((acc, key) => {
-                // Does the reflection relation exist already?
-                const currentReflection = currentReportDetails.filter(
-                    item => item.Initiative_Funder__c === key
-                );
-                return [
-                    ...acc,
-                    {
-                        reportDetailId: currentReflection[0]?.Id ?? false,
-                        relationId: key,
-                        value: formData[`${key}-reflection`],
-                        selected: formData[`${key}-selector`],
-                    },
-                ];
-            }, [])
-            .filter(item => item.selected);
-
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Create or update report detail ids based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailIds = await Promise.all(
-            reportDetails.map(item =>
-                item.reportDetailId
-                    ? sfUpdate({
-                          object,
-                          id: item.reportDetailId,
-                          data: {
-                              Description__c: item.value,
-                          },
-                      })
-                    : sfCreate({
-                          object,
-                          data: {
-                              Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
-                              Initiative_Funder__c: item.relationId,
-                              Description__c: item.value,
-                              Initiative_Report__c: REPORT_ID,
-                          },
-                      })
-            )
-        );
-
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
-    }
-
-    // Method: Submits no reflections flag
-    async function submitNoReflections() {
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Create or update report detail ids based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailIds = await Promise.all(
-            Object.keys(initiative?._funders).map(funderKey =>
-                sfCreate({
-                    object,
-                    data: {
-                        Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
-                        Initiative_Funder__c: funderKey,
-                        Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
-                        Initiative_Report__c: REPORT_ID,
-                    },
-                })
-            )
-        );
-
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
-    }
-
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
     // Local state to handle modal
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsSaving, setModalIsSaving] = useState(false);
@@ -271,14 +145,11 @@ const LogbookComponent = ({ pageProps }) => {
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        const {
-            Description__c,
-            Initiative_Activity__c,
-            Initiative_Update_Content__r,
-        } = initiative?._initiativeUpdates[updateId] ?? {};
+        const { Description__c, Initiative_Activity__c } =
+            initiative?._updates[updateId] ?? {};
 
         // Check if there is content
-        const content = Initiative_Update_Content__r?.records[0];
+        const content = utilities.getInitiativeUpdateContent(updateId);
 
         // Update type
         setUpdateType(
@@ -291,26 +162,10 @@ const LogbookComponent = ({ pageProps }) => {
 
     // Add submit handler to wizard navigation store
     useEffect(() => {
-        if (MODE === CONTEXTS.REPORT) {
-            setTimeout(() => {
-                setCurrentSubmitHandler(
-                    handleSubmitReflections(submitReflections, error)
-                );
-            }, 100);
-        } else {
-            setTimeout(() => {
-                setCurrentSubmitHandler(null);
-            }, 100);
-        }
+        setTimeout(() => {
+            setCurrentSubmitHandler(null);
+        }, 100);
     }, [initiative]);
-
-    // TODO Current report details
-    const currentReportDetails = getReportDetails(REPORT_ID);
-
-    // TODO Check if there is relevant report details yet
-    const reportDetailsItems = currentReportDetails.filter(item =>
-        Object.keys(initiative?._funders).includes(item.Initiative_Funder__c)
-    );
 
     // Activities
     const activities = Object.values(initiative?._activities).filter(
@@ -323,9 +178,14 @@ const LogbookComponent = ({ pageProps }) => {
     );
 
     // Logbook entries
-    const logbookEntries = Object.values(initiative?._initiativeUpdates)
+    const logbookEntries = Object.values(initiative?._updates)
         .filter(update => update.Type__c === CONSTANTS.TYPES.LOGBOOK_UPDATE)
         .sort((a, b) => new Date(b.CreatedDate) - new Date(a.CreatedDate));
+
+    // Get update content
+    const currentInitiativeUpdateContent = utilities.getInitiativeUpdateContent(
+        updateId
+    );
 
     return (
         <>
@@ -347,15 +207,6 @@ const LogbookComponent = ({ pageProps }) => {
                     }}
                     items={logbookEntries}
                 />
-
-                {MODE === CONTEXTS.REPORT && (
-                    <NoReflections
-                        onClick={submitNoReflections}
-                        reflectionItems={reportDetailsItems.map(
-                            item => item.Description__c
-                        )}
-                    />
-                )}
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
@@ -414,9 +265,7 @@ const LogbookComponent = ({ pageProps }) => {
                                     src={
                                         (typeof attachImage === 'string' &&
                                             attachImage) ||
-                                        initiative?._initiativeUpdates[updateId]
-                                            ?.Initiative_Update_Content__r
-                                            ?.records[0].URL__c
+                                        currentInitiativeUpdateContent.URL__c
                                     }
                                 />
                             )}
@@ -427,9 +276,7 @@ const LogbookComponent = ({ pageProps }) => {
                                     src={
                                         (typeof attachVideo === 'string' &&
                                             attachVideo) ||
-                                        initiative?._initiativeUpdates[updateId]
-                                            ?.Initiative_Update_Content__r
-                                            ?.records[0].URL__c
+                                        currentInitiativeUpdateContent.URL__c
                                     }
                                 />
                             )}
@@ -439,9 +286,7 @@ const LogbookComponent = ({ pageProps }) => {
                                     href={
                                         (typeof attachDocument === 'string' &&
                                             attachDocument) ||
-                                        initiative?._initiativeUpdates[updateId]
-                                            ?.Initiative_Update_Content__r
-                                            ?.records[0].URL__c
+                                        currentInitiativeUpdateContent.URL__c
                                     }>
                                     View document
                                 </a>

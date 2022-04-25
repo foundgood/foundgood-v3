@@ -24,7 +24,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Fetch initiative data
-    const { initiative, CONSTANTS } = useInitiativeDataStore();
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { label, getValueLabel } = useMetadata();
@@ -50,16 +50,15 @@ const ActivitiesComponent = ({ pageProps }) => {
                         : false;
                 })
                 .map((item, index) => {
-                    console.log(item);
                     const title = item.Things_To_Do__c;
                     const location = item.Initiative_Location__c?.split(
                         ';'
                     ).join(', ');
-                    const successIndicators = item.Initiative_Activity_Success_Metrics__r?.records.map(
-                        success => {
+                    const successIndicators = utilities
+                        .getInitiativeActivitySuccessMetrics(item.Id)
+                        .map(success => {
                             return success.Name;
-                        }
-                    );
+                        });
 
                     // Check if they have related goals
                     const relatedGoals = Object.values(
@@ -99,7 +98,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                         title: title,
                         description: item.Things_To_Do_Description__c,
                         location: location,
-                        successIndicators: successIndicators,
+                        successIndicators,
                         goals: descriptions,
                         relatedGoals: stripUndefined(relatedGoals),
                         activityType: item.Activity_Tag__c?.split(';').map(a =>

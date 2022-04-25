@@ -147,7 +147,6 @@ const DevelopmentsComponent = ({ pageProps }) => {
                 })
                 .map(item => {
                     let items = [];
-                    console.log(item);
 
                     getValueLabel(
                         'initiativeActivitySuccessMetric.Gender__c',
@@ -273,7 +272,6 @@ const DevelopmentsComponent = ({ pageProps }) => {
                         {results?.length > 0 &&
                             results?.map((item, index) => (
                                 <div key={`a-${index}`} className="mt-24">
-                                    {console.log(item)}
                                     <ReportSharingCard
                                         key={`r-${index}`}
                                         headline={item.headline}

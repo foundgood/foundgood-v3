@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 
 // Utilities
 import { useMetadata } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
@@ -20,6 +21,8 @@ const LogbookCardsComponent = ({
 }) => {
     // Hook: Metadata
     const { label } = useMetadata();
+
+    const { utilities } = useInitiativeDataStore();
 
     return (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100">
@@ -41,8 +44,9 @@ const LogbookCardsComponent = ({
             {items?.length > 0 && (
                 <div className="inline-grid items-start w-full grid-cols-1 gap-24 md:grid-cols-2">
                     {items.map((item, index) => {
-                        const content =
-                            item?.Initiative_Update_Content__r?.records[0];
+                        const content = utilities.getInitiativeUpdateContent(
+                            item.Id
+                        );
 
                         return (
                             <div
