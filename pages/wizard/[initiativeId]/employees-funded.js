@@ -6,12 +6,7 @@ import { useForm, useWatch, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useMetadata, useElseware, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -38,10 +33,10 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log, helpText } = useMetadata();
+    const { label, valueSet, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -57,8 +52,8 @@ const EmployeesFundedComponent = ({ pageProps }) => {
 
     const { isDirty } = useFormState({ control });
 
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    // Hook: Elseware setup
+    const { ewCreate, ewCreateUpdateWrapper } = useElseware();
 
     // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
@@ -66,7 +61,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     // Store: Initiative data
     const {
         initiative,
-        updateEmployeeFunded,
+        updateInitiativeData,
         getReportDetails,
         updateReportDetails,
         CONSTANTS,
@@ -97,15 +92,13 @@ const EmployeesFundedComponent = ({ pageProps }) => {
             };
 
             // Update / Save
-            const employeeFundedId = updateId
-                ? await sfUpdate({ object, data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative__c: initiative.Id },
-                  });
-
-            // Update store
-            await updateEmployeeFunded(employeeFundedId);
+            await ewCreateUpdateWrapper(
+                'initiative-employee-funded/initiative-employee-funded',
+                updateId,
+                data,
+                { Initiative__c: initiative.Id },
+                '_employeesFunded'
+            );
 
             // Close modal
             setModalIsOpen(false);
@@ -126,54 +119,34 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     async function submitReflections(formData) {
         const { Employees_Funded_Overview } = formData;
 
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
         // Check if reflection exist - then update
-
         if (Employees_Funded_Overview) {
-            const reportDetailId =
-                currentReflection && currentReflection.Id
-                    ? await sfUpdate({
-                          object,
-                          id: currentReflection.Id,
-                          data: {
-                              Description__c: Employees_Funded_Overview,
-                          },
-                      })
-                    : await sfCreate({
-                          object,
-                          data: {
-                              Type__c:
-                                  CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
-                              Description__c: Employees_Funded_Overview,
-                              Initiative_Report__c: REPORT_ID,
-                          },
-                      });
-
-            // Update affected activity goals
-            await updateReportDetails([reportDetailId]);
+            ewCreateUpdateWrapper(
+                'initiative-report-detail/initiative-report-detail',
+                currentReflection?.Id,
+                {
+                    Description__c: Employees_Funded_Overview,
+                },
+                {
+                    Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
+                    Initiative_Report__c: REPORT_ID,
+                },
+                '_reportDetails'
+            );
         }
     }
 
     // Method: Submits no reflections flag
     async function submitNoReflections() {
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Create or update report detail ids based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailId = await sfCreate({
-            object,
-            data: {
+        const { data: reportDetailsData } = await ewCreate(
+            'initiative-report-detail/initiative-report-detail',
+            {
                 Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
                 Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
                 Initiative_Report__c: REPORT_ID,
-            },
-        });
-
-        // Bulk update affected activity goals
-        await updateReportDetails([reportDetailId]);
+            }
+        );
+        updateInitiativeData('_reportDetails', reportDetailsData);
     }
 
     // Method: Form error/validation handler
@@ -190,7 +163,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     const [reflecting, setReflecting] = useState(false);
     // Effect: Run reflectAction on reflectSelected change in order to propagate event up
     useEffect(() => {
-        console.log(reflectSelected);
         setReflecting(
             reflectSelected && reflectSelected.length > 0 ? true : false
         );
@@ -273,7 +245,9 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         label={label(
                             'custom.FA_ReportWizardEmployeesReflectionSubHeading'
                         )}
-                        placeholder={labelTodo('Enter reflections')}
+                        placeholder={label(
+                            'custom.FA_FormCaptureTextEntryEmpty'
+                        )}
                         maxLength={750}
                         controller={controlReflections}
                     />

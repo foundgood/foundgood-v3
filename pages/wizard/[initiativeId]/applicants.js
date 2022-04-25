@@ -6,12 +6,7 @@ import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useMetadata, useContext, useElseware } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -31,10 +26,10 @@ const ApplicantsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, valueSet, log, helpText } = useMetadata();
+    const { label, valueSet, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -45,8 +40,8 @@ const ApplicantsComponent = ({ pageProps }) => {
     } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    // Hook: Elseware setup
+    const { ewGet, ewCreate, ewCreateUpdateWrapper } = useElseware();
 
     // Watch & Update - Applicant Type
     const applicantTypeSelect = useWatch({ control, name: 'Type__c' });
@@ -56,8 +51,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     const {
         initiative,
         getReportDetails,
-        updateCollaborator,
-        updateReportDetails,
+        updateInitiativeData,
         CONSTANTS,
     } = useInitiativeDataStore();
 
@@ -65,7 +59,9 @@ const ApplicantsComponent = ({ pageProps }) => {
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Get data for form
-    const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
+    const { data: accountGrantees } = ewGet('account/account', {
+        type: 'grantee',
+    });
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -74,9 +70,6 @@ const ApplicantsComponent = ({ pageProps }) => {
             setModalIsSaving(true);
 
             const { Dates, Account__c, Type__c, Description__c } = formData;
-
-            // Object name
-            const object = 'Initiative_Collaborator__c';
 
             // Data for sf
             const data = {
@@ -88,15 +81,13 @@ const ApplicantsComponent = ({ pageProps }) => {
             };
 
             // Update / Save
-            const collaboratorId = updateId
-                ? await sfUpdate({ object, data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative__c: initiative.Id },
-                  });
-
-            // Update store
-            await updateCollaborator(collaboratorId);
+            const collaboratorData = await ewCreateUpdateWrapper(
+                'initiative-collaborator/initiative-collaborator',
+                updateId,
+                data,
+                { Initiative__c: initiative.Id },
+                '_collaborators'
+            );
 
             // Close modal
             setModalIsOpen(false);
@@ -111,7 +102,10 @@ const ApplicantsComponent = ({ pageProps }) => {
             // setValue: setValueReflections,
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    setValueReflections(`${collaboratorId}-selector`, true);
+                    setValueReflections(
+                        `${collaboratorData.Id}-selector`,
+                        true
+                    );
                 }
             }, 500);
         } catch (error) {
@@ -142,64 +136,49 @@ const ApplicantsComponent = ({ pageProps }) => {
             }, [])
             .filter(item => item.selected);
 
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
         // Create or update report detail ids based on reformatted form data
         // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailIds = await Promise.all(
+        await Promise.all(
             reportDetails.map(item =>
-                item.reportDetailId
-                    ? sfUpdate({
-                          object,
-                          id: item.reportDetailId,
-                          data: {
-                              Description__c: item.value,
-                          },
-                      })
-                    : sfCreate({
-                          object,
-                          data: {
-                              Type__c: CONSTANTS.TYPES.COLLABORATOR_OVERVIEW,
-                              Initiative_Collaborator__c: item.relationId,
-                              Description__c: item.value,
-                              Initiative_Report__c: REPORT_ID,
-                          },
-                      })
+                ewCreateUpdateWrapper(
+                    'initiative-report-detail/initiative-report-detail',
+                    item.reportDetailId,
+                    {
+                        Description__c: item.value,
+                    },
+                    {
+                        Type__c: CONSTANTS.TYPES.COLLABORATOR_OVERVIEW,
+                        Initiative_Collaborator__c: item.relationId,
+                        Initiative_Report__c: REPORT_ID,
+                    },
+                    '_reportDetails'
+                )
             )
         );
-
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
     }
 
     // Method: Submits no reflections flag
     async function submitNoReflections() {
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Create or update report detail ids based on reformatted form data
+        // Create or update report detail based on reformatted form data
         // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailIds = await Promise.all(
+        await Promise.all(
             Object.values(initiative?._collaborators)
                 .filter(item =>
                     CONSTANTS.TYPES.APPLICANTS_ALL.includes(item.Type__c)
                 )
-                .map(item =>
-                    sfCreate({
-                        object,
-                        data: {
+                .map(async item => {
+                    const { data: reportDetailsData } = await ewCreate(
+                        'initiative-report-detail/initiative-report-detail',
+                        {
                             Type__c: CONSTANTS.TYPES.COLLABORATOR_OVERVIEW,
-                            Initiative_Collaborator__c: item.Id,
+                            Initiative_Funder__c: item.Id,
                             Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
                             Initiative_Report__c: REPORT_ID,
-                        },
-                    })
-                )
+                        }
+                    );
+                    updateInitiativeData('_reportDetails', reportDetailsData);
+                })
         );
-
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
     }
 
     // Method: Form error/validation handler
@@ -257,7 +236,6 @@ const ApplicantsComponent = ({ pageProps }) => {
 
     // Watch the change of goal type
     useEffect(() => {
-        console.log('Set type: ', applicantTypeSelect);
         setApplicantType(applicantTypeSelect);
     }, [applicantTypeSelect]);
 
@@ -375,10 +353,14 @@ const ApplicantsComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('custom.FA_FormCaptureSelectEmpty')}
                         options={
-                            accountGrantees?.records?.map(item => ({
-                                label: item.Name,
-                                value: item.Id,
-                            })) ?? []
+                            accountGrantees
+                                ? Object.values(accountGrantees?.data).map(
+                                      item => ({
+                                          label: item.Name,
+                                          value: item.Id,
+                                      })
+                                  )
+                                : []
                         }
                         required
                         controller={control}

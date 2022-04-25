@@ -6,12 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useMetadata, useElseware, useContext } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -41,7 +36,7 @@ const FundersComponent = ({ pageProps }) => {
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label, helpText, valueSet } = useMetadata();
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    const { ewGet, ewCreate, ewCreateUpdateWrapper } = useElseware();
 
     // ///////////////////
     // ///////////////////
@@ -51,8 +46,7 @@ const FundersComponent = ({ pageProps }) => {
     const {
         initiative,
         getReportDetails,
-        updateFunder,
-        updateReportDetails,
+        updateInitiativeData,
         isNovoLeadFunder,
         CONSTANTS,
     } = useInitiativeDataStore();
@@ -96,9 +90,6 @@ const FundersComponent = ({ pageProps }) => {
                 Application_Id__c,
             } = formData;
 
-            // Object name
-            const object = 'Initiative_Funder__c';
-
             // Data for sf
             const data = {
                 Account__c,
@@ -111,15 +102,13 @@ const FundersComponent = ({ pageProps }) => {
             };
 
             // Update / Save
-            const funderId = updateId
-                ? await sfUpdate({ object, data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative__c: initiative.Id },
-                  });
-
-            // Update store
-            await updateFunder(funderId);
+            const funderData = await ewCreateUpdateWrapper(
+                'initiative-funder/initiative-funder',
+                updateId,
+                data,
+                { Initiative__c: initiative.Id },
+                '_funders'
+            );
 
             // Close modal
             setModalIsOpen(false);
@@ -133,7 +122,7 @@ const FundersComponent = ({ pageProps }) => {
             // Fold out shit when done if report
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    reflectionForm.setValue(`${funderId}-selector`, true);
+                    reflectionForm.setValue(`${funderData.Id}-selector`, true);
                 }
             }, 500);
         } catch (error) {
@@ -164,60 +153,45 @@ const FundersComponent = ({ pageProps }) => {
             }, [])
             .filter(item => item.selected);
 
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Create or update report detail ids based on reformatted form data
+        // Create or update report detail based on reformatted form data
         // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailIds = await Promise.all(
+        await Promise.all(
             reportDetails.map(item =>
-                item.reportDetailId
-                    ? sfUpdate({
-                          object,
-                          id: item.reportDetailId,
-                          data: {
-                              Description__c: item.value,
-                          },
-                      })
-                    : sfCreate({
-                          object,
-                          data: {
-                              Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
-                              Initiative_Funder__c: item.relationId,
-                              Description__c: item.value,
-                              Initiative_Report__c: REPORT_ID,
-                          },
-                      })
+                ewCreateUpdateWrapper(
+                    'initiative-report-detail/initiative-report-detail',
+                    item.reportDetailId,
+                    {
+                        Description__c: item.value,
+                    },
+                    {
+                        Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
+                        Initiative_Funder__c: item.relationId,
+                        Initiative_Report__c: REPORT_ID,
+                    },
+                    '_reportDetails'
+                )
             )
         );
-
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
     }
 
     // Method: Submits no reflections flag
     async function submitNoReflections() {
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
         // Create or update report detail ids based on reformatted form data
         // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailIds = await Promise.all(
-            Object.keys(initiative?._funders).map(funderKey =>
-                sfCreate({
-                    object,
-                    data: {
+        await Promise.all(
+            Object.values(initiative?._funders).map(async item => {
+                const { data: reportDetailsData } = await ewCreate(
+                    'initiative-report-detail/initiative-report-detail',
+                    {
                         Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
-                        Initiative_Funder__c: funderKey,
+                        Initiative_Funder__c: item.Id,
                         Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
                         Initiative_Report__c: REPORT_ID,
-                    },
-                })
-            )
+                    }
+                );
+                updateInitiativeData('_reportDetails', reportDetailsData);
+            })
         );
-
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
     }
 
     // Method: Form error/validation handler
@@ -276,9 +250,9 @@ const FundersComponent = ({ pageProps }) => {
     // ///////////////////
 
     // Get data for form
-    const { data: accountFoundations } = sfQuery(
-        queries.account.allFoundations()
-    );
+    const { data: accountFoundations } = ewGet('account/account', {
+        type: 'foundation',
+    });
 
     // Current report details
     const currentReportDetails = getReportDetails(REPORT_ID);
@@ -304,10 +278,12 @@ const FundersComponent = ({ pageProps }) => {
             required: true,
             // Type options
             subLabel: helpText('objects.initiativeFunder.Account__c'),
-            options: accountFoundations?.records?.map(item => ({
-                label: item.Name,
-                value: item.Id,
-            })),
+            options: accountFoundations
+                ? Object.values(accountFoundations?.data).map(item => ({
+                      label: item.Name,
+                      value: item.Id,
+                  }))
+                : [],
         },
         {
             type: 'Select',

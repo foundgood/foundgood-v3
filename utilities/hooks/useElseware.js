@@ -80,15 +80,15 @@ const useElseware = () => {
     async function ewCreateUpdateWrapper(
         path,
         id,
-        data,
-        parentId = {},
+        updateData = {},
+        createData = {},
         initiativePath = null
     ) {
         const { data: responseData } = id
-            ? await ewUpdate(path, id, data)
+            ? await ewUpdate(path, id, updateData)
             : await ewCreate(path, {
-                  ...data,
-                  ...parentId,
+                  ...updateData,
+                  ...createData,
               });
 
         // Update store

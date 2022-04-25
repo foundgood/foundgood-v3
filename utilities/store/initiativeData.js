@@ -139,16 +139,6 @@ const useInitiativeDataStore = create((set, get) => ({
         return funders?.length > 0;
     },
 
-    // Setter for initiative Id
-    setInitiativeId(id) {
-        set(state => ({
-            initiative: {
-                ...state.initiative,
-                Id: id,
-            },
-        }));
-    },
-
     // GETTERS
 
     getInitiativeId() {
@@ -169,6 +159,8 @@ const useInitiativeDataStore = create((set, get) => ({
             : [];
     },
 
+    // UPDATERS
+
     updateInitiativeData(path, data) {
         let initiative = get().initiative;
         _set(initiative, `${path}[${data.Id}]`, data);
@@ -178,71 +170,10 @@ const useInitiativeDataStore = create((set, get) => ({
     },
 
     // Update initiative model and connected models
-    async updateInitiative(id) {
-        const data = await sfQuery(queries.initiative.get(id));
-        if (data) {
-            set(state => ({
-                initiative: { ...state.initiative, ...data },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    // Update single item
-    async updateFunder(id) {
-        const data = await sfQuery(queries.initiativeFunder.get(id));
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _funders: {
-                        ...state.initiative._funders,
-                        [id]: data,
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    async updateCollaborator(id) {
-        const data = await sfQuery(queries.initiativeCollaborator.get(id));
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _collaborators: {
-                        ...state.initiative._collaborators,
-                        [id]: data,
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    async updateEmployeeFunded(id) {
-        const data = await sfQuery(queries.initiativeEmployeeFunded.get(id));
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _employeesFunded: {
-                        ...state.initiative._employeesFunded,
-                        [id]: data,
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
+    updateInitiative(data) {
+        set(state => ({
+            initiative: { ...state.initiative, ...data },
+        }));
     },
 
     async updateReport(id) {
@@ -280,8 +211,6 @@ const useInitiativeDataStore = create((set, get) => ({
         // Update auth
         _updateAuth();
     },
-
-    async updateOutcomes(id) {},
 
     async updateActivity(id) {
         const data = await sfQuery(queries.initiativeActivity.get(id));
@@ -459,37 +388,6 @@ const useInitiativeDataStore = create((set, get) => ({
                 path: 'initiative/initiative',
                 params: { id, expand: true },
             });
-
-            // // Get initiative
-            // const initiativeData = await sfQuery(queries.initiative.get(id));
-
-            // // Populate dependent data based on same id
-            // const collaboratorsData = await sfQuery(
-            //     queries.initiativeCollaborator.getAll(id)
-            // );
-            // const fundersData = await sfQuery(
-            //     queries.initiativeFunder.getAll(id)
-            // );
-            // const employeesFundedData = await sfQuery(
-            //     queries.initiativeEmployeeFunded.getAll(id)
-            // );
-            // const reportsData = await sfQuery(
-            //     queries.initiativeReport.getAll(id)
-            // );
-            // const goalsData = await sfQuery(queries.initiativeGoal.getAll(id));
-
-            // const activitiesData = await sfQuery(
-            //     queries.initiativeActivity.getAll(id)
-            // );
-            // const activityGoalsData = await sfQuery(
-            //     queries.initiativeActivityGoal.getAll(id)
-            // );
-            // const activitySuccessMetricsData = await sfQuery(
-            //     queries.initiativeActivitySuccessMetric.getAll(id)
-            // );
-            // const initiativeUpdatesData = await sfQuery(
-            //     queries.initiativeUpdate.getAll(id)
-            // );
 
             // Update state
             set(state => ({

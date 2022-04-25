@@ -25,10 +25,20 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     const { MODE, CONTEXTS, REPORT_ID, INITIATIVE_ID } = useContext();
 
     // Store: wizardLayout
-    const { rightMenuActive, toggleRightMenu, leftMenuActive, toggleLeftMenu } = useWizardLayoutStore();
+    const {
+        rightMenuActive,
+        toggleRightMenu,
+        leftMenuActive,
+        toggleLeftMenu,
+    } = useWizardLayoutStore();
 
     // Store: Initiaitive Data
-    const { populateReport, populateReportDetails, populateInitiative, initiative } = useInitiativeDataStore();
+    const {
+        populateReport,
+        populateReportDetails,
+        populateInitiative,
+        initiative,
+    } = useInitiativeDataStore();
 
     // Hook: Metadata
     const { label, log } = useMetadata();
@@ -60,7 +70,11 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
         }
 
         // Initiative mode - check to populate initiative
-        if (MODE === CONTEXTS.INITIATIVE && INITIATIVE_ID !== 'new' && INITIATIVE_ID) {
+        if (
+            MODE === CONTEXTS.INITIATIVE &&
+            INITIATIVE_ID !== 'new' &&
+            INITIATIVE_ID
+        ) {
             populateInitiative(INITIATIVE_ID);
         }
     }, [MODE, REPORT_ID, INITIATIVE_ID]);
@@ -162,12 +176,16 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                 className={cc([
                     'absolute flex justify-center transition-slow left-0 right-0 mb-24 top-48 xl:top-0 sm:top-56',
                     {
-                        'xl:left-[20%] 3xl:left-[300px]': leftMenuActive && layoutSettings.aside,
-                        'xl:right-[25%] 3xl:right-[400px]': rightMenuActive && layoutSettings.help,
+                        'xl:left-[20%] 3xl:left-[300px]':
+                            leftMenuActive && layoutSettings.aside,
+                        'xl:right-[25%] 3xl:right-[400px]':
+                            rightMenuActive && layoutSettings.help,
                     },
                 ])}>
                 {/* Content */}
-                <div className="w-full transition-slow max-w-[600px] page-mx mt-80 pb-64 lg:pb-96">{children}</div>
+                <div className="w-full transition-slow max-w-[600px] page-mx mt-80 pb-64 lg:pb-96">
+                    {children}
+                </div>
 
                 {/* Bottom bar wrapper for aligning */}
                 <div
@@ -175,11 +193,17 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                     className={cc([
                         'fixed bottom-0 left-0 right-0 h-48 lg:h-64 flex justify-center transition-slow z-below-aside',
                         {
-                            'xl:left-[20%] 3xl:left-[300px]': leftMenuActive && layoutSettings.aside,
-                            'xl:right-[25%] 3xl:right-[400px]': rightMenuActive && layoutSettings.help,
+                            'xl:left-[20%] 3xl:left-[300px]':
+                                leftMenuActive && layoutSettings.aside,
+                            'xl:right-[25%] 3xl:right-[400px]':
+                                rightMenuActive && layoutSettings.help,
                         },
                     ])}>
-                    {layoutSettings.updateBottom ? <UpdateBottomNavigation /> : <BottomNavigation />}
+                    {layoutSettings.updateBottom ? (
+                        <UpdateBottomNavigation />
+                    ) : (
+                        <BottomNavigation />
+                    )}
                 </div>
             </div>
         </>

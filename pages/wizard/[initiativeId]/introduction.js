@@ -5,12 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useMetadata, useElseware, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -28,10 +23,10 @@ const IntroductionComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
-    const { label, log } = useMetadata();
+    const { label } = useMetadata();
 
-    // Hook: Salesforce setup
-    const { sfCreate } = useSalesForce();
+    // Hook: elseware setup
+    const { ewCreate } = useElseware();
 
     const [bodyTexts, setBodyTexts] = useState([]);
 
@@ -47,29 +42,26 @@ const IntroductionComponent = ({ pageProps }) => {
     const {
         updateInitiative,
         initiative,
-        setInitiativeId,
         reset: resetInitiativeStore,
     } = useInitiativeDataStore();
 
     // Method: Submit page content
     async function submit() {
-        // Initiative
+        // Create initiative
         if (MODE === CONTEXTS.INITIATIVE) {
-            const initiativeId = await sfCreate({
-                object: 'Initiative__c',
-                data: {
+            const { data: initiativeData } = await ewCreate(
+                'initiative/initiative',
+                {
                     Name: '___',
                     Configuration_Type__c: 'Reporting',
-                },
-            });
+                }
+            );
 
-            setInitiativeId(initiativeId);
-
-            await updateInitiative(initiativeId);
+            // Update store
+            updateInitiative(initiativeData);
         }
     }
 
-    // Add submit handler to wizard navigation store
     useEffect(() => {
         // Reset navigation store in localstorage
         resetWizardNavigationStore();
@@ -85,6 +77,7 @@ const IntroductionComponent = ({ pageProps }) => {
         }
     }, [MODE]);
 
+    // Add submit handler to wizard navigation store
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(submit);

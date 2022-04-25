@@ -5,12 +5,7 @@ import React, { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useMetadata, useElseware, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -36,7 +31,7 @@ const OverviewComponent = () => {
 
     const { MODE, CONTEXTS } = useContext();
     const { label, valueSet, controlledValueSet, helpText } = useMetadata();
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    const { ewGet, ewCreate, ewUpdate, ewCreateUpdateWrapper } = useElseware();
 
     // ///////////////////
     // ///////////////////
@@ -48,8 +43,7 @@ const OverviewComponent = () => {
         initiative,
         isNovoLeadFunder,
         updateInitiative,
-        updateCollaborator,
-        updateGoal,
+        updateInitiativeData,
     } = useInitiativeDataStore();
 
     // Store: Wizard navigation
@@ -87,10 +81,10 @@ const OverviewComponent = () => {
                 Funder_Objective__c,
             } = formData;
 
-            await sfUpdate({
-                object: 'Initiative__c',
-                id: initiative.Id,
-                data: {
+            const initiativeData = await ewUpdate(
+                'initiative/initiative',
+                initiative.Id,
+                {
                     Name,
                     Summary__c,
                     Category__c,
@@ -103,52 +97,39 @@ const OverviewComponent = () => {
                     Problem_Effect__c: Problem_Effect__c.map(
                         item => item.selectValue
                     ).join(';'),
-                },
-            });
+                }
+            );
+
+            // Update initiative
+            updateInitiative(initiativeData);
 
             // Only create collaborator if main collaborator have not been set
             if (!mainCollaborator?.Account__c || false) {
-                const collaboratorId = await sfCreate({
-                    object: 'Initiative_Collaborator__c',
-                    data: {
+                const collaboratorData = await ewCreate(
+                    'initiative-collaborator/initiative-collaborator',
+                    {
                         Type__c: CONSTANTS.TYPES.MAIN_COLLABORATOR,
                         Initiative__c: initiative.Id,
                         Account__c,
-                    },
-                });
-                await updateCollaborator(collaboratorId);
+                    }
+                );
+
+                updateInitiativeData('_collaborators', collaboratorData);
             }
 
-            // Update initiative
-            await updateInitiative(initiative.Id);
-
-            // Create / update funder funder objective based on Category
-            const goalId = funderObjective.Id
-                ? await sfUpdate({
-                      object: 'Initiative_Goal__c',
-                      data: {
-                          Goal__c: Funder_Objective__c,
-                          Type__c: CONSTANTS.TYPES.GOAL_PREDEFINED,
-                          Funder_Objective__c,
-                          KPI_Category__c: Category__c,
-                      },
-                      id: funderObjective.Id,
-                  })
-                : await sfCreate({
-                      object: 'Initiative_Goal__c',
-                      data: {
-                          ...{
-                              Goal__c: Funder_Objective__c,
-                              Type__c: CONSTANTS.TYPES.GOAL_PREDEFINED,
-                              Funder_Objective__c,
-                              KPI_Category__c: Category__c,
-                          },
-                          Initiative__c: initiative.Id,
-                      },
-                  });
-
-            // Update store
-            await updateGoal(goalId);
+            // Create / update funder objective based on Category
+            await ewCreateUpdateWrapper(
+                'initiative-goal/initiative-goal',
+                funderObjective?.Id,
+                {
+                    Goal__c: Funder_Objective__c,
+                    Type__c: CONSTANTS.TYPES.GOAL_PREDEFINED,
+                    Funder_Objective__c,
+                    KPI_Category__c: Category__c,
+                },
+                { Initiative__c: initiative.Id },
+                '_goals'
+            );
         } catch (error) {
             console.warn(error);
         }
@@ -178,7 +159,9 @@ const OverviewComponent = () => {
     // ///////////////////
 
     // Get data for form
-    const { data: accountGrantees } = sfQuery(queries.account.allGrantees());
+    const { data: accountGrantees } = ewGet('account/account', {
+        type: 'grantee',
+    });
 
     // Main collaborator
     const mainCollaborator =
@@ -202,17 +185,21 @@ const OverviewComponent = () => {
             type: 'Select',
             name: 'Account__c',
             label: label('objects.initiative.Lead_Grantee__c'),
-            defaultValue: accountGrantees?.records?.find(
-                ag => ag.Id === mainCollaborator?.Account__c
-            )?.Id,
+            defaultValue: accountGrantees
+                ? Object.values(accountGrantees.data).find(
+                      ag => ag.Id === mainCollaborator?.Account__c
+                  )?.Id
+                : null,
             disabled: mainCollaborator?.Id ? true : isNovoLeadFunder(),
             required: mainCollaborator?.Id ? false : true,
             // Type options
             subLabel: helpText('objects.initiative.Lead_Grantee__c'),
-            options: accountGrantees?.records.map(item => ({
-                label: item.Name,
-                value: item.Id,
-            })),
+            options: accountGrantees
+                ? Object.values(accountGrantees.data).map(item => ({
+                      label: item.Name,
+                      value: item.Id,
+                  }))
+                : [],
         },
         {
             type: 'Text',
