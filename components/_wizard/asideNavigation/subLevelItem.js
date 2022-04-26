@@ -32,7 +32,7 @@ const SubLevelItemComponent = ({ item }) => {
     const { asPath, push } = useRouter();
 
     // Store: Initiative data
-    const { isNovoLeadFunder } = useInitiativeDataStore();
+    const { utilities } = useInitiativeDataStore();
 
     // Store: Wizard navigation
     const { completedItems, handleSubmit } = useWizardNavigationStore();
@@ -75,7 +75,7 @@ const SubLevelItemComponent = ({ item }) => {
                         )}
                     </i> */}
                     {/* Title "Goals" needs to be replaced for NNF */}
-                    {isNovoLeadFunder() && titleNNF
+                    {utilities.isNovoLeadFunder() && titleNNF
                         ? label(titleNNF)
                         : label(title)}
                 </span>

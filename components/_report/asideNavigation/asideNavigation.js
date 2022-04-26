@@ -21,7 +21,7 @@ const AsideNavigationComponent = () => {
     const { getValueLabel, label } = useMetadata();
 
     // Store: Initiative data
-    const { initiative, isNovoLeadFunder } = useInitiativeDataStore();
+    const { initiative, utilities } = useInitiativeDataStore();
 
     // Store: Report navigation
     const { buildReportNavigationItems, items } = useReportNavigationStore();
@@ -85,7 +85,7 @@ const AsideNavigationComponent = () => {
                                                     label(childItem.title)
                                                 )}`}>
                                                 {/* Title "Goals" needs to be replaced for NNF */}
-                                                {isNovoLeadFunder() &&
+                                                {utilities.isNovoLeadFunder() &&
                                                 childItem.titleNNF
                                                     ? label(childItem.titleNNF)
                                                     : label(childItem.title)}

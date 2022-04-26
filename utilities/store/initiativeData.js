@@ -1,5 +1,7 @@
 import create from 'zustand';
+import _get from 'lodash.get';
 import _set from 'lodash.set';
+import _unset from 'lodash.unset';
 import { query } from 'utilities/api/salesForce/fetchers';
 import { queries } from 'utilities/api/salesForce/queries';
 import { authStore } from 'utilities/store';
@@ -122,58 +124,80 @@ const useInitiativeDataStore = create((set, get) => ({
         },
         // Returns array of objects of activitySuccessMetrics based on Initiative_Activity__c id
         getInitiativeActivitySuccessMetrics(activityId) {
-            return Object.values(
-                get().initiative._activitySuccessMetrics
-            ).filter(
-                successMetric =>
-                    successMetric.Initiative_Activity__c === activityId
+            return (
+                Object.values(get().initiative._activitySuccessMetrics).filter(
+                    successMetric =>
+                        successMetric.Initiative_Activity__c === activityId
+                ) ?? []
             );
         },
-    },
-
-    // Helper for knowing if NNF is lead funder
-    isNovoLeadFunder() {
-        const funders = Object.values(get().initiative?._funders ?? [])
-            .filter(funder => funder.Type__c === constants.TYPES.LEAD_FUNDER)
-            .filter(funder => funder.Account__c === constants.IDS.NNF_ACCOUNT);
-        return funders?.length > 0;
-    },
-
-    // GETTERS
-
-    getInitiativeId() {
-        return get().initiative.Id;
-    },
-
-    // Getter for report based on ID
-    getReport(id) {
-        return id ? get().initiative?._reports[id] ?? {} : {};
-    },
-
-    // Getter for report details based on report ID
-    getReportDetails(id) {
-        return id
-            ? Object.values(get().initiative?._reportDetails).filter(
-                  item => item.Initiative_Report__c === id
-              ) ?? []
-            : [];
-    },
-
-    // UPDATERS
-
-    updateInitiativeData(path, data) {
-        let initiative = get().initiative;
-        _set(initiative, `${path}[${data.Id}]`, data);
-        set(() => ({
-            initiative,
-        }));
-    },
-
-    // Update initiative model and connected models
-    updateInitiative(data) {
-        set(state => ({
-            initiative: { ...state.initiative, ...data },
-        }));
+        // Returns report object based on Initiative_Report__c id
+        getReport(reportId) {
+            return id ? get().initiative?._reports[reportId] ?? {} : {};
+        },
+        // Returns array of objects of reportDetails based on Initiative_Report__c id
+        getReportDetails(reportId) {
+            return (
+                Object.values(get().initiative?._reportDetails).filter(
+                    item => item.Initiative_Report__c === reportId
+                ) ?? []
+            );
+        },
+        // Returns id of initiative - to make sure it's the latest
+        getInitiativeId() {
+            return get().initiative.Id;
+        },
+        // Update initiative with new data
+        updateInitiative(data) {
+            set(state => ({
+                initiative: { ...state.initiative, ...data },
+            }));
+        },
+        // Updates nested initiative objects with new data
+        updateInitiativeData(path, data) {
+            let initiative = get().initiative;
+            _set(initiative, `${path}[${data.Id}]`, data);
+            set(() => ({
+                initiative,
+            }));
+        },
+        // Updates data relations
+        updateInitiativeDataRelations(path, data) {
+            let initiative = get().initiative;
+            _set(initiative, path, { ..._get(initiative, path), ...data });
+            set(() => ({
+                initiative,
+            }));
+        },
+        // Removes initiative data
+        removeInitiativeData(path, id) {
+            let initiative = get().initiative;
+            _unset(initiative, `${path}[${id}]`);
+            set(() => ({
+                initiative,
+            }));
+        },
+        // Removes data relations
+        removeInitiativeDataRelations(path, fnRelation) {
+            let initiative = get().initiative;
+            Object.values(_get(initiative, path))
+                .filter(fnRelation)
+                .forEach(item => _unset(initiative, `${path}[${item.Id}]`));
+            set(() => ({
+                initiative,
+            }));
+        },
+        // Helper for knowing if NNF is lead funder
+        isNovoLeadFunder() {
+            const funders = Object.values(get().initiative?._funders ?? [])
+                .filter(
+                    funder => funder.Type__c === constants.TYPES.LEAD_FUNDER
+                )
+                .filter(
+                    funder => funder.Account__c === constants.IDS.NNF_ACCOUNT
+                );
+            return funders?.length > 0;
+        },
     },
 
     async updateReport(id) {
@@ -184,24 +208,6 @@ const useInitiativeDataStore = create((set, get) => ({
                     ...state.initiative,
                     _reports: {
                         ...state.initiative._reports,
-                        [id]: data,
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    async updateGoal(id) {
-        const data = await sfQuery(queries.initiativeGoal.get(id));
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _goals: {
-                        ...state.initiative._goals,
                         [id]: data,
                     },
                 },
@@ -245,48 +251,6 @@ const useInitiativeDataStore = create((set, get) => ({
                 },
             }));
         }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    // Bulk update multiple ids
-    async updateActivityGoals(ids) {
-        const data = await sfQuery(
-            queries.initiativeActivityGoal.getMultiple(ids)
-        );
-
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _activityGoals: {
-                        ...state.initiative._activityGoals,
-                        ..._returnAsKeys(data),
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    // Activity Goals: Remove items based on ids
-    async removeActivityGoals(ids) {
-        set(state => {
-            const activityGoals = Object.values(
-                state.initiative._activityGoals
-            ).filter(item => {
-                return ids.includes(item.Id) ? false : true;
-            });
-            return {
-                initiative: {
-                    ...state.initiative,
-                    _activityGoals: { ..._returnAsKeys(activityGoals) },
-                },
-            };
-        });
 
         // Update auth
         _updateAuth();

@@ -6,7 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import { useAuth, useMetadata, useElseware } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -16,7 +16,7 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import { InputWrapper, Select, LongText } from 'components/_inputs';
+import { InputWrapper, LongText } from 'components/_inputs';
 import GoalCard from 'components/_wizard/goalCard';
 
 const GoalsComponent = ({ pageProps }) => {
@@ -25,20 +25,20 @@ const GoalsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { label, valueSet, log, helpText } = useMetadata();
+    const { label, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate } = useSalesForce();
+    // Hook: Elseware setup
+    const { ewCreateUpdateWrapper } = useElseware();
 
     // Store: Wizard navigation
     const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const { initiative, updateGoal, CONSTANTS } = useInitiativeDataStore();
+    const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -46,9 +46,6 @@ const GoalsComponent = ({ pageProps }) => {
         setModalIsSaving(true);
         try {
             const { Goal__c } = formData;
-
-            // Object name
-            const object = 'Initiative_Goal__c';
 
             // Data for sf
             // Get type of submission based on goalType
@@ -59,15 +56,13 @@ const GoalsComponent = ({ pageProps }) => {
             };
 
             // Update / Save
-            const goalId = updateId
-                ? await sfUpdate({ object, data: data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative__c: initiative.Id },
-                  });
-
-            // Update store
-            await updateGoal(goalId);
+            await ewCreateUpdateWrapper(
+                'initiative-goal/initiative-goal',
+                updateId,
+                data,
+                { Initiative__c: initiative.Id },
+                '_goals'
+            );
 
             // Close modal
             setModalIsOpen(false);

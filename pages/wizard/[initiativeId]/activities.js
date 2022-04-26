@@ -6,12 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useMetadata, useElseware, useContext } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -31,17 +26,10 @@ const ActivitiesComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const {
-        labelTodo,
-        label,
-        valueSet,
-        controlledValueSet,
-        helpText,
-        log,
-    } = useMetadata();
+    const { label, valueSet, controlledValueSet, helpText } = useMetadata();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -53,17 +41,13 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { isDirty } = useFormState({ control });
 
     // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfDelete, sfQuery, queries } = useSalesForce();
+    const { ewUpdate, ewCreate } = useElseware();
 
     // Store: Initiative data
     const {
         initiative,
-        getReportDetails,
-        updateActivity,
-        updateActivityGoals,
-        removeActivityGoals,
+        utilities,
         updateReportDetails,
-        isNovoLeadFunder,
         CONSTANTS,
     } = useInitiativeDataStore();
 
@@ -83,9 +67,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                 Goals,
             } = formData;
 
-            // Object name
-            const object = 'Initiative_Activity__c';
-
             // Data for sf
             const data = {
                 Activity_Type__c: CONSTANTS.TYPES.ACTIVITY_INTERVENTION,
@@ -97,50 +78,41 @@ const ActivitiesComponent = ({ pageProps }) => {
                     ';'
                 ),
                 KPI_Category__c: initiative?.Category__c,
+                _activityGoals: Goals.map(item => item.selectValue),
             };
 
-            // Update / Save
-            const activityId = updateId
-                ? await sfUpdate({ object, data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative__c: initiative.Id },
-                  });
+            // Update / save (custom)
+            const { data: activityData } = updateId
+                ? await ewUpdate(
+                      'initiative-activity/initiative-activity-intervention',
+                      updateId,
+                      data
+                  )
+                : await ewCreate(
+                      'initiative-activity/initiative-activity-intervention',
+                      {
+                          ...data,
+                          Initiative__c: initiative.Id,
+                      }
+                  );
 
-            // Update store
-            await updateActivity(activityId);
+            // Destructure response
+            const { _activityGoals, ...rest } = activityData;
 
-            // Remove all previous goals
-            const deleteActivityGoals = Object.values(
-                initiative?._activityGoals
-            ).filter(item => item.Initiative_Activity__c === activityId);
-
-            const deletedActivityGoalIds = await Promise.all(
-                deleteActivityGoals.map(activityGoal => {
-                    return sfDelete({
-                        object: 'Initiative_Activity_Goal__c',
-                        id: activityGoal.Id,
-                    });
-                })
-            );
-            // Store - remove deleted data
-            await removeActivityGoals(deletedActivityGoalIds);
-
-            // Create Initiative activitie goals based on goal
-            const addedActivityGoalIds = await Promise.all(
-                Goals.map(item => {
-                    return sfCreate({
-                        object: 'Initiative_Activity_Goal__c',
-                        data: {
-                            Initiative_Goal__c: item.selectValue,
-                            Initiative_Activity__c: activityId,
-                        },
-                    });
-                })
+            // Clean out existing related data
+            utilities.removeInitiativeDataRelations(
+                '_activityGoals',
+                item => item.Initiative_Activity__c === updateId
             );
 
-            // Bulk update affected activity goals
-            await updateActivityGoals(addedActivityGoalIds);
+            // Update main data
+            utilities.updateInitiativeData('_activities', rest);
+
+            // Updated related data
+            utilities.updateInitiativeDataRelations(
+                '_activityGoals',
+                _activityGoals
+            );
 
             // Close modal
             setModalIsOpen(false);
@@ -155,7 +127,7 @@ const ActivitiesComponent = ({ pageProps }) => {
             // setValue: setValueReflections,
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    setValueReflections(`${activityId}-selector`, true);
+                    setValueReflections(`${activityData.Id}-selector`, true);
                 }
             }, 500);
         } catch (error) {
@@ -317,7 +289,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // Current report details
-    const currentReportDetails = getReportDetails(REPORT_ID);
+    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
 
     // Custom goals
     const customGoals = Object.values(initiative?._goals).filter(
@@ -494,9 +466,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                             initiative?.Category__c
                         )}
                         buttonLabel={label('custom.FA_ButtonAddActivityTag')}
-                        listMaxLength={isNovoLeadFunder() ? 1 : 4}
+                        listMaxLength={utilities.isNovoLeadFunder() ? 1 : 4}
                         controller={control}
-                        required={isNovoLeadFunder()}
+                        required={utilities.isNovoLeadFunder()}
                     />
                     <SelectList
                         name="Location"

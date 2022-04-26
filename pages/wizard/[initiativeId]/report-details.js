@@ -47,12 +47,7 @@ const ReportDetailsComponent = () => {
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const {
-        initiative,
-        updateReport,
-        getReport,
-        isNovoLeadFunder,
-    } = useInitiativeDataStore();
+    const { initiative, updateReport, utilities } = useInitiativeDataStore();
 
     // Method: Submit page content
     async function submit(formData) {
@@ -96,7 +91,7 @@ const ReportDetailsComponent = () => {
     }, [initiative]);
 
     // Get current report
-    const currentReport = getReport(REPORT_ID);
+    const currentReport = utilities.getReport(REPORT_ID);
 
     return (
         <>
@@ -113,8 +108,8 @@ const ReportDetailsComponent = () => {
                     label={label('custom.FA_ReportName')}
                     placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
                     maxLength={80}
-                    disabled={isNovoLeadFunder()}
-                    required={!isNovoLeadFunder()}
+                    disabled={utilities.isNovoLeadFunder()}
+                    required={!utilities.isNovoLeadFunder()}
                     controller={control}
                 />
                 <Select
@@ -126,8 +121,8 @@ const ReportDetailsComponent = () => {
                     )}
                     placeholder={labelTodo('Type')}
                     options={valueSet('initiativeReport.Report_Type__c')}
-                    disabled={isNovoLeadFunder()}
-                    required={!isNovoLeadFunder()}
+                    disabled={utilities.isNovoLeadFunder()}
+                    required={!utilities.isNovoLeadFunder()}
                     controller={control}
                 />
                 <DatePicker
@@ -136,8 +131,8 @@ const ReportDetailsComponent = () => {
                     subLabel={helpText('objects.initiativeReport.Due_Date__c')}
                     defaultValue={currentReport.Due_Date__c}
                     controller={control}
-                    disabled={isNovoLeadFunder()}
-                    required={!isNovoLeadFunder()}
+                    disabled={utilities.isNovoLeadFunder()}
+                    required={!utilities.isNovoLeadFunder()}
                 />
                 <DateRange
                     name="ReportDuration"
@@ -145,14 +140,14 @@ const ReportDetailsComponent = () => {
                         from: currentReport.Report_Period_Start_Date__c,
                         to: currentReport.Report_Period_End_Date__c,
                     }}
-                    disabled={isNovoLeadFunder()}
+                    disabled={utilities.isNovoLeadFunder()}
                     label={`${label(
                         'objects.initiativeReport.Report_Period_Start_Date__c'
                     )} / ${label(
                         'objects.initiativeReport.Report_Period_End_Date__c'
                     )}`}
                     controller={control}
-                    required={!isNovoLeadFunder()}
+                    required={!utilities.isNovoLeadFunder()}
                 />
             </InputWrapper>
         </>

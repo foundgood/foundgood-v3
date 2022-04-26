@@ -62,7 +62,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     // Store: Initiative data
     const {
         initiative,
-        getReportDetails,
+        utilities,
         updateActivity,
         updateReportDetails,
         CONSTANTS,
@@ -315,7 +315,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // Current report details
-    const currentReportDetails = getReportDetails(REPORT_ID);
+    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
 
     // Check if there is relevant report details yet
     const reportDetailsItems = currentReportDetails

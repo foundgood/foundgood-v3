@@ -48,12 +48,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     const [applicantType, setApplicantType] = useState(null);
 
     // Store: Initiative data
-    const {
-        initiative,
-        getReportDetails,
-        updateInitiativeData,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
@@ -176,7 +171,10 @@ const ApplicantsComponent = ({ pageProps }) => {
                             Initiative_Report__c: REPORT_ID,
                         }
                     );
-                    updateInitiativeData('_reportDetails', reportDetailsData);
+                    utilities.updateInitiativeData(
+                        '_reportDetails',
+                        reportDetailsData
+                    );
                 })
         );
     }
@@ -240,7 +238,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     }, [applicantTypeSelect]);
 
     // Current report details
-    const currentReportDetails = getReportDetails(REPORT_ID);
+    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
 
     // Check if there is relevant report details yet
     const reportDetailsItems = currentReportDetails

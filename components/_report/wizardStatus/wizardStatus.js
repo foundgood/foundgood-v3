@@ -34,10 +34,10 @@ const WizardStatusComponent = () => {
     const { sfUpdate } = useSalesForce();
 
     // Initiative data
-    const { updateReport, getReport, CONSTANTS } = useInitiativeDataStore();
+    const { updateReport, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Current report
-    const currentReport = getReport(REPORT_ID);
+    const currentReport = utilities.getReport(REPORT_ID);
 
     // State: Modal
     const [showModal, setShowModal] = useState(false);

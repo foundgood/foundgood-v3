@@ -28,7 +28,7 @@ const BottomNavigationComponent = () => {
     const { label } = useMetadata();
 
     // Store: Initiaitive Data
-    const { getInitiativeId } = useInitiativeDataStore();
+    const { utilities } = useInitiativeDataStore();
 
     // Store: Wizard navigation
     const {
@@ -55,7 +55,9 @@ const BottomNavigationComponent = () => {
             // Go to next in flow
             router.push(
                 nextItemUrl(
-                    INITIATIVE_ID === 'new' ? getInitiativeId() : INITIATIVE_ID,
+                    INITIATIVE_ID === 'new'
+                        ? utilities.getInitiativeId()
+                        : INITIATIVE_ID,
                     REPORT_ID
                 )
             );

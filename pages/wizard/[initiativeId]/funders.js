@@ -43,13 +43,7 @@ const FundersComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const {
-        initiative,
-        getReportDetails,
-        updateInitiativeData,
-        isNovoLeadFunder,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
@@ -189,7 +183,10 @@ const FundersComponent = ({ pageProps }) => {
                         Initiative_Report__c: REPORT_ID,
                     }
                 );
-                updateInitiativeData('_reportDetails', reportDetailsData);
+                utilities.updateInitiativeData(
+                    '_reportDetails',
+                    reportDetailsData
+                );
             })
         );
     }
@@ -255,7 +252,7 @@ const FundersComponent = ({ pageProps }) => {
     });
 
     // Current report details
-    const currentReportDetails = getReportDetails(REPORT_ID);
+    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
 
     // Check if there is relevant report details yet
     const reportDetailsItems = currentReportDetails.filter(item =>
@@ -273,7 +270,7 @@ const FundersComponent = ({ pageProps }) => {
             name: 'Account__c',
             label: label('objects.initiativeFunder.Account__c'),
             disabled:
-                isNovoLeadFunder() &&
+                utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             required: true,
             // Type options
@@ -290,7 +287,7 @@ const FundersComponent = ({ pageProps }) => {
             name: 'Type__c',
             label: label('objects.initiativeFunder.Type__c'),
             disabled:
-                isNovoLeadFunder() &&
+                utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             required: true,
             // Type options
@@ -302,7 +299,7 @@ const FundersComponent = ({ pageProps }) => {
             name: 'Contribution',
             label: label('objects.initiativeFunder.Amount__c'),
             disabled:
-                isNovoLeadFunder() &&
+                utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             // Type options
             showText: true,
@@ -321,7 +318,7 @@ const FundersComponent = ({ pageProps }) => {
                 'objects.initiativeFunder.Grant_Start_Date__c'
             )} / ${label('objects.initiativeFunder.Grant_End_Date__c')}`,
             disabled:
-                isNovoLeadFunder() &&
+                utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
         },
         {
@@ -329,7 +326,7 @@ const FundersComponent = ({ pageProps }) => {
             name: 'Application_Id__c',
             label: label('objects.initiativeFunder.Application_Id__c'),
             disabled:
-                isNovoLeadFunder() &&
+                utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             // Type options
             maxLength: 15,

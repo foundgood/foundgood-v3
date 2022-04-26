@@ -41,7 +41,7 @@ const RisksAndChallengesComponent = () => {
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const { initiative, updateReport, getReport } = useInitiativeDataStore();
+    const { initiative, utilities, updateReport } = useInitiativeDataStore();
 
     // Method: Submit page content
     async function submit(formData) {
@@ -79,7 +79,7 @@ const RisksAndChallengesComponent = () => {
     }, [initiative]);
 
     // Get current report
-    const currentReport = getReport(REPORT_ID);
+    const currentReport = utilities.getReport(REPORT_ID);
 
     return (
         <>

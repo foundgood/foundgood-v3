@@ -38,13 +38,7 @@ const OverviewComponent = () => {
     // STORES
     // ///////////////////
 
-    const {
-        CONSTANTS,
-        initiative,
-        isNovoLeadFunder,
-        updateInitiative,
-        updateInitiativeData,
-    } = useInitiativeDataStore();
+    const { CONSTANTS, initiative, utilities } = useInitiativeDataStore();
 
     // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
@@ -101,7 +95,7 @@ const OverviewComponent = () => {
             );
 
             // Update initiative
-            updateInitiative(initiativeData);
+            utilities.updateInitiative(initiativeData);
 
             // Only create collaborator if main collaborator have not been set
             if (!mainCollaborator?.Account__c || false) {
@@ -114,7 +108,10 @@ const OverviewComponent = () => {
                     }
                 );
 
-                updateInitiativeData('_collaborators', collaboratorData);
+                utilities.updateInitiativeData(
+                    '_collaborators',
+                    collaboratorData
+                );
             }
 
             // Create / update funder objective based on Category
@@ -190,7 +187,9 @@ const OverviewComponent = () => {
                       ag => ag.Id === mainCollaborator?.Account__c
                   )?.Id
                 : null,
-            disabled: mainCollaborator?.Id ? true : isNovoLeadFunder(),
+            disabled: mainCollaborator?.Id
+                ? true
+                : utilities.isNovoLeadFunder(),
             required: mainCollaborator?.Id ? false : true,
             // Type options
             subLabel: helpText('objects.initiative.Lead_Grantee__c'),
@@ -206,8 +205,14 @@ const OverviewComponent = () => {
             name: 'Name',
             label: label('custom.FA_InitiativeName'),
             defaultValue: initiative?.Name === '___' ? '' : initiative?.Name,
-            disabled: initiative?.Name === '___' ? isNovoLeadFunder() : true,
-            required: initiative?.Name === '___' ? !isNovoLeadFunder() : false,
+            disabled:
+                initiative?.Name === '___'
+                    ? utilities.isNovoLeadFunder()
+                    : true,
+            required:
+                initiative?.Name === '___'
+                    ? !utilities.isNovoLeadFunder()
+                    : false,
             // Type options
             maxLength: 80,
         },
@@ -216,7 +221,7 @@ const OverviewComponent = () => {
             name: 'Category__c',
             label: label('objects.initiative.Category__c'),
             defaultValue: initiative?.Category__c ? initiative.Category__c : '',
-            disabled: isNovoLeadFunder(),
+            disabled: utilities.isNovoLeadFunder(),
             required: true,
             // Type options
             options: valueSet('initiative.Category__c'),
@@ -256,7 +261,7 @@ const OverviewComponent = () => {
                 from: initiative?.Grant_Start_Date__c,
                 to: initiative?.Grant_End_Date__c,
             },
-            disabled: isNovoLeadFunder(),
+            disabled: utilities.isNovoLeadFunder(),
         },
         {
             type: 'SelectList',

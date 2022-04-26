@@ -40,8 +40,8 @@ const IntroductionComponent = ({ pageProps }) => {
 
     // Store: Initiative data / Wizard navigation
     const {
-        updateInitiative,
         initiative,
+        utilities,
         reset: resetInitiativeStore,
     } = useInitiativeDataStore();
 
@@ -58,7 +58,7 @@ const IntroductionComponent = ({ pageProps }) => {
             );
 
             // Update store
-            updateInitiative(initiativeData);
+            utilities.updateInitiative(initiativeData);
         }
     }
 

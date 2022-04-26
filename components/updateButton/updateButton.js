@@ -34,7 +34,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
     const { userInitiativeRights } = useAuth();
 
     // Initiative data
-    const { updateReport, getReport, CONSTANTS } = useInitiativeDataStore();
+    const { updateReport, utilities, CONSTANTS } = useInitiativeDataStore();
 
     const [canUpdate, setCanUpdate] = useState(true);
 
@@ -42,7 +42,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
     async function reportInProgress() {
         try {
             if (
-                getReport(REPORT_ID).Status__c ===
+                utilities.getReport(REPORT_ID).Status__c ===
                 CONSTANTS.TYPES.REPORT_NOT_STARTED
             ) {
                 // Object name
@@ -76,7 +76,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
         const canUpdate =
             userInitiativeRights.canEdit &&
             (reportPage
-                ? getReport(REPORT_ID).Status__c !==
+                ? utilities.getReport(REPORT_ID).Status__c !==
                   CONSTANTS.TYPES.REPORT_PUBLISHED
                     ? true
                     : false

@@ -41,7 +41,7 @@ const EndOfGrantReflectionsComponent = () => {
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const { initiative, updateReport, getReport } = useInitiativeDataStore();
+    const { initiative, updateReport, utilities } = useInitiativeDataStore();
 
     // Method: Submit page content
     async function submit(formData) {
@@ -82,7 +82,7 @@ const EndOfGrantReflectionsComponent = () => {
     }, [initiative]);
 
     // Get current report
-    const currentReport = getReport(REPORT_ID);
+    const currentReport = utilities.getReport(REPORT_ID);
 
     return (
         <>

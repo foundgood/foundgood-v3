@@ -27,7 +27,7 @@ const ReportComponent = () => {
         initiative: initiativeFromSalesForce,
         populateReportDetails,
         populateReport,
-        getReport,
+        utilities,
         CONSTANTS,
     } = useInitiativeDataStore();
 
@@ -42,17 +42,18 @@ const ReportComponent = () => {
 
     // Effect: React to new report ids and set version accordingly
     useEffect(() => {
-        if (getReport(REPORT_ID)?.Id) {
+        if (utilities.getReport(REPORT_ID)?.Id) {
             setReportVersion(
-                getReport(REPORT_ID)?.Report_Viewer_Version__c ?? 'default'
+                utilities.getReport(REPORT_ID)?.Report_Viewer_Version__c ??
+                    'default'
             );
         }
-    }, [REPORT_ID, getReport(REPORT_ID)?.Report_Viewer_Version__c]);
+    }, [REPORT_ID, utilities.getReport(REPORT_ID)?.Report_Viewer_Version__c]);
 
     // Fetcher stand by for json data if report version number matches
     const { data: initiativeFromJson } = useSWR(
         ['1.0', '1.1'].includes(reportVersion)
-            ? getReport(REPORT_ID).Exported_Report_URL__c
+            ? utilities.getReport(REPORT_ID).Exported_Report_URL__c
             : null,
         simpleJson.fetcher,
         {

@@ -59,13 +59,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // Store: Initiative data
-    const {
-        initiative,
-        updateInitiativeData,
-        getReportDetails,
-        updateReportDetails,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -146,7 +140,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 Initiative_Report__c: REPORT_ID,
             }
         );
-        updateInitiativeData('_reportDetails', reportDetailsData);
+        utilities.updateInitiativeData('_reportDetails', reportDetailsData);
     }
 
     // Method: Form error/validation handler
@@ -208,7 +202,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // Current report details
-    const currentReportDetails = getReportDetails(REPORT_ID);
+    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
     const currentReflection =
         currentReportDetails.find(
             detail =>

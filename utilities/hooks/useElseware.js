@@ -11,7 +11,7 @@ const useElseware = () => {
     const { loggedIn, updateUserTimeout } = useAuth();
 
     // Store: Initiative data
-    const { updateInitiativeData } = useInitiativeDataStore();
+    const { utilities } = useInitiativeDataStore();
 
     // Method for consuming GET with elseware API
     // Path is the elseware path - e.g. initiative-activity/initiative-activity
@@ -69,6 +69,26 @@ const useElseware = () => {
         }
     }
 
+    // Method for deleting any object with elseware API
+    // Path is the elseware path - e.g. initiative-activity/initiative-activity
+    // Id is the id of the object - e.g. a0p1x0000008CbtAAE
+    // Returns nothing
+    async function ewDelete(path, id) {
+        try {
+            const responseData = await elseware.remove({
+                path,
+                params: { id },
+            });
+
+            // Update user timeout
+            updateUserTimeout();
+
+            return responseData;
+        } catch (error) {
+            console.warn(error);
+        }
+    }
+
     // Wrapper method for creating or updating any object with elseware API
     // It also updates the object in the initiative data store as a side effect
     // Path is the elseware path - e.g. initiative-activity/initiative-activity
@@ -92,7 +112,8 @@ const useElseware = () => {
               });
 
         // Update store
-        if (initiativePath) updateInitiativeData(initiativePath, responseData);
+        if (initiativePath)
+            utilities.updateInitiativeData(initiativePath, responseData);
 
         // Return data
         return responseData;
@@ -101,6 +122,7 @@ const useElseware = () => {
     return {
         ewGet,
         ewCreate,
+        ewDelete,
         ewUpdate,
         ewCreateUpdateWrapper,
     };

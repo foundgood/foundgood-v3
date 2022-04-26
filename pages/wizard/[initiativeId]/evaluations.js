@@ -50,7 +50,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // Store: Initiative data
     const {
         initiative,
-        getReportDetails,
+        utilities,
         updateReportDetails,
         CONSTANTS,
     } = useInitiativeDataStore();
@@ -196,9 +196,9 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // Current report details
-    const currentReportDetails = getReportDetails(REPORT_ID).filter(
-        item => item.Type__c === CONSTANTS.TYPES.EVALUATION
-    );
+    const currentReportDetails = utilities
+        .getReportDetails(REPORT_ID)
+        .filter(item => item.Type__c === CONSTANTS.TYPES.EVALUATION);
 
     return (
         <>
