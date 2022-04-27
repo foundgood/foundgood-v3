@@ -42,7 +42,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
     async function reportInProgress() {
         try {
             if (
-                utilities.getReport(REPORT_ID).Status__c ===
+                utilities.reports.get(REPORT_ID).Status__c ===
                 CONSTANTS.TYPES.REPORT_NOT_STARTED
             ) {
                 // Object name
@@ -76,7 +76,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
         const canUpdate =
             userInitiativeRights.canEdit &&
             (reportPage
-                ? utilities.getReport(REPORT_ID).Status__c !==
+                ? utilities.reports.get(REPORT_ID).Status__c !==
                   CONSTANTS.TYPES.REPORT_PUBLISHED
                     ? true
                     : false

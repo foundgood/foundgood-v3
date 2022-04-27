@@ -20,25 +20,51 @@ import { InputWrapper, LongText } from 'components/_inputs';
 import GoalCard from 'components/_wizard/goalCard';
 
 const GoalsComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Hook: Metadata
-    const { label, helpText } = useMetadata();
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: useForm setup
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { label, helpText } = useMetadata();
+    const { ewCreateUpdateWrapper } = useElseware();
+
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { handleSubmit, control, setValue, reset } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // Hook: Elseware setup
-    const { ewCreateUpdateWrapper } = useElseware();
-
-    // Store: Wizard navigation
-    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
-
-    // Store: Initiative data
-    const { initiative, CONSTANTS } = useInitiativeDataStore();
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -50,7 +76,7 @@ const GoalsComponent = ({ pageProps }) => {
             // Data for sf
             // Get type of submission based on goalType
             const data = {
-                Type__c: CONSTANTS.TYPES.GOAL_CUSTOM,
+                Type__c: CONSTANTS.GOALS.GOAL_CUSTOM,
                 Goal__c,
                 KPI_Category__c: initiative?.Category__c,
             };
@@ -79,16 +105,14 @@ const GoalsComponent = ({ pageProps }) => {
         }
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        const { Goal__c } = initiative?._goals[updateId] ?? {};
+        const { Goal__c } = utilities.goals.get(updateId);
         setValue('Goal__c', Goal__c);
     }, [updateId, modalIsOpen]);
 
@@ -107,20 +131,17 @@ const GoalsComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {Object.keys(initiative?._goals).map(goalKey => {
-                    const goal = initiative?._goals[goalKey];
-                    return goal.Type__c === CONSTANTS.TYPES.GOAL_CUSTOM ? (
-                        <GoalCard
-                            key={goalKey}
-                            headline={_get(goal, 'Goal__c') || ''}
-                            footnote={_get(goal, 'Type__c') || ''}
-                            action={() => {
-                                setUpdateId(goalKey);
-                                setModalIsOpen(true);
-                            }}
-                        />
-                    ) : null;
-                })}
+                {utilities.goals.getTypeCustom().map(goal => (
+                    <GoalCard
+                        key={goal.Id}
+                        headline={_get(goal, 'Goal__c') || ''}
+                        footnote={_get(goal, 'Type__c') || ''}
+                        action={() => {
+                            setUpdateId(goal.Id);
+                            setModalIsOpen(true);
+                        }}
+                    />
+                ))}
                 <Button
                     theme="teal"
                     className="self-start"

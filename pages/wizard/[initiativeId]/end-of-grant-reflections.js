@@ -82,7 +82,7 @@ const EndOfGrantReflectionsComponent = () => {
     }, [initiative]);
 
     // Get current report
-    const currentReport = utilities.getReport(REPORT_ID);
+    const currentReport = utilities.reports.get(REPORT_ID);
 
     return (
         <>

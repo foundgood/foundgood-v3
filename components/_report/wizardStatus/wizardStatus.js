@@ -37,7 +37,7 @@ const WizardStatusComponent = () => {
     const { updateReport, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Current report
-    const currentReport = utilities.getReport(REPORT_ID);
+    const currentReport = utilities.reports.get(REPORT_ID);
 
     // State: Modal
     const [showModal, setShowModal] = useState(false);

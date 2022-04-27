@@ -54,8 +54,8 @@ const ActivitiesComponent = ({ pageProps }) => {
                     const location = item.Initiative_Location__c?.split(
                         ';'
                     ).join(', ');
-                    const successIndicators = utilities
-                        .getInitiativeActivitySuccessMetrics(item.Id)
+                    const successIndicators = utilities.activitySuccessMetrics
+                        .getFromActivityId(item.Id)
                         .map(success => {
                             return success.Name;
                         });

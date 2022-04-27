@@ -6,7 +6,13 @@ import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useContext, useElseware } from 'utilities/hooks';
+import {
+    useAuth,
+    useMetadata,
+    useContext,
+    useElseware,
+    useReflections,
+} from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -21,17 +27,55 @@ import CollaboratorCard from 'components/_wizard/collaboratorCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const ApplicantsComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-
-    // Hook: Metadata
     const { label, valueSet, helpText } = useMetadata();
+    const { ewGet, ewCreateUpdateWrapper } = useElseware();
+    const {
+        submitMultipleNoReflections,
+        submitMultipleReflections,
+    } = useReflections({
+        dataSet: utilities.collaborators.getTypeApplicantsAll,
+        parentKey: 'Initiative_Collaborator__c',
+        type: CONSTANTS.REPORT_DETAILS.COLLABORATOR_OVERVIEW,
+    });
 
-    // Hook: useForm setup
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [reflecting, setReflecting] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+    const [applicantType, setApplicantType] = useState(null);
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { handleSubmit, control, setValue, reset } = useForm();
     const {
         handleSubmit: handleSubmitReflections,
@@ -39,24 +83,12 @@ const ApplicantsComponent = ({ pageProps }) => {
         setValue: setValueReflections,
     } = useForm();
     const { isDirty } = useFormState({ control });
-
-    // Hook: Elseware setup
-    const { ewGet, ewCreate, ewCreateUpdateWrapper } = useElseware();
-
-    // Watch & Update - Applicant Type
     const applicantTypeSelect = useWatch({ control, name: 'Type__c' });
-    const [applicantType, setApplicantType] = useState(null);
 
-    // Store: Initiative data
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-
-    // Get data for form
-    const { data: accountGrantees } = ewGet('account/account', {
-        type: 'grantee',
-    });
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -110,90 +142,16 @@ const ApplicantsComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Adds reflections
-    async function submitReflections(formData) {
-        // Reformat form data based on topic keys
-        const reportDetails = Object.keys(initiative?._collaborators)
-            .reduce((acc, key) => {
-                // Does the reflection relation exist already?
-                const currentReflection = currentReportDetails.filter(
-                    item => item.Initiative_Collaborator__c === key
-                );
-                return [
-                    ...acc,
-                    {
-                        reportDetailId: currentReflection[0]?.Id ?? false,
-                        relationId: key,
-                        value: formData[`${key}-reflection`],
-                        selected: formData[`${key}-selector`],
-                    },
-                ];
-            }, [])
-            .filter(item => item.selected);
-
-        // Create or update report detail ids based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        await Promise.all(
-            reportDetails.map(item =>
-                ewCreateUpdateWrapper(
-                    'initiative-report-detail/initiative-report-detail',
-                    item.reportDetailId,
-                    {
-                        Description__c: item.value,
-                    },
-                    {
-                        Type__c: CONSTANTS.TYPES.COLLABORATOR_OVERVIEW,
-                        Initiative_Collaborator__c: item.relationId,
-                        Initiative_Report__c: REPORT_ID,
-                    },
-                    '_reportDetails'
-                )
-            )
-        );
-    }
-
-    // Method: Submits no reflections flag
-    async function submitNoReflections() {
-        // Create or update report detail based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        await Promise.all(
-            Object.values(initiative?._collaborators)
-                .filter(item =>
-                    CONSTANTS.TYPES.APPLICANTS_ALL.includes(item.Type__c)
-                )
-                .map(async item => {
-                    const { data: reportDetailsData } = await ewCreate(
-                        'initiative-report-detail/initiative-report-detail',
-                        {
-                            Type__c: CONSTANTS.TYPES.COLLABORATOR_OVERVIEW,
-                            Initiative_Funder__c: item.Id,
-                            Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
-                            Initiative_Report__c: REPORT_ID,
-                        }
-                    );
-                    utilities.updateInitiativeData(
-                        '_reportDetails',
-                        reportDetailsData
-                    );
-                })
-        );
-    }
-
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
         throw error;
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-
-    // Local state to handle reflection
-    const [reflecting, setReflecting] = useState(false);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
@@ -203,7 +161,7 @@ const ApplicantsComponent = ({ pageProps }) => {
             Account__c,
             Type__c,
             Description__c,
-        } = initiative?._collaborators[updateId] ?? {};
+        } = utilities.collaborators.get(updateId);
 
         setValue('Type__c', Type__c);
         setValue('Account__c', Account__c);
@@ -219,17 +177,13 @@ const ApplicantsComponent = ({ pageProps }) => {
 
     // Add submit handler to wizard navigation store
     useEffect(() => {
-        if (MODE === CONTEXTS.REPORT) {
-            setTimeout(() => {
-                setCurrentSubmitHandler(
-                    handleSubmitReflections(submitReflections, error)
-                );
-            }, 100);
-        } else {
-            setTimeout(() => {
-                setCurrentSubmitHandler(null);
-            }, 100);
-        }
+        setTimeout(() => {
+            setCurrentSubmitHandler(
+                MODE === CONTEXTS.REPORT
+                    ? handleSubmitReflections(submitMultipleReflections, error)
+                    : null
+            );
+        }, 100);
     }, [initiative]);
 
     // Watch the change of goal type
@@ -237,8 +191,20 @@ const ApplicantsComponent = ({ pageProps }) => {
         setApplicantType(applicantTypeSelect);
     }, [applicantTypeSelect]);
 
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Get data for form
+    const { data: accountGrantees } = ewGet('account/account', {
+        type: 'grantee',
+    });
+
     // Current report details
-    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
+    const currentReportDetails = utilities.reportDetails.getFromReportId(
+        REPORT_ID
+    );
 
     // Check if there is relevant report details yet
     const reportDetailsItems = currentReportDetails
@@ -247,14 +213,15 @@ const ApplicantsComponent = ({ pageProps }) => {
                 item.Initiative_Collaborator__c
             )
         )
-        .filter(item => {
-            // Collaborator
-            const collaborator =
-                initiative?._collaborators[item.Initiative_Collaborator__c];
-            return CONSTANTS.TYPES.APPLICANTS_ALL.includes(
-                collaborator.Type__c
-            );
-        });
+        .filter(item =>
+            CONSTANTS.COLLABORATORS.APPLICANTS_ALL.includes(
+                utilities.collaborators.get(item.Initiative_Collaborator__c)
+                    .Type__c
+            )
+        );
+
+    // Get applicants
+    const applicants = utilities.collaborators.getTypeApplicantsAll();
 
     return (
         <>
@@ -264,48 +231,37 @@ const ApplicantsComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {MODE === CONTEXTS.REPORT &&
-                    Object.values(
-                        initiative._collaborators
-                    ).filter(collaborator =>
-                        CONSTANTS.TYPES.APPLICANTS_ALL.includes(
-                            collaborator.Type__c
-                        )
-                    ).length > 0 && (
-                        <NoReflections
-                            onClick={submitNoReflections}
-                            reflectionItems={reportDetailsItems.map(
-                                item => item.Description__c
-                            )}
-                            reflecting={reflecting}
-                        />
-                    )}
-                {Object.keys(initiative._collaborators).map(collaboratorKey => {
-                    const collaborator =
-                        initiative._collaborators[collaboratorKey];
+                {MODE === CONTEXTS.REPORT && applicants.length > 0 && (
+                    <NoReflections
+                        onClick={submitMultipleNoReflections}
+                        reflectionItems={reportDetailsItems.map(
+                            item => item.Description__c
+                        )}
+                        reflecting={reflecting}
+                    />
+                )}
+                {applicants.map(collaborator => {
                     const reflection = currentReportDetails.filter(
                         item =>
-                            item.Initiative_Collaborator__c === collaboratorKey
+                            item.Initiative_Collaborator__c === collaborator.Id
                     );
-                    return CONSTANTS.TYPES.APPLICANTS_ALL.includes(
-                        collaborator.Type__c
-                    ) ? (
+                    return (
                         <CollaboratorCard
-                            key={collaboratorKey}
+                            key={collaborator.Id}
                             headline={
                                 _get(collaborator, 'Account__r.Name') || ''
                             }
                             label={_get(collaborator, 'Type__c') || ''}
                             body={_get(collaborator, 'Description__c') || ''}
                             action={() => {
-                                setUpdateId(collaboratorKey);
+                                setUpdateId(collaborator.Id);
                                 setModalIsOpen(true);
                             }}
                             reflectAction={setReflecting}
                             controller={
                                 MODE === CONTEXTS.REPORT && controlReflections
                             }
-                            name={collaboratorKey}
+                            name={collaborator.Id}
                             defaultValue={{
                                 selected:
                                     reflection[0] &&
@@ -322,8 +278,9 @@ const ApplicantsComponent = ({ pageProps }) => {
                                 'custom.FA_ReportWizardCoApplicantReflectionSubHeading'
                             )}
                         />
-                    ) : null;
+                    );
                 })}
+
                 <Button
                     theme="teal"
                     className="self-start"
@@ -365,7 +322,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                     />
                     {/* Hide if main applicant */}
                     {initiative?._collaborators[updateId]?.Type__c !==
-                        CONSTANTS.TYPES.MAIN_COLLABORATOR && (
+                        CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR && (
                         <Select
                             name="Type__c"
                             label={label(
@@ -380,7 +337,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                             options={valueSet(
                                 'initiativeCollaborator.Type__c'
                             ).filter(item =>
-                                CONSTANTS.TYPES.APPLICANTS_CREATE.includes(
+                                CONSTANTS.COLLABORATORS.APPLICANTS_CREATE.includes(
                                     item.value
                                 )
                             )}
@@ -401,7 +358,8 @@ const ApplicantsComponent = ({ pageProps }) => {
                         )}
                         controller={control}
                     />
-                    {applicantType === CONSTANTS.TYPES.MAIN_COLLABORATOR && (
+                    {applicantType ===
+                        CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR && (
                         <DateRange
                             name="Dates"
                             label={`${label(

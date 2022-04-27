@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import { useForm, useFormState, useWatch } from 'react-hook-form';
+import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import { useAuth, useMetadata, useElseware } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -14,68 +14,75 @@ import {
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Button from 'components/button';
 import Modal from 'components/modal';
-import {
-    InputWrapper,
-    Select,
-    SelectList,
-    Text,
-    Number,
-} from 'components/_inputs';
+import { InputWrapper, Select, SelectList, Text } from 'components/_inputs';
 import KpiCard from 'components/_wizard/kpiCard';
 
 const IndicatorsComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Hook: Metadata
-    const {
-        labelTodo,
-        label,
-        valueSet,
-        helpText,
-        getValueLabel,
-        log,
-        controlledValueSet,
-    } = useMetadata();
-
-    // Hook: useForm setup
-    const { handleSubmit, control, setValue, reset, unregister } = useForm();
-    const { isDirty } = useFormState({ control });
-
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
     // Store: Wizard navigation
     const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // Store: Initiative data
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const {
-        initiative,
-        updateActivitySuccessMetric,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+        label,
+        valueSet,
+        helpText,
+        getValueLabel,
+        controlledValueSet,
+    } = useMetadata();
+    const { ewCreateUpdateWrapper } = useElseware();
+
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [indicatorType, setIndiciatorType] = useState(null);
+    const [updateId, setUpdateId] = useState(null);
+    const [activity, setActivity] = useState(null);
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
+    const { handleSubmit, control, setValue, reset } = useForm();
+    const { isDirty } = useFormState({ control });
+
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
         setModalIsSaving(true);
+
         try {
-            const {
-                KPI__c,
-                Gender,
-                Highest_Age__c,
-                Lowest_Age__c,
-                Name,
-                Type__c,
-            } = formData;
-
-            console.log(Gender);
-
-            // Object name
-            const object = 'Initiative_Activity_Success_Metric__c';
+            const { KPI__c, Gender, Name } = formData;
 
             // Get age
             const indicatorWithAge =
@@ -85,12 +92,12 @@ const IndicatorsComponent = ({ pageProps }) => {
 
             // Data for sf
             const data = {
-                [CONSTANTS.TYPES.INDICATOR_CUSTOM]: {
+                [CONSTANTS.ACTIVITY_SUCCESS_METRICS.INDICATOR_CUSTOM]: {
                     Type__c: indicatorType,
                     Name,
                     KPI_Category__c: initiative?.Category__c,
                 },
-                [CONSTANTS.TYPES.INDICATOR_PREDEFINED]: {
+                [CONSTANTS.ACTIVITY_SUCCESS_METRICS.INDICATOR_PREDEFINED]: {
                     Type__c: indicatorType,
                     KPI__c,
                     Name: KPI__c,
@@ -105,22 +112,13 @@ const IndicatorsComponent = ({ pageProps }) => {
             };
 
             // Update / Save
-            const ActivitySuccessMetricId = updateId
-                ? await sfUpdate({
-                      object,
-                      data: data[indicatorType],
-                      id: updateId,
-                  })
-                : await sfCreate({
-                      object,
-                      data: {
-                          ...data[indicatorType],
-                          Initiative_Activity__c: activity.Id,
-                      },
-                  });
-
-            // Update store
-            await updateActivitySuccessMetric(ActivitySuccessMetricId);
+            await ewCreateUpdateWrapper(
+                'initiative-activity-success-metric/initiative-activity-success-metric',
+                updateId,
+                data[indicatorType],
+                { Initiative_Activity__c: activity.Id },
+                '_activitySuccessMetrics'
+            );
 
             // Close modal
             setModalIsOpen(false);
@@ -139,22 +137,22 @@ const IndicatorsComponent = ({ pageProps }) => {
         }
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-    const [indicatorType, setIndiciatorType] = useState(null);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
-    const [activity, setActivity] = useState(null);
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        const { KPI__c, Gender__c, Gender_Other__c, Type__c, Name } =
-            initiative?._activitySuccessMetrics[updateId] ?? {};
+        const {
+            KPI__c,
+            Gender__c,
+            Gender_Other__c,
+            Type__c,
+            Name,
+        } = utilities.activitySuccessMetrics.get(updateId);
 
         setValue('Type__c', Type__c);
-
         setValue('Name', Name);
         setValue('KPI__c', KPI__c);
         setValue('Gender', [
@@ -165,23 +163,20 @@ const IndicatorsComponent = ({ pageProps }) => {
         ]);
     }, [updateId, modalIsOpen]);
 
-    // Activities
-    const activities = Object.keys(initiative?._activities).filter(
-        activityKey => {
-            const activity = initiative?._activities[activityKey];
-            return (
-                activity.Activity_Type__c ===
-                CONSTANTS.TYPES.ACTIVITY_INTERVENTION
-            );
-        }
-    );
-
     // Reset submithandler
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(null);
         }, 100);
     }, [initiative]);
+
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Activities
+    const activities = utilities.activities.getTypeIntervention();
 
     return (
         <>
@@ -192,103 +187,83 @@ const IndicatorsComponent = ({ pageProps }) => {
             />
             <InputWrapper preload={!initiative.Id}>
                 {activities.length > 0 ? (
-                    activities.map(activityKey => {
-                        const activity = initiative?._activities[activityKey];
-                        // Get success metric items based on activity id (activityKey) and activitySuccessMetric.XXX
-                        const successMetricItems = Object.values(
-                            initiative?._activitySuccessMetrics
-                        ).filter(
-                            item => item.Initiative_Activity__c === activityKey
-                        );
+                    activities.map(activity => (
+                        <KpiCard
+                            key={activity.Id}
+                            headline={_get(activity, 'Things_To_Do__c') || ''}
+                            peopleItems={utilities.activitySuccessMetrics
+                                .getTypePredefinedFromActivityId(activity.Id)
+                                .map(item => {
+                                    let headline;
+                                    // Get gender
+                                    const gender = item.Gender__c
+                                        ? getValueLabel(
+                                              'initiativeActivitySuccessMetric.Gender__c',
+                                              item.Gender__c
+                                          )
+                                        : '';
+                                    const genderOther = item.Gender_Other__c
+                                        ? ` ${item.Gender_Other__c}`
+                                        : '';
 
-                        // console.log(successMetricItems);
+                                    // Get KPI
+                                    const kpi = item.KPI__c
+                                        ? ` ${getValueLabel(
+                                              'initiativeActivitySuccessMetric.KPI__c',
+                                              item.KPI__c,
+                                              true
+                                          )} `
+                                        : '';
 
-                        return (
-                            <KpiCard
-                                key={activity.Id}
-                                headline={
-                                    _get(activity, 'Things_To_Do__c') || ''
-                                }
-                                peopleItems={successMetricItems
-                                    .filter(
-                                        item =>
-                                            item.Type__c ===
-                                            CONSTANTS.TYPES.INDICATOR_PREDEFINED
-                                    )
-                                    .map(item => {
-                                        let headline;
-                                        // Get gender
-                                        const gender = item.Gender__c
-                                            ? getValueLabel(
-                                                  'initiativeActivitySuccessMetric.Gender__c',
-                                                  item.Gender__c
-                                              )
-                                            : '';
-                                        const genderOther = item.Gender_Other__c
-                                            ? ` ${item.Gender_Other__c}`
-                                            : '';
+                                    headline = `${gender}${genderOther}${kpi}`;
 
-                                        // Get KPI
-                                        const kpi = item.KPI__c
-                                            ? ` ${getValueLabel(
-                                                  'initiativeActivitySuccessMetric.KPI__c',
-                                                  item.KPI__c,
-                                                  true
-                                              )} `
-                                            : '';
-
-                                        headline = `${gender}${genderOther}${kpi}`;
-
-                                        // Remove Unspecified
-                                        headline = headline.replace(
-                                            'Unspecified ',
-                                            ''
-                                        );
-
-                                        return {
-                                            id: item.Id,
-                                            headline,
-                                            label: item.Type__c,
-                                        };
-                                    })}
-                                metricItems={successMetricItems
-                                    .filter(
-                                        item =>
-                                            item.Type__c ===
-                                            CONSTANTS.TYPES.INDICATOR_CUSTOM
-                                    )
-                                    .map(item => {
-                                        let headline = item.Name;
-
-                                        return {
-                                            id: item.Id,
-                                            headline,
-                                            label: item.Type__c,
-                                        };
-                                    })}
-                                actionCreatePeople={() => {
-                                    setModalIsOpen(true);
-                                    setActivity(activity);
-                                    setIndiciatorType(
-                                        CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                                    // Remove Unspecified
+                                    headline = headline.replace(
+                                        'Unspecified ',
+                                        ''
                                     );
-                                }}
-                                actionCreateMetric={() => {
-                                    setModalIsOpen(true);
-                                    setActivity(activity);
-                                    setIndiciatorType(
-                                        CONSTANTS.TYPES.INDICATOR_CUSTOM
-                                    );
-                                }}
-                                actionUpdate={(item, indicator) => {
-                                    setModalIsOpen(true);
-                                    setUpdateId(item.id);
-                                    setActivity(activity);
-                                    setIndiciatorType(indicator);
-                                }}
-                            />
-                        );
-                    })
+
+                                    return {
+                                        id: item.Id,
+                                        headline,
+                                        label: item.Type__c,
+                                    };
+                                })}
+                            metricItems={utilities.activitySuccessMetrics
+                                .getTypeCustomFromActivityId(activity.Id)
+                                .map(item => {
+                                    let headline = item.Name;
+
+                                    return {
+                                        id: item.Id,
+                                        headline,
+                                        label: item.Type__c,
+                                    };
+                                })}
+                            actionCreatePeople={() => {
+                                setModalIsOpen(true);
+                                setActivity(activity);
+                                setIndiciatorType(
+                                    CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                                        .INDICATOR_PREDEFINED
+                                );
+                            }}
+                            actionCreateMetric={() => {
+                                setModalIsOpen(true);
+                                setActivity(activity);
+                                setIndiciatorType(
+                                    CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                                        .INDICATOR_CUSTOM
+                                );
+                            }}
+                            actionUpdate={(item, indicator) => {
+                                setModalIsOpen(true);
+                                setUpdateId(item.id);
+                                setActivity(activity);
+                                setIndiciatorType(indicator);
+                            }}
+                        />
+                    ))
                 ) : (
                     <p className="t-h5">
                         {label('custom.FA_WizardEmptyStatesIndicators')}
@@ -303,7 +278,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     {/* Custom indicator */}
-                    {indicatorType === CONSTANTS.TYPES.INDICATOR_CUSTOM && (
+                    {indicatorType ===
+                        CONSTANTS.ACTIVITY_SUCCESS_METRICS.INDICATOR_CUSTOM && (
                         <Text
                             name="Name"
                             label={label(
@@ -317,7 +293,9 @@ const IndicatorsComponent = ({ pageProps }) => {
                         />
                     )}
                     {/* Predefined indicator */}
-                    {indicatorType === CONSTANTS.TYPES.INDICATOR_PREDEFINED && (
+                    {indicatorType ===
+                        CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                            .INDICATOR_PREDEFINED && (
                         <>
                             <Select
                                 name="KPI__c"

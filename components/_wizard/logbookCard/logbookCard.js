@@ -44,7 +44,7 @@ const LogbookCardsComponent = ({
             {items?.length > 0 && (
                 <div className="inline-grid items-start w-full grid-cols-1 gap-24 md:grid-cols-2">
                     {items.map((item, index) => {
-                        const content = utilities.getInitiativeUpdateContent(
+                        const content = utilities.updateContents.getFromUpdateId(
                             item.Id
                         );
 

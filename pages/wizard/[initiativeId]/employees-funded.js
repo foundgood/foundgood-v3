@@ -6,7 +6,13 @@ import { useForm, useWatch, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useElseware, useContext } from 'utilities/hooks';
+import {
+    useAuth,
+    useMetadata,
+    useElseware,
+    useContext,
+    useReflections,
+} from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -28,38 +34,66 @@ import ProjectMemberCard from 'components/_wizard/projectMemberCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const EmployeesFundedComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-
-    // Hook: Metadata
     const { label, valueSet, helpText } = useMetadata();
+    const { ewCreateUpdateWrapper } = useElseware();
+    const { submitNoReflection, submitReflection } = useReflections({
+        dataSet: utilities.collaborators.getTypeAdditional,
+        reflectionKey: 'Employees_Funded_Overview',
+        type: CONSTANTS.REPORT_DETAILS.EMPLOYEES_FUNDED_OVERVIEW,
+    });
 
-    // Hook: useForm setup
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [reflecting, setReflecting] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { handleSubmit, control, setValue, reset } = useForm();
     const {
         handleSubmit: handleSubmitReflections,
         control: controlReflections,
     } = useForm();
-
     const reflectSelected = useWatch({
         control: controlReflections,
         name: 'Employees_Funded_Overview',
     });
-
     const { isDirty } = useFormState({ control });
 
-    // Hook: Elseware setup
-    const { ewCreate, ewCreateUpdateWrapper } = useElseware();
-
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-
-    // Store: Initiative data
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -109,61 +143,23 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Adds reflections
-    async function submitReflections(formData) {
-        const { Employees_Funded_Overview } = formData;
-
-        // Check if reflection exist - then update
-        if (Employees_Funded_Overview) {
-            ewCreateUpdateWrapper(
-                'initiative-report-detail/initiative-report-detail',
-                currentReflection?.Id,
-                {
-                    Description__c: Employees_Funded_Overview,
-                },
-                {
-                    Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
-                    Initiative_Report__c: REPORT_ID,
-                },
-                '_reportDetails'
-            );
-        }
-    }
-
-    // Method: Submits no reflections flag
-    async function submitNoReflections() {
-        const { data: reportDetailsData } = await ewCreate(
-            'initiative-report-detail/initiative-report-detail',
-            {
-                Type__c: CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW,
-                Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
-                Initiative_Report__c: REPORT_ID,
-            }
-        );
-        utilities.updateInitiativeData('_reportDetails', reportDetailsData);
-    }
-
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
         throw error;
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
-    // Local state to handle reflection
-    const [reflecting, setReflecting] = useState(false);
     // Effect: Run reflectAction on reflectSelected change in order to propagate event up
     useEffect(() => {
         setReflecting(
             reflectSelected && reflectSelected.length > 0 ? true : false
         );
     }, [reflectSelected]);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
@@ -173,7 +169,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
             Gender__c,
             Gender_Other__c,
             Percent_Involvement__c,
-        } = initiative?._employeesFunded[updateId] ?? {};
+        } = utilities.employeesFunded.get(updateId);
 
         setValue('Job_Title__c', Job_Title__c);
         setValue('Role_Type__c', Role_Type__c);
@@ -188,26 +184,32 @@ const EmployeesFundedComponent = ({ pageProps }) => {
 
     // Add submit handler to wizard navigation store
     useEffect(() => {
-        if (MODE === CONTEXTS.REPORT) {
-            setTimeout(() => {
-                setCurrentSubmitHandler(
-                    handleSubmitReflections(submitReflections, error)
-                );
-            }, 100);
-        } else {
-            setTimeout(() => {
-                setCurrentSubmitHandler(null);
-            }, 100);
-        }
+        setTimeout(() => {
+            setCurrentSubmitHandler(
+                MODE === CONTEXTS.REPORT
+                    ? handleSubmitReflections(submitReflection, error)
+                    : null
+            );
+        }, 100);
     }, [initiative]);
 
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
     // Current report details
-    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
     const currentReflection =
-        currentReportDetails.find(
-            detail =>
-                detail.Type__c === CONSTANTS.TYPES.EMPLOYEES_FUNDED_OVERVIEW
-        ) || null;
+        utilities.reportDetails
+            .getFromReportId(REPORT_ID)
+            .find(
+                detail =>
+                    detail.Type__c ===
+                    CONSTANTS.REPORT_DETAILS.EMPLOYEES_FUNDED_OVERVIEW
+            ) || null;
+
+    // Get emloyeesFunded
+    const employeesFunded = utilities.employeesFunded.getAll();
 
     return (
         <>
@@ -217,16 +219,13 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {MODE === CONTEXTS.REPORT &&
-                    Object.values(initiative._employeesFunded).length > 0 && (
-                        <NoReflections
-                            onClick={submitNoReflections}
-                            reflectionItems={[
-                                currentReflection?.Description__c,
-                            ]}
-                            reflecting={reflecting}
-                        />
-                    )}
+                {MODE === CONTEXTS.REPORT && employeesFunded.length > 0 && (
+                    <NoReflections
+                        onClick={submitNoReflection}
+                        reflectionItems={[currentReflection?.Description__c]}
+                        reflecting={reflecting}
+                    />
+                )}
                 {MODE === CONTEXTS.REPORT && (
                     <Reflection
                         name="Employees_Funded_Overview"
@@ -246,28 +245,23 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         controller={controlReflections}
                     />
                 )}
-                {Object.keys(initiative._employeesFunded).map(employeeKey => {
-                    const employee = initiative._employeesFunded[employeeKey];
-                    return (
-                        <ProjectMemberCard
-                            key={employeeKey}
-                            headline={_get(employee, 'Job_Title__c') || ''}
-                            label={_get(employee, 'Role_Type__c') || ''}
-                            body={`${_get(employee, 'Gender__c') || ''} ${
-                                employee.Gender__c &&
-                                employee.Percent_Involvement__c
-                                    ? '•'
-                                    : ''
-                            } ${
-                                _get(employee, 'Percent_Involvement__c') || ''
-                            } %`}
-                            action={() => {
-                                setUpdateId(employeeKey);
-                                setModalIsOpen(true);
-                            }}
-                        />
-                    );
-                })}
+                {employeesFunded.map(employee => (
+                    <ProjectMemberCard
+                        key={employee.Id}
+                        headline={_get(employee, 'Job_Title__c') || ''}
+                        label={_get(employee, 'Role_Type__c') || ''}
+                        body={`${_get(employee, 'Gender__c') || ''} ${
+                            employee.Gender__c &&
+                            employee.Percent_Involvement__c
+                                ? '•'
+                                : ''
+                        } ${_get(employee, 'Percent_Involvement__c') || ''} %`}
+                        action={() => {
+                            setUpdateId(employee.Id);
+                            setModalIsOpen(true);
+                        }}
+                    />
+                ))}
                 <Button
                     theme="teal"
                     className="self-start"

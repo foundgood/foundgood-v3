@@ -26,19 +26,19 @@ const OverviewComponent = () => {
 
     // ///////////////////
     // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { CONSTANTS, initiative, utilities } = useInitiativeDataStore();
+
+    // ///////////////////
+    // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { MODE, CONTEXTS } = useContext();
     const { label, valueSet, controlledValueSet, helpText } = useMetadata();
     const { ewGet, ewCreate, ewUpdate, ewCreateUpdateWrapper } = useElseware();
-
-    // ///////////////////
-    // ///////////////////
-    // STORES
-    // ///////////////////
-
-    const { CONSTANTS, initiative, utilities } = useInitiativeDataStore();
 
     // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
@@ -102,7 +102,7 @@ const OverviewComponent = () => {
                 const collaboratorData = await ewCreate(
                     'initiative-collaborator/initiative-collaborator',
                     {
-                        Type__c: CONSTANTS.TYPES.MAIN_COLLABORATOR,
+                        Type__c: CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR,
                         Initiative__c: initiative.Id,
                         Account__c,
                     }
@@ -120,7 +120,7 @@ const OverviewComponent = () => {
                 funderObjective?.Id,
                 {
                     Goal__c: Funder_Objective__c,
-                    Type__c: CONSTANTS.TYPES.GOAL_PREDEFINED,
+                    Type__c: CONSTANTS.GOALS.GOAL_PREDEFINED,
                     Funder_Objective__c,
                     KPI_Category__c: Category__c,
                 },
@@ -161,16 +161,10 @@ const OverviewComponent = () => {
     });
 
     // Main collaborator
-    const mainCollaborator =
-        Object.values(initiative?._collaborators).find(
-            item => item.Type__c === CONSTANTS.TYPES.MAIN_COLLABORATOR
-        ) || {};
+    const mainCollaborator = utilities.collaborators.getTypeMain();
 
-    // Funder objective
-    const funderObjective =
-        Object.values(initiative?._goals).find(
-            item => item.Type__c === CONSTANTS.TYPES.GOAL_PREDEFINED
-        ) || {};
+    // Funder objective (predefined goal)
+    const funderObjective = utilities.goals.getTypePredefined();
 
     // ///////////////////
     // ///////////////////

@@ -6,7 +6,13 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useElseware, useContext } from 'utilities/hooks';
+import {
+    useAuth,
+    useMetadata,
+    useElseware,
+    useContext,
+    useReflections,
+} from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -31,26 +37,34 @@ const FundersComponent = ({ pageProps }) => {
 
     // ///////////////////
     // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+
+    // ///////////////////
+    // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label, helpText, valueSet } = useMetadata();
-    const { ewGet, ewCreate, ewCreateUpdateWrapper } = useElseware();
-
-    // ///////////////////
-    // ///////////////////
-    // STORES
-    // ///////////////////
-
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { ewGet, ewCreateUpdateWrapper } = useElseware();
+    const {
+        submitMultipleNoReflections,
+        submitMultipleReflections,
+    } = useReflections({
+        dataSet: utilities.funders.getAll,
+        parentKey: 'Initiative_Funder__c',
+        type: CONSTANTS.REPORT_DETAILS.FUNDER_OVERVIEW,
+    });
 
     // ///////////////////
     // ///////////////////
     // STATE
     // ///////////////////
+
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsSaving, setModalIsSaving] = useState(false);
     const [reflecting, setReflecting] = useState(false);
@@ -126,71 +140,6 @@ const FundersComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Adds reflections
-    async function submitReflections(formData) {
-        // Reformat form data based on topic keys
-        const reportDetails = Object.keys(initiative?._funders)
-            .reduce((acc, key) => {
-                // Does the reflection relation exist already?
-                const currentReflection = currentReportDetails.filter(
-                    item => item.Initiative_Funder__c === key
-                );
-                return [
-                    ...acc,
-                    {
-                        reportDetailId: currentReflection[0]?.Id ?? false,
-                        relationId: key,
-                        value: formData[`${key}-reflection`],
-                        selected: formData[`${key}-selector`],
-                    },
-                ];
-            }, [])
-            .filter(item => item.selected);
-
-        // Create or update report detail based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        await Promise.all(
-            reportDetails.map(item =>
-                ewCreateUpdateWrapper(
-                    'initiative-report-detail/initiative-report-detail',
-                    item.reportDetailId,
-                    {
-                        Description__c: item.value,
-                    },
-                    {
-                        Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
-                        Initiative_Funder__c: item.relationId,
-                        Initiative_Report__c: REPORT_ID,
-                    },
-                    '_reportDetails'
-                )
-            )
-        );
-    }
-
-    // Method: Submits no reflections flag
-    async function submitNoReflections() {
-        // Create or update report detail ids based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        await Promise.all(
-            Object.values(initiative?._funders).map(async item => {
-                const { data: reportDetailsData } = await ewCreate(
-                    'initiative-report-detail/initiative-report-detail',
-                    {
-                        Type__c: CONSTANTS.TYPES.FUNDER_OVERVIEW,
-                        Initiative_Funder__c: item.Id,
-                        Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
-                        Initiative_Report__c: REPORT_ID,
-                    }
-                );
-                utilities.updateInitiativeData(
-                    '_reportDetails',
-                    reportDetailsData
-                );
-            })
-        );
-    }
-
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
@@ -212,7 +161,7 @@ const FundersComponent = ({ pageProps }) => {
             Application_Id__c,
             Grant_Start_Date__c,
             Grant_End_Date__c,
-        } = initiative?._funders[updateId] ?? {};
+        } = utilities.funders.get(updateId);
 
         mainForm.setValue('Type__c', Type__c);
         mainForm.setValue('Account__c', Account__c);
@@ -228,17 +177,16 @@ const FundersComponent = ({ pageProps }) => {
 
     // Effect: Add submit handler to wizard navigation store
     useEffect(() => {
-        if (MODE === CONTEXTS.REPORT) {
-            setTimeout(() => {
-                setCurrentSubmitHandler(
-                    reflectionForm.handleSubmit(submitReflections, error)
-                );
-            }, 100);
-        } else {
-            setTimeout(() => {
-                setCurrentSubmitHandler(null);
-            }, 100);
-        }
+        setTimeout(() => {
+            setCurrentSubmitHandler(
+                MODE === CONTEXTS.REPORT
+                    ? reflectionForm.handleSubmit(
+                          submitMultipleReflections,
+                          error
+                      )
+                    : null
+            );
+        }, 100);
     }, [initiative]);
 
     // ///////////////////
@@ -252,12 +200,17 @@ const FundersComponent = ({ pageProps }) => {
     });
 
     // Current report details
-    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
+    const currentReportDetails = utilities.reportDetails.getFromReportId(
+        REPORT_ID
+    );
 
     // Check if there is relevant report details yet
     const reportDetailsItems = currentReportDetails.filter(item =>
         Object.keys(initiative?._funders).includes(item.Initiative_Funder__c)
     );
+
+    // Get funders
+    const funders = utilities.funders.getAll();
 
     // ///////////////////
     // ///////////////////
@@ -342,23 +295,22 @@ const FundersComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                <RenderNoReflections
-                    {...{
-                        MODE,
-                        CONTEXTS,
-                        initiative,
-                        submitNoReflections,
-                        reportDetailsItems,
-                        reflecting,
-                    }}
-                />
+                {MODE === CONTEXTS.REPORT && funders.length > 0 && (
+                    <NoReflections
+                        onClick={submitMultipleNoReflections}
+                        reflectionItems={reportDetailsItems.map(
+                            item => item.Description__c
+                        )}
+                        reflecting={reflecting}
+                    />
+                )}
                 <RenderFunderCard
                     {...{
                         MODE,
                         CONTEXTS,
                         CONSTANTS,
-                        initiative,
                         currentReportDetails,
+                        funders,
                         setUpdateId,
                         setFunder,
                         setModalIsOpen,
@@ -401,31 +353,12 @@ const FundersComponent = ({ pageProps }) => {
 // LOCAL COMPONENTS
 // ///////////////////
 
-const RenderNoReflections = ({
-    MODE,
-    CONTEXTS,
-    initiative,
-    submitNoReflections,
-    reportDetailsItems,
-    reflecting,
-}) =>
-    MODE === CONTEXTS.REPORT &&
-    Object.values(initiative?._funders).length > 0 && (
-        <NoReflections
-            onClick={submitNoReflections}
-            reflectionItems={reportDetailsItems.map(
-                item => item.Description__c
-            )}
-            reflecting={reflecting}
-        />
-    );
-
 const RenderFunderCard = ({
     MODE,
     CONTEXTS,
     CONSTANTS,
-    initiative,
     currentReportDetails,
+    funders,
     setUpdateId,
     setFunder,
     setModalIsOpen,
@@ -433,15 +366,14 @@ const RenderFunderCard = ({
     reflectionForm,
     label,
 }) =>
-    Object.keys(initiative?._funders).map(funderKey => {
-        const funder = initiative?._funders[funderKey];
+    funders.map(funder => {
         const reflection = currentReportDetails.filter(
-            item => item.Initiative_Funder__c === funderKey
+            item => item.Initiative_Funder__c === funder.Id
         );
 
         return (
             <FunderCard
-                key={funderKey}
+                key={funder.Id}
                 headline={_get(funder, 'Account__r.Name') || ''}
                 label={_get(funder, 'Type__c') || ''}
                 subHeadline={`${_get(funder, 'CurrencyIsoCode') || ''} ${
@@ -451,13 +383,13 @@ const RenderFunderCard = ({
                     _get(funder, 'Grant_End_Date__c') || ''
                 } • ${_get(funder, 'Application_Id__c') || ''}`}
                 action={() => {
-                    setUpdateId(funderKey);
+                    setUpdateId(funder.Id);
                     setFunder(funder);
                     setModalIsOpen(true);
                 }}
                 reflectAction={setReflecting}
                 controller={MODE === CONTEXTS.REPORT && reflectionForm.control}
-                name={funderKey}
+                name={funder.Id}
                 defaultValue={{
                     selected:
                         reflection[0] &&

@@ -81,7 +81,7 @@ const LogbookComponent = ({ pageProps }) => {
             );
 
             // Get update content
-            const currentInitiativeUpdateContent = utilities.getInitiativeUpdateContent(
+            const currentInitiativeUpdateContent = utilities.updateContents.getFromUpdateId(
                 initiativeUpdate?.Id
             );
 
@@ -149,7 +149,7 @@ const LogbookComponent = ({ pageProps }) => {
             initiative?._updates[updateId] ?? {};
 
         // Check if there is content
-        const content = utilities.getInitiativeUpdateContent(updateId);
+        const content = utilities.updateContents.getFromUpdateId(updateId);
 
         // Update type
         setUpdateType(
@@ -183,7 +183,7 @@ const LogbookComponent = ({ pageProps }) => {
         .sort((a, b) => new Date(b.CreatedDate) - new Date(a.CreatedDate));
 
     // Get update content
-    const currentInitiativeUpdateContent = utilities.getInitiativeUpdateContent(
+    const currentInitiativeUpdateContent = utilities.updateContents.getFromUpdateId(
         updateId
     );
 

@@ -4,6 +4,7 @@ import useAuth from './useAuth';
 import useSalesForce from './useSalesForce';
 import useContext from './useContext';
 import useElseware from './useElseware';
+import useReflections from './useReflections';
 
 export {
     useElseware,
@@ -12,4 +13,5 @@ export {
     useAuth,
     useSalesForce,
     useContext,
+    useReflections,
 };

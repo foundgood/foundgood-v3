@@ -46,7 +46,7 @@ const LogbookComponent = ({ pageProps }) => {
                         item.Type__c !== CONSTANTS.TYPES.LOGBOOK_TYPE_METRICS // Ignore metrics updates
                 )
                 .map(item => {
-                    const updateContent = utilities.getInitiativeUpdateContent(
+                    const updateContent = utilities.updateContents.getFromUpdateId(
                         item.Id
                     );
 

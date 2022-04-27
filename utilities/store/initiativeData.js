@@ -54,6 +54,62 @@ const defaultInitiative = {
 };
 
 const constants = {
+    ACCOUNT: {
+        FOUNDATION: 'Foundation',
+        GRANTEE: 'Grantee',
+    },
+    ACTIVITIES: {
+        ACTIVITY_INTERVENTION: 'Intervention',
+        ACTIVITY_DISSEMINATION: 'Dissemination',
+        ACTIVITY_JOURNAL: 'Journal publication',
+    },
+    ACTIVITY_GOALS: {},
+    ACTIVITY_SUCCESS_METRICS: {
+        INDICATOR_CUSTOM: 'Custom',
+        INDICATOR_PREDEFINED: 'People',
+        INDICATOR_GENDER_OTHER: 'Other',
+    },
+    COLLABORATORS: {
+        MAIN_COLLABORATOR: 'Main applicant',
+        ADDITIONAL_COLLABORATORS: ['Additional collaborator'],
+        APPLICANTS_ALL: ['Co applicant', 'Main applicant'],
+        APPLICANTS_CREATE: ['Co applicant'],
+    },
+    EMPLOYEES_FUNDED: {
+        GENDER_OTHER: 'Other',
+        GENDER_MALE: 'Male',
+        GENDER_FEMALE: 'Female',
+    },
+    FUNDERS: {
+        LEAD_FUNDER: 'Lead funder',
+    },
+    GOALS: {
+        GOAL_CUSTOM: 'Custom',
+        GOAL_PREDEFINED: 'Foundation',
+    },
+    REPORT_DETAIL_ENTRIES: {},
+    REPORT_DETAIL_GOALS: {},
+    REPORT_DETAILS: {
+        INFLUENCE_ON_POLICY: 'Influence On Policy',
+        EVALUATION: 'Evaluation',
+        EMPLOYEES_FUNDED_OVERVIEW: 'Employees Funded Overview',
+        FUNDER_OVERVIEW: 'Funder Overview',
+        COLLABORATOR_OVERVIEW: 'Collaborator Overview',
+        ACTIVITY_OVERVIEW: 'Activity Overview',
+        OUTCOME_OVERVIEW: 'Outcome',
+        LOGBOOK_UPDATE: 'Update',
+    },
+    REPORTS: {
+        REPORT_NOT_STARTED: 'Not started',
+        REPORT_IN_PROGRESS: 'In progress',
+        REPORT_IN_REVIEW: 'In review',
+        REPORT_PUBLISHED: 'Published',
+    },
+    UPDATE_CONTENTS: {},
+    UPDATES: {
+        LOGBOOK_TYPE_METRICS: 'Success Metric Update',
+        LOGBOOK_TYPE_UPDATE: 'Update',
+    },
     TYPES: {
         ACCOUNT_TYPE_FOUNDATION: 'Foundation',
         ACCOUNT_TYPE_GRANTEE: 'Grantee',
@@ -112,37 +168,154 @@ const useInitiativeDataStore = create((set, get) => ({
     },
 
     utilities: {
-        // Returns single/first object of initiativeUpdateContent based on Initiative_Update__c id
-        getInitiativeUpdateContent(initiativeUpdateId) {
-            return (
-                Object.values(get().initiative._updateContents).find(
-                    updateContent =>
-                        updateContent.Initiative_Update__c ===
-                        initiativeUpdateId
-                ) ?? {}
-            );
+        activities: {
+            // Returns activity as object based on id
+            get(id) {
+                return get().initiative._activities[id] || {};
+            },
+            // Returns activities as array
+            getAll() {
+                return Object.values(get().initiative._activities);
+            },
+            // Returns activities with specific type as array
+            getTypeIntervention() {
+                return Object.values(get().initiative._activities).filter(
+                    item =>
+                        constants.ACTIVITIES.ACTIVITY_INTERVENTION ===
+                        item.Activity_Type__c
+                );
+            },
         },
-        // Returns array of objects of activitySuccessMetrics based on Initiative_Activity__c id
-        getInitiativeActivitySuccessMetrics(activityId) {
-            return (
-                Object.values(get().initiative._activitySuccessMetrics).filter(
-                    successMetric =>
-                        successMetric.Initiative_Activity__c === activityId
-                ) ?? []
-            );
+        activityGoals: {},
+        activitySuccessMetrics: {
+            // Returns activitySuccessMetric as object based on id
+            get(id) {
+                return get().initiative._activitySuccessMetrics[id] || {};
+            },
+            // Returns array of objects of activitySuccessMetrics based on Initiative_Activity__c id
+            getFromActivityId(activityId) {
+                return Object.values(
+                    get().initiative?._activitySuccessMetrics
+                ).filter(item => item.Initiative_Activity__c === activityId);
+            },
+            getTypePredefinedFromActivityId(activityId) {
+                return this.getFromActivityId(activityId).filter(
+                    item =>
+                        item.Type__c ===
+                        constants.ACTIVITY_SUCCESS_METRICS.INDICATOR_PREDEFINED
+                );
+            },
+            getTypeCustomFromActivityId(activityId) {
+                return this.getFromActivityId(activityId).filter(
+                    item =>
+                        item.Type__c ===
+                        constants.ACTIVITY_SUCCESS_METRICS.INDICATOR_CUSTOM
+                );
+            },
         },
-        // Returns report object based on Initiative_Report__c id
-        getReport(reportId) {
-            return id ? get().initiative?._reports[reportId] ?? {} : {};
+        collaborators: {
+            // Returns collaborator as object based on id
+            get(id) {
+                return get().initiative._collaborators[id] || {};
+            },
+            // Returns collaborater with specific type as object
+            getTypeMain() {
+                return (
+                    Object.values(get().initiative._collaborators).find(
+                        item =>
+                            item.Type__c ===
+                            constants.COLLABORATORS.MAIN_COLLABORATOR
+                    ) || {}
+                );
+            },
+            // Returns collaboraters with specific type as array
+            getTypeAdditional() {
+                return Object.values(
+                    get().initiative._collaborators
+                ).filter(item =>
+                    constants.COLLABORATORS.ADDITIONAL_COLLABORATORS.includes(
+                        item.Type__c
+                    )
+                );
+            },
+            // Returns collaboraters with specific type as array
+            getTypeApplicantsAll() {
+                return Object.values(
+                    get().initiative._collaborators
+                ).filter(item =>
+                    constants.COLLABORATORS.APPLICANTS_ALL.includes(
+                        item.Type__c
+                    )
+                );
+            },
         },
-        // Returns array of objects of reportDetails based on Initiative_Report__c id
-        getReportDetails(reportId) {
-            return (
-                Object.values(get().initiative?._reportDetails).filter(
+        employeesFunded: {
+            // Returns employeeFunded as object based on id
+            get(id) {
+                return get().initiative._employeesFunded[id] || {};
+            },
+            // Returns employeesFunded as array
+            getAll() {
+                return Object.values(get().initiative._employeesFunded);
+            },
+        },
+        funders: {
+            // Returns funder as object based on id
+            get(id) {
+                return get().initiative._funders[id] || {};
+            },
+            // Returns funders as array
+            getAll() {
+                return Object.values(get().initiative._funders);
+            },
+        },
+        goals: {
+            // Returns goal as object based on id
+            get(id) {
+                return get().initiative._goals[id] || {};
+            },
+            // Returns goal with specific type as object
+            getTypePredefined() {
+                return (
+                    Object.values(get().initiative?._goals).find(
+                        item => item.Type__c === constants.GOALS.GOAL_PREDEFINED
+                    ) || {}
+                );
+            },
+            // Returns collaboraters with specific type as array
+            getTypeCustom() {
+                return Object.values(get().initiative._goals).filter(item =>
+                    constants.GOALS.GOAL_CUSTOM.includes(item.Type__c)
+                );
+            },
+        },
+        reportDetailEntries: {},
+        reportDetailGoals: {},
+        reportDetails: {
+            // Returns array of objects of reportDetails based on Initiative_Report__c id
+            getFromReportId(reportId) {
+                return Object.values(get().initiative?._reportDetails).filter(
                     item => item.Initiative_Report__c === reportId
-                ) ?? []
-            );
+                );
+            },
         },
+        reports: {
+            // Returns report as object based on id
+            get(id) {
+                return get().initiative._reports[id] || {};
+            },
+        },
+        updateContents: {
+            // Returns updateContent as object based on Initiative_Update__c id
+            getFromUpdateId(initiativeUpdateId) {
+                return (
+                    Object.values(get().initiative?._updateContents).find(
+                        item => item.Initiative_Update__c === initiativeUpdateId
+                    ) || {}
+                );
+            },
+        },
+        updates: {},
         // Returns id of initiative - to make sure it's the latest
         getInitiativeId() {
             return get().initiative.Id;

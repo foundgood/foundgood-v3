@@ -315,7 +315,9 @@ const SharingResultsComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // Current report details
-    const currentReportDetails = utilities.getReportDetails(REPORT_ID);
+    const currentReportDetails = utilities.reportDetails.getFromReportId(
+        REPORT_ID
+    );
 
     // Check if there is relevant report details yet
     const reportDetailsItems = currentReportDetails
