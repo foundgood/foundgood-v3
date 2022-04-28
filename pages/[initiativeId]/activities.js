@@ -27,9 +27,11 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, getValueLabel } = useMetadata();
+    const { label, getValueLabel, log } = useMetadata();
 
     const [activities, setActivities] = useState();
+
+    log();
 
     useEffect(() => {
         // Make sure data it loaded

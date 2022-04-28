@@ -188,8 +188,8 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // Current report details
-    const currentReportDetails = utilities
-        .getReportDetails(REPORT_ID)
+    const currentReportDetails = utilities.reportDetails
+        .getFromReportId(REPORT_ID)
         .filter(item => item.Type__c === CONSTANTS.TYPES.INFLUENCE_ON_POLICY);
 
     return (

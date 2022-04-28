@@ -44,8 +44,8 @@ const useReflections = ({ dataSet, parentKey, reflectionKey, type }) => {
     async function submitMultipleReflections(formData) {
         rDataSet()
             .reduce((acc, key) => {
-                const currentReflection = utilities
-                    .getReportDetails(REPORT_ID)
+                const currentReflection = utilities.reportDetails
+                    .getFromReportId(REPORT_ID)
                     .filter(item => item[parentKey] === key);
                 return [
                     ...acc,
