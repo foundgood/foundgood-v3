@@ -24,7 +24,7 @@ const PostProjectActivitiesComponent = () => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText, log } = useLabels();
+    const { labelTodo, label } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();

@@ -29,7 +29,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText } = useLabels();
+    const { label, object, valueSet } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -271,11 +271,11 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Who_Is_Evaluating__c"
-                        label={label(
-                            'objects.Initiative__c.Detail.Who_Is_Evaluating__c'
+                        label={object.label(
+                            'Initiative__c.Detail.Who_Is_Evaluating__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative__c.Detail.Who_Is_Evaluating__c'
+                        subLabel={object.helpText(
+                            'Initiative__c.Detail.Who_Is_Evaluating__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet(

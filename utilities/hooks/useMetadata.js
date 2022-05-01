@@ -131,7 +131,6 @@ const useMetadata = () => {
 
     function log() {
         console.log(metadata);
-        logLabels();
     }
 
     return {

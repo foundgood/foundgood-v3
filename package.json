@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "pretty": "prettier --write \"./**/*.{js,jsx}\"",
     "metadata": "run-func ./utilities/metadata/extract extractToJsonFile",
     "labels": "run-func ./utilities/labels/writeLabels extractToJsonFile",
     "dev": "yarn metadata; yarn labels; next dev",

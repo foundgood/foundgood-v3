@@ -44,11 +44,9 @@ const ReportHeaderComponent = ({ initiative, report, constants }) => {
                 <div className="mt-16">{mainApplicant}</div>
 
                 <h1 className="mt-48 t-h1">{initiative.Name}</h1>
-                <div className="mt-16 t-sh2">
-                    {`${report.Report_Type__c} ${label(
-                        'TitleReport'
-                    )} ${report.Due_Date__c?.substring(0, 4)}`}
-                </div>
+                <div className="mt-16 t-sh2">{`${report.Report_Type__c} ${label(
+                    'TitleReport'
+                )} ${report.Due_Date__c?.substring(0, 4)}`}</div>
                 <div className="flex mt-16 t-caption text-blue-60">
                     {report.Funder_Report__r.Application_Id__c}
                     {initiative.Stage__c && ` • ${initiative.Stage__c}`}

@@ -24,7 +24,7 @@ const ReportSummaryComponent = () => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText, log } = useLabels();
+    const { label } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();

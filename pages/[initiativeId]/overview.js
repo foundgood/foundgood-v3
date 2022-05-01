@@ -31,7 +31,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, valueSet, getValueLabel, log } = useLabels();
+    const { label, object, valueSet, getValueLabel } = useLabels();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -333,8 +333,8 @@ const ProjectComponent = ({ pageProps }) => {
                                         </h3>
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
-                                            {label(
-                                                'objects.Initiative_Goal__c.Funder_Objective__c'
+                                            {object.label(
+                                                'Initiative_Goal__c.Funder_Objective__c'
                                             )}
                                         </h4>
                                         <h3 className="t-h5">

@@ -49,7 +49,7 @@ const FundersComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, helpText, valueSet } = useLabels();
+    const { label, object, valueSet } = useLabels();
     const { ewGet, ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -221,13 +221,13 @@ const FundersComponent = ({ pageProps }) => {
         {
             type: 'Select',
             name: 'Account__c',
-            label: label('objects.Initiative_Funder__c.Account__c'),
+            label: object.label('Initiative_Funder__c.Account__c'),
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             required: true,
             // Type options
-            subLabel: helpText('objects.Initiative_Funder__c.Account__c'),
+            subLabel: object.helpText('Initiative_Funder__c.Account__c'),
             options: accountFoundations
                 ? Object.values(accountFoundations?.data).map(item => ({
                       label: item.Name,
@@ -238,19 +238,19 @@ const FundersComponent = ({ pageProps }) => {
         {
             type: 'Select',
             name: 'Type__c',
-            label: label('objects.Initiative_Funder__c.Type__c'),
+            label: object.label('Initiative_Funder__c.Type__c'),
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             required: true,
             // Type options
-            subLabel: helpText('objects.Initiative_Funder__c.Type__c'),
+            subLabel: object.helpText('Initiative_Funder__c.Type__c'),
             options: valueSet('initiativeFunder.Type__c'),
         },
         {
             type: 'SelectList',
             name: 'Contribution',
-            label: label('objects.Initiative_Funder__c.Amount__c'),
+            label: object.label('Initiative_Funder__c.Amount__c'),
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
@@ -262,14 +262,14 @@ const FundersComponent = ({ pageProps }) => {
                 { label: 'EUR', value: 'EUR' },
             ],
             selectPlaceholder: label('FormCaptureSelectEmpty'),
-            subLabel: helpText('objects.Initiative_Funder__c.Amount__c'),
+            subLabel: object.helpText('Initiative_Funder__c.Amount__c'),
         },
         {
             type: 'DateRange',
             name: 'GrantDate',
-            label: `${label(
-                'objects.Initiative_Funder__c.Grant_Start_Date__c'
-            )} / ${label('objects.Initiative_Funder__c.Grant_End_Date__c')}`,
+            label: `${object.label(
+                'Initiative_Funder__c.Grant_Start_Date__c'
+            )} / ${object.label('Initiative_Funder__c.Grant_End_Date__c')}`,
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
@@ -277,15 +277,13 @@ const FundersComponent = ({ pageProps }) => {
         {
             type: 'Text',
             name: 'Application_Id__c',
-            label: label('objects.Initiative_Funder__c.Application_Id__c'),
+            label: object.label('Initiative_Funder__c.Application_Id__c'),
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             // Type options
             maxLength: 15,
-            subLabel: helpText(
-                'objects.Initiative_Funder__c.Application_Id__c'
-            ),
+            subLabel: object.helpText('Initiative_Funder__c.Application_Id__c'),
         },
     ];
 

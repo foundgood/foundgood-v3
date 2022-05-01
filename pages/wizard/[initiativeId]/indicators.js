@@ -45,8 +45,8 @@ const IndicatorsComponent = ({ pageProps }) => {
 
     const {
         label,
+        object,
         valueSet,
-        helpText,
         getValueLabel,
         controlledValueSet,
     } = useLabels();
@@ -295,11 +295,11 @@ const IndicatorsComponent = ({ pageProps }) => {
                         <>
                             <Select
                                 name="KPI__c"
-                                label={label(
-                                    'objects.Initiative_Activity__cSuccessMetric.KPI__c'
+                                label={object.label(
+                                    'Initiative_Activity__cSuccessMetric.KPI__c'
                                 )}
-                                subLabel={helpText(
-                                    'objects.Initiative_Activity__cSuccessMetric.KPI__c'
+                                subLabel={object.helpText(
+                                    'Initiative_Activity__cSuccessMetric.KPI__c'
                                 )}
                                 placeholder={label('FormCaptureSelectEmpty')}
                                 options={controlledValueSet(
@@ -310,17 +310,17 @@ const IndicatorsComponent = ({ pageProps }) => {
                             />
                             <SelectList
                                 name="Gender"
-                                label={label(
-                                    'objects.Initiative_Activity__cSuccessMetric.Gender__c'
+                                label={object.label(
+                                    'Initiative_Activity__cSuccessMetric.Gender__c'
                                 )}
-                                subLabel={helpText(
-                                    'objects.Initiative_Activity__cSuccessMetric.Gender__c'
+                                subLabel={object.helpText(
+                                    'Initiative_Activity__cSuccessMetric.Gender__c'
                                 )}
                                 selectPlaceholder={label(
                                     'FormCaptureSelectEmpty'
                                 )}
-                                textPlaceholder={label(
-                                    'objects.Initiative_Activity__cSuccessMetric.Gender_Other__c'
+                                textPlaceholder={object.label(
+                                    'Initiative_Activity__cSuccessMetric.Gender_Other__c'
                                 )}
                                 options={valueSet(
                                     'initiativeActivitySuccessMetric.Gender__c'

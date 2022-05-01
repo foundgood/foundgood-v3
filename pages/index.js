@@ -8,7 +8,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useElseware, useLabels, useAuth, useLabels } from 'utilities/hooks';
+import { useElseware, useLabels, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -28,8 +28,7 @@ const HomeComponent = () => {
     const { CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, valueSet } = useLabels();
-    const { log } = useLabels();
+    const { label, valueSet, log } = useLabels();
     log();
 
     // Hook: Get data from elseware

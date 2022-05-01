@@ -15,7 +15,7 @@ import UpdateButton from 'components/updateButton';
 
 const ReportOverviewComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label, valueSet, getValueLabel } = useLabels();
+    const { label, object, valueSet, getValueLabel } = useLabels();
 
     const [developmentGoals, setDevelopmentGoals] = useState();
     const [coApplicants, setCoApplicants] = useState([]);
@@ -139,9 +139,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         {initiative.Category__c}
                     </h3>
                     <div className="t-sh6 text-blue-60">
-                        {label(
-                            'objects.Initiative_Goal__c.Funder_Objective__c'
-                        )}
+                        {object.label('Initiative_Goal__c.Funder_Objective__c')}
                     </div>
                     <h3 className="t-h5">
                         {getValueLabel(

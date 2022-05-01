@@ -16,7 +16,7 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportSummaryComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useLabels();
+    const { label, object } = useLabels();
 
     // useEffect(() => {
     // }, []);
@@ -38,7 +38,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {report.Project_Purpose__c && (
                 <TextCard
                     hasBackground={true}
-                    headline={label('objects.Initiative__c.Project_Purpose__c')}
+                    headline={object.label('Initiative__c.Project_Purpose__c')}
                     body={report.Project_Purpose__c}
                 />
             )}
@@ -46,7 +46,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {!report.Project_Purpose__c && (
                 <SectionEmpty
                     type="report"
-                    headline={label('objects.Initiative__c.Project_Purpose__c')}
+                    headline={object.label('Initiative__c.Project_Purpose__c')}
                 />
             )}
 
@@ -55,8 +55,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 <TextCard
                     className="mt-32"
                     hasBackground={true}
-                    headline={label(
-                        'objects.Initiative__c.Progress_Towards_Grant_Area_Themes__c'
+                    headline={object.label(
+                        'Initiative__c.Progress_Towards_Grant_Area_Themes__c'
                     )}
                     body={report.Progress_Towards_Grant_Area_Themes__c}
                 />
@@ -65,8 +65,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {!report.Project_Purpose__c && (
                 <SectionEmpty
                     type="report"
-                    headline={label(
-                        'objects.Initiative__c.Progress_Towards_Grant_Area_Themes__c'
+                    headline={object.label(
+                        'Initiative__c.Progress_Towards_Grant_Area_Themes__c'
                     )}
                 />
             )}
@@ -76,8 +76,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 <TextCard
                     className="mt-32"
                     hasBackground={true}
-                    headline={label(
-                        'objects.Initiative__c.Important_Results__c'
+                    headline={object.label(
+                        'Initiative__c.Important_Results__c'
                     )}
                     body={report.Important_Results__c}
                 />
@@ -86,8 +86,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {!report.Important_Results__c && (
                 <SectionEmpty
                     type="report"
-                    headline={label(
-                        'objects.Initiative__c.Important_Results__c'
+                    headline={object.label(
+                        'Initiative__c.Important_Results__c'
                     )}
                 />
             )}

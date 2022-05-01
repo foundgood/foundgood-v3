@@ -75,7 +75,7 @@ const ActivityCard = ({
     reflectionMode,
 }) => {
     // Hook: Metadata
-    const { labelTodo, label, getValueLabel } = useLabels();
+    const { label, object, getValueLabel } = useLabels();
 
     return (
         <div
@@ -97,8 +97,8 @@ const ActivityCard = ({
                     {tags && tags.length > 0 && (
                         <>
                             <div className="mt-8 t-caption-bold">
-                                {label(
-                                    'objects.Initiative_Activity__c.Activity_Tag__c'
+                                {object.label(
+                                    'Initiative_Activity__c.Activity_Tag__c'
                                 )}
                             </div>
                             <div className="flex flex-col items-start">
@@ -119,8 +119,8 @@ const ActivityCard = ({
                     {locations && (
                         <>
                             <div className="mt-16 t-caption-bold">
-                                {label(
-                                    'objects.Initiative_Activity__c.Initiative_Location__c'
+                                {object.label(
+                                    'Initiative_Activity__c.Initiative_Location__c'
                                 )}
                             </div>
                             <ul>
@@ -137,7 +137,7 @@ const ActivityCard = ({
                     {goals && goals.length > 0 && (
                         <>
                             <div className="mt-16 t-caption-bold">
-                                {label('objects.Initiative_Goal__c.Goal__c')}
+                                {object.label('Initiative_Goal__c.Goal__c')}
                             </div>
                             <div className="flex flex-col items-start">
                                 {goals.map((goal, index) => (

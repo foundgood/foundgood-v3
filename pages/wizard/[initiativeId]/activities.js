@@ -49,7 +49,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, valueSet, controlledValueSet, helpText } = useLabels();
+    const { label, object, valueSet, controlledValueSet } = useLabels();
     const { ewUpdate, ewCreate } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -349,11 +349,11 @@ const ActivitiesComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Text
                         name="Things_To_Do__c"
-                        label={label(
-                            'objects.Initiative_Activity__c.Things_To_Do__c'
+                        label={object.label(
+                            'Initiative_Activity__c.Things_To_Do__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Activity__c.Things_To_Do__c'
+                        subLabel={object.helpText(
+                            'Initiative_Activity__c.Things_To_Do__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={200}
@@ -362,11 +362,11 @@ const ActivitiesComponent = ({ pageProps }) => {
                     />
                     <LongText
                         name="Things_To_Do_Description__c"
-                        label={label(
-                            'objects.Initiative_Activity__c.Things_To_Do_Description__c'
+                        label={object.label(
+                            'Initiative_Activity__c.Things_To_Do_Description__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Activity__c.Things_To_Do_Description__c'
+                        subLabel={object.helpText(
+                            'Initiative_Activity__c.Things_To_Do_Description__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={400}
@@ -374,11 +374,11 @@ const ActivitiesComponent = ({ pageProps }) => {
                     />
                     <SelectList
                         name="Activities"
-                        label={label(
-                            'objects.Initiative_Activity__c.Activity_Tag__c'
+                        label={object.label(
+                            'Initiative_Activity__c.Activity_Tag__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Activity__c.Activity_Tag__c'
+                        subLabel={object.helpText(
+                            'Initiative_Activity__c.Activity_Tag__c'
                         )}
                         selectPlaceholder={label('FormCaptureSelectEmpty')}
                         options={controlledValueSet(
@@ -392,11 +392,11 @@ const ActivitiesComponent = ({ pageProps }) => {
                     />
                     <SelectList
                         name="Location"
-                        label={label(
-                            'objects.Initiative_Activity__c.Initiative_Location__c'
+                        label={object.label(
+                            'Initiative_Activity__c.Initiative_Location__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Activity__c.Initiative_Location__c'
+                        subLabel={object.helpText(
+                            'Initiative_Activity__c.Initiative_Location__c'
                         )}
                         listMaxLength={1}
                         options={valueSet(
@@ -411,9 +411,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                     {customGoals.length > 0 && (
                         <SelectList
                             name="Goals"
-                            label={label('objects.Initiative_Goal__c.Goal__c')}
-                            subLabel={helpText(
-                                'objects.Initiative_Goal__c.Goal__c'
+                            label={object.label('Initiative_Goal__c.Goal__c')}
+                            subLabel={object.helpText(
+                                'Initiative_Goal__c.Goal__c'
                             )}
                             options={customGoals.map(goal => ({
                                 value: goal.Id,

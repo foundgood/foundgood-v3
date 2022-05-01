@@ -29,7 +29,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, helpText } = useLabels();
+    const { labelTodo, label, object } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -263,11 +263,11 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Text
                         name="Type_Of_Influence__c"
-                        label={label(
-                            'objects.Initiative__c.Detail.Type_Of_Influence__c'
+                        label={object.label(
+                            'Initiative__c.Detail.Type_Of_Influence__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative__c.Detail.Type_Of_Influence__c'
+                        subLabel={object.helpText(
+                            'Initiative__c.Detail.Type_Of_Influence__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={80}

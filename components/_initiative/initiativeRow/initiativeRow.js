@@ -147,13 +147,11 @@ const InitiativeRowComponent = ({
                                 {label('InitiativeManagerCardPeriod')}
                             </div>
                             <div className="text-blue-100 t-caption-bold">
-                                <span className="mr-8">
-                                    {`${dayjs(startDate).format(
-                                        'DD.MM.YYYY'
-                                    )} - ${dayjs(endDate).format(
-                                        'DD.MM.YYYY'
-                                    )}`}
-                                </span>
+                                <span className="mr-8">{`${dayjs(
+                                    startDate
+                                ).format('DD.MM.YYYY')} - ${dayjs(
+                                    endDate
+                                ).format('DD.MM.YYYY')}`}</span>
                             </div>
                         </div>
                     )}

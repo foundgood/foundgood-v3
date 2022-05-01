@@ -56,7 +56,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, valueSet, helpText } = useLabels();
+    const { label, object, valueSet } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
     const { submitNoReflection, submitReflection } = useReflections({
         dataSet: utilities.collaborators.getTypeAdditional,
@@ -279,11 +279,11 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Text
                         name="Job_Title__c"
-                        label={label(
-                            'objects.Initiative_Employee_Funded__c.Job_Title__c'
+                        label={object.label(
+                            'Initiative_Employee_Funded__c.Job_Title__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Employee_Funded__c.Job_Title__c'
+                        subLabel={object.helpText(
+                            'Initiative_Employee_Funded__c.Job_Title__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={80}
@@ -292,11 +292,11 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     />
                     <Select
                         name="Role_Type__c"
-                        label={label(
-                            'objects.Initiative_Employee_Funded__c.Role_Type__c'
+                        label={object.label(
+                            'Initiative_Employee_Funded__c.Role_Type__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Employee_Funded__c.Role_Type__c'
+                        subLabel={object.helpText(
+                            'Initiative_Employee_Funded__c.Role_Type__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet(
@@ -307,15 +307,15 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     />
                     <SelectList
                         name="Gender"
-                        label={label(
-                            'objects.Initiative_Employee_Funded__c.Gender__c'
+                        label={object.label(
+                            'Initiative_Employee_Funded__c.Gender__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Employee_Funded__c.Gender__c'
+                        subLabel={object.helpText(
+                            'Initiative_Employee_Funded__c.Gender__c'
                         )}
                         selectPlaceholder={label('FormCaptureSelectEmpty')}
-                        textPlaceholder={label(
-                            'objects.Initiative_Employee_Funded__c.Gender_Other__c'
+                        textPlaceholder={object.label(
+                            'Initiative_Employee_Funded__c.Gender_Other__c'
                         )}
                         options={valueSet('initiativeEmployeeFunded.Gender__c')}
                         showText
@@ -324,11 +324,11 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     />
                     <Number
                         name="Percent_Involvement__c"
-                        label={label(
-                            'objects.Initiative_Employee_Funded__c.Percent_Involvement__c'
+                        label={object.label(
+                            'Initiative_Employee_Funded__c.Percent_Involvement__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Employee_Funded__c.Percent_Involvement__c'
+                        subLabel={object.helpText(
+                            'Initiative_Employee_Funded__c.Percent_Involvement__c'
                         )}
                         placeholder={label('FormCaptureNumberEmpty')}
                         minValue={0}

@@ -16,7 +16,7 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportSummaryComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useLabels();
+    const { label, object } = useLabels();
 
     // useEffect(() => {
     // }, []);
@@ -35,8 +35,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {report.Summary_Of_Activities__c && (
                 <TextCard
                     hasBackground={true}
-                    headline={label(
-                        'objects.Initiative__c.Summary_Of_Activities__c'
+                    headline={object.label(
+                        'Initiative__c.Summary_Of_Activities__c'
                     )}
                     body={report.Summary_Of_Activities__c}
                 />
@@ -45,8 +45,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {!report.Summary_Of_Activities__c && (
                 <SectionEmpty
                     type="report"
-                    headline={label(
-                        'objects.Initiative__c.Summary_Of_Activities__c'
+                    headline={object.label(
+                        'Initiative__c.Summary_Of_Activities__c'
                     )}
                 />
             )}
@@ -55,8 +55,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 <TextCard
                     hasBackground={true}
                     className="mt-32"
-                    headline={label(
-                        'objects.Initiative__c.Summary_Of_Challenges_And_Learnings__c'
+                    headline={object.label(
+                        'Initiative__c.Summary_Of_Challenges_And_Learnings__c'
                     )}
                     body={report.Summary_Of_Challenges_And_Learnings__c}
                 />
@@ -65,8 +65,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {!report.Summary_Of_Challenges_And_Learnings__c && (
                 <SectionEmpty
                     type="report"
-                    headline={label(
-                        'objects.Initiative__c.Summary_Of_Challenges_And_Learnings__c'
+                    headline={object.label(
+                        'Initiative__c.Summary_Of_Challenges_And_Learnings__c'
                     )}
                 />
             )}

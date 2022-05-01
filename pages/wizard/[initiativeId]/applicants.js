@@ -49,7 +49,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, valueSet, helpText } = useLabels();
+    const { label, object, valueSet } = useLabels();
     const { ewGet, ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -300,11 +300,11 @@ const ApplicantsComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <Select
                         name="Account__c"
-                        label={label(
-                            'objects.Initiative_Collaborator__c.Account__c'
+                        label={object.label(
+                            'Initiative_Collaborator__c.Account__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Collaborator__c.Account__c'
+                        subLabel={object.helpText(
+                            'Initiative_Collaborator__c.Account__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
                         options={
@@ -325,11 +325,11 @@ const ApplicantsComponent = ({ pageProps }) => {
                         CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR && (
                         <Select
                             name="Type__c"
-                            label={label(
-                                'objects.Initiative_Collaborator__c.Type__c'
+                            label={object.label(
+                                'Initiative_Collaborator__c.Type__c'
                             )}
-                            subLabel={helpText(
-                                'objects.Initiative_Collaborator__c.Type__c'
+                            subLabel={object.helpText(
+                                'Initiative_Collaborator__c.Type__c'
                             )}
                             placeholder={label('FormCaptureSelectEmpty')}
                             options={valueSet(
@@ -345,11 +345,11 @@ const ApplicantsComponent = ({ pageProps }) => {
                     )}
                     <LongText
                         name="Description__c"
-                        label={label(
-                            'objects.Initiative_Collaborator__c.Description__c'
+                        label={object.label(
+                            'Initiative_Collaborator__c.Description__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Collaborator__c.Description__c'
+                        subLabel={object.helpText(
+                            'Initiative_Collaborator__c.Description__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         controller={control}
@@ -358,10 +358,10 @@ const ApplicantsComponent = ({ pageProps }) => {
                         CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR && (
                         <DateRange
                             name="Dates"
-                            label={`${label(
-                                'objects.Initiative_Collaborator__c.Start_Date__c'
-                            )} / ${label(
-                                'objects.Initiative_Collaborator__c.End_Date__c'
+                            label={`${object.label(
+                                'Initiative_Collaborator__c.Start_Date__c'
+                            )} / ${object.label(
+                                'Initiative_Collaborator__c.End_Date__c'
                             )}`}
                             controller={control}
                         />

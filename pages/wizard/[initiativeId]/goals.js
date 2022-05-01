@@ -41,7 +41,7 @@ const GoalsComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
-    const { label, helpText } = useLabels();
+    const { label, object } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
 
     // ///////////////////
@@ -161,10 +161,8 @@ const GoalsComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <LongText
                         name="Goal__c"
-                        label={label('objects.Initiative_Goal__c.Goal__c')}
-                        subLabel={helpText(
-                            'objects.Initiative_Goal__c.Goal__c'
-                        )}
+                        label={object.label('Initiative_Goal__c.Goal__c')}
+                        subLabel={object.helpText('Initiative_Goal__c.Goal__c')}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={200}
                         controller={control}

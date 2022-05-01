@@ -15,11 +15,11 @@ const WizardComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { label, valueSet, log } = useLabels();
+    const { object } = useLabels();
 
     return (
         <div className="t-h1">
-            Foundgood, {label('objects.Initiative__c.Approach_Thinking__c')}
+            Foundgood, {object.label('Initiative__c.Approach_Thinking__c')}
         </div>
     );
 };

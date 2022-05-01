@@ -27,10 +27,10 @@ const ReportDetailsComponent = () => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    const { REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, helpText, valueSet, log } = useLabels();
+    const { labelTodo, label, object, valueSet } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -110,8 +110,8 @@ const ReportDetailsComponent = () => {
                 <Select
                     name="Report_Type__c"
                     defaultValue={currentReport.Report_Type__c}
-                    label={label('objects.Initiative__c.Report_Type__c')}
-                    subLabel={helpText('objects.Initiative__c.Report_Type__c')}
+                    label={object.label('Initiative__c.Report_Type__c')}
+                    subLabel={object.helpText('Initiative__c.Report_Type__c')}
                     placeholder={labelTodo('Type')}
                     options={valueSet('initiativeReport.Report_Type__c')}
                     disabled={utilities.isNovoLeadFunder()}
@@ -120,8 +120,8 @@ const ReportDetailsComponent = () => {
                 />
                 <DatePicker
                     name="Due_Date__c"
-                    label={label('objects.Initiative__c.Due_Date__c')}
-                    subLabel={helpText('objects.Initiative__c.Due_Date__c')}
+                    label={object.label('Initiative__c.Due_Date__c')}
+                    subLabel={object.helpText('Initiative__c.Due_Date__c')}
                     defaultValue={currentReport.Due_Date__c}
                     controller={control}
                     disabled={utilities.isNovoLeadFunder()}
@@ -134,10 +134,10 @@ const ReportDetailsComponent = () => {
                         to: currentReport.Report_Period_End_Date__c,
                     }}
                     disabled={utilities.isNovoLeadFunder()}
-                    label={`${label(
-                        'objects.Initiative__c.Report_Period_Start_Date__c'
-                    )} / ${label(
-                        'objects.Initiative__c.Report_Period_End_Date__c'
+                    label={`${object.label(
+                        'Initiative__c.Report_Period_Start_Date__c'
+                    )} / ${object.label(
+                        'Initiative__c.Report_Period_End_Date__c'
                     )}`}
                     controller={control}
                     required={!utilities.isNovoLeadFunder()}

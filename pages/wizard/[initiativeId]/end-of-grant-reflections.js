@@ -21,16 +21,16 @@ const EndOfGrantReflectionsComponent = () => {
     verifyLoggedIn();
 
     // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    const { REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText, log } = useLabels();
+    const { label } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
 
     // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    const { sfUpdate } = useSalesForce();
 
     // Store: Wizard navigation
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();

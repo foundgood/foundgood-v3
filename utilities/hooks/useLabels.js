@@ -6,14 +6,19 @@ import parse from 'html-react-parser';
 import { useMetadata } from 'utilities/hooks';
 
 // Data
-import { labels, texts } from '_labels/labels';
+import {
+    labels,
+    texts,
+    objects,
+    pickLists,
+    controlledPickLists,
+} from '_labels/labels';
 
 const useLabels = () => {
     const { locale } = useRouter();
     const {
         labelTodo,
         valueSet,
-        helpText,
         log: logMetadata,
         controlledValueSet,
         getValueLabel,
@@ -76,7 +81,7 @@ const useLabels = () => {
                 return label;
             }
             // 3. Missing
-            label = `${path} missing`;
+            label = `object ${path} label missing`;
             return label;
         },
         helpText(path) {
@@ -97,13 +102,13 @@ const useLabels = () => {
                 return label;
             }
             // 3. Missing
-            label = `${path} missing`;
+            label = `object ${path} helpText missing`;
             return label;
         },
     };
 
     function log() {
-        console.log({ labels, texts });
+        console.log({ labels, texts, objects, pickLists, controlledPickLists });
         logMetadata();
     }
 
@@ -115,7 +120,6 @@ const useLabels = () => {
 
         labelTodo,
         valueSet,
-        helpText,
         controlledValueSet,
         getValueLabel,
     };

@@ -25,7 +25,7 @@ const LogbookComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { label, helpText } = useLabels();
+    const { label, object } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -217,11 +217,11 @@ const LogbookComponent = ({ pageProps }) => {
                 <InputWrapper>
                     <LongText
                         name="Description__c"
-                        label={label(
-                            'objects.Initiative_Update__c.Description__c'
+                        label={object.label(
+                            'Initiative_Update__c.Description__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Update__c.Description__c'
+                        subLabel={object.helpText(
+                            'Initiative_Update__c.Description__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         required
@@ -295,11 +295,11 @@ const LogbookComponent = ({ pageProps }) => {
                     </div>
                     <Select
                         name="Initiative_Activity__c"
-                        label={label(
-                            'objects.Initiative_Update__c.Initiative_Activity__c'
+                        label={object.label(
+                            'Initiative_Update__c.Initiative_Activity__c'
                         )}
-                        subLabel={helpText(
-                            'objects.Initiative_Update__c.Initiative_Activity__c'
+                        subLabel={object.helpText(
+                            'Initiative_Update__c.Initiative_Activity__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
                         options={activities.map(activity => ({

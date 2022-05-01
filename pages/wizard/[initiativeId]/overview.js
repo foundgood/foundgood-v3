@@ -37,7 +37,7 @@ const OverviewComponent = () => {
     // ///////////////////
 
     const { MODE, CONTEXTS } = useContext();
-    const { label, valueSet, controlledValueSet, helpText } = useLabels();
+    const { label, object, valueSet, controlledValueSet } = useLabels();
     const { ewGet, ewCreate, ewUpdate, ewCreateUpdateWrapper } = useElseware();
 
     // Store: Wizard navigation
@@ -175,7 +175,7 @@ const OverviewComponent = () => {
         {
             type: 'Select',
             name: 'Account__c',
-            label: label('objects.Initiative__c.Lead_Grantee__c'),
+            label: object.label('Initiative__c.Lead_Grantee__c'),
             defaultValue: accountGrantees
                 ? Object.values(accountGrantees.data).find(
                       ag => ag.Id === mainCollaborator?.Account__c
@@ -186,7 +186,7 @@ const OverviewComponent = () => {
                 : utilities.isNovoLeadFunder(),
             required: mainCollaborator?.Id ? false : true,
             // Type options
-            subLabel: helpText('objects.Initiative__c.Lead_Grantee__c'),
+            subLabel: object.helpText('Initiative__c.Lead_Grantee__c'),
             options: accountGrantees
                 ? Object.values(accountGrantees.data).map(item => ({
                       label: item.Name,
@@ -197,7 +197,7 @@ const OverviewComponent = () => {
         {
             type: 'Text',
             name: 'Name',
-            label: label('objects.Initiative__c.Name'),
+            label: object.label('Initiative__c.Name'),
             defaultValue: initiative?.Name === '___' ? '' : initiative?.Name,
             disabled:
                 initiative?.Name === '___'
@@ -213,18 +213,18 @@ const OverviewComponent = () => {
         {
             type: 'Select',
             name: 'Category__c',
-            label: label('objects.Initiative__c.Category__c'),
+            label: object.label('Initiative__c.Category__c'),
             defaultValue: initiative?.Category__c ? initiative.Category__c : '',
             disabled: utilities.isNovoLeadFunder(),
             required: true,
             // Type options
             options: valueSet('initiative.Category__c'),
-            subLabel: helpText('objects.Initiative__c.Category__c'),
+            subLabel: object.helpText('Initiative__c.Category__c'),
         },
         {
             type: 'Select',
             name: 'Funder_Objective__c',
-            label: label('objects.Initiative_Goal__c.Funder_Objective__c'),
+            label: object.label('Initiative_Goal__c.Funder_Objective__c'),
             defaultValue: funderObjective.Funder_Objective__c,
             disabled: !CategoryWatch && !initiative?.Category__c,
             required: true,
@@ -233,26 +233,24 @@ const OverviewComponent = () => {
                 'initiativeGoal.Funder_Objective__c',
                 CategoryWatch ? CategoryWatch : initiative?.Category__c
             ),
-            subLabel: helpText(
-                'objects.Initiative_Goal__c.Funder_Objective__c'
-            ),
+            subLabel: object.helpText('Initiative_Goal__c.Funder_Objective__c'),
         },
         {
             type: 'LongText',
             name: 'Summary__c',
-            label: label('objects.Initiative__c.Summary__c'),
+            label: object.label('Initiative__c.Summary__c'),
             defaultValue: initiative?.Summary__c,
             required: true,
             // Type options
             maxLength: 400,
-            subLabel: helpText('objects.Initiative__c.Summary__c'),
+            subLabel: object.helpText('Initiative__c.Summary__c'),
         },
         {
             type: 'DateRange',
             name: 'GrantDate',
-            label: `${label(
-                'objects.Initiative__c.Grant_Start_Date__c'
-            )} / ${label('objects.Initiative__c.Grant_End_Date__c')}`,
+            label: `${object.label(
+                'Initiative__c.Grant_Start_Date__c'
+            )} / ${object.label('Initiative__c.Grant_End_Date__c')}`,
             defaultValue: {
                 from: initiative?.Grant_Start_Date__c,
                 to: initiative?.Grant_End_Date__c,
@@ -262,7 +260,7 @@ const OverviewComponent = () => {
         {
             type: 'SelectList',
             name: 'Where_Is_Problem__c',
-            label: label('objects.Initiative__c.Where_Is_Problem__c'),
+            label: object.label('Initiative__c.Where_Is_Problem__c'),
             defaultValue: initiative?.Where_Is_Problem__c?.split(';').map(
                 value => ({
                     selectValue: value,
@@ -272,12 +270,12 @@ const OverviewComponent = () => {
             buttonLabel: label('ButtonAddLocation'),
             listMaxLength: 3,
             options: valueSet('account.Location__c'),
-            subLabel: helpText('objects.Initiative__c.Where_Is_Problem__c'),
+            subLabel: object.helpText('Initiative__c.Where_Is_Problem__c'),
         },
         {
             type: 'SelectList',
             name: 'Problem_Effect__c',
-            label: label('objects.Initiative__c.Problem_Effect__c'),
+            label: object.label('Initiative__c.Problem_Effect__c'),
             defaultValue: initiative?.Problem_Effect__c?.split(';').map(
                 value => ({
                     selectValue: value,
@@ -287,17 +285,17 @@ const OverviewComponent = () => {
             buttonLabel: label('ButtonAddSDG'),
             listMaxLength: 10,
             options: valueSet('initiative.Problem_Effect__c'),
-            subLabel: helpText('objects.Initiative__c.Problem_Effect__c'),
+            subLabel: object.helpText('Initiative__c.Problem_Effect__c'),
         },
         ...(MODE === CONTEXTS.INITIATIVE
             ? [
                   {
                       type: 'Image',
                       name: 'Hero_Image__c',
-                      label: label('objects.Initiative__c.Hero_Image__c'),
+                      label: object.label('Initiative__c.Hero_Image__c'),
                       defaultValue: initiative?.Hero_Image_URL__c,
                       // Type options
-                      subLabel: helpText('objects.Initiative__c.Hero_Image__c'),
+                      subLabel: object.helpText('Initiative__c.Hero_Image__c'),
                   },
               ]
             : []),
