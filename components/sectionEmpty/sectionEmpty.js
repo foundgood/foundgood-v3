@@ -6,14 +6,14 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 
 const SectionEmptyComponent = ({ headline, type }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
     return (
         <>
             {headline && (
@@ -30,11 +30,9 @@ const SectionEmptyComponent = ({ headline, type }) => {
                         'bg-white border-teal-20': type != 'noReflections',
                     },
                 ])}>
-                {type == 'initiative' &&
-                    label('custom.FA_InitiativeEmptyState')}
-                {type == 'report' && label('custom.FA_ReportEmptyState')}
-                {type == 'noReflections' &&
-                    label('custom.FA_NothingToReportReportView')}
+                {type == 'initiative' && label('InitiativeEmptyState')}
+                {type == 'report' && label('ReportEmptyState')}
+                {type == 'noReflections' && label('NothingToReportReportView')}
             </div>
         </>
     );

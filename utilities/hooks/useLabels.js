@@ -3,20 +3,33 @@ import { useRouter } from 'next/router';
 import _get from 'lodash.get';
 import parse from 'html-react-parser';
 
+import { useMetadata } from 'utilities/hooks';
+
 // Data
 import { labels, texts } from '_labels/labels';
 
-const useMetadata = () => {
+const useLabels = () => {
     const { locale } = useRouter();
+    const {
+        labelTodo,
+        valueSet,
+        helpText,
+        log: logMetadata,
+        controlledValueSet,
+        getValueLabel,
+    } = useMetadata();
 
     // TODO FounderId logic
-    const founderId = 'TBD';
+    const founderId = null;
 
     function label(path) {
+        let label;
         // 1. Founder based
-        let label = _get(labels, `${path}.${founderId}.${locale}`);
-        if (typeof label === 'string') {
-            return label;
+        if (founderId) {
+            label = _get(labels, `${path}.${founderId}.${locale}`);
+            if (typeof label === 'string') {
+                return label;
+            }
         }
         // 2. Default
         label = _get(labels, `${path}.${locale}`);
@@ -29,10 +42,13 @@ const useMetadata = () => {
     }
 
     function text(path) {
+        let text;
         // 1. Founder based
-        let text = _get(texts, `${path}.${founderId}.${locale}`);
-        if (typeof text === 'string') {
-            return parse(text);
+        if (founderId) {
+            text = _get(texts, `${path}.${founderId}.${locale}`);
+            if (typeof text === 'string') {
+                return parse(text);
+            }
         }
         // 2. Default
         text = _get(texts, `${path}.${locale}`);
@@ -44,15 +60,65 @@ const useMetadata = () => {
         return parse(text);
     }
 
+    const object = {
+        label(path) {
+            let label;
+            // 1. Founder based
+            if (founderId) {
+                label = _get(objects, `${path}.${founderId}.${locale}.label`);
+                if (typeof label === 'string') {
+                    return label;
+                }
+            }
+            // 2. Default
+            label = _get(objects, `${path}.${locale}.label`);
+            if (typeof label === 'string') {
+                return label;
+            }
+            // 3. Missing
+            label = `${path} missing`;
+            return label;
+        },
+        helpText(path) {
+            let label;
+            // 1. Founder based
+            if (founderId) {
+                label = _get(
+                    objects,
+                    `${path}.${founderId}.${locale}.helpText`
+                );
+                if (typeof label === 'string') {
+                    return label;
+                }
+            }
+            // 2. Default
+            label = _get(objects, `${path}.${locale}.helpText`);
+            if (typeof label === 'string') {
+                return label;
+            }
+            // 3. Missing
+            label = `${path} missing`;
+            return label;
+        },
+    };
+
     function log() {
         console.log({ labels, texts });
+        logMetadata();
     }
 
     return {
         label,
         text,
+        object,
         log,
+
+        labelTodo,
+        valueSet,
+        helpText,
+        controlledValueSet,
+        getValueLabel,
     };
 };
 
-export default useMetadata;
+export default useLabels;

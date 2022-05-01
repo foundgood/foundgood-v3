@@ -6,7 +6,7 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -15,7 +15,7 @@ import Modal from 'components/modal';
 
 const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // State: Modal
     const [showModal, setShowModal] = useState(false);
@@ -28,14 +28,14 @@ const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
             return (
                 <div className="flex items-center justify-between p-16 text-teal-100 border-4 border-teal-20 bg-teal-20 rounded-8">
                     <h2 className="mr-24 font-bold t-sh4">
-                        {label('custom.FA_NothingToReportPromptHeader')}
+                        {label('NothingToReportPromptHeader')}
                     </h2>
                     <Button
                         theme="teal"
                         variant="secondary"
                         className="self-end"
                         action={() => setShowModal(true)}>
-                        {label('custom.FA_ButtonNoUpdates')}
+                        {label('ButtonNoUpdates')}
                     </Button>
                 </div>
             );
@@ -44,10 +44,10 @@ const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
             return (
                 <div className="flex flex-col p-16 border-4 border-amber-10 bg-amber-10 rounded-8 text-amber-100">
                     <h2 className="mb-8 font-bold t-sh4">
-                        {label('custom.FA_NothingToReportStatusHeader')}
+                        {label('NothingToReportStatusHeader')}
                     </h2>
                     <p className="mb-16 t-small">
-                        {label('custom.FA_NothingToReportStatusBody')}
+                        {label('NothingToReportStatusBody')}
                     </p>
                 </div>
             );
@@ -56,7 +56,7 @@ const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
             return (
                 <div className="flex items-center justify-between p-16 text-teal-100 border-4 border-teal-20 bg-teal-20 rounded-8">
                     <p className="mb-16 t-small">
-                        {label('custom.FA_NothingToReportUpdatesMadeStatus')}
+                        {label('NothingToReportUpdatesMadeStatus')}
                     </p>
                 </div>
             );
@@ -100,15 +100,15 @@ const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
             {updates && states.updates()}
             <Modal
                 isOpen={showModal}
-                title={label('custom.FA_NothingToReportModalHeader')}
+                title={label('NothingToReportModalHeader')}
                 onCancel={() => setShowModal(false)}
-                saveText={label('custom.FA_ButtonContinue')}
+                saveText={label('ButtonContinue')}
                 onSave={() => {
                     onClick();
                     setShowModal(false);
                 }}>
                 <p className="t-preamble">
-                    {label('custom.FA_NothingToReportModalBody')}
+                    {label('NothingToReportModalBody')}
                 </p>
             </Modal>
         </>

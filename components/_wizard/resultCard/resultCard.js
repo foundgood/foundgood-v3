@@ -7,7 +7,7 @@ import { useWatch } from 'react-hook-form';
 import AnimateHeight from 'react-animate-height';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import Card from 'components/_wizard/card';
@@ -73,14 +73,14 @@ const ResultCardComponent = ({
 
 const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { labelTodo, label } = useLabels();
     return (
         <div className="p-16 my-16 space-y-8 rounded t-sh7 bg-teal-10">
             {title && (
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
                         {label(
-                            'objects.initiativeActivity.Publication_Title__c'
+                            'objects.Initiative_Activity__c.Publication_Title__c'
                         )}
                     </span>
                     <span className="text-teal-100">{title}</span>
@@ -91,7 +91,7 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
                         {label(
-                            'objects.initiativeActivity.Publication_Type__c'
+                            'objects.Initiative_Activity__c.Publication_Type__c'
                         )}
                     </span>
                     <span className="text-teal-100">{type}</span>
@@ -102,7 +102,7 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
                         {label(
-                            'objects.initiativeActivity.Publication_Year__c'
+                            'objects.Initiative_Activity__c.Publication_Year__c'
                         )}
                     </span>
                     <span className="text-teal-100">{year}</span>
@@ -113,7 +113,7 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
                         {label(
-                            'objects.initiativeActivity.Publication_Publisher__c'
+                            'objects.Initiative_Activity__c.Publication_Publisher__c'
                         )}
                     </span>
                     <span className="text-teal-100">{publisher}</span>
@@ -124,7 +124,7 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
                         {label(
-                            'objects.initiativeActivity.Publication_Author__c'
+                            'objects.Initiative_Activity__c.Publication_Author__c'
                         )}
                     </span>
                     <span className="text-teal-100">{author}</span>
@@ -134,7 +134,9 @@ const JournalPublication = ({ type, year, title, publisher, author, doi }) => {
             {doi && (
                 <div className="flex flex-col md:flex-row">
                     <span className="w-4/12 text-teal-60">
-                        {label('objects.initiativeActivity.Publication_DOI__c')}
+                        {label(
+                            'objects.Initiative_Activity__c.Publication_DOI__c'
+                        )}
                     </span>
                     <span className="text-teal-100">{doi}</span>
                 </div>

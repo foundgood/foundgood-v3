@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -17,7 +17,7 @@ import ReportDetailCard from 'components/_initiative/reportDetailCard';
 
 const ReportFundersComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const [funders, setFunders] = useState([]);
 
@@ -161,11 +161,11 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
     }, [initiative, report.Id]);
 
     return (
-        <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuFunders'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuFunders'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label('custom.FA_ReportViewSubHeadingFundersOverall')}
+                        {label('ReportViewSubHeadingFundersOverall')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="funders" />
                 </div>
@@ -178,9 +178,7 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                         <div className="pie" style={pieChartStyle}>
                             <div className="absolute w-full -mt-16 text-center top-1/2">
                                 <p className="t-sh7 text-blue-60">
-                                    {label(
-                                        'custom.FA_InitiativeViewTotalFunded'
-                                    )}
+                                    {label('InitiativeViewTotalFunded')}
                                 </p>
                                 <p className="t-h6">
                                     {currency}{' '}
@@ -192,7 +190,7 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                     <div className="md:w-1/2">
                         {/* Headline */}
                         <div className="t-caption-bold">
-                            {label('custom.FA_InitiativeViewFundingOverview')}
+                            {label('InitiativeViewFundingOverview')}
                         </div>
                         {/* List of funders */}
                         {donutData.map((item, index) => (
@@ -223,7 +221,7 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                                 items={[
                                     {
                                         label: label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersAmount'
+                                            'InitiativeViewFunderTableColumnHeadersAmount'
                                         ),
                                         text: `${
                                             item.CurrencyIsoCode
@@ -233,7 +231,7 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                                     },
                                     {
                                         label: label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersApplicationId'
+                                            'InitiativeViewFunderTableColumnHeadersApplicationId'
                                         ),
                                         text: item.Application_Id__c,
                                     },
@@ -244,7 +242,7 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                             <>
                                 <div className="t-h5">
                                     {label(
-                                        'custom.FA_ReportViewSubHeadingFundersReflections'
+                                        'ReportViewSubHeadingFundersReflections'
                                     )}
                                 </div>
                                 <p className="mt-8 t-body">

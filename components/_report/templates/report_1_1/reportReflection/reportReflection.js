@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -16,18 +16,17 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportSummaryComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // useEffect(() => {
     // }, []);
 
     return (
-        <SectionWrapper
-            id={asId(label('custom.FA_ReportWizardMenuEndReflections'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuEndReflections'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label('custom.FA_ReportViewHeadingEndReflections')}
+                        {label('ReportViewHeadingEndReflections')}
                     </h3>
                     <UpdateButton
                         mode="report"
@@ -39,9 +38,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {report.Project_Purpose__c && (
                 <TextCard
                     hasBackground={true}
-                    headline={label(
-                        'objects.initiativeReport.Project_Purpose__c'
-                    )}
+                    headline={label('objects.Initiative__c.Project_Purpose__c')}
                     body={report.Project_Purpose__c}
                 />
             )}
@@ -49,9 +46,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             {!report.Project_Purpose__c && (
                 <SectionEmpty
                     type="report"
-                    headline={label(
-                        'objects.initiativeReport.Project_Purpose__c'
-                    )}
+                    headline={label('objects.Initiative__c.Project_Purpose__c')}
                 />
             )}
 
@@ -61,7 +56,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     className="mt-32"
                     hasBackground={true}
                     headline={label(
-                        'objects.initiativeReport.Progress_Towards_Grant_Area_Themes__c'
+                        'objects.Initiative__c.Progress_Towards_Grant_Area_Themes__c'
                     )}
                     body={report.Progress_Towards_Grant_Area_Themes__c}
                 />
@@ -71,7 +66,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 <SectionEmpty
                     type="report"
                     headline={label(
-                        'objects.initiativeReport.Progress_Towards_Grant_Area_Themes__c'
+                        'objects.Initiative__c.Progress_Towards_Grant_Area_Themes__c'
                     )}
                 />
             )}
@@ -82,7 +77,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     className="mt-32"
                     hasBackground={true}
                     headline={label(
-                        'objects.initiativeReport.Important_Results__c'
+                        'objects.Initiative__c.Important_Results__c'
                     )}
                     body={report.Important_Results__c}
                 />
@@ -92,7 +87,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 <SectionEmpty
                     type="report"
                     headline={label(
-                        'objects.initiativeReport.Important_Results__c'
+                        'objects.Initiative__c.Important_Results__c'
                     )}
                 />
             )}

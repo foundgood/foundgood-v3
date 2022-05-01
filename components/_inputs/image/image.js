@@ -7,7 +7,7 @@ import t from 'prop-types';
 import { useController } from 'react-hook-form';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { s3 } from 'utilities/api';
 
 // Components
@@ -22,7 +22,7 @@ const ImageComponent = ({
     ...rest
 }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Controller from useForm
     const {
@@ -52,7 +52,7 @@ const ImageComponent = ({
                 variant="quaternary"
                 className="self-start mt-16"
                 action={'fake'}>
-                {label('custom.FA_ButtonUploadImage')}
+                {label('ButtonUploadImage')}
             </Button>
             <input
                 ref={ref}

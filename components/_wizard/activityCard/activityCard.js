@@ -8,7 +8,7 @@ import { useWatch } from 'react-hook-form';
 import AnimateHeight from 'react-animate-height';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -75,7 +75,7 @@ const ActivityCard = ({
     reflectionMode,
 }) => {
     // Hook: Metadata
-    const { labelTodo, label, getValueLabel } = useMetadata();
+    const { labelTodo, label, getValueLabel } = useLabels();
 
     return (
         <div
@@ -98,7 +98,7 @@ const ActivityCard = ({
                         <>
                             <div className="mt-8 t-caption-bold">
                                 {label(
-                                    'objects.initiativeActivity.Activity_Tag__c'
+                                    'objects.Initiative_Activity__c.Activity_Tag__c'
                                 )}
                             </div>
                             <div className="flex flex-col items-start">
@@ -120,7 +120,7 @@ const ActivityCard = ({
                         <>
                             <div className="mt-16 t-caption-bold">
                                 {label(
-                                    'objects.initiativeActivity.Initiative_Location__c'
+                                    'objects.Initiative_Activity__c.Initiative_Location__c'
                                 )}
                             </div>
                             <ul>
@@ -137,7 +137,7 @@ const ActivityCard = ({
                     {goals && goals.length > 0 && (
                         <>
                             <div className="mt-16 t-caption-bold">
-                                {label('objects.initiativeGoal.Goal__c')}
+                                {label('objects.Initiative_Goal__c.Goal__c')}
                             </div>
                             <div className="flex flex-col items-start">
                                 {goals.map((goal, index) => (
@@ -157,7 +157,7 @@ const ActivityCard = ({
                     theme="teal"
                     variant={reflectionMode ? 'tertiary' : 'secondary'}
                     action={action}>
-                    {label('custom.FA_ButtonEditDetails')}
+                    {label('ButtonEditDetails')}
                 </Button>
                 {reflectionMode && (
                     <Button
@@ -165,9 +165,7 @@ const ActivityCard = ({
                         variant="secondary"
                         action={() => onChange(!selected)}>
                         {label(
-                            selected
-                                ? 'custom.FA_ButtonCancel'
-                                : 'custom.FA_ButtonProvideUpdate'
+                            selected ? 'ButtonCancel' : 'ButtonProvideUpdate'
                         )}
                     </Button>
                 )}

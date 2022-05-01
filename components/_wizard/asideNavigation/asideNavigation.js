@@ -9,7 +9,7 @@ import {
     useWizardNavigationStore,
     useInitiativeDataStore,
 } from 'utilities/store';
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useLabels, useContext } from 'utilities/hooks';
 
 // Components
 import { TopLevelItem } from 'components/_wizard/asideNavigation';
@@ -19,7 +19,7 @@ const AsideNavigationComponent = () => {
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Store: wizardNavigation
     const {
@@ -57,14 +57,14 @@ const AsideNavigationComponent = () => {
                         <h3 className="mt-16 t-sh6">
                             {`${
                                 initiative._reports[REPORT_ID]?.Report_Type__c
-                            } ${label('custom.FA_TitleReport')} ${dayjs(
+                            } ${label('TitleReport')} ${dayjs(
                                 initiative._reports[REPORT_ID]?.Due_Date__c
                             ).format('YYYY')}`}
                         </h3>
                     </>
                 ) : (
                     <h2 className="mt-8 t-h5">
-                        {label('custom.FA_CreateNewInitiative')}
+                        {label('CreateNewInitiative')}
                     </h2>
                 )}
             </header>

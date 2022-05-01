@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId, stripUndefined } from 'utilities';
 
 // Components
@@ -19,7 +19,7 @@ import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportActivitiesComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { labelTodo, label, getValueLabel } = useMetadata();
+    const { labelTodo, label, getValueLabel } = useLabels();
 
     const [activities, setActivities] = useState([]);
 
@@ -105,12 +105,12 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                 return {
                                     type: item.Type__c,
                                     groupTitle: label(
-                                        'custom.FA_InitiativeViewIndicatorsPeopleReached'
+                                        'InitiativeViewIndicatorsPeopleReached'
                                     ),
                                     title: headline,
                                     value: value,
                                     label: label(
-                                        'custom.FA_ReportViewActivitiesGraphKeyDuring'
+                                        'ReportViewActivitiesGraphKeyDuring'
                                     ),
                                 };
                             }
@@ -119,12 +119,12 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                 return {
                                     type: item.Type__c,
                                     groupTitle: label(
-                                        'custom.FA_InitiativeViewIndicatorsMetrics'
+                                        'InitiativeViewIndicatorsMetrics'
                                     ),
                                     title: item.Name,
                                     value: value,
                                     label: label(
-                                        'custom.FA_ReportViewActivitiesGraphKeyDuring'
+                                        'ReportViewActivitiesGraphKeyDuring'
                                     ),
                                 };
                             }
@@ -172,14 +172,11 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
     }, [initiative, report.Id]);
 
     return (
-        <SectionWrapper
-            id={asId(label('custom.FA_ReportWizardMenuActivities'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuActivities'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label(
-                            'custom.FA_ReportViewSubHeadingActivitiesOverall'
-                        )}
+                        {label('ReportViewSubHeadingActivitiesOverall')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="activities" />
                 </div>
@@ -206,7 +203,7 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                 items={[
                                     {
                                         label: label(
-                                            'custom.FA_InitiativeViewActivityLocation'
+                                            'InitiativeViewActivityLocation'
                                         ),
                                         text: getValueLabel(
                                             'initiativeActivity.Initiative_Location__c',
@@ -244,7 +241,7 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                             hasBackground={true}
                             className="mt-32"
                             headline={label(
-                                'custom.FA_ReportViewSubHeadingActivityReflections'
+                                'ReportViewSubHeadingActivityReflections'
                             )}
                             body={item.reportReflection}
                         />

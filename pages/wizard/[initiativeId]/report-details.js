@@ -5,12 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm, useFormState } from 'react-hook-form';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -35,7 +30,7 @@ const ReportDetailsComponent = () => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, helpText, valueSet, log } = useMetadata();
+    const { labelTodo, label, helpText, valueSet, log } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -105,8 +100,8 @@ const ReportDetailsComponent = () => {
                 <Text
                     name="Name"
                     defaultValue={currentReport.Name}
-                    label={label('custom.FA_ReportName')}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    label={label('ReportName')}
+                    placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={80}
                     disabled={utilities.isNovoLeadFunder()}
                     required={!utilities.isNovoLeadFunder()}
@@ -115,10 +110,8 @@ const ReportDetailsComponent = () => {
                 <Select
                     name="Report_Type__c"
                     defaultValue={currentReport.Report_Type__c}
-                    label={label('objects.initiativeReport.Report_Type__c')}
-                    subLabel={helpText(
-                        'objects.initiativeReport.Report_Type__c'
-                    )}
+                    label={label('objects.Initiative__c.Report_Type__c')}
+                    subLabel={helpText('objects.Initiative__c.Report_Type__c')}
                     placeholder={labelTodo('Type')}
                     options={valueSet('initiativeReport.Report_Type__c')}
                     disabled={utilities.isNovoLeadFunder()}
@@ -127,8 +120,8 @@ const ReportDetailsComponent = () => {
                 />
                 <DatePicker
                     name="Due_Date__c"
-                    label={label('objects.initiativeReport.Due_Date__c')}
-                    subLabel={helpText('objects.initiativeReport.Due_Date__c')}
+                    label={label('objects.Initiative__c.Due_Date__c')}
+                    subLabel={helpText('objects.Initiative__c.Due_Date__c')}
                     defaultValue={currentReport.Due_Date__c}
                     controller={control}
                     disabled={utilities.isNovoLeadFunder()}
@@ -142,9 +135,9 @@ const ReportDetailsComponent = () => {
                     }}
                     disabled={utilities.isNovoLeadFunder()}
                     label={`${label(
-                        'objects.initiativeReport.Report_Period_Start_Date__c'
+                        'objects.Initiative__c.Report_Period_Start_Date__c'
                     )} / ${label(
-                        'objects.initiativeReport.Report_Period_End_Date__c'
+                        'objects.Initiative__c.Report_Period_End_Date__c'
                     )}`}
                     controller={control}
                     required={!utilities.isNovoLeadFunder()}

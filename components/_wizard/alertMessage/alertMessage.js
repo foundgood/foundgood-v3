@@ -5,11 +5,11 @@ import React from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 const AlertMessageComponent = ({ description }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { labelTodo } = useLabels();
 
     return (
         <div className="inline-block px-8 pt-4 bg-amber-20 text-amber-300 rounded-4">

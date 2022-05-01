@@ -7,7 +7,7 @@ import t from 'prop-types';
 import { useForm, useWatch } from 'react-hook-form';
 
 // Utilities
-import { useSalesForce, useMetadata, useAuth } from 'utilities/hooks';
+import { useSalesForce, useLabels, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -23,7 +23,7 @@ const ReportComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { label, labelTodo, valueSet } = useMetadata();
+    const { label, labelTodo, valueSet } = useLabels();
 
     // Reset initiative data
     const { CONSTANTS } = useInitiativeDataStore();
@@ -193,15 +193,13 @@ const ReportComponent = ({ pageProps }) => {
             {/* Content */}
             <div className="w-full max-w-[900px] page-mx mt-80 md:mt-120 pb-64 lg:pb-96 rounded-8">
                 <SectionWrapper>
-                    <h2 className="t-h2">
-                        {label('custom.FA_ReportManagerHeading')}
-                    </h2>
+                    <h2 className="t-h2">{label('ReportManagerHeading')}</h2>
                     <div className="flex flex-col">
                         <input
                             {...register('filter.text')}
                             type="text"
                             placeholder={label(
-                                'custom.FA_InitiativeManagerSearchBoxText'
+                                'InitiativeManagerSearchBoxText'
                             )}
                             className="input-search"
                         />
@@ -209,7 +207,7 @@ const ReportComponent = ({ pageProps }) => {
                             <SearchFilterMultiselect
                                 name="filter.category"
                                 label={label(
-                                    'custom.FA_ReportManagerFilterGrantGivingArea'
+                                    'ReportManagerFilterGrantGivingArea'
                                 )}
                                 controller={control}
                                 options={valueSet('initiative.Category__c')}
@@ -217,7 +215,7 @@ const ReportComponent = ({ pageProps }) => {
                             <SearchFilterMultiselect
                                 name="filter.status"
                                 // label={label(
-                                //     'custom.FA_ReportManagerFilterReportStatus'
+                                //     'ReportManagerFilterReportStatus'
                                 // )}
                                 label={labelTodo('Report status is')}
                                 controller={control}
@@ -225,9 +223,7 @@ const ReportComponent = ({ pageProps }) => {
                             />
                             <SearchFilterMultiselect
                                 name="filter.type"
-                                label={label(
-                                    'custom.FA_ReportManagerFilterReportType'
-                                )}
+                                label={label('ReportManagerFilterReportType')}
                                 controller={control}
                                 options={valueSet(
                                     'initiativeReport.Report_Type__c'
@@ -238,7 +234,7 @@ const ReportComponent = ({ pageProps }) => {
                                 <SearchFilterMultiselect
                                     name="filter.foundation"
                                     label={label(
-                                        'custom.FA_ReportManagerFilterFoundation'
+                                        'ReportManagerFilterFoundation'
                                     )}
                                     controller={control}
                                     options={

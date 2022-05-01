@@ -7,7 +7,7 @@ import t from 'prop-types';
 import { Controller } from 'react-hook-form';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 const LongTextComponent = ({
     name,
@@ -22,7 +22,7 @@ const LongTextComponent = ({
     ...rest
 }) => {
     // Hook: Metadata
-    const { label: metadataLabel } = useMetadata();
+    const { label: metadataLabel } = useLabels();
 
     // State: Local length
     const [lengthValue, setLengthValue] = useState(0);
@@ -56,7 +56,7 @@ const LongTextComponent = ({
                         maxLength={maxLength}
                         placeholder={
                             placeholder ||
-                            metadataLabel('custom.FA_FormCaptureTextEntryEmpty')
+                            metadataLabel('FormCaptureTextEntryEmpty')
                         }
                         onChange={event => {
                             // Local value state

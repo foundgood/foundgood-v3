@@ -8,7 +8,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useElseware, useMetadata, useAuth, useLabels } from 'utilities/hooks';
+import { useElseware, useLabels, useAuth, useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -28,7 +28,7 @@ const HomeComponent = () => {
     const { CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, valueSet } = useMetadata();
+    const { label, valueSet } = useLabels();
     const { log } = useLabels();
     log();
 
@@ -138,12 +138,12 @@ const HomeComponent = () => {
                 <SectionWrapper>
                     <div className="flex justify-between">
                         <h2 className="t-h2">
-                            {label('custom.FA_InitiativeManagerHeading')}
+                            {label('InitiativeManagerHeading')}
                         </h2>
                         {user?.User_Account_Type__c !==
                             CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION && (
                             <Button theme="teal" action="/wizard/introduction">
-                                {label('custom.FA_InitiativeManagerCreate')}
+                                {label('InitiativeManagerCreate')}
                             </Button>
                         )}
                     </div>
@@ -152,7 +152,7 @@ const HomeComponent = () => {
                             {...register('filter.text')}
                             type="text"
                             placeholder={label(
-                                'custom.FA_InitiativeManagerSearchBoxText'
+                                'InitiativeManagerSearchBoxText'
                             )}
                             className="input-search"
                         />
@@ -160,7 +160,7 @@ const HomeComponent = () => {
                             <SearchFilterMultiselect
                                 name="filter.category"
                                 label={label(
-                                    'custom.FA_InitiativeManagerFilterFilterGrantGivingArea'
+                                    'InitiativeManagerFilterFilterGrantGivingArea'
                                 )}
                                 controller={control}
                                 options={valueSet('initiative.Category__c')}
@@ -168,14 +168,14 @@ const HomeComponent = () => {
                             <SearchFilterDate
                                 name="filter.startDate"
                                 label={label(
-                                    'custom.FA_InitiativeManagerFilterGrantStartDate'
+                                    'InitiativeManagerFilterGrantStartDate'
                                 )}
                                 controller={control}
                             />
                             <SearchFilterDate
                                 name="filter.endDate"
                                 label={label(
-                                    'custom.FA_InitiativeManagerFilterGrantEndDate'
+                                    'InitiativeManagerFilterGrantEndDate'
                                 )}
                                 controller={control}
                             />

@@ -8,7 +8,7 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata, useAuth, useResponsive } from 'utilities/hooks';
+import { useLabels, useAuth, useResponsive } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { isJson } from 'utilities';
 
@@ -31,7 +31,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, valueSet, getValueLabel, log } = useMetadata();
+    const { label, valueSet, getValueLabel, log } = useLabels();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -278,17 +278,13 @@ const ProjectComponent = ({ pageProps }) => {
             {initiativeData && (
                 <div className="animate-fade-in">
                     <SectionWrapper>
-                        <h1 className="t-h1">
-                            {label('custom.FA_MenuContext')}
-                        </h1>
+                        <h1 className="t-h1">{label('MenuContext')}</h1>
                     </SectionWrapper>
                     {/* Overview */}
                     <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewOverviewHeading'
-                                )}
+                                {label('InitiativeViewOverviewHeading')}
                             </h2>
                             <UpdateButton
                                 mode="initiative"
@@ -329,7 +325,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     <div className="p-16 mb-20 border-4 lg:mr-12 lg:w-1/2 border-gray-10 rounded-8">
                                         <h4 className="t-sh6 text-blue-60">
                                             {label(
-                                                'custom.FA_InitiativeViewGrantGivingArea'
+                                                'InitiativeViewGrantGivingArea'
                                             )}
                                         </h4>
                                         <h3 className="t-h5">
@@ -338,7 +334,7 @@ const ProjectComponent = ({ pageProps }) => {
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
                                             {label(
-                                                'objects.initiativeGoal.Funder_Objective__c'
+                                                'objects.Initiative_Goal__c.Funder_Objective__c'
                                             )}
                                         </h4>
                                         <h3 className="t-h5">
@@ -351,7 +347,7 @@ const ProjectComponent = ({ pageProps }) => {
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
                                             {label(
-                                                'custom.FA_ReportViewInitiativePeriod'
+                                                'ReportViewInitiativePeriod'
                                             )}
                                         </h4>
                                         {initiativeData.Grant_Start_Date__c && (
@@ -370,7 +366,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     <div className="p-16 border-4 lg:ml-12 lg:w-1/2 border-gray-10 rounded-8">
                                         <h4 className="t-sh6 text-blue-60">
                                             {label(
-                                                'custom.FA_InitiativeViewInitiativeLocation'
+                                                'InitiativeViewInitiativeLocation'
                                             )}
                                         </h4>
                                         {/* Location */}
@@ -384,16 +380,12 @@ const ProjectComponent = ({ pageProps }) => {
                                         {/* Empty state - No Location */}
                                         {!initiativeData.Translated_Where_Is_Problem__c && (
                                             <div>
-                                                {label(
-                                                    'custom.FA_ReportEmptyLocation'
-                                                )}
+                                                {label('ReportEmptyLocation')}
                                             </div>
                                         )}
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
-                                            {label(
-                                                'custom.FA_InitiativeViewSDGSs'
-                                            )}
+                                            {label('InitiativeViewSDGSs')}
                                         </h4>
                                         <div className="flex flex-col">
                                             {developmentGoals &&
@@ -419,9 +411,7 @@ const ProjectComponent = ({ pageProps }) => {
                                                 )}
                                             {!developmentGoals && (
                                                 <div>
-                                                    {label(
-                                                        'custom.FA_ReportEmptySDGs'
-                                                    )}
+                                                    {label('ReportEmptySDGs')}
                                                 </div>
                                             )}
                                         </div>
@@ -434,9 +424,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewFundersGrantsHeading'
-                                )}
+                                {label('InitiativeViewFundersGrantsHeading')}
                             </h2>
                             <UpdateButton mode="initiative" baseUrl="funders" />
                         </div>
@@ -448,7 +436,7 @@ const ProjectComponent = ({ pageProps }) => {
                                         <div className="absolute w-full -mt-16 text-center top-1/2">
                                             <p className="t-sh7 text-blue-60">
                                                 {label(
-                                                    'custom.FA_InitiativeViewTotalFunded'
+                                                    'InitiativeViewTotalFunded'
                                                 )}
                                             </p>
                                             <p className="t-h6">
@@ -463,9 +451,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 <div className="md:w-1/2">
                                     {/* Headline */}
                                     <div className="t-caption-bold">
-                                        {label(
-                                            'custom.FA_InitiativeViewFundingOverview'
-                                        )}
+                                        {label('InitiativeViewFundingOverview')}
                                     </div>
                                     {/* List of funders */}
                                     {donutData?.map((item, index) => (
@@ -491,27 +477,27 @@ const ProjectComponent = ({ pageProps }) => {
                                 <div className="flex pb-8">
                                     <div className="w-full t-footnote-bold">
                                         {label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersFunder'
+                                            'InitiativeViewFunderTableColumnHeadersFunder'
                                         )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
                                         {label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersType'
+                                            'InitiativeViewFunderTableColumnHeadersType'
                                         )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
                                         {label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersAmount'
+                                            'InitiativeViewFunderTableColumnHeadersAmount'
                                         )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
                                         {label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersApplicationId'
+                                            'InitiativeViewFunderTableColumnHeadersApplicationId'
                                         )}
                                     </div>
                                     <div className="w-full t-footnote-bold">
                                         {label(
-                                            'custom.FA_InitiativeViewFunderTableColumnHeadersGrantPeriod'
+                                            'InitiativeViewFunderTableColumnHeadersGrantPeriod'
                                         )}
                                     </div>
                                 </div>
@@ -562,7 +548,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label('custom.FA_InitiativeViewGoalsHeading')}
+                                {label('InitiativeViewGoalsHeading')}
                             </h2>
                             <UpdateButton mode="initiative" baseUrl="goals" />
                         </div>
@@ -598,9 +584,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewApplicantsHeading'
-                                )}
+                                {label('InitiativeViewApplicantsHeading')}
                             </h2>
                             <UpdateButton
                                 mode="initiative"
@@ -652,9 +636,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewCollaboratorsHeading'
-                                )}
+                                {label('InitiativeViewCollaboratorsHeading')}
                             </h2>
                             <UpdateButton
                                 mode="initiative"
@@ -700,9 +682,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewEmployeesFundedHeading'
-                                )}
+                                {label('InitiativeViewEmployeesFundedHeading')}
                             </h2>
                             <UpdateButton
                                 mode="initiative"
@@ -748,18 +728,18 @@ const ProjectComponent = ({ pageProps }) => {
                                     <div className="flex pb-8">
                                         <div className="w-full t-footnote-bold">
                                             {label(
-                                                'custom.FA_InitiativeViewEmployeesTableColumnHeadersTitle'
+                                                'InitiativeViewEmployeesTableColumnHeadersTitle'
                                             )}
                                         </div>
                                         <div className="w-full t-footnote-bold">
                                             {label(
-                                                'custom.FA_InitiativeViewEmployeesTableColumnHeadersRole'
+                                                'InitiativeViewEmployeesTableColumnHeadersRole'
                                             )}
                                         </div>
                                         {largeBps.includes(bp) && (
                                             <div className="w-full t-footnote-bold">
                                                 {label(
-                                                    'custom.FA_InitiativeViewEmployeesTableColumnHeadersUtilisation'
+                                                    'InitiativeViewEmployeesTableColumnHeadersUtilisation'
                                                 )}
                                             </div>
                                         )}
@@ -802,7 +782,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label('custom.FA_InitiativeViewCausesHeading')}
+                                {label('InitiativeViewCausesHeading')}
                             </h2>
                             {/* <UpdateButton
                                 mode="initiative"
@@ -838,7 +818,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label('custom.FA_InitiativeViewVisionHeading')}
+                                {label('InitiativeViewVisionHeading')}
                             </h2>
                             {/* <UpdateButton
                                 mode="initiative"
@@ -859,9 +839,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewOrgFocusHeading'
-                                )}
+                                {label('InitiativeViewOrgFocusHeading')}
                             </h2>
                             {/* <UpdateButton
                                 mode="initiative"
@@ -882,9 +860,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewProblemsHeading'
-                                )}
+                                {label('InitiativeViewProblemsHeading')}
                             </h2>
                             {/* <UpdateButton
                                 mode="initiative"
@@ -905,9 +881,7 @@ const ProjectComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewReasonsHeading'
-                                )}
+                                {label('InitiativeViewReasonsHeading')}
                             </h2>
                             {/* <UpdateButton
                                 mode="initiative"

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -16,17 +16,17 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportSummaryComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // useEffect(() => {
     // }, []);
 
     return (
-        <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuSummary'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuSummary'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label('custom.FA_ReportViewHeadingSummary')}
+                        {label('ReportViewHeadingSummary')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="report-summary" />
                 </div>
@@ -36,7 +36,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 <TextCard
                     hasBackground={true}
                     headline={label(
-                        'objects.initiativeReport.Summary_Of_Activities__c'
+                        'objects.Initiative__c.Summary_Of_Activities__c'
                     )}
                     body={report.Summary_Of_Activities__c}
                 />
@@ -46,7 +46,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 <SectionEmpty
                     type="report"
                     headline={label(
-                        'objects.initiativeReport.Summary_Of_Activities__c'
+                        'objects.Initiative__c.Summary_Of_Activities__c'
                     )}
                 />
             )}
@@ -56,7 +56,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     hasBackground={true}
                     className="mt-32"
                     headline={label(
-                        'objects.initiativeReport.Summary_Of_Challenges_And_Learnings__c'
+                        'objects.Initiative__c.Summary_Of_Challenges_And_Learnings__c'
                     )}
                     body={report.Summary_Of_Challenges_And_Learnings__c}
                 />
@@ -66,7 +66,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 <SectionEmpty
                     type="report"
                     headline={label(
-                        'objects.initiativeReport.Summary_Of_Challenges_And_Learnings__c'
+                        'objects.Initiative__c.Summary_Of_Challenges_And_Learnings__c'
                     )}
                 />
             )}

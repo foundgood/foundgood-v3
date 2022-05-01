@@ -6,7 +6,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -18,7 +18,7 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const [collaborators, setCollaborators] = useState([]);
 
@@ -68,14 +68,11 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
     }, [initiative, report.Id]);
 
     return (
-        <SectionWrapper
-            id={asId(label('custom.FA_ReportWizardMenuCollaborations'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuCollaborations'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label(
-                            'custom.FA_ReportViewSubHeadingCollaborationsOverall'
-                        )}
+                        {label('ReportViewSubHeadingCollaborationsOverall')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="collaborators" />
                 </div>
@@ -102,13 +99,13 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
                                 items={[
                                     {
                                         label: label(
-                                            'custom.FA_ReportViewCollaboratorType'
+                                            'ReportViewCollaboratorType'
                                         ),
                                         text: item.Type__c,
                                     },
                                     {
                                         label: label(
-                                            'custom.FA_ReportViewCollaborationPeriod'
+                                            'ReportViewCollaborationPeriod'
                                         ),
                                         text: `${dayjs(
                                             item.Start_Date__c
@@ -122,9 +119,7 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
 
                         <TextCard
                             hasBackground={true}
-                            headline={label(
-                                'custom.FA_ReportViewUpdatesForReport'
-                            )}
+                            headline={label('ReportViewUpdatesForReport')}
                             body={item.reportReflection}
                         />
                     </div>

@@ -6,7 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useElseware } from 'utilities/hooks';
+import { useAuth, useLabels, useElseware } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -49,7 +49,7 @@ const IndicatorsComponent = ({ pageProps }) => {
         helpText,
         getValueLabel,
         controlledValueSet,
-    } = useMetadata();
+    } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
 
     // ///////////////////
@@ -266,13 +266,13 @@ const IndicatorsComponent = ({ pageProps }) => {
                     ))
                 ) : (
                     <p className="t-h5">
-                        {label('custom.FA_WizardEmptyStatesIndicators')}
+                        {label('WizardEmptyStatesIndicators')}
                     </p>
                 )}
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingIndicators')}
+                title={label('WizardModalHeadingIndicators')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
@@ -282,12 +282,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                         CONSTANTS.ACTIVITY_SUCCESS_METRICS.INDICATOR_CUSTOM && (
                         <Text
                             name="Name"
-                            label={label(
-                                'custom.FA_InitiativeActivitySuccessMetricName'
-                            )}
-                            placeholder={label(
-                                'custom.FA_FormCaptureTextEntryEmpty'
-                            )}
+                            label={label('InitiativeActivitySuccessMetricName')}
+                            placeholder={label('FormCaptureTextEntryEmpty')}
                             maxLength={80}
                             controller={control}
                         />
@@ -300,14 +296,12 @@ const IndicatorsComponent = ({ pageProps }) => {
                             <Select
                                 name="KPI__c"
                                 label={label(
-                                    'objects.initiativeActivitySuccessMetric.KPI__c'
+                                    'objects.Initiative_Activity__cSuccessMetric.KPI__c'
                                 )}
                                 subLabel={helpText(
-                                    'objects.initiativeActivitySuccessMetric.KPI__c'
+                                    'objects.Initiative_Activity__cSuccessMetric.KPI__c'
                                 )}
-                                placeholder={label(
-                                    'custom.FA_FormCaptureSelectEmpty'
-                                )}
+                                placeholder={label('FormCaptureSelectEmpty')}
                                 options={controlledValueSet(
                                     'initiativeActivitySuccessMetric.KPI__c',
                                     initiative?.Category__c
@@ -317,16 +311,16 @@ const IndicatorsComponent = ({ pageProps }) => {
                             <SelectList
                                 name="Gender"
                                 label={label(
-                                    'objects.initiativeActivitySuccessMetric.Gender__c'
+                                    'objects.Initiative_Activity__cSuccessMetric.Gender__c'
                                 )}
                                 subLabel={helpText(
-                                    'objects.initiativeActivitySuccessMetric.Gender__c'
+                                    'objects.Initiative_Activity__cSuccessMetric.Gender__c'
                                 )}
                                 selectPlaceholder={label(
-                                    'custom.FA_FormCaptureSelectEmpty'
+                                    'FormCaptureSelectEmpty'
                                 )}
                                 textPlaceholder={label(
-                                    'objects.initiativeActivitySuccessMetric.Gender_Other__c'
+                                    'objects.Initiative_Activity__cSuccessMetric.Gender_Other__c'
                                 )}
                                 options={valueSet(
                                     'initiativeActivitySuccessMetric.Gender__c'

@@ -7,7 +7,7 @@ import t from 'prop-types';
 import Image from 'next/image';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -29,7 +29,7 @@ const CardComponent = ({
     children,
 }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     return (
         <div
@@ -103,7 +103,7 @@ const CardComponent = ({
                     theme="teal"
                     variant={reflectionMode ? 'tertiary' : 'secondary'}
                     action={action}>
-                    {label('custom.FA_ButtonEditDetails')}
+                    {label('ButtonEditDetails')}
                 </Button>
                 {reflectionMode && (
                     <Button
@@ -111,9 +111,7 @@ const CardComponent = ({
                         variant="secondary"
                         action={() => onChange(!selected)}>
                         {label(
-                            selected
-                                ? 'custom.FA_ButtonCancel'
-                                : 'custom.FA_ButtonProvideUpdate'
+                            selected ? 'ButtonCancel' : 'ButtonProvideUpdate'
                         )}
                     </Button>
                 )}

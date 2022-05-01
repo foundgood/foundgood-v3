@@ -7,7 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useInitiativeDataStore } from 'utilities/store';
-import { useContext, useAuth, useMetadata } from 'utilities/hooks';
+import { useContext, useAuth, useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -20,7 +20,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
     const { populateInitiative, initiative } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
@@ -53,7 +53,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                             theme="blue"
                             variant="secondary"
                             action={`/wizard/${INITIATIVE_ID}/overview`}>
-                            {label('custom.FA_ButtonRunWizard')}
+                            {label('ButtonRunWizard')}
                         </Button>
                     )}
                 </div>

@@ -5,7 +5,7 @@ import React from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -20,7 +20,7 @@ const KpiCardComponent = ({
     actionUpdate,
 }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Store: Initiative data
     const { CONSTANTS } = useInitiativeDataStore();
@@ -31,7 +31,7 @@ const KpiCardComponent = ({
                 {headline && (
                     <div className="flex flex-col">
                         <h4 className="mb-8 t-sh4">
-                            {label('custom.FA_WizardTitleActivity')}
+                            {label('WizardTitleActivity')}
                         </h4>
                         <h2 className="t-h4">{headline}</h2>
                     </div>
@@ -41,9 +41,7 @@ const KpiCardComponent = ({
                 <div className="flex justify-between">
                     <div className="flex items-center">
                         <h4 className="t-sh4">
-                            {label(
-                                'custom.FA_InitiativeViewIndicatorsPeopleReached'
-                            )}
+                            {label('InitiativeViewIndicatorsPeopleReached')}
                         </h4>
                     </div>
 
@@ -51,7 +49,7 @@ const KpiCardComponent = ({
                         theme="teal"
                         variant="quaternary"
                         action={actionCreatePeople}>
-                        {label('custom.FA_ButtonAddPeople')}
+                        {label('ButtonAddPeople')}
                     </Button>
                 </div>
 
@@ -78,7 +76,7 @@ const KpiCardComponent = ({
                                             CONSTANTS.TYPES.INDICATOR_PREDEFINED
                                         )
                                     }>
-                                    {label('custom.FA_Update')}
+                                    {label('Update')}
                                 </Button>
                             </div>
                         ))}
@@ -90,7 +88,7 @@ const KpiCardComponent = ({
                 <div className="flex justify-between">
                     <div className="flex items-center">
                         <h4 className="t-sh4">
-                            {label('custom.FA_InitiativeViewIndicatorsMetrics')}
+                            {label('InitiativeViewIndicatorsMetrics')}
                         </h4>
                     </div>
 
@@ -98,7 +96,7 @@ const KpiCardComponent = ({
                         theme="teal"
                         variant="quaternary"
                         action={actionCreateMetric}>
-                        {label('custom.FA_ButtonAddIndicator')}
+                        {label('ButtonAddIndicator')}
                     </Button>
                 </div>
                 {metricItems?.length > 0 && (
@@ -124,7 +122,7 @@ const KpiCardComponent = ({
                                             CONSTANTS.TYPES.INDICATOR_CUSTOM
                                         )
                                     }>
-                                    {label('custom.FA_Update')}
+                                    {label('Update')}
                                 </Button>
                             </div>
                         ))}

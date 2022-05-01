@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata, useAuth } from 'utilities/hooks';
+import { useLabels, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -26,7 +26,7 @@ const ReportsComponent = ({ pageProps }) => {
     const [reportGroups, setReportGroups] = useState();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     useEffect(() => {
         if (
@@ -95,9 +95,7 @@ const ReportsComponent = ({ pageProps }) => {
                     <SectionWrapper>
                         <div className="flex justify-between">
                             <h1 className="t-h1">
-                                {label(
-                                    'custom.FA_InitiativeViewReportsScheduleHeading'
-                                )}
+                                {label('InitiativeViewReportsScheduleHeading')}
                             </h1>
                             {reportGroups?.length < 1 && !isOnlyNNF && (
                                 <UpdateButton

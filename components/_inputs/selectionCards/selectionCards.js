@@ -7,14 +7,14 @@ import t from 'prop-types';
 import { Controller } from 'react-hook-form';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Icons
 import { FiCheckCircle, FiCircle } from 'react-icons/fi';
 
 const SelectionCards = ({ controller, name, options, defaultValue }) => {
     // Hook: Metadata
-    const { labelTodo } = useMetadata();
+    const { labelTodo } = useLabels();
 
     // Local state
     const [values, setValues] = useState(defaultValue || []);

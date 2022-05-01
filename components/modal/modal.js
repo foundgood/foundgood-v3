@@ -8,7 +8,7 @@ import t from 'prop-types';
 import { Transition } from '@headlessui/react';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -23,7 +23,7 @@ const ModalComponent = ({
     saveText,
 }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Local state and effect for handling delay in content animation
     const [showContent, setShowContent] = useState(false);
@@ -73,13 +73,13 @@ const ModalComponent = ({
                             variant="tertiary"
                             theme="coral"
                             action={onCancel}>
-                            {label('custom.FA_ButtonCancel')}
+                            {label('ButtonCancel')}
                         </Button>
                         <Button
                             theme="coral"
                             action={onSave}
                             disabled={disabledSave}>
-                            {saveText || label('custom.FA_ButtonSave')}
+                            {saveText || label('ButtonSave')}
                         </Button>
                     </div>
                 </div>

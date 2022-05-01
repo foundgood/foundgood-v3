@@ -15,32 +15,32 @@ const initiativeWizardDictionary = {
         hideBack: true,
     },
     context: {
-        title: 'custom.FA_MenuContext',
+        title: 'MenuContext',
         visible: true,
         items: [],
     },
     background: {
-        title: 'custom.FA_MenuInitiativeDetails',
+        title: 'MenuInitiativeDetails',
         visible: true,
         items: [],
     },
     activitiesParent: {
-        title: 'custom.FA_MenuActivities',
+        title: 'MenuActivities',
         visible: true,
         items: [],
     },
     developments: {
-        title: 'custom.FA_MenuDevelopments',
+        title: 'MenuDevelopments',
         visible: true,
         items: [],
     },
     logbook: {
-        title: 'custom.FA_MenuLogbook',
+        title: 'MenuLogbook',
         visible: true,
         items: [],
     },
     reports: {
-        title: 'custom.FA_TabReports',
+        title: 'TabReports',
         visible: true,
         items: [],
     },
@@ -58,16 +58,16 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/overview`;
         },
-        title: 'custom.FA_InitiativeViewOverviewHeading',
+        title: 'InitiativeViewOverviewHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardOverviewHeading',
-                preamble: 'custom.FA_InitiativeWizardOverviewSubheading',
+                title: 'InitiativeWizardOverviewHeading',
+                preamble: 'InitiativeWizardOverviewSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardOverviewHelpWhy',
-                what: 'custom.FA_InitiativeWizardOverviewHelpWhat',
-                guide: 'custom.FA_InitiativeWizardOverviewHelpGuide',
+                why: 'InitiativeWizardOverviewHelpWhy',
+                what: 'InitiativeWizardOverviewHelpWhat',
+                guide: 'InitiativeWizardOverviewHelpGuide',
             },
         },
     },
@@ -77,16 +77,16 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/funders`;
         },
-        title: 'custom.FA_InitiativeViewFundersGrantsHeading',
+        title: 'InitiativeViewFundersGrantsHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardFundersHeading',
-                preamble: 'custom.FA_InitiativeWizardFundersSubheading',
+                title: 'InitiativeWizardFundersHeading',
+                preamble: 'InitiativeWizardFundersSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardFundersHelpWhy',
-                what: 'custom.FA_InitiativeWizardFundersHelpWhat',
-                guide: 'custom.FA_InitiativeWizardFundersHelpGuide',
+                why: 'InitiativeWizardFundersHelpWhy',
+                what: 'InitiativeWizardFundersHelpWhat',
+                guide: 'InitiativeWizardFundersHelpGuide',
             },
         },
     },
@@ -95,16 +95,16 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/applicants`;
         },
-        title: 'custom.FA_InitiativeViewApplicantsHeading',
+        title: 'InitiativeViewApplicantsHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardApplicantsHeading',
-                preamble: 'custom.FA_InitiativeWizardApplicantsSubheading',
+                title: 'InitiativeWizardApplicantsHeading',
+                preamble: 'InitiativeWizardApplicantsSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardApplicantsHelpWhy',
-                what: 'custom.FA_InitiativeWizardApplicantsHelpWhat',
-                guide: 'custom.FA_InitiativeWizardApplicantsHelpGuide',
+                why: 'InitiativeWizardApplicantsHelpWhy',
+                what: 'InitiativeWizardApplicantsHelpWhat',
+                guide: 'InitiativeWizardApplicantsHelpGuide',
             },
         },
     },
@@ -113,16 +113,16 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/collaborators`;
         },
-        title: 'custom.FA_InitiativeViewCollaboratorsHeading',
+        title: 'InitiativeViewCollaboratorsHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardCollaboratorsHeading',
-                preamble: 'custom.FA_InitiativeWizardCollaboratorsSubheading',
+                title: 'InitiativeWizardCollaboratorsHeading',
+                preamble: 'InitiativeWizardCollaboratorsSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardCollaboratorsHelpWhy',
-                what: 'custom.FA_InitiativeWizardCollaboratorsHelpWhat',
-                guide: 'custom.FA_InitiativeWizardCollaboratorsHelpGuide',
+                why: 'InitiativeWizardCollaboratorsHelpWhy',
+                what: 'InitiativeWizardCollaboratorsHelpWhat',
+                guide: 'InitiativeWizardCollaboratorsHelpGuide',
             },
         },
     },
@@ -131,106 +131,106 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/employees-funded`;
         },
-        title: 'custom.FA_InitiativeViewEmployeesFundedHeading',
+        title: 'InitiativeViewEmployeesFundedHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardEmployeesHeading',
-                preamble: 'custom.FA_InitiativeWizardEmployeesSubheading',
+                title: 'InitiativeWizardEmployeesHeading',
+                preamble: 'InitiativeWizardEmployeesSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardEmployeesHelpWhy',
-                what: 'custom.FA_InitiativeWizardEmployeesHelpWhat',
-                guide: 'custom.FA_InitiativeWizardEmployeesHelpGuide',
+                why: 'InitiativeWizardEmployeesHelpWhy',
+                what: 'InitiativeWizardEmployeesHelpWhat',
+                guide: 'InitiativeWizardEmployeesHelpGuide',
             },
         },
     },
     problemsToBeSolved: {
-        title: 'custom.FA_InitiativeViewProblemsHeading',
+        title: 'InitiativeViewProblemsHeading',
         baseUrl: 'problems-to-be-solved',
         url(initiativeId) {
             return `/wizard/${initiativeId}/problems-to-be-solved`;
         },
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardProblemsHeading',
-                preamble: 'custom.FA_InitiativeWizardProblemsSubheading',
+                title: 'InitiativeWizardProblemsHeading',
+                preamble: 'InitiativeWizardProblemsSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardProblemsHelpWhy',
-                what: 'custom.FA_InitiativeWizardProblemsHelpWhat',
-                guide: 'custom.FA_InitiativeWizardProblemsHelpGuide',
+                why: 'InitiativeWizardProblemsHelpWhy',
+                what: 'InitiativeWizardProblemsHelpWhat',
+                guide: 'InitiativeWizardProblemsHelpGuide',
             },
         },
     },
     causesOfTheProblem: {
-        title: 'custom.FA_InitiativeViewCausesHeading',
+        title: 'InitiativeViewCausesHeading',
         baseUrl: 'causes-of-the-problem',
         url(initiativeId) {
             return `/wizard/${initiativeId}/causes-of-the-problem`;
         },
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardCausesHeading',
-                preamble: 'custom.FA_InitiativeWizardCausesSubheading',
+                title: 'InitiativeWizardCausesHeading',
+                preamble: 'InitiativeWizardCausesSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardCausesHelpWhy',
-                what: 'custom.FA_InitiativeWizardCausesHelpWhat',
-                guide: 'custom.FA_InitiativeWizardCausesHelpGuide',
+                why: 'InitiativeWizardCausesHelpWhy',
+                what: 'InitiativeWizardCausesHelpWhat',
+                guide: 'InitiativeWizardCausesHelpGuide',
             },
         },
     },
     organisationalFocus: {
-        title: 'custom.FA_InitiativeViewOrgFocusHeading',
+        title: 'InitiativeViewOrgFocusHeading',
         baseUrl: 'organisational-focus',
         url(initiativeId) {
             return `/wizard/${initiativeId}/organisational-focus`;
         },
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardOrgFocusHeading',
-                preamble: 'custom.FA_InitiativeWizardOrgFocusSubheading',
+                title: 'InitiativeWizardOrgFocusHeading',
+                preamble: 'InitiativeWizardOrgFocusSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardOrgFocusHelpWhy',
-                what: 'custom.FA_InitiativeWizardOrgFocusHelpWhat',
-                guide: 'custom.FA_InitiativeWizardOrgFocusHelpGuide',
+                why: 'InitiativeWizardOrgFocusHelpWhy',
+                what: 'InitiativeWizardOrgFocusHelpWhat',
+                guide: 'InitiativeWizardOrgFocusHelpGuide',
             },
         },
     },
     ourVision: {
-        title: 'custom.FA_InitiativeViewVisionHeading',
+        title: 'InitiativeViewVisionHeading',
         baseUrl: 'our-vision',
         url(initiativeId) {
             return `/wizard/${initiativeId}/our-vision`;
         },
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardVisionHeading',
-                preamble: 'custom.FA_InitiativeWizardVisionSubheading',
+                title: 'InitiativeWizardVisionHeading',
+                preamble: 'InitiativeWizardVisionSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardVisionHelpWhy',
-                what: 'custom.FA_InitiativeWizardVisionHelpWhat',
-                guide: 'custom.FA_InitiativeWizardVisionHelpGuide',
+                why: 'InitiativeWizardVisionHelpWhy',
+                what: 'InitiativeWizardVisionHelpWhat',
+                guide: 'InitiativeWizardVisionHelpGuide',
             },
         },
     },
     reasonsForThisSolve: {
-        title: 'custom.FA_InitiativeViewReasonsHeading',
+        title: 'InitiativeViewReasonsHeading',
         baseUrl: 'reasons-for-this-solve',
         url(initiativeId) {
             return `/wizard/${initiativeId}/reasons-for-this-solve`;
         },
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardReasonsHeading',
-                preamble: 'custom.FA_InitiativeWizardReasonsSubheading',
+                title: 'InitiativeWizardReasonsHeading',
+                preamble: 'InitiativeWizardReasonsSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardReasonsHelpWhy',
-                what: 'custom.FA_InitiativeWizardReasonsHelpWhat',
-                guide: 'custom.FA_InitiativeWizardReasonsHelpGuide',
+                why: 'InitiativeWizardReasonsHelpWhy',
+                what: 'InitiativeWizardReasonsHelpWhat',
+                guide: 'InitiativeWizardReasonsHelpGuide',
             },
         },
     },
@@ -239,17 +239,17 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/goals`;
         },
-        title: 'custom.FA_InitiativeViewGoalsHeading',
-        titleNNF: 'custom.FA_ReportViewHeadingFunderObjectives', // Show different title to NNF
+        title: 'InitiativeViewGoalsHeading',
+        titleNNF: 'ReportViewHeadingFunderObjectives', // Show different title to NNF
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardGoalsHeading',
-                preamble: 'custom.FA_InitiativeWizardGoalsSubheading',
+                title: 'InitiativeWizardGoalsHeading',
+                preamble: 'InitiativeWizardGoalsSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardGoalsHelpWhy',
-                what: 'custom.FA_InitiativeWizardGoalsHelpWhat',
-                guide: 'custom.FA_InitiativeWizardGoalsHelpGuide',
+                why: 'InitiativeWizardGoalsHelpWhy',
+                what: 'InitiativeWizardGoalsHelpWhat',
+                guide: 'InitiativeWizardGoalsHelpGuide',
             },
         },
     },
@@ -258,16 +258,16 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/activities`;
         },
-        title: 'custom.FA_InitiativeViewActivitiesHeading',
+        title: 'InitiativeViewActivitiesHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardActivitiesHeading',
-                preamble: 'custom.FA_InitiativeWizardActivitiesSubheading',
+                title: 'InitiativeWizardActivitiesHeading',
+                preamble: 'InitiativeWizardActivitiesSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardActivitiesHelpWhy',
-                what: 'custom.FA_InitiativeWizardActivitiesHelpWhat',
-                guide: 'custom.FA_InitiativeWizardActivitiesHelpGuide',
+                why: 'InitiativeWizardActivitiesHelpWhy',
+                what: 'InitiativeWizardActivitiesHelpWhat',
+                guide: 'InitiativeWizardActivitiesHelpGuide',
             },
         },
     },
@@ -276,16 +276,16 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/indicators`;
         },
-        title: 'custom.FA_InitiativeViewIndicatorsHeading',
+        title: 'InitiativeViewIndicatorsHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardIndicatorsHeading',
-                preamble: 'custom.FA_InitiativeWizardIndicatorsSubheading',
+                title: 'InitiativeWizardIndicatorsHeading',
+                preamble: 'InitiativeWizardIndicatorsSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardIndicatorsHelpWhy',
-                what: 'custom.FA_InitiativeWizardIndicatorsHelpWhat',
-                guide: 'custom.FA_InitiativeWizardIndicatorsHelpGuide',
+                why: 'InitiativeWizardIndicatorsHelpWhy',
+                what: 'InitiativeWizardIndicatorsHelpWhat',
+                guide: 'InitiativeWizardIndicatorsHelpGuide',
             },
         },
     },
@@ -294,84 +294,84 @@ const initiativeWizardDictionary = {
         url(initiativeId) {
             return `/wizard/${initiativeId}/sharing-results`;
         },
-        title: 'custom.FA_InitiativeViewSharingResultsHeading',
+        title: 'InitiativeViewSharingResultsHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardSharingHeading',
-                preamble: 'custom.FA_InitiativeWizardSharingSubheading',
+                title: 'InitiativeWizardSharingHeading',
+                preamble: 'InitiativeWizardSharingSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardSharingHelpWhy',
-                what: 'custom.FA_InitiativeWizardSharingHelpWhat',
-                guide: 'custom.FA_InitiativeWizardSharingHelpGuide',
+                why: 'InitiativeWizardSharingHelpWhy',
+                what: 'InitiativeWizardSharingHelpWhat',
+                guide: 'InitiativeWizardSharingHelpGuide',
             },
         },
     },
     targets: {
-        title: 'custom.FA_InitiativeViewTargetsHeading',
+        title: 'InitiativeViewTargetsHeading',
         baseUrl: 'targets',
         url(initiativeId) {
             return `/wizard/${initiativeId}/targets`;
         },
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardTargetsHeading',
-                preamble: 'custom.FA_InitiativeWizardTargetsSubheading',
+                title: 'InitiativeWizardTargetsHeading',
+                preamble: 'InitiativeWizardTargetsSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardTargetsHelpWhy',
-                what: 'custom.FA_InitiativeWizardTargetsHelpWhat',
-                guide: 'custom.FA_InitiativeWizardTargetsHelpGuide',
+                why: 'InitiativeWizardTargetsHelpWhy',
+                what: 'InitiativeWizardTargetsHelpWhat',
+                guide: 'InitiativeWizardTargetsHelpGuide',
             },
         },
     },
     progressSoFar: {
-        title: 'custom.FA_InitiativeViewProgressHeading',
+        title: 'InitiativeViewProgressHeading',
         baseUrl: 'progress-so-far',
         url(initiativeId) {
             return `/wizard/${initiativeId}/progress-so-far`;
         },
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardProgressHeading',
-                preamble: 'custom.FA_InitiativeWizardProgressSubheading',
+                title: 'InitiativeWizardProgressHeading',
+                preamble: 'InitiativeWizardProgressSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardProgressHelpWhy',
-                what: 'custom.FA_InitiativeWizardProgressHelpWhat',
-                guide: 'custom.FA_InitiativeWizardProgressHelpGuide',
+                why: 'InitiativeWizardProgressHelpWhy',
+                what: 'InitiativeWizardProgressHelpWhat',
+                guide: 'InitiativeWizardProgressHelpGuide',
             },
         },
     },
     logbookEntry: {
-        title: 'custom.FA_InitiativeViewLogEntryHeading',
+        title: 'InitiativeViewLogEntryHeading',
         baseUrl: 'logbook-entry',
         url(initiativeId) {
             return `/wizard/${initiativeId}/logbook-entry`;
         },
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardLogEntryHeading',
-                preamble: 'custom.FA_InitiativeWizardLogEntrySubheading',
+                title: 'InitiativeWizardLogEntryHeading',
+                preamble: 'InitiativeWizardLogEntrySubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardLogEntryHelpWhy',
-                what: 'custom.FA_InitiativeWizardLogEntryHelpWhat',
-                guide: 'custom.FA_InitiativeWizardLogEntryHelpGuide',
+                why: 'InitiativeWizardLogEntryHelpWhy',
+                what: 'InitiativeWizardLogEntryHelpWhat',
+                guide: 'InitiativeWizardLogEntryHelpGuide',
             },
         },
     },
     reportSchedule: {
-        title: 'custom.FA_InitiativeViewReportsScheduleHeading',
+        title: 'InitiativeViewReportsScheduleHeading',
         labels: {
             form: {
-                title: 'custom.FA_InitiativeWizardReportsScheduleHeading',
-                preamble: 'custom.FA_InitiativeWizardReportsScheduleSubheading',
+                title: 'InitiativeWizardReportsScheduleHeading',
+                preamble: 'InitiativeWizardReportsScheduleSubheading',
             },
             help: {
-                why: 'custom.FA_InitiativeWizardReportScheduleHelpWhy',
-                what: 'custom.FA_InitiativeWizardReportScheduleHelpWhat',
-                guide: 'custom.FA_InitiativeWizardReportScheduleHelpGuide',
+                why: 'InitiativeWizardReportScheduleHelpWhy',
+                what: 'InitiativeWizardReportScheduleHelpWhat',
+                guide: 'InitiativeWizardReportScheduleHelpGuide',
             },
         },
         baseUrl: 'report-schedule',

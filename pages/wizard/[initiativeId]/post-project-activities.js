@@ -5,12 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -29,7 +24,7 @@ const PostProjectActivitiesComponent = () => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText, log } = useMetadata();
+    const { labelTodo, valueSet, label, helpText, log } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -93,10 +88,8 @@ const PostProjectActivitiesComponent = () => {
                 <Reflection
                     name="Post_Project_Activities__c"
                     defaultValue={currentReport.Post_Project_Activities__c}
-                    label={label(
-                        'custom.FA_ReportWizardPostProjectReflectionSubHeading'
-                    )}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    label={label('ReportWizardPostProjectReflectionSubHeading')}
+                    placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}

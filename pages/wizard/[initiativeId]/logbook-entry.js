@@ -6,7 +6,7 @@ import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useElseware } from 'utilities/hooks';
+import { useAuth, useLabels, useElseware } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -25,7 +25,7 @@ const LogbookComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { label, helpText } = useMetadata();
+    const { label, helpText } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -196,7 +196,7 @@ const LogbookComponent = ({ pageProps }) => {
             />
             <InputWrapper preload={!initiative.Id}>
                 <LogbookCard
-                    headline={label('custom.FA_MenuLogbook')}
+                    headline={label('MenuLogbook')}
                     actionCreate={() => {
                         setUpdateId(null);
                         setModalIsOpen(true);
@@ -210,20 +210,20 @@ const LogbookComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_ButtonAddLogEntry')}
+                title={label('ButtonAddLogEntry')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving || attachLoading}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <LongText
                         name="Description__c"
-                        label={label('objects.initiativeUpdate.Description__c')}
+                        label={label(
+                            'objects.Initiative_Update__c.Description__c'
+                        )}
                         subLabel={helpText(
-                            'objects.initiativeUpdate.Description__c'
+                            'objects.Initiative_Update__c.Description__c'
                         )}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         required
                         controller={control}
                     />
@@ -231,7 +231,7 @@ const LogbookComponent = ({ pageProps }) => {
                         <div className="flex space-x-16">
                             <Attach
                                 name="AttachImage"
-                                label={label('custom.FA_AttachImage')}
+                                label={label('AttachImage')}
                                 type="image"
                                 accept=".png,.jpg,.jpeg"
                                 controller={control}
@@ -240,7 +240,7 @@ const LogbookComponent = ({ pageProps }) => {
                             />
                             <Attach
                                 name="AttachVideo"
-                                label={label('custom.FA_AttachVideo')}
+                                label={label('AttachVideo')}
                                 type="video"
                                 accept="video/mp4,video/x-m4v,video/*"
                                 controller={control}
@@ -249,7 +249,7 @@ const LogbookComponent = ({ pageProps }) => {
                             />
                             <Attach
                                 name="AttachDocument"
-                                label={label('custom.FA_AttachDocument')}
+                                label={label('AttachDocument')}
                                 type="document"
                                 accept=".pdf"
                                 controller={control}
@@ -296,12 +296,12 @@ const LogbookComponent = ({ pageProps }) => {
                     <Select
                         name="Initiative_Activity__c"
                         label={label(
-                            'objects.initiativeUpdate.Initiative_Activity__c'
+                            'objects.Initiative_Update__c.Initiative_Activity__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeUpdate.Initiative_Activity__c'
+                            'objects.Initiative_Update__c.Initiative_Activity__c'
                         )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
+                        placeholder={label('FormCaptureSelectEmpty')}
                         options={activities.map(activity => ({
                             value: activity.Id,
                             label: activity.Things_To_Do__c,

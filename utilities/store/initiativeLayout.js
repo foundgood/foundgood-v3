@@ -14,22 +14,22 @@ const useInitiativeLayoutStore = create(set => ({
 
     // Navigation object
     navigation: [
-        { slug: 'overview', label: 'custom.FA_MenuContext' },
+        { slug: 'overview', label: 'MenuContext' },
         {
-            label: 'custom.FA_MenuInitiativeDetails',
+            label: 'MenuInitiativeDetails',
             subItems: [
                 {
                     slug: 'activities',
-                    label: 'custom.FA_MenuActivities',
+                    label: 'MenuActivities',
                 },
                 {
                     slug: 'developments',
-                    label: 'custom.FA_MenuDevelopments',
+                    label: 'MenuDevelopments',
                 },
-                { slug: 'logbook', label: 'custom.FA_MenuLogbook' },
+                { slug: 'logbook', label: 'MenuLogbook' },
             ],
         },
-        { slug: 'reports', label: 'custom.FA_TabReports' },
+        { slug: 'reports', label: 'TabReports' },
     ],
 }));
 

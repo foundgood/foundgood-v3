@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Utilities
-import { useAuth, useMetadata, useContext } from 'utilities/hooks';
+import { useAuth, useLabels, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -23,7 +23,7 @@ const CompleteComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const [bodyTexts, setBodyTexts] = useState([]);
 
@@ -41,9 +41,7 @@ const CompleteComponent = ({ pageProps }) => {
 
     useEffect(() => {
         let bodyTexts;
-        bodyTexts = label('custom.FA_InitiativeWizardCompleteText')?.split(
-            '\n'
-        );
+        bodyTexts = label('InitiativeWizardCompleteText')?.split('\n');
         bodyTexts = bodyTexts === undefined ? [] : bodyTexts;
         setBodyTexts(bodyTexts);
     }, []);
@@ -51,8 +49,8 @@ const CompleteComponent = ({ pageProps }) => {
     return (
         <>
             <TitlePreamble
-                title={label('custom.FA_ReportWizardCompleteHeading')}
-                preamble={label('custom.FA_ReportWizardCompleteSubHeading')}
+                title={label('ReportWizardCompleteHeading')}
+                preamble={label('ReportWizardCompleteSubHeading')}
             />
             <div className="flex justify-center">
                 <Image src="/images/new-report.png" width="600" height="366" />

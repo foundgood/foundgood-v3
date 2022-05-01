@@ -8,7 +8,7 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useMetadata,
+    useLabels,
     useElseware,
     useContext,
     useReflections,
@@ -49,7 +49,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, valueSet, controlledValueSet, helpText } = useMetadata();
+    const { label, valueSet, controlledValueSet, helpText } = useLabels();
     const { ewUpdate, ewCreate } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -325,7 +325,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         : reflection[0]?.Description__c,
                             }}
                             inputLabel={label(
-                                'custom.FA_ReportWizardActivitiesReflectionSubHeading'
+                                'ReportWizardActivitiesReflectionSubHeading'
                             )}
                         />
                     );
@@ -337,12 +337,12 @@ const ActivitiesComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddActivity')}
+                    {label('ButtonAddActivity')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingActivities')}
+                title={label('WizardModalHeadingActivities')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
@@ -350,14 +350,12 @@ const ActivitiesComponent = ({ pageProps }) => {
                     <Text
                         name="Things_To_Do__c"
                         label={label(
-                            'objects.initiativeActivity.Things_To_Do__c'
+                            'objects.Initiative_Activity__c.Things_To_Do__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeActivity.Things_To_Do__c'
+                            'objects.Initiative_Activity__c.Things_To_Do__c'
                         )}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={200}
                         controller={control}
                         required
@@ -365,33 +363,29 @@ const ActivitiesComponent = ({ pageProps }) => {
                     <LongText
                         name="Things_To_Do_Description__c"
                         label={label(
-                            'objects.initiativeActivity.Things_To_Do_Description__c'
+                            'objects.Initiative_Activity__c.Things_To_Do_Description__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeActivity.Things_To_Do_Description__c'
+                            'objects.Initiative_Activity__c.Things_To_Do_Description__c'
                         )}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={400}
                         controller={control}
                     />
                     <SelectList
                         name="Activities"
                         label={label(
-                            'objects.initiativeActivity.Activity_Tag__c'
+                            'objects.Initiative_Activity__c.Activity_Tag__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeActivity.Activity_Tag__c'
+                            'objects.Initiative_Activity__c.Activity_Tag__c'
                         )}
-                        selectPlaceholder={label(
-                            'custom.FA_FormCaptureSelectEmpty'
-                        )}
+                        selectPlaceholder={label('FormCaptureSelectEmpty')}
                         options={controlledValueSet(
                             'initiativeActivity.Activity_Tag__c',
                             initiative?.Category__c
                         )}
-                        buttonLabel={label('custom.FA_ButtonAddActivityTag')}
+                        buttonLabel={label('ButtonAddActivityTag')}
                         listMaxLength={utilities.isNovoLeadFunder() ? 1 : 4}
                         controller={control}
                         required={utilities.isNovoLeadFunder()}
@@ -399,39 +393,35 @@ const ActivitiesComponent = ({ pageProps }) => {
                     <SelectList
                         name="Location"
                         label={label(
-                            'objects.initiativeActivity.Initiative_Location__c'
+                            'objects.Initiative_Activity__c.Initiative_Location__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeActivity.Initiative_Location__c'
+                            'objects.Initiative_Activity__c.Initiative_Location__c'
                         )}
                         listMaxLength={1}
                         options={valueSet(
                             'initiativeActivity.Initiative_Location__c'
                         )}
                         showText
-                        selectPlaceholder={label(
-                            'custom.FA_FormCaptureSelectEmpty'
-                        )}
-                        selectLabel={label('custom.FA_FormCaptureCountry')}
-                        textLabel={label('custom.FA_FormCaptureRegion')}
+                        selectPlaceholder={label('FormCaptureSelectEmpty')}
+                        selectLabel={label('FormCaptureCountry')}
+                        textLabel={label('FormCaptureRegion')}
                         controller={control}
                     />
                     {customGoals.length > 0 && (
                         <SelectList
                             name="Goals"
-                            label={label('objects.initiativeGoal.Goal__c')}
+                            label={label('objects.Initiative_Goal__c.Goal__c')}
                             subLabel={helpText(
-                                'objects.initiativeGoal.Goal__c'
+                                'objects.Initiative_Goal__c.Goal__c'
                             )}
                             options={customGoals.map(goal => ({
                                 value: goal.Id,
                                 label: goal.Goal__c,
                             }))}
-                            selectPlaceholder={label(
-                                'custom.FA_FormCaptureSelectEmpty'
-                            )}
+                            selectPlaceholder={label('FormCaptureSelectEmpty')}
                             controller={control}
-                            buttonLabel={label('custom.FA_ButtonAddGoal')}
+                            buttonLabel={label('ButtonAddGoal')}
                         />
                     )}
                 </InputWrapper>

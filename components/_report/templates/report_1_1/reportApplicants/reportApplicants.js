@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -17,7 +17,7 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportApplicantsComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const [applicants, setApplicants] = useState([]);
 
@@ -68,12 +68,11 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
     }, [initiative, report.Id]);
 
     return (
-        <SectionWrapper
-            id={asId(label('custom.FA_ReportWizardMenuApplicants'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuApplicants'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label('custom.FA_InitiativeViewApplicantsHeading')}
+                        {label('InitiativeViewApplicantsHeading')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="applicants" />
                 </div>
@@ -100,13 +99,13 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
                                 items={[
                                     {
                                         label: label(
-                                            'custom.FA_ReportViewCollaboratorType'
+                                            'ReportViewCollaboratorType'
                                         ),
                                         text: item.Type__c,
                                     },
                                     {
                                         label: label(
-                                            'custom.FA_ReportViewCollaborationPeriod'
+                                            'ReportViewCollaborationPeriod'
                                         ),
                                         text: `${item.Start_Date__c} - ${item.End_Date__c}`,
                                     },
@@ -116,9 +115,7 @@ const ReportApplicantsComponent = ({ initiative, report, constants }) => {
 
                         <TextCard
                             hasBackground={true}
-                            headline={label(
-                                'custom.FA_ReportViewUpdatesForReport'
-                            )}
+                            headline={label('ReportViewUpdatesForReport')}
                             body={item.reportReflection}
                         />
                     </div>

@@ -5,7 +5,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import cc from 'classcat';
 
 // Utilities
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useLabels, useContext } from 'utilities/hooks';
 import { useInitiativeLayoutStore } from 'utilities/store';
 
 // Components
@@ -22,7 +22,7 @@ const TabNavigationComponent = () => {
     const { navigation } = useInitiativeLayoutStore();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const [menuActive, setMenuActive] = useState(false);
 

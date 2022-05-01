@@ -6,12 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -34,7 +29,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText } = useMetadata();
+    const { labelTodo, valueSet, label, helpText } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -252,7 +247,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                             : item?.Description__c,
                                 }}
                                 inputLabel={label(
-                                    'custom.FA_ReportWizardEvaluationsReflectionSubHeading'
+                                    'ReportWizardEvaluationsReflectionSubHeading'
                                 )}
                             />
                         );
@@ -264,12 +259,12 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddEvaluation')}
+                    {label('ButtonAddEvaluation')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingEvaluation')}
+                title={label('WizardModalHeadingEvaluation')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
@@ -277,12 +272,12 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                     <Select
                         name="Who_Is_Evaluating__c"
                         label={label(
-                            'objects.initiativeReportDetail.Who_Is_Evaluating__c'
+                            'objects.Initiative__c.Detail.Who_Is_Evaluating__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeReportDetail.Who_Is_Evaluating__c'
+                            'objects.Initiative__c.Detail.Who_Is_Evaluating__c'
                         )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
+                        placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeReportDetail.Who_Is_Evaluating__c'
                         )}

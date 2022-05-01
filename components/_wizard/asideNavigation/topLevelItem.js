@@ -8,7 +8,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useWizardNavigationStore } from 'utilities/store';
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import { SubLevelItem } from 'components/_wizard/asideNavigation';
@@ -20,7 +20,7 @@ const TopLevelItemComponent = ({ item }) => {
     const { title, items } = item;
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Store: wizardNavigation
     const { toggleSection, openSection } = useWizardNavigationStore();

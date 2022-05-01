@@ -6,7 +6,7 @@ import cc from 'classcat';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useLabels, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -25,7 +25,7 @@ const BottomNavigationComponent = () => {
     const { INITIATIVE_ID, REPORT_ID, MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Store: Initiaitive Data
     const { utilities } = useInitiativeDataStore();
@@ -89,7 +89,7 @@ const BottomNavigationComponent = () => {
                             ? `/${INITIATIVE_ID}/reports/${REPORT_ID}`
                             : `/${INITIATIVE_ID}/overview`
                     }>
-                    {label('custom.FA_ButtonExit')}
+                    {label('ButtonExit')}
                 </Button>
                 <p
                     className={cc([
@@ -98,7 +98,7 @@ const BottomNavigationComponent = () => {
                             'opacity-100': loading,
                         },
                     ])}>
-                    {label('custom.FA_MessageSaved')}
+                    {label('MessageSaved')}
                 </p>
                 <div className="flex space-x-12">
                     <Button
@@ -115,14 +115,14 @@ const BottomNavigationComponent = () => {
                         variant="secondary"
                         disabled={loading}
                         action={router.back}>
-                        {label('custom.FA_ButtonBack')}
+                        {label('ButtonBack')}
                     </Button>
 
                     <Button
                         theme="coral"
                         action={onHandleContinue}
                         disabled={loading}>
-                        {label('custom.FA_ButtonContinue')}
+                        {label('ButtonContinue')}
                     </Button>
                 </div>
             </div>

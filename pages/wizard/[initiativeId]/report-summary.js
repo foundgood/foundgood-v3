@@ -5,12 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -29,7 +24,7 @@ const ReportSummaryComponent = () => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText, log } = useMetadata();
+    const { labelTodo, valueSet, label, helpText, log } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -94,9 +89,9 @@ const ReportSummaryComponent = () => {
                     name="Summary_Of_Activities__c"
                     defaultValue={currentReport.Summary_Of_Activities__c}
                     label={label(
-                        'custom.FA_ReportWizardActivitySummaryReflectionSubHeading'
+                        'ReportWizardActivitySummaryReflectionSubHeading'
                     )}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}
@@ -106,10 +101,8 @@ const ReportSummaryComponent = () => {
                     defaultValue={
                         currentReport.Summary_Of_Challenges_And_Learnings__c
                     }
-                    label={label(
-                        'custom.FA_ReportWizardChallengesReflectionSubHeading'
-                    )}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    label={label('ReportWizardChallengesReflectionSubHeading')}
+                    placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}

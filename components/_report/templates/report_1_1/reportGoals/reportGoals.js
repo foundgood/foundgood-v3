@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -16,7 +16,7 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportGoalsComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label, getValueLabel } = useMetadata();
+    const { label, getValueLabel } = useLabels();
 
     const [isNnfLeadFunder, setIsNnfLeadFunder] = useState(false);
 
@@ -31,17 +31,15 @@ const ReportGoalsComponent = ({ initiative, report, constants }) => {
     }, [initiative]);
 
     return (
-        <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuGoals'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuGoals'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
                         {/* Show to different headings. Depending on if lead funder is Novo Nordisk Foundation */}
                         {!isNnfLeadFunder &&
-                            label('custom.FA_InitiativeViewGoalsHeading')}
+                            label('InitiativeViewGoalsHeading')}
                         {isNnfLeadFunder &&
-                            label(
-                                'custom.FA_ReportViewHeadingFunderObjectives'
-                            )}
+                            label('ReportViewHeadingFunderObjectives')}
                     </h3>
                     {!isNnfLeadFunder && (
                         <UpdateButton mode="report" baseUrl="goals" />

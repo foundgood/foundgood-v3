@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -21,7 +21,7 @@ const InformationCaptureComponent = () => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { label, labelTodo, log, valueSet } = useMetadata();
+    const { label, labelTodo, log, valueSet } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -61,10 +61,8 @@ const InformationCaptureComponent = () => {
     return (
         <>
             <TitlePreamble
-                title={label('custom.FA_InitiativeWizardConfigureHeading')}
-                preamble={label(
-                    'custom.FA_InitiativeWizardConfigureSubHeading'
-                )}
+                title={label('InitiativeWizardConfigureHeading')}
+                preamble={label('InitiativeWizardConfigureSubHeading')}
             />
             <InputWrapper>
                 <SelectionCards
@@ -82,7 +80,7 @@ const InformationCaptureComponent = () => {
                             ).find(item => item.value === 'Reporting').label,
                             value: 'Reporting',
                             details: label(
-                                'custom.FA_InitiativeWizardConfigureReportingText'
+                                'InitiativeWizardConfigureReportingText'
                             ),
                             required: true,
                         },
@@ -92,14 +90,14 @@ const InformationCaptureComponent = () => {
                         //     ).find(item => item.value === 'Planning').label,
                         //     value: 'Planning',
                         //     details:
-                        //         label('custom.FA_InitiativeWizardConfigurePlanningText'),
+                        //         label('InitiativeWizardConfigurePlanningText'),
                         // },
                         // {
                         //     label: valueSet(
                         //         'initiative.Configuration_Type__c'
                         //     ).find(item => item.value === 'Explain').label,
                         //     value: 'Explain',
-                        //     details: label('custom.FA_InitiativeWizardConfigureExplainText'),
+                        //     details: label('InitiativeWizardConfigureExplainText'),
                         // },
                     ]}
                 />

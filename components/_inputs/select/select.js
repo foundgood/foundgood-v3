@@ -7,7 +7,7 @@ import t from 'prop-types';
 import { Controller } from 'react-hook-form';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Icons
 import { FiChevronDown } from 'react-icons/fi';
@@ -26,7 +26,7 @@ const SelectComponent = ({
     ...rest
 }) => {
     // Hook: Metadata
-    const { label: metadataLabel } = useMetadata();
+    const { label: metadataLabel } = useLabels();
 
     // Defaultvalue
     useEffect(() => {
@@ -70,9 +70,7 @@ const SelectComponent = ({
                             {...rest}>
                             <option default value="" className="hidden">
                                 {placeholder ||
-                                    metadataLabel(
-                                        'custom.FA_FormCaptureSelectEmpty'
-                                    )}
+                                    metadataLabel('FormCaptureSelectEmpty')}
                             </option>
                             {options
                                 .sort((a, b) => a.label.localeCompare(b.label))

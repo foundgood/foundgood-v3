@@ -5,12 +5,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Utilities
-import {
-    useMetadata,
-    useContext,
-    useAuth,
-    useSalesForce,
-} from 'utilities/hooks';
+import { useLabels, useContext, useAuth, useSalesForce } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -22,7 +17,7 @@ const WizardStatusComponent = () => {
     const router = useRouter();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Hook: Auth
     const { userInitiativeRights } = useAuth();
@@ -94,7 +89,7 @@ const WizardStatusComponent = () => {
         <>
             <div className="flex flex-col py-12 md:items-center md:justify-end md:flex-row bg-teal-20 page-px">
                 <p className="flex items-center mb-12 mr-12 lg:mr-24 t-sh6 text-teal-60 md:flex md:mb-0">
-                    {label('custom.FA_ReportViewReportStatus')}
+                    {label('ReportViewReportStatus')}
                     <span className="px-8 pt-3 pb-1 mb-2 ml-8 text-blue-100 bg-blue-10 rounded-4 t-sh7">
                         {currentReport.Status__c}
                     </span>
@@ -129,7 +124,7 @@ const WizardStatusComponent = () => {
                                 //     ) || !userInitiativeRights.canEdit
                                 // }
                                 action={reportInProgress}>
-                                {label('custom.FA_ButtonRunWizard')}
+                                {label('ButtonRunWizard')}
                             </Button>
                         )}
                     {userInitiativeRights.canEdit &&
@@ -148,22 +143,20 @@ const WizardStatusComponent = () => {
                                     CONSTANTS.TYPES.REPORT_IN_REVIEW
                                 }
                                 action={() => setShowModal(true)}>
-                                {label('custom.FA_ButtonSubmit')}
+                                {label('ButtonSubmit')}
                             </Button>
                         )}
                 </div>
             </div>
             <Modal
                 isOpen={showModal}
-                title={label('custom.FA_ModalReportCompleteHeader')}
+                title={label('ModalReportCompleteHeader')}
                 onCancel={() => setShowModal(false)}
-                saveText={label('custom.FA_ButtonSubmit')}
+                saveText={label('ButtonSubmit')}
                 onSave={() => {
                     completeReport();
                 }}>
-                <p className="t-preamble">
-                    {label('custom.FA_ModalReportCompleteBody')}
-                </p>
+                <p className="t-preamble">{label('ModalReportCompleteBody')}</p>
             </Modal>
         </>
     );

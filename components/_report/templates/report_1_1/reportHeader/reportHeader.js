@@ -6,7 +6,7 @@ import t from 'prop-types';
 import Image from 'next/image';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -15,7 +15,7 @@ const ReportHeaderComponent = ({ initiative, report, constants }) => {
     const [mainApplicant, setMainApplicant] = useState();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     useEffect(() => {
         // Report main applicant
@@ -46,7 +46,7 @@ const ReportHeaderComponent = ({ initiative, report, constants }) => {
                 <h1 className="mt-48 t-h1">{initiative.Name}</h1>
                 <div className="mt-16 t-sh2">
                     {`${report.Report_Type__c} ${label(
-                        'custom.FA_TitleReport'
+                        'TitleReport'
                     )} ${report.Due_Date__c?.substring(0, 4)}`}
                 </div>
                 <div className="flex mt-16 t-caption text-blue-60">

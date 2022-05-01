@@ -6,7 +6,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata, useAuth } from 'utilities/hooks';
+import { useLabels, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { stripUndefined } from 'utilities';
 
@@ -31,7 +31,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
     const [results, setResults] = useState();
 
     // Hook: Metadata
-    const { getValueLabel, label } = useMetadata();
+    const { getValueLabel, label } = useLabels();
 
     useEffect(() => {
         // Make sure data it loaded
@@ -106,7 +106,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                             title: headline,
                                             value: value,
                                             label: label(
-                                                'custom.FA_InitiativeViewMetricsTotal'
+                                                'InitiativeViewMetricsTotal'
                                             ),
                                         };
                                     } else {
@@ -114,7 +114,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                             title: item.Name,
                                             value: value,
                                             label: label(
-                                                'custom.FA_InitiativeViewMetricsTotal'
+                                                'InitiativeViewMetricsTotal'
                                             ),
                                         };
                                     }
@@ -158,33 +158,29 @@ const DevelopmentsComponent = ({ pageProps }) => {
                         items = [
                             {
                                 label: label(
-                                    'custom.FA_InitiativeViewSharingPublicationType'
+                                    'InitiativeViewSharingPublicationType'
                                 ),
                                 text: item.Publication_Type__c,
                             },
                             {
                                 label: label(
-                                    'custom.FA_InitiativeViewSharingPublicationYear'
+                                    'InitiativeViewSharingPublicationYear'
                                 ),
                                 text: dayjs(item.Publication_Year__c).format(
                                     'YYYY'
                                 ),
                             },
                             {
-                                label: label(
-                                    'custom.FA_InitiativeViewSharingPublisher'
-                                ),
+                                label: label('InitiativeViewSharingPublisher'),
                                 text: item.Publication_Publisher__c,
                             },
                             {
-                                label: label(
-                                    'custom.FA_InitiativeViewSharingAuthor'
-                                ),
+                                label: label('InitiativeViewSharingAuthor'),
                                 text: item.Publication_Author__c,
                             },
                             {
                                 label: label(
-                                    'custom.FA_InitiativeViewSharingPublicationDOI'
+                                    'InitiativeViewSharingPublicationDOI'
                                 ),
                                 text: item.Publication_DOI__c,
                             },
@@ -224,16 +220,12 @@ const DevelopmentsComponent = ({ pageProps }) => {
             {initiative?.Id && (
                 <div className="animate-fade-in">
                     <SectionWrapper>
-                        <div className="t-h1">
-                            {label('custom.FA_MenuDevelopments')}
-                        </div>
+                        <div className="t-h1">{label('MenuDevelopments')}</div>
                     </SectionWrapper>
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewIndicatorsHeading'
-                                )}
+                                {label('InitiativeViewIndicatorsHeading')}
                             </h2>
                             <UpdateButton
                                 mode="initiative"
@@ -260,9 +252,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     <SectionWrapper className="mt-32 bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingSharingOverall'
-                                )}
+                                {label('ReportViewSubHeadingSharingOverall')}
                             </h2>
                             <UpdateButton
                                 mode="initiative"

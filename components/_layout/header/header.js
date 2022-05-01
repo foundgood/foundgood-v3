@@ -9,7 +9,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useMetadata, useAuth } from 'utilities/hooks';
+import { useLabels, useAuth } from 'utilities/hooks';
 
 // Components
 
@@ -19,7 +19,7 @@ import FGLogo from 'assets/images/fg-logo.svg';
 
 const HeaderComponent = ({ showUserControls }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Hook: Auth
     const { user, logout } = useAuth();
@@ -81,7 +81,7 @@ const HeaderComponent = ({ showUserControls }) => {
                                 <a>
                                     <FiHeart className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
-                                        {label('custom.FA_MenuInitiatives')}
+                                        {label('MenuInitiatives')}
                                     </span>
                                 </a>
                             </Link>
@@ -91,7 +91,7 @@ const HeaderComponent = ({ showUserControls }) => {
                                 <a>
                                     <FiInbox className="w-24 h-24 mx-auto stroke-current" />
                                     <span className="hidden mt-4 select-none lg:block">
-                                        {label('custom.FA_TabReports')}
+                                        {label('TabReports')}
                                     </span>
                                 </a>
                             </Link>
@@ -130,7 +130,7 @@ const HeaderComponent = ({ showUserControls }) => {
                                 't-h6 transition-default hover:text-blue-200',
                                 { 'text-blue-100': router.locale === 'en' },
                             ])}>
-                            {label('custom.FA_MenuLanguageEN')}
+                            {label('MenuLanguageEN')}
                         </a>
                     </Link>
                     <span>/</span>
@@ -141,7 +141,7 @@ const HeaderComponent = ({ showUserControls }) => {
                                 't-h6 transition-default hover:text-blue-200',
                                 { 'text-blue-100': router.locale === 'da' },
                             ])}>
-                            {label('custom.FA_MenuLanguageDK')}
+                            {label('MenuLanguageDK')}
                         </a>
                     </Link>
                 </span>
@@ -150,7 +150,7 @@ const HeaderComponent = ({ showUserControls }) => {
                         logout();
                     }}
                     className="flex items-center text-blue-300 t-h6 transition-default hover:text-blue-200">
-                    {label('custom.FA_LogOut')}
+                    {label('LogOut')}
                 </button>
             </div>
         </>

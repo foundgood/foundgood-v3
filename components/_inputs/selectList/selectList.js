@@ -8,7 +8,7 @@ import { useController } from 'react-hook-form';
 import { nanoid } from 'nanoid';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -36,7 +36,7 @@ const SelectListComponent = ({
     setValue,
 }) => {
     // Hook: Metadata
-    const { label: metadataLabel } = useMetadata();
+    const { label: metadataLabel } = useLabels();
 
     // Local state
     const [list, setList] = useState([
@@ -187,7 +187,7 @@ const SelectListComponent = ({
                                                 className="hidden">
                                                 {selectPlaceholder ||
                                                     metadataLabel(
-                                                        'custom.FA_FormCaptureSelectEmpty'
+                                                        'FormCaptureSelectEmpty'
                                                     )}
                                             </option>
                                             {options
@@ -220,7 +220,7 @@ const SelectListComponent = ({
                                             placeholder={
                                                 textPlaceholder ||
                                                 metadataLabel(
-                                                    'custom.FA_FormCaptureTextEntryEmpty'
+                                                    'FormCaptureTextEntryEmpty'
                                                 )
                                             }
                                             onChange={event => {

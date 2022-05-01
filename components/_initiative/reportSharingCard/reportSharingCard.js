@@ -6,11 +6,11 @@ import t from 'prop-types';
 import Image from 'next/image';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 const ReportSharingCardComponent = ({ headline, description, tags, items }) => {
     // Hook: Metadata
-    // const { label } = useMetadata();
+    // const { label } = useLabels();
 
     return (
         <div className="flex items-start justify-between">
@@ -36,7 +36,7 @@ const ReportSharingCardComponent = ({ headline, description, tags, items }) => {
             {tags && (
                 <div className="flex flex-col items-start w-1/3 p-16 border-4 border-blue-10 rounded-8">
                     <div className="text-blue-60 t-sh7">
-                        {/* {label('custom.FA_ReportViewSharingAudience')} */}
+                        {/* {label('ReportViewSharingAudience')} */}
                     </div>
                     {tags.map((tag, index) => (
                         <div

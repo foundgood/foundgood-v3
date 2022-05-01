@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -17,7 +17,7 @@ import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportEvaluationsComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const [evaluations, setEvaluations] = useState([]);
 
@@ -52,14 +52,11 @@ const ReportEvaluationsComponent = ({ initiative, report, constants }) => {
     }, [initiative, report.Id]);
 
     return (
-        <SectionWrapper
-            id={asId(label('custom.FA_ReportWizardMenuEvaluations'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuEvaluations'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label(
-                            'custom.FA_ReportViewSubHeadingEvaluationsOverall'
-                        )}
+                        {label('ReportViewSubHeadingEvaluationsOverall')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="evaluations" />
                 </div>
@@ -85,7 +82,7 @@ const ReportEvaluationsComponent = ({ initiative, report, constants }) => {
                             <TextCard
                                 hasBackground={true}
                                 headline={label(
-                                    'custom.FA_ReportViewSubHeadingEvaluationsReflections'
+                                    'ReportViewSubHeadingEvaluationsReflections'
                                 )}
                                 body={item.reportReflection}
                             />

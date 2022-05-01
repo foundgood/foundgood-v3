@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Packages
 import cc from 'classcat';
@@ -22,7 +22,7 @@ const TextComponent = ({
     ...rest
 }) => {
     // Hook: Metadata
-    const { label: metadataLabel } = useMetadata();
+    const { label: metadataLabel } = useLabels();
 
     // State: Local length
     const [lengthValue, setLengthValue] = useState(0);
@@ -58,9 +58,7 @@ const TextComponent = ({
                             maxLength={maxLength ? maxLength : 'none'}
                             placeholder={
                                 placeholder ||
-                                metadataLabel(
-                                    'custom.FA_FormCaptureTextEntryEmpty'
-                                )
+                                metadataLabel('FormCaptureTextEntryEmpty')
                             }
                             onChange={event => {
                                 // Local value state

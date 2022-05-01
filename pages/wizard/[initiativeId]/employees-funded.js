@@ -8,7 +8,7 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useMetadata,
+    useLabels,
     useElseware,
     useContext,
     useReflections,
@@ -56,7 +56,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, valueSet, helpText } = useMetadata();
+    const { label, valueSet, helpText } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
     const { submitNoReflection, submitReflection } = useReflections({
         dataSet: utilities.collaborators.getTypeAdditional,
@@ -236,11 +236,9 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                                 : currentReflection?.Description__c
                         }
                         label={label(
-                            'custom.FA_ReportWizardEmployeesReflectionSubHeading'
+                            'ReportWizardEmployeesReflectionSubHeading'
                         )}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={750}
                         controller={controlReflections}
                     />
@@ -269,12 +267,12 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddEmployee')}
+                    {label('ButtonAddEmployee')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingEmployees')}
+                title={label('WizardModalHeadingEmployees')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
@@ -282,14 +280,12 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     <Text
                         name="Job_Title__c"
                         label={label(
-                            'objects.initiativeEmployeeFunded.Job_Title__c'
+                            'objects.Initiative_Employee_Funded__c.Job_Title__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeEmployeeFunded.Job_Title__c'
+                            'objects.Initiative_Employee_Funded__c.Job_Title__c'
                         )}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={80}
                         required
                         controller={control}
@@ -297,12 +293,12 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     <Select
                         name="Role_Type__c"
                         label={label(
-                            'objects.initiativeEmployeeFunded.Role_Type__c'
+                            'objects.Initiative_Employee_Funded__c.Role_Type__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeEmployeeFunded.Role_Type__c'
+                            'objects.Initiative_Employee_Funded__c.Role_Type__c'
                         )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
+                        placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeEmployeeFunded.Role_Type__c'
                         )}
@@ -312,16 +308,14 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     <SelectList
                         name="Gender"
                         label={label(
-                            'objects.initiativeEmployeeFunded.Gender__c'
+                            'objects.Initiative_Employee_Funded__c.Gender__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeEmployeeFunded.Gender__c'
+                            'objects.Initiative_Employee_Funded__c.Gender__c'
                         )}
-                        selectPlaceholder={label(
-                            'custom.FA_FormCaptureSelectEmpty'
-                        )}
+                        selectPlaceholder={label('FormCaptureSelectEmpty')}
                         textPlaceholder={label(
-                            'objects.initiativeEmployeeFunded.Gender_Other__c'
+                            'objects.Initiative_Employee_Funded__c.Gender_Other__c'
                         )}
                         options={valueSet('initiativeEmployeeFunded.Gender__c')}
                         showText
@@ -331,12 +325,12 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     <Number
                         name="Percent_Involvement__c"
                         label={label(
-                            'objects.initiativeEmployeeFunded.Percent_Involvement__c'
+                            'objects.Initiative_Employee_Funded__c.Percent_Involvement__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeEmployeeFunded.Percent_Involvement__c'
+                            'objects.Initiative_Employee_Funded__c.Percent_Involvement__c'
                         )}
-                        placeholder={label('custom.FA_FormCaptureNumberEmpty')}
+                        placeholder={label('FormCaptureNumberEmpty')}
                         minValue={0}
                         maxValue={100}
                         controller={control}

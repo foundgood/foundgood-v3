@@ -9,22 +9,22 @@ const reportWizardDictionary = {
         hideBack: true,
     },
     summary: {
-        title: 'custom.FA_ReportWizardMenuHeading1',
+        title: 'ReportWizardMenuHeading1',
         visible: true,
         items: [],
     },
     keyChanges: {
-        title: 'custom.FA_ReportWizardMenuHeading2',
+        title: 'ReportWizardMenuHeading2',
         visible: true,
         items: [],
     },
     keyResults: {
-        title: 'custom.FA_ReportWizardMenuHeading3',
+        title: 'ReportWizardMenuHeading3',
         visible: true,
         items: [],
     },
     reflections: {
-        title: 'custom.FA_ReportWizardMenuHeading4',
+        title: 'ReportWizardMenuHeading4',
         visible: true,
         items: [],
     },
@@ -47,16 +47,16 @@ const reportWizardDictionary = {
     },
 
     reportDetails: {
-        title: 'custom.FA_ReportWizardMenuReportDetails',
+        title: 'ReportWizardMenuReportDetails',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardReportDetailsHeading',
-                preamble: 'custom.FA_ReportWizardReportDetailsSubHeading',
+                title: 'ReportWizardReportDetailsHeading',
+                preamble: 'ReportWizardReportDetailsSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardReportDetailsHelpWhy',
-                what: 'custom.FA_ReportWizardReportDetailsHelpWhat',
-                guide: 'custom.FA_ReportWizardReportDetailsHelpGuide',
+                why: 'ReportWizardReportDetailsHelpWhy',
+                what: 'ReportWizardReportDetailsHelpWhat',
+                guide: 'ReportWizardReportDetailsHelpGuide',
             },
         },
         baseUrl: 'report-details',
@@ -65,16 +65,16 @@ const reportWizardDictionary = {
         },
     },
     funders: {
-        title: 'custom.FA_ReportWizardMenuFunders',
+        title: 'ReportWizardMenuFunders',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardFundersHeading',
-                preamble: 'custom.FA_ReportWizardFundersSubHeading',
+                title: 'ReportWizardFundersHeading',
+                preamble: 'ReportWizardFundersSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardFundersHelpWhy',
-                what: 'custom.FA_ReportWizardFundersHelpWhat',
-                guide: 'custom.FA_ReportWizardFundersHelpGuide',
+                why: 'ReportWizardFundersHelpWhy',
+                what: 'ReportWizardFundersHelpWhat',
+                guide: 'ReportWizardFundersHelpGuide',
             },
         },
         baseUrl: 'funders',
@@ -83,16 +83,16 @@ const reportWizardDictionary = {
         },
     },
     overview: {
-        title: 'custom.FA_ReportWizardMenuOverview',
+        title: 'ReportWizardMenuOverview',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardOverviewHeading',
-                preamble: 'custom.FA_ReportWizardOverviewSubHeading',
+                title: 'ReportWizardOverviewHeading',
+                preamble: 'ReportWizardOverviewSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardOverviewHelpWhy',
-                what: 'custom.FA_ReportWizardOverviewHelpWhat',
-                guide: 'custom.FA_ReportWizardOverviewHelpGuide',
+                why: 'ReportWizardOverviewHelpWhy',
+                what: 'ReportWizardOverviewHelpWhat',
+                guide: 'ReportWizardOverviewHelpGuide',
             },
         },
         baseUrl: 'overview',
@@ -101,16 +101,16 @@ const reportWizardDictionary = {
         },
     },
     reportSummary: {
-        title: 'custom.FA_ReportWizardMenuSummary',
+        title: 'ReportWizardMenuSummary',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardReportSummaryHeading',
-                preamble: 'custom.FA_ReportWizardReportSummarySubHeading',
+                title: 'ReportWizardReportSummaryHeading',
+                preamble: 'ReportWizardReportSummarySubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardReportSummaryHelpWhy',
-                what: 'custom.FA_ReportWizardReportSummaryHelpWhat',
-                guide: 'custom.FA_ReportWizardReportSummaryHelpGuide',
+                why: 'ReportWizardReportSummaryHelpWhy',
+                what: 'ReportWizardReportSummaryHelpWhat',
+                guide: 'ReportWizardReportSummaryHelpGuide',
             },
         },
         baseUrl: 'report-summary',
@@ -119,16 +119,16 @@ const reportWizardDictionary = {
         },
     },
     risksAndChallenges: {
-        title: 'custom.FA_ReportWizardMenuRisks',
+        title: 'ReportWizardMenuRisks',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardRisksHeading',
-                preamble: 'custom.FA_ReportWizardRisksSubHeading',
+                title: 'ReportWizardRisksHeading',
+                preamble: 'ReportWizardRisksSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardRisksHelpWhy',
-                what: 'custom.FA_ReportWizardRisksHelpWhat',
-                guide: 'custom.FA_ReportWizardRisksHelpGuide',
+                why: 'ReportWizardRisksHelpWhy',
+                what: 'ReportWizardRisksHelpWhat',
+                guide: 'ReportWizardRisksHelpGuide',
             },
         },
         baseUrl: 'risks-and-challenges',
@@ -137,16 +137,16 @@ const reportWizardDictionary = {
         },
     },
     applicants: {
-        title: 'custom.FA_ReportWizardMenuApplicants',
+        title: 'ReportWizardMenuApplicants',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardApplicantsHeading',
-                preamble: 'custom.FA_ReportWizardApplicantsSubHeading',
+                title: 'ReportWizardApplicantsHeading',
+                preamble: 'ReportWizardApplicantsSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardApplicantsHelpWhy',
-                what: 'custom.FA_ReportWizardApplicantsHelpWhat',
-                guide: 'custom.FA_ReportWizardApplicantsHelpGuide',
+                why: 'ReportWizardApplicantsHelpWhy',
+                what: 'ReportWizardApplicantsHelpWhat',
+                guide: 'ReportWizardApplicantsHelpGuide',
             },
         },
         baseUrl: 'applicants',
@@ -155,16 +155,16 @@ const reportWizardDictionary = {
         },
     },
     collaborators: {
-        title: 'custom.FA_ReportWizardMenuCollaborations',
+        title: 'ReportWizardMenuCollaborations',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardCollaboratorsHeading',
-                preamble: 'custom.FA_ReportWizardCollaboratorsSubHeading',
+                title: 'ReportWizardCollaboratorsHeading',
+                preamble: 'ReportWizardCollaboratorsSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardCollaboratorsHelpWhy',
-                what: 'custom.FA_ReportWizardCollaboratorsHelpWhat',
-                guide: 'custom.FA_ReportWizardCollaboratorsHelpGuide',
+                why: 'ReportWizardCollaboratorsHelpWhy',
+                what: 'ReportWizardCollaboratorsHelpWhat',
+                guide: 'ReportWizardCollaboratorsHelpGuide',
             },
         },
         baseUrl: 'collaborators',
@@ -173,16 +173,16 @@ const reportWizardDictionary = {
         },
     },
     employeesFunded: {
-        title: 'custom.FA_ReportWizardMenuEmployees',
+        title: 'ReportWizardMenuEmployees',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardEmployeesHeading',
-                preamble: 'custom.FA_ReportWizardEmployeesSubHeading',
+                title: 'ReportWizardEmployeesHeading',
+                preamble: 'ReportWizardEmployeesSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardEmployeesHelpWhy',
-                what: 'custom.FA_ReportWizardEmployeesHelpWhat',
-                guide: 'custom.FA_ReportWizardEmployeesHelpGuide',
+                why: 'ReportWizardEmployeesHelpWhy',
+                what: 'ReportWizardEmployeesHelpWhat',
+                guide: 'ReportWizardEmployeesHelpGuide',
             },
         },
         baseUrl: 'employees-funded',
@@ -191,17 +191,17 @@ const reportWizardDictionary = {
         },
     },
     goals: {
-        title: 'custom.FA_ReportWizardMenuGoals',
-        titleNNF: 'custom.FA_ReportViewHeadingFunderObjectives', // Show different title to NNF
+        title: 'ReportWizardMenuGoals',
+        titleNNF: 'ReportViewHeadingFunderObjectives', // Show different title to NNF
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardGoalsHeading',
-                preamble: 'custom.FA_ReportWizardGoalsSubHeading',
+                title: 'ReportWizardGoalsHeading',
+                preamble: 'ReportWizardGoalsSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardGoalsHelpWhy',
-                what: 'custom.FA_ReportWizardGoalsHelpWhat',
-                guide: 'custom.FA_ReportWizardGoalsHelpGuide',
+                why: 'ReportWizardGoalsHelpWhy',
+                what: 'ReportWizardGoalsHelpWhat',
+                guide: 'ReportWizardGoalsHelpGuide',
             },
         },
         baseUrl: 'goals',
@@ -210,16 +210,16 @@ const reportWizardDictionary = {
         },
     },
     activities: {
-        title: 'custom.FA_ReportWizardMenuActivities',
+        title: 'ReportWizardMenuActivities',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardActivitiesHeading',
-                preamble: 'custom.FA_ReportWizardActivitiesSubHeading',
+                title: 'ReportWizardActivitiesHeading',
+                preamble: 'ReportWizardActivitiesSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardActivitiesHelpWhy',
-                what: 'custom.FA_ReportWizardActivitiesHelpWhat',
-                guide: 'custom.FA_ReportWizardActivitiesHelpGuide',
+                why: 'ReportWizardActivitiesHelpWhy',
+                what: 'ReportWizardActivitiesHelpWhat',
+                guide: 'ReportWizardActivitiesHelpGuide',
             },
         },
         baseUrl: 'activities',
@@ -228,16 +228,16 @@ const reportWizardDictionary = {
         },
     },
     indicators: {
-        title: 'custom.FA_ReportWizardMenuIndicators',
+        title: 'ReportWizardMenuIndicators',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardIndicatorsHeading',
-                preamble: 'custom.FA_ReportWizardIndicatorsSubheading',
+                title: 'ReportWizardIndicatorsHeading',
+                preamble: 'ReportWizardIndicatorsSubheading',
             },
             help: {
-                why: 'custom.FA_ReportWizardIndicatorsHelpWhy',
-                what: 'custom.FA_ReportWizardIndicatorsHelpWhat',
-                guide: 'custom.FA_ReportWizardIndicatorsHelpGuide',
+                why: 'ReportWizardIndicatorsHelpWhy',
+                what: 'ReportWizardIndicatorsHelpWhat',
+                guide: 'ReportWizardIndicatorsHelpGuide',
             },
         },
         baseUrl: 'indicators',
@@ -246,16 +246,16 @@ const reportWizardDictionary = {
         },
     },
     progressSoFar: {
-        title: 'custom.FA_ReportWizardMenuProgress',
+        title: 'ReportWizardMenuProgress',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardProgressHeading',
-                preamble: 'custom.FA_ReportWizardProgressSubHeading',
+                title: 'ReportWizardProgressHeading',
+                preamble: 'ReportWizardProgressSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardProgressHelpWhy',
-                what: 'custom.FA_ReportWizardProgressHelpWhat',
-                guide: 'custom.FA_ReportWizardProgressHelpGuide',
+                why: 'ReportWizardProgressHelpWhy',
+                what: 'ReportWizardProgressHelpWhat',
+                guide: 'ReportWizardProgressHelpGuide',
             },
         },
         baseUrl: 'progress-so-far',
@@ -264,16 +264,16 @@ const reportWizardDictionary = {
         },
     },
     sharingResults: {
-        title: 'custom.FA_ReportWizardMenuSharing',
+        title: 'ReportWizardMenuSharing',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardSharingHeading',
-                preamble: 'custom.FA_ReportWizardSharingSubHeading',
+                title: 'ReportWizardSharingHeading',
+                preamble: 'ReportWizardSharingSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardSharingHelpWhy',
-                what: 'custom.FA_ReportWizardSharingHelpWhat',
-                guide: 'custom.FA_ReportWizardSharingHelpGuide',
+                why: 'ReportWizardSharingHelpWhy',
+                what: 'ReportWizardSharingHelpWhat',
+                guide: 'ReportWizardSharingHelpGuide',
             },
         },
         baseUrl: 'sharing-results',
@@ -284,16 +284,16 @@ const reportWizardDictionary = {
     outcomes: {},
     logbookEntry: {},
     influenceOnPolicy: {
-        title: 'custom.FA_ReportWizardMenuInfluence',
+        title: 'ReportWizardMenuInfluence',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardInfluenceHeading',
-                preamble: 'custom.FA_ReportWizardInfluenceSubHeading',
+                title: 'ReportWizardInfluenceHeading',
+                preamble: 'ReportWizardInfluenceSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardInfluenceHelpWhy',
-                what: 'custom.FA_ReportWizardInfluenceHelpWhat',
-                guide: 'custom.FA_ReportWizardInfluenceHelpGuide',
+                why: 'ReportWizardInfluenceHelpWhy',
+                what: 'ReportWizardInfluenceHelpWhat',
+                guide: 'ReportWizardInfluenceHelpGuide',
             },
         },
         baseUrl: 'influence-on-policy',
@@ -302,16 +302,16 @@ const reportWizardDictionary = {
         },
     },
     evaluations: {
-        title: 'custom.FA_ReportWizardMenuEvaluations',
+        title: 'ReportWizardMenuEvaluations',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardEvaluationsHeading',
-                preamble: 'custom.FA_ReportWizardEvaluationsSubHeading',
+                title: 'ReportWizardEvaluationsHeading',
+                preamble: 'ReportWizardEvaluationsSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardEvaluationsHelpWhy',
-                what: 'custom.FA_ReportWizardEvaluationsHelpWhat',
-                guide: 'custom.FA_ReportWizardEvaluationsHelpGuide',
+                why: 'ReportWizardEvaluationsHelpWhy',
+                what: 'ReportWizardEvaluationsHelpWhat',
+                guide: 'ReportWizardEvaluationsHelpGuide',
             },
         },
         baseUrl: 'evaluations',
@@ -320,16 +320,16 @@ const reportWizardDictionary = {
         },
     },
     endOfGrantReflections: {
-        title: 'custom.FA_ReportWizardMenuEndReflections',
+        title: 'ReportWizardMenuEndReflections',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardEndReflectionsHeading',
-                preamble: 'custom.FA_ReportWizardEndReflectionsSubHeading',
+                title: 'ReportWizardEndReflectionsHeading',
+                preamble: 'ReportWizardEndReflectionsSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardEndReflectionsHelpWhy',
-                what: 'custom.FA_ReportWizardEndReflectionsHelpWhat',
-                guide: 'custom.FA_ReportWizardEndReflectionsHelpGuide',
+                why: 'ReportWizardEndReflectionsHelpWhy',
+                what: 'ReportWizardEndReflectionsHelpWhat',
+                guide: 'ReportWizardEndReflectionsHelpGuide',
             },
         },
         baseUrl: 'end-of-grant-reflections',
@@ -338,17 +338,16 @@ const reportWizardDictionary = {
         },
     },
     postProjectActivities: {
-        title: 'custom.FA_ReportWizardMenuPostProjectActivities',
+        title: 'ReportWizardMenuPostProjectActivities',
         labels: {
             form: {
-                title: 'custom.FA_ReportWizardPostProjectActivitiesHeading',
-                preamble:
-                    'custom.FA_ReportWizardPostProjectActivitiesSubHeading',
+                title: 'ReportWizardPostProjectActivitiesHeading',
+                preamble: 'ReportWizardPostProjectActivitiesSubHeading',
             },
             help: {
-                why: 'custom.FA_ReportWizardPostProjectActivitiesHelpWhy',
-                what: 'custom.FA_ReportWizardPostProjectActivitiesHelpWhat',
-                guide: 'custom.FA_ReportWizardPostProjectActivitiesHelpGuide',
+                why: 'ReportWizardPostProjectActivitiesHelpWhy',
+                what: 'ReportWizardPostProjectActivitiesHelpWhat',
+                guide: 'ReportWizardPostProjectActivitiesHelpGuide',
             },
         },
         baseUrl: 'post-project-activities',

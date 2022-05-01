@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -23,7 +23,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { labelTodo, label } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -148,9 +148,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                             );
                         })
                 ) : (
-                    <p className="t-h5">
-                        {label('custom.FA_WizardEmptyStatesProgress')}
-                    </p>
+                    <p className="t-h5">{label('WizardEmptyStatesProgress')}</p>
                 )}
             </InputWrapper>
         </>

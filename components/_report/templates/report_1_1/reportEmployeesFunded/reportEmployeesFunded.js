@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -17,7 +17,7 @@ import TextCard from 'components/_initiative/textCard';
 
 const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const [employeeGroups, setEmployeeGroups] = useState([]);
     const [
@@ -81,13 +81,11 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
     }, [initiative, report.Id]);
 
     return (
-        <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuEmployees'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuEmployees'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label(
-                            'custom.FA_ReportViewSubHeadingEmployeesOverall'
-                        )}
+                        {label('ReportViewSubHeadingEmployeesOverall')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="employees-funded" />
                 </div>
@@ -134,7 +132,7 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
                             className="mt-32"
                             hasBackground={true}
                             headline={label(
-                                'custom.FA_ReportViewSubHeadingEmployeesReflections'
+                                'ReportViewSubHeadingEmployeesReflections'
                             )}
                             body={employeesFundedReflection}
                         />

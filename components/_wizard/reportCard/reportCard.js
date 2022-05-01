@@ -6,7 +6,7 @@ import t from 'prop-types';
 import { useForm, useFormState } from 'react-hook-form';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -23,7 +23,7 @@ const ReportCardComponent = ({
     disableUpdate,
 }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     return (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100">
@@ -31,8 +31,7 @@ const ReportCardComponent = ({
                 {headline && (
                     <div className="flex items-center">
                         <h4 className="t-sh4">
-                            {label('custom.FA_InitiativeViewReportsText')}{' '}
-                            {headline}
+                            {label('InitiativeViewReportsText')} {headline}
                         </h4>
                     </div>
                 )}
@@ -41,7 +40,7 @@ const ReportCardComponent = ({
                         theme="teal"
                         variant="primary"
                         action={actionCreate}>
-                        {label('custom.FA_ButtonAddReport')}
+                        {label('ButtonAddReport')}
                     </Button>
                 )}
             </div>
@@ -66,7 +65,7 @@ const ReportCardComponent = ({
                                         theme="teal"
                                         variant="quaternary"
                                         action={() => actionUpdate(item)}>
-                                        {label('custom.FA_Update')}
+                                        {label('Update')}
                                     </Button>
                                 )}
                             </div>

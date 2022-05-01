@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -18,7 +18,7 @@ import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportResultsComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const [results, setResults] = useState([]);
 
@@ -72,31 +72,27 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                         items = [
                             {
                                 label: label(
-                                    'custom.FA_InitiativeViewSharingPublicationType'
+                                    'InitiativeViewSharingPublicationType'
                                 ),
                                 text: item.Publication_Type__c,
                             },
                             {
                                 label: label(
-                                    'custom.FA_InitiativeViewSharingPublicationYear'
+                                    'InitiativeViewSharingPublicationYear'
                                 ),
                                 text: item.Publication_Year__c,
                             },
                             {
-                                label: label(
-                                    'custom.FA_InitiativeViewSharingPublisher'
-                                ),
+                                label: label('InitiativeViewSharingPublisher'),
                                 text: item.Publication_Publisher__c,
                             },
                             {
-                                label: label(
-                                    'custom.FA_InitiativeViewSharingAuthor'
-                                ),
+                                label: label('InitiativeViewSharingAuthor'),
                                 text: item.Publication_Author__c,
                             },
                             {
                                 label: label(
-                                    'custom.FA_InitiativeViewSharingPublicationDOI'
+                                    'InitiativeViewSharingPublicationDOI'
                                 ),
                                 text: item.Publication_DOI__c,
                             },
@@ -125,11 +121,11 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
     }, [initiative, report.Id]);
 
     return (
-        <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuSharing'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuSharing'))}>
             <SectionWrapper>
                 <div className="flex justify-between mt-32">
                     <h3 className="t-h4">
-                        {label('custom.FA_ReportViewSubHeadingSharingOverall')}
+                        {label('ReportViewSubHeadingSharingOverall')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="sharing-results" />
                 </div>
@@ -162,7 +158,7 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                         <TextCard
                             hasBackground={true}
                             headline={label(
-                                'custom.FA_ReportViewSubHeadingSharingReflections'
+                                'ReportViewSubHeadingSharingReflections'
                             )}
                             body={item.reportReflection}
                         />

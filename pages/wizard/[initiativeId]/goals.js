@@ -6,7 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useElseware } from 'utilities/hooks';
+import { useAuth, useLabels, useElseware } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -41,7 +41,7 @@ const GoalsComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
-    const { label, helpText } = useMetadata();
+    const { label, helpText } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
 
     // ///////////////////
@@ -149,23 +149,23 @@ const GoalsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddGoal')}
+                    {label('ButtonAddGoal')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingGoals')}
+                title={label('WizardModalHeadingGoals')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <LongText
                         name="Goal__c"
-                        label={label('objects.initiativeGoal.Goal__c')}
-                        subLabel={helpText('objects.initiativeGoal.Goal__c')}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
+                        label={label('objects.Initiative_Goal__c.Goal__c')}
+                        subLabel={helpText(
+                            'objects.Initiative_Goal__c.Goal__c'
                         )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={200}
                         controller={control}
                     />

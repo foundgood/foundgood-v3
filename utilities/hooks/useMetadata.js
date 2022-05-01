@@ -2,28 +2,25 @@
 import { useRouter } from 'next/router';
 import _get from 'lodash.get';
 
-import { useLabels } from 'utilities/hooks';
-
 // Data
 import metadata from '_metadata/metadata';
 
 const useMetadata = () => {
     const { locale } = useRouter();
-    const { label, text } = useLabels();
 
-    // function label(path) {
-    //     // Locale based
-    //     let label = _get(metadata.labels, `${locale}.${path}.label`);
-    //     if (typeof label === 'string') {
-    //         return label;
-    //     }
-    //     // Fallback
-    //     label = _get(metadata.labels.en, `${path}.label`);
-    //     if (typeof label === 'string') {
-    //         return label;
-    //     }
-    //     return label;
-    // }
+    function label(path) {
+        // Locale based
+        let label = _get(metadata.labels, `${locale}.${path}.label`);
+        if (typeof label === 'string') {
+            return label;
+        }
+        // Fallback
+        label = _get(metadata.labels.en, `${path}.label`);
+        if (typeof label === 'string') {
+            return label;
+        }
+        return label;
+    }
 
     function helpText(path) {
         // Locale based
@@ -134,11 +131,11 @@ const useMetadata = () => {
 
     function log() {
         console.log(metadata);
+        logLabels();
     }
 
     return {
         label,
-        text,
         labelTodo,
         type,
         valueSet,

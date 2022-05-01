@@ -5,7 +5,7 @@ import React from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata, useAuth } from 'utilities/hooks';
+import { useLabels, useAuth } from 'utilities/hooks';
 
 // Components
 
@@ -15,11 +15,11 @@ const WizardComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { label, valueSet, log } = useMetadata();
+    const { label, valueSet, log } = useLabels();
 
     return (
         <div className="t-h1">
-            Foundgood, {label('objects.initiative.Approach_Thinking__c')}
+            Foundgood, {label('objects.Initiative__c.Approach_Thinking__c')}
         </div>
     );
 };

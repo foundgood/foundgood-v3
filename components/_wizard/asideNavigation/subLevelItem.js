@@ -12,7 +12,7 @@ import {
     useWizardNavigationStore,
     useInitiativeDataStore,
 } from 'utilities/store';
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useLabels, useContext } from 'utilities/hooks';
 
 // Components
 
@@ -23,7 +23,7 @@ const SubLevelItemComponent = ({ item }) => {
     const { baseUrl, title, url, titleNNF } = item;
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Hook: Context
     const { INITIATIVE_ID, REPORT_ID } = useContext();

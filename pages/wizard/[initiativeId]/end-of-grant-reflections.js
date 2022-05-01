@@ -5,12 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -29,7 +24,7 @@ const EndOfGrantReflectionsComponent = () => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText, log } = useMetadata();
+    const { labelTodo, valueSet, label, helpText, log } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -95,10 +90,8 @@ const EndOfGrantReflectionsComponent = () => {
                 <Reflection
                     name="Project_Purpose__c"
                     defaultValue={currentReport.Project_Purpose__c}
-                    label={label(
-                        'custom.FA_ReportWizardPurposeReflectionSubHeading'
-                    )}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    label={label('ReportWizardPurposeReflectionSubHeading')}
+                    placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}
@@ -108,10 +101,8 @@ const EndOfGrantReflectionsComponent = () => {
                     defaultValue={
                         currentReport.Progress_Towards_Grant_Area_Themes__c
                     }
-                    label={label(
-                        'custom.FA_ReportWizardProgressReflectionSubHeading'
-                    )}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    label={label('ReportWizardProgressReflectionSubHeading')}
+                    placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}
@@ -119,10 +110,8 @@ const EndOfGrantReflectionsComponent = () => {
                 <Reflection
                     name="Important_Results__c"
                     defaultValue={currentReport.Important_Results__c}
-                    label={label(
-                        'custom.FA_ReportWizardResultsReflectionSubHeading'
-                    )}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    label={label('ReportWizardResultsReflectionSubHeading')}
+                    placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}

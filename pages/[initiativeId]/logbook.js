@@ -6,7 +6,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata, useAuth } from 'utilities/hooks';
+import { useLabels, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -32,7 +32,7 @@ const LogbookComponent = ({ pageProps }) => {
     const [logs, setLogs] = useState([]);
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     useEffect(() => {
         // Make sure data it loaded
@@ -94,7 +94,7 @@ const LogbookComponent = ({ pageProps }) => {
                     <SectionWrapper>
                         <div className="flex justify-between mr-48 md:mr-0">
                             <h1 className="pointer-events-none t-h1">
-                                {label('custom.FA_MenuLogbook')}
+                                {label('MenuLogbook')}
                             </h1>
                             <UpdateButton
                                 mode="initiative"

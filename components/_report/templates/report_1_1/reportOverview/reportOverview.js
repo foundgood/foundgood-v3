@@ -6,7 +6,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
 // Components
@@ -15,7 +15,7 @@ import UpdateButton from 'components/updateButton';
 
 const ReportOverviewComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label, valueSet, getValueLabel } = useMetadata();
+    const { label, valueSet, getValueLabel } = useLabels();
 
     const [developmentGoals, setDevelopmentGoals] = useState();
     const [coApplicants, setCoApplicants] = useState([]);
@@ -119,11 +119,11 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
     );
 
     return (
-        <SectionWrapper id={asId(label('custom.FA_ReportWizardMenuOverview'))}>
+        <SectionWrapper id={asId(label('ReportWizardMenuOverview'))}>
             <SectionWrapper>
                 <div className="flex justify-between">
                     <h3 className="t-h4">
-                        {label('custom.FA_ReportViewHeadingOverview')}
+                        {label('ReportViewHeadingOverview')}
                     </h3>
                     <UpdateButton mode="report" baseUrl="overview" />
                 </div>
@@ -133,13 +133,15 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
             <div className="inline-grid items-start w-full grid-cols-1 md:grid-cols-2 md:gap-24">
                 <div className="p-16 border-4 border-gray-10 rounded-8">
                     <div className="t-sh6 text-blue-60">
-                        {label('custom.FA_InitiativeViewGrantGivingArea')}
+                        {label('InitiativeViewGrantGivingArea')}
                     </div>
                     <h3 className="mt-20 mb-16 t-h5">
                         {initiative.Category__c}
                     </h3>
                     <div className="t-sh6 text-blue-60">
-                        {label('objects.initiativeGoal.Funder_Objective__c')}
+                        {label(
+                            'objects.Initiative_Goal__c.Funder_Objective__c'
+                        )}
                     </div>
                     <h3 className="t-h5">
                         {getValueLabel(
@@ -149,7 +151,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         )}
                     </h3>
                     <div className="mt-16 t-sh6 text-blue-60">
-                        {label('custom.FA_InitiativeViewSDGSs')}
+                        {label('InitiativeViewSDGSs')}
                     </div>
                     <div className="flex flex-col">
                         {developmentGoals &&
@@ -167,13 +169,13 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                                 </h3>
                             ))}
                         {!developmentGoals && (
-                            <div>{label('custom.FA_ReportEmptySDGs')}</div>
+                            <div>{label('ReportEmptySDGs')}</div>
                         )}
                     </div>
                 </div>
                 <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                     <div className="t-sh6 text-blue-60">
-                        {label('custom.FA_ReportViewGrantStartEndDate')}
+                        {label('ReportViewGrantStartEndDate')}
                     </div>
                     <h3 className="t-h5">
                         {dayjs(funder.Grant_Start_Date__c).format('DD.MM.YYYY')}
@@ -181,7 +183,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         {dayjs(funder.Grant_End_Date__c).format('DD.MM.YYYY')}
                     </h3>
                     <div className="mt-16 t-sh6 text-blue-60">
-                        {label('custom.FA_InitiativeViewInitiativeLocation')}
+                        {label('InitiativeViewInitiativeLocation')}
                     </div>
                     {/* Location */}
                     {initiative.Translated_Where_Is_Problem__c && (
@@ -193,12 +195,12 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                     )}
                     {/* Empty state - No Location */}
                     {!initiative.Translated_Where_Is_Problem__c && (
-                        <div>{label('custom.FA_ReportEmptyLocation')}</div>
+                        <div>{label('ReportEmptyLocation')}</div>
                     )}
                 </div>
                 <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                     <div className="t-sh6 text-blue-60">
-                        {label('custom.FA_ReportViewCoFunders')}
+                        {label('ReportViewCoFunders')}
                     </div>
 
                     <div>
@@ -210,11 +212,10 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                                 </h3>
                             ))}
                         {/* Empty state - NO co-funders */}
-                        {coFunders?.length < 1 &&
-                            label('custom.FA_ReportEmptyCoFunders')}
+                        {coFunders?.length < 1 && label('ReportEmptyCoFunders')}
                     </div>
                     <div className="mt-16 t-sh6 text-blue-60">
-                        {label('custom.FA_ReportViewCoApplicants')}
+                        {label('ReportViewCoApplicants')}
                     </div>
                     {/* List of co-applicants */}
                     {coApplicants?.length > 0 && (
@@ -222,19 +223,19 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                     )}
                     {/* Empty state - NO co-applicants */}
                     {coApplicants?.length < 1 && (
-                        <div>{label('custom.FA_ReportEmptyCoApplicants')}</div>
+                        <div>{label('ReportEmptyCoApplicants')}</div>
                     )}
                 </div>
                 {reportFunder && (
                     <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
                         <div className="t-sh6 text-blue-60">
-                            {label('custom.FA_ReportViewAmountByFunder')}{' '}
+                            {label('ReportViewAmountByFunder')}{' '}
                             {reportFunder.name}
                         </div>
                         <h3 className="t-h5">{reportFunder.amount}</h3>
 
                         <div className="mt-16 t-sh6 text-blue-60">
-                            {label('custom.FA_ReportViewShareOfTotalFunding')}
+                            {label('ReportViewShareOfTotalFunding')}
                         </div>
                         <h3 className="t-h5">{reportFunder.share}</h3>
                     </div>

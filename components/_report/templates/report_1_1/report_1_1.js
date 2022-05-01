@@ -8,7 +8,7 @@ import Link from 'next/link';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useLabels, useContext } from 'utilities/hooks';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -33,7 +33,7 @@ import ReportReflection from 'components/_report/templates/report_1_1/reportRefl
 
 const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Hook: Context
     const { INITIATIVE_ID, REPORT_ID } = useContext();
@@ -93,7 +93,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     {/* Headline: "Key changes" */}
                     <SectionWrapper paddingY={false}>
                         <h2 className="t-h3 mt-96">
-                            {label('custom.FA_ReportViewHeadingKeyChanges')}
+                            {label('ReportViewHeadingKeyChanges')}
                         </h2>
                     </SectionWrapper>
 
@@ -160,9 +160,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                         <SectionWrapper paddingY={false}>
                             <SectionWrapper paddingY={false}>
                                 <h2 className="t-h3 mt-96">
-                                    {label(
-                                        'custom.FA_ReportViewHeadingKeyResults'
-                                    )}
+                                    {label('ReportViewHeadingKeyResults')}
                                 </h2>
                             </SectionWrapper>
                         </SectionWrapper>
@@ -227,7 +225,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 className="mt-32"
                                 hasBackground={true}
                                 headline={label(
-                                    'objects.initiativeReport.Post_Project_Activities__c'
+                                    'objects.Initiative__c.Post_Project_Activities__c'
                                 )}
                                 body={report.Post_Project_Activities__c}
                             />
@@ -239,7 +237,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                             <SectionEmpty
                                 type="report"
                                 headline={label(
-                                    'objects.initiativeReport.Post_Project_Activities__c'
+                                    'objects.Initiative__c.Post_Project_Activities__c'
                                 )}
                             />
                         </SectionWrapper>
@@ -248,15 +246,13 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     <SectionWrapper>
                         <SectionWrapper>
                             <h3 className="mt-32 t-h4">
-                                {label(
-                                    'custom.FA_ReportViewSubHeadingLogAdditional'
-                                )}
+                                {label('ReportViewSubHeadingLogAdditional')}
                             </h3>
                             <p className="mt-32 t-small">
                                 <Link href={`/${INITIATIVE_ID}/logbook`}>
                                     <a className="underline">
                                         {label(
-                                            'custom.FA_ReportViewSubHeadingLogAdditionalSubHeading'
+                                            'ReportViewSubHeadingLogAdditionalSubHeading'
                                         )}
                                     </a>
                                 </Link>

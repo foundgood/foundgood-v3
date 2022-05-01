@@ -5,12 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -29,7 +24,7 @@ const RisksAndChallengesComponent = () => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText, log } = useMetadata();
+    const { labelTodo, valueSet, label, helpText, log } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
@@ -92,10 +87,8 @@ const RisksAndChallengesComponent = () => {
                 <Reflection
                     name="Summary_Of_Initiative_Risks__c"
                     defaultValue={currentReport.Summary_Of_Initiative_Risks__c}
-                    label={label(
-                        'custom.FA_ReportWizardChallengesReflectionSubHeading'
-                    )}
-                    placeholder={label('custom.FA_FormCaptureTextEntryEmpty')}
+                    label={label('ReportWizardChallengesReflectionSubHeading')}
+                    placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
                     controller={control}

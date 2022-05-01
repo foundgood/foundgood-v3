@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata, useAuth } from 'utilities/hooks';
+import { useLabels, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { isJson, stripUndefined } from 'utilities';
 
@@ -27,7 +27,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, getValueLabel, log } = useMetadata();
+    const { label, getValueLabel, log } = useLabels();
 
     const [activities, setActivities] = useState();
 
@@ -130,16 +130,12 @@ const ActivitiesComponent = ({ pageProps }) => {
             {initiative?.Id && (
                 <div className="animate-fade-in">
                     <SectionWrapper>
-                        <div className="t-h1">
-                            {label('custom.FA_MenuActivities')}
-                        </div>
+                        <div className="t-h1">{label('MenuActivities')}</div>
                     </SectionWrapper>
                     <SectionWrapper className="bg-white mb-128 rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
-                                {label(
-                                    'custom.FA_InitiativeViewActivitiesHeading'
-                                )}
+                                {label('InitiativeViewActivitiesHeading')}
                             </h2>
                             <UpdateButton
                                 mode="initiative"
@@ -156,7 +152,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         items={[
                                             {
                                                 label: label(
-                                                    'custom.FA_InitiativeViewActivityLocation'
+                                                    'InitiativeViewActivityLocation'
                                                 ),
                                                 text: getValueLabel(
                                                     'initiativeActivity.Initiative_Location__c',
@@ -169,7 +165,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         <>
                                             <div className="mt-32 t-h6">
                                                 {label(
-                                                    'custom.FA_InitiativeViewActivityType'
+                                                    'InitiativeViewActivityType'
                                                 )}
                                             </div>
                                             <div className="flex flex-col items-start">
@@ -189,7 +185,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         <>
                                             <div className="mt-32 t-h5">
                                                 {label(
-                                                    'custom.FA_InitiativeViewActivityIndicators'
+                                                    'InitiativeViewActivityIndicators'
                                                 )}
                                             </div>
 
@@ -210,7 +206,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         <>
                                             <div className="mt-32 t-h5">
                                                 {label(
-                                                    'custom.FA_InitiativeViewActivityRelatedGoals'
+                                                    'InitiativeViewActivityRelatedGoals'
                                                 )}
                                             </div>
                                             {item.relatedGoals.map(

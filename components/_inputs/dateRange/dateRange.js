@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 import 'react-day-picker/lib/style.css';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 const DateRangeComponent = ({
     controller,
@@ -29,7 +29,7 @@ const DateRangeComponent = ({
     }, [defaultValue]);
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Local state for handling dates
     const [from, setFrom] = useState(defaultValue.from);
@@ -76,7 +76,7 @@ const DateRangeComponent = ({
                     ])}>
                     <div className="flex flex-col flex-grow">
                         <span className="mb-4 input-utility-text">
-                            {label('custom.FA_FormCaptureDateRangeFrom')}
+                            {label('FormCaptureDateRangeFrom')}
                         </span>
                         <DayPickerInput
                             inputProps={{ disabled }}
@@ -108,7 +108,7 @@ const DateRangeComponent = ({
                     </div>
                     <div className="flex flex-col flex-grow">
                         <span className="mb-4 input-utility-text">
-                            {label('custom.FA_FormCaptureDateRangeTo')}
+                            {label('FormCaptureDateRangeTo')}
                         </span>
                         <DayPickerInput
                             inputProps={{ disabled: disabled || !from }}

@@ -5,14 +5,14 @@ import React from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Components
 import { Number, InputWrapper } from 'components/_inputs';
 
 const ProgressCardComponent = ({ headline, items, controller }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     return controller ? (
         <div className="p-16 max-w-[600px] rounded-8 bg-teal-10 text-teal-100">
@@ -40,7 +40,7 @@ const ProgressCardComponent = ({ headline, items, controller }) => {
                                     <Number
                                         name={item.id}
                                         subLabel={label(
-                                            'custom.FA_ReportViewActivitiesGraphKeyDuring'
+                                            'ReportViewActivitiesGraphKeyDuring'
                                         )}
                                         placeholder={item.currently}
                                         controller={controller}

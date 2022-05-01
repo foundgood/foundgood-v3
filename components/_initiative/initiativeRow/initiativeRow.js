@@ -9,7 +9,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Icons
@@ -28,7 +28,7 @@ const InitiativeRowComponent = ({
     reports,
 }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // State: Reports
     const [sortedReports, setSortedReports] = useState([]);
@@ -107,7 +107,7 @@ const InitiativeRowComponent = ({
                             {otherFunders > 0 && (
                                 <span>
                                     + {otherFunders}{' '}
-                                    {label('custom.FA_ReportManagerCardOthers')}
+                                    {label('ReportManagerCardOthers')}
                                 </span>
                             )}
                         </div>
@@ -117,9 +117,7 @@ const InitiativeRowComponent = ({
                     {nextReport && (
                         <div className="p-8 space-y-4 border-4 sm:w-2/5 md:w-auto border-amber-20 rounded-4">
                             <div className="t-sh7 text-teal-60">
-                                {label(
-                                    'custom.FA_InitiativeManagerCardDeadline'
-                                )}
+                                {label('InitiativeManagerCardDeadline')}
                                 <span className="px-6 pt-3 pb-1 ml-4 t-sh7 text-teal-60 bg-teal-10 rounded-4">
                                     {nextReport.Report_Type__c}
                                 </span>
@@ -136,9 +134,7 @@ const InitiativeRowComponent = ({
                                     {nextReport.dueDate}
                                     {nextReport.overdue && (
                                         <span className="px-6 pt-3 pb-1 ml-4 t-sh7 text-coral-100 bg-coral-20 rounded-4">
-                                            {label(
-                                                'custom.FA_InitiativeManagerCardDue'
-                                            )}
+                                            {label('InitiativeManagerCardDue')}
                                         </span>
                                     )}
                                 </span>
@@ -148,7 +144,7 @@ const InitiativeRowComponent = ({
                     {startDate && endDate && (
                         <div className="p-8 space-y-4 border-4 sm:w-2/5 md:w-auto border-amber-20 rounded-4">
                             <div className="t-sh7 text-blue-60">
-                                {label('custom.FA_InitiativeManagerCardPeriod')}
+                                {label('InitiativeManagerCardPeriod')}
                             </div>
                             <div className="text-blue-100 t-caption-bold">
                                 <span className="mr-8">

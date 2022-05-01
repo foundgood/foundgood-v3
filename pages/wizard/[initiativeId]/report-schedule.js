@@ -6,7 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -29,7 +29,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { labelTodo, valueSet, label, helpText, log } = useMetadata();
+    const { labelTodo, valueSet, label, helpText, log } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -180,44 +180,40 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         );
                     })
                 ) : (
-                    <p className="t-h5">
-                        {label('custom.FA_WizardEmptyStatesReports')}
-                    </p>
+                    <p className="t-h5">{label('WizardEmptyStatesReports')}</p>
                 )}
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingReports')}
+                title={label('WizardModalHeadingReports')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
                         name="Report_Type__c"
-                        label={label('objects.initiativeReport.Report_Type__c')}
+                        label={label('objects.Initiative__c.Report_Type__c')}
                         subLabel={helpText(
-                            'objects.initiativeReport.Report_Type__c'
+                            'objects.Initiative__c.Report_Type__c'
                         )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
+                        placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet('initiativeReport.Report_Type__c')}
                         controller={control}
                         required
                     />
                     <DatePicker
                         name="Due_Date__c"
-                        label={label('objects.initiativeReport.Due_Date__c')}
-                        subLabel={helpText(
-                            'objects.initiativeReport.Due_Date__c'
-                        )}
+                        label={label('objects.Initiative__c.Due_Date__c')}
+                        subLabel={helpText('objects.Initiative__c.Due_Date__c')}
                         controller={control}
                         required
                     />
                     <DateRange
                         name="ReportDates"
                         label={`${label(
-                            'objects.initiativeReport.Report_Period_Start_Date__c'
+                            'objects.Initiative__c.Report_Period_Start_Date__c'
                         )} / ${label(
-                            'objects.initiativeReport.Report_Period_End_Date__c'
+                            'objects.Initiative__c.Report_Period_End_Date__c'
                         )}`}
                         controller={control}
                     />

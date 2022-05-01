@@ -7,12 +7,7 @@ import _get from 'lodash.get';
 import dayjs from 'dayjs';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -38,7 +33,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // Hook: Metadata
-    const { getValueLabel, valueSet, log, label, helpText } = useMetadata();
+    const { getValueLabel, valueSet, log, label, helpText } = useLabels();
 
     // Context for wizard pages
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
@@ -452,7 +447,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                         : null
                                 }
                                 input={label(
-                                    'custom.FA_ReportWizardSharingReflectionSubHeading'
+                                    'ReportWizardSharingReflectionSubHeading'
                                 )}
                             />
                         );
@@ -464,12 +459,12 @@ const SharingResultsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddResult')}
+                    {label('ButtonAddResult')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingSharing')}
+                title={label('WizardModalHeadingSharing')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
@@ -477,14 +472,12 @@ const SharingResultsComponent = ({ pageProps }) => {
                     <Text
                         name="Things_To_Do__c"
                         label={label(
-                            'objects.initiativeActivity.Things_To_Do__c'
+                            'objects.Initiative_Activity__c.Things_To_Do__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeActivity.Things_To_Do__c'
+                            'objects.Initiative_Activity__c.Things_To_Do__c'
                         )}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={200}
                         controller={control}
                         required
@@ -493,12 +486,12 @@ const SharingResultsComponent = ({ pageProps }) => {
                     <Select
                         name="Dissemination_Method__c"
                         label={label(
-                            'objects.initiativeActivity.Dissemination_Method__c'
+                            'objects.Initiative_Activity__c.Dissemination_Method__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeActivity.Dissemination_Method__c'
+                            'objects.Initiative_Activity__c.Dissemination_Method__c'
                         )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
+                        placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeActivity.Dissemination_Method__c'
                         )}
@@ -509,18 +502,16 @@ const SharingResultsComponent = ({ pageProps }) => {
                     <SelectList
                         name="Audience_Tag__c"
                         label={label(
-                            'objects.initiativeActivity.Audience_Tag__c'
+                            'objects.Initiative_Activity__c.Audience_Tag__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeActivity.Audience_Tag__c'
+                            'objects.Initiative_Activity__c.Audience_Tag__c'
                         )}
-                        selectPlaceholder={label(
-                            'custom.FA_FormCaptureSelectEmpty'
-                        )}
+                        selectPlaceholder={label('FormCaptureSelectEmpty')}
                         options={valueSet('initiativeActivity.Audience_Tag__c')}
                         listMaxLength={4}
                         controller={control}
-                        buttonLabel={label('custom.FA_ButtonAddAudienceTag')}
+                        buttonLabel={label('ButtonAddAudienceTag')}
                         required
                     />
 
@@ -530,14 +521,12 @@ const SharingResultsComponent = ({ pageProps }) => {
                             <Text
                                 name="Publication_Type__c"
                                 label={label(
-                                    'objects.initiativeActivity.Publication_Type__c'
+                                    'objects.Initiative_Activity__c.Publication_Type__c'
                                 )}
                                 subLabel={helpText(
-                                    'objects.initiativeActivity.Publication_Type__c'
+                                    'objects.Initiative_Activity__c.Publication_Type__c'
                                 )}
-                                placeholder={label(
-                                    'custom.FA_FormCaptureTextEntryEmpty'
-                                )}
+                                placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={30}
                                 controller={control}
                             />
@@ -545,10 +534,10 @@ const SharingResultsComponent = ({ pageProps }) => {
                             <Select
                                 name="Publication_Year__c"
                                 label={label(
-                                    'objects.initiativeActivity.Publication_Year__c'
+                                    'objects.Initiative_Activity__c.Publication_Year__c'
                                 )}
                                 subLabel={helpText(
-                                    'objects.initiativeActivity.Publication_Year__c'
+                                    'objects.Initiative_Activity__c.Publication_Year__c'
                                 )}
                                 options={getYears()}
                                 controller={control}
@@ -556,56 +545,48 @@ const SharingResultsComponent = ({ pageProps }) => {
                             <Text
                                 name="Publication_Title__c"
                                 label={label(
-                                    'objects.initiativeActivity.Publication_Title__c'
+                                    'objects.Initiative_Activity__c.Publication_Title__c'
                                 )}
                                 subLabel={helpText(
-                                    'objects.initiativeActivity.Publication_Title__c'
+                                    'objects.Initiative_Activity__c.Publication_Title__c'
                                 )}
-                                placeholder={label(
-                                    'custom.FA_FormCaptureTextEntryEmpty'
-                                )}
+                                placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={200}
                                 controller={control}
                             />
                             <Text
                                 name="Publication_Publisher__c"
                                 label={label(
-                                    'objects.initiativeActivity.Publication_Publisher__c'
+                                    'objects.Initiative_Activity__c.Publication_Publisher__c'
                                 )}
                                 subLabel={helpText(
-                                    'objects.initiativeActivity.Publication_Publisher__c'
+                                    'objects.Initiative_Activity__c.Publication_Publisher__c'
                                 )}
-                                placeholder={label(
-                                    'custom.FA_FormCaptureTextEntryEmpty'
-                                )}
+                                placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={200}
                                 controller={control}
                             />
                             <Text
                                 name="Publication_Author__c"
                                 label={label(
-                                    'objects.initiativeActivity.Publication_Author__c'
+                                    'objects.Initiative_Activity__c.Publication_Author__c'
                                 )}
                                 subLabel={helpText(
-                                    'objects.initiativeActivity.Publication_Author__c'
+                                    'objects.Initiative_Activity__c.Publication_Author__c'
                                 )}
-                                placeholder={label(
-                                    'custom.FA_FormCaptureTextEntryEmpty'
-                                )}
+                                placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={80}
                                 controller={control}
                             />
                             <Text
                                 name="Publication_DOI__c"
                                 label={label(
-                                    'objects.initiativeActivity.Publication_DOI__c'
+                                    'objects.Initiative_Activity__c.Publication_DOI__c'
                                 )}
                                 subLabel={helpText(
-                                    'objects.initiativeActivity.Publication_DOI__c'
+                                    'objects.Initiative_Activity__c.Publication_DOI__c'
                                 )}
-                                placeholder={label(
-                                    'custom.FA_FormCaptureTextEntryEmpty'
-                                )}
+                                placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={30}
                                 controller={control}
                             />

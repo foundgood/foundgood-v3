@@ -8,7 +8,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useContext } from 'utilities/hooks';
 // Icon
 import { FiFileText } from 'react-icons/fi';
@@ -24,7 +24,7 @@ const ReportCardComponent = ({
     const { INITIATIVE_ID } = useContext();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
     const url = `/${INITIATIVE_ID}/reports/${id}`;
 
     return (
@@ -53,8 +53,8 @@ const ReportCardComponent = ({
                 <div className="mt-8 text-teal-100 t-h5">{headline}</div>
                 <div className="text-teal-60 t-sh6">
                     {status == 'Published'
-                        ? label('custom.FA_InitiativeViewReportSubmitted')
-                        : label('custom.FA_InitiativeViewReportDue')}{' '}
+                        ? label('InitiativeViewReportSubmitted')
+                        : label('InitiativeViewReportDue')}{' '}
                     {dayjs(date).format('DD.MM.YYYY')}
                 </div>
                 {/* <div className="self-end mt-16">
@@ -62,7 +62,7 @@ const ReportCardComponent = ({
                         theme="teal"
                         variant="quaternary"
                         action={actionUpdate}>
-                        {label('custom.FA_Update')}
+                        {label('Update')}
                     </Button>
                 </div> */}
             </a>

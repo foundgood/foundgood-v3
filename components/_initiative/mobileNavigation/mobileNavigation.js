@@ -6,7 +6,7 @@ import cc from 'classcat';
 
 // Utilities
 import { useInitiativeLayoutStore } from 'utilities/store';
-import { useResponsive, useMetadata, useContext } from 'utilities/hooks';
+import { useResponsive, useLabels, useContext } from 'utilities/hooks';
 
 // Components
 import ActiveLink from 'components/activeLink';
@@ -32,7 +32,7 @@ const MobileNavigationComponent = () => {
     } = useInitiativeLayoutStore();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Open/Close submenu
     const [subMenuActive, setSubMenuActive] = useState(false);

@@ -6,12 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useMetadata,
-    useSalesForce,
-    useContext,
-} from 'utilities/hooks';
+import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -34,7 +29,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label, helpText } = useMetadata();
+    const { labelTodo, label, helpText } = useLabels();
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -244,7 +239,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                             : item?.Description__c,
                                 }}
                                 inputLabel={label(
-                                    'custom.FA_ReportWizardInfluencesReflectionSubHeading'
+                                    'ReportWizardInfluencesReflectionSubHeading'
                                 )}
                             />
                         );
@@ -256,7 +251,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddInfluence')}
+                    {label('ButtonAddInfluence')}
                 </Button>
             </InputWrapper>
             <Modal
@@ -269,14 +264,12 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                     <Text
                         name="Type_Of_Influence__c"
                         label={label(
-                            'objects.initiativeReportDetail.Type_Of_Influence__c'
+                            'objects.Initiative__c.Detail.Type_Of_Influence__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeReportDetail.Type_Of_Influence__c'
+                            'objects.Initiative__c.Detail.Type_Of_Influence__c'
                         )}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={80}
                         controller={control}
                         required

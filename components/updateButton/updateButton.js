@@ -6,12 +6,7 @@ import t from 'prop-types';
 import { useRouter } from 'next/router';
 
 // Utilities
-import {
-    useMetadata,
-    useContext,
-    useAuth,
-    useSalesForce,
-} from 'utilities/hooks';
+import { useLabels, useContext, useAuth, useSalesForce } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -25,7 +20,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
     const router = useRouter();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Hook: Salesforce setup
     const { sfUpdate } = useSalesForce();
@@ -95,7 +90,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
                             ? reportInProgress
                             : `/wizard/${INITIATIVE_ID}/${baseUrl}/update`
                     }>
-                    {label('custom.FA_Update')}
+                    {label('Update')}
                 </Button>
             )}
         </>

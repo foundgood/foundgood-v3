@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import cc from 'classcat';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useWizardNavigationStore } from 'utilities/store';
 
 // Components
@@ -19,7 +19,7 @@ const UpdateBottomNavigationComponent = () => {
     const [loading, setLoading] = useState(false);
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Store: Wizard navigation
     const { handleSubmit, onUrlOrContextChange } = useWizardNavigationStore();
@@ -51,7 +51,7 @@ const UpdateBottomNavigationComponent = () => {
         <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
             <div className="flex items-center justify-between w-full">
                 <Button theme="coral" variant="secondary" action={router.back}>
-                    {label('custom.FA_ButtonExit')}
+                    {label('ButtonExit')}
                 </Button>
                 <p
                     className={cc([
@@ -60,11 +60,14 @@ const UpdateBottomNavigationComponent = () => {
                             'opacity-100': loading,
                         },
                     ])}>
-                    {label('custom.FA_MessageSaved')}
+                    {label('MessageSaved')}
                 </p>
                 <div className="flex space-x-12">
-                    <Button theme="coral" action={onHandleSave} disabled={loading}>
-                        {label('custom.FA_ButtonSave')}
+                    <Button
+                        theme="coral"
+                        action={onHandleSave}
+                        disabled={loading}>
+                        {label('ButtonSave')}
                     </Button>
                 </div>
             </div>

@@ -8,7 +8,7 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useMetadata,
+    useLabels,
     useElseware,
     useContext,
     useReflections,
@@ -49,7 +49,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, valueSet, helpText } = useMetadata();
+    const { label, valueSet, helpText } = useLabels();
     const { ewGet, ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -278,7 +278,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                                         : reflection[0]?.Description__c,
                             }}
                             inputLabel={label(
-                                'custom.FA_ReportWizardCollaboratorReflectionSubHeading'
+                                'ReportWizardCollaboratorReflectionSubHeading'
                             )}
                         />
                     ) : null;
@@ -290,12 +290,12 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddCollaborator')}
+                    {label('ButtonAddCollaborator')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingCollaborators')}
+                title={label('WizardModalHeadingCollaborators')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={handleSubmit(submit)}>
@@ -303,12 +303,12 @@ const CollaboratorsComponent = ({ pageProps }) => {
                     <Select
                         name="Account__c"
                         label={label(
-                            'objects.initiativeCollaborator.Account__c'
+                            'objects.Initiative_Collaborator__c.Account__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeCollaborator.Account__c'
+                            'objects.Initiative_Collaborator__c.Account__c'
                         )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
+                        placeholder={label('FormCaptureSelectEmpty')}
                         options={
                             accountOrganisations
                                 ? Object.values(accountOrganisations?.data)
@@ -330,11 +330,13 @@ const CollaboratorsComponent = ({ pageProps }) => {
                     />
                     <Select
                         name="Type__c"
-                        label={label('objects.initiativeCollaborator.Type__c')}
-                        subLabel={helpText(
-                            'objects.initiativeCollaborator.Type__c'
+                        label={label(
+                            'objects.Initiative_Collaborator__c.Type__c'
                         )}
-                        placeholder={label('custom.FA_FormCaptureSelectEmpty')}
+                        subLabel={helpText(
+                            'objects.Initiative_Collaborator__c.Type__c'
+                        )}
+                        placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet(
                             'initiativeCollaborator.Type__c'
                         ).filter(item =>
@@ -348,23 +350,21 @@ const CollaboratorsComponent = ({ pageProps }) => {
                     <LongText
                         name="Description__c"
                         label={label(
-                            'objects.initiativeCollaborator.Description__c'
+                            'objects.Initiative_Collaborator__c.Description__c'
                         )}
                         subLabel={helpText(
-                            'objects.initiativeCollaborator.Description__c'
+                            'objects.Initiative_Collaborator__c.Description__c'
                         )}
-                        placeholder={label(
-                            'custom.FA_FormCaptureTextEntryEmpty'
-                        )}
+                        placeholder={label('FormCaptureTextEntryEmpty')}
                         controller={control}
                         required
                     />
                     <DateRange
                         name="Dates"
                         label={`${label(
-                            'objects.initiativeCollaborator.Start_Date__c'
+                            'objects.Initiative_Collaborator__c.Start_Date__c'
                         )} / ${label(
-                            'objects.initiativeCollaborator.End_Date__c'
+                            'objects.Initiative_Collaborator__c.End_Date__c'
                         )}`}
                         controller={control}
                     />

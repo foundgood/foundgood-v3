@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 // Utilities
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useLabels, useContext } from 'utilities/hooks';
 import { useReportLayoutStore } from 'utilities/store';
 
 // Components
@@ -27,7 +27,7 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
     const { INITIATIVE_ID } = useContext();
 
     // Hook: Metadata
-    const { labelTodo, label } = useMetadata();
+    const { labelTodo, label } = useLabels();
 
     // Store: ReportLayout
     const { toggleLeftMenu } = useReportLayoutStore();
@@ -153,9 +153,7 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
                                 // hasRounded={false}
                                 className="mt-24"
                                 hasBackground={true}
-                                headline={label(
-                                    'custom.FA_ReportViewHeadingSummary'
-                                )}
+                                headline={label('ReportViewHeadingSummary')}
                                 body={summary}
                             />
                         )}
@@ -165,7 +163,7 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
                                 hasBackground={true}
                                 headline={labelTodo('Achievements')}
                                 // headline={label(
-                                //     'custom.FA_ReportViewHeadingSummary'
+                                //     'ReportViewHeadingSummary'
                                 // )}
                                 body={achievement}
                             />
@@ -217,9 +215,7 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
                         {files && (
                             <SectionWrapper>
                                 <h2 className="mt-48 t-h4">
-                                    {label(
-                                        'custom.FA_ReportViewSubHeadingLogAdditional'
-                                    )}
+                                    {label('ReportViewSubHeadingLogAdditional')}
                                 </h2>
                                 {files.map((item, index) => (
                                     <a

@@ -8,7 +8,7 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useMetadata,
+    useLabels,
     useElseware,
     useContext,
     useReflections,
@@ -49,7 +49,7 @@ const FundersComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, helpText, valueSet } = useMetadata();
+    const { label, helpText, valueSet } = useLabels();
     const { ewGet, ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -221,13 +221,13 @@ const FundersComponent = ({ pageProps }) => {
         {
             type: 'Select',
             name: 'Account__c',
-            label: label('objects.initiativeFunder.Account__c'),
+            label: label('objects.Initiative_Funder__c.Account__c'),
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             required: true,
             // Type options
-            subLabel: helpText('objects.initiativeFunder.Account__c'),
+            subLabel: helpText('objects.Initiative_Funder__c.Account__c'),
             options: accountFoundations
                 ? Object.values(accountFoundations?.data).map(item => ({
                       label: item.Name,
@@ -238,19 +238,19 @@ const FundersComponent = ({ pageProps }) => {
         {
             type: 'Select',
             name: 'Type__c',
-            label: label('objects.initiativeFunder.Type__c'),
+            label: label('objects.Initiative_Funder__c.Type__c'),
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             required: true,
             // Type options
-            subLabel: helpText('objects.initiativeFunder.Type__c'),
+            subLabel: helpText('objects.Initiative_Funder__c.Type__c'),
             options: valueSet('initiativeFunder.Type__c'),
         },
         {
             type: 'SelectList',
             name: 'Contribution',
-            label: label('objects.initiativeFunder.Amount__c'),
+            label: label('objects.Initiative_Funder__c.Amount__c'),
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
@@ -261,15 +261,15 @@ const FundersComponent = ({ pageProps }) => {
                 { label: 'DKK', value: 'DKK' },
                 { label: 'EUR', value: 'EUR' },
             ],
-            selectPlaceholder: label('custom.FA_FormCaptureSelectEmpty'),
-            subLabel: helpText('objects.initiativeFunder.Amount__c'),
+            selectPlaceholder: label('FormCaptureSelectEmpty'),
+            subLabel: helpText('objects.Initiative_Funder__c.Amount__c'),
         },
         {
             type: 'DateRange',
             name: 'GrantDate',
             label: `${label(
-                'objects.initiativeFunder.Grant_Start_Date__c'
-            )} / ${label('objects.initiativeFunder.Grant_End_Date__c')}`,
+                'objects.Initiative_Funder__c.Grant_Start_Date__c'
+            )} / ${label('objects.Initiative_Funder__c.Grant_End_Date__c')}`,
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
@@ -277,13 +277,15 @@ const FundersComponent = ({ pageProps }) => {
         {
             type: 'Text',
             name: 'Application_Id__c',
-            label: label('objects.initiativeFunder.Application_Id__c'),
+            label: label('objects.Initiative_Funder__c.Application_Id__c'),
             disabled:
                 utilities.isNovoLeadFunder() &&
                 funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             // Type options
             maxLength: 15,
-            subLabel: helpText('objects.initiativeFunder.Application_Id__c'),
+            subLabel: helpText(
+                'objects.Initiative_Funder__c.Application_Id__c'
+            ),
         },
     ];
 
@@ -326,12 +328,12 @@ const FundersComponent = ({ pageProps }) => {
                         setUpdateId(null);
                         setModalIsOpen(true);
                     }}>
-                    {label('custom.FA_ButtonAddFunder')}
+                    {label('ButtonAddFunder')}
                 </Button>
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={label('custom.FA_WizardModalHeadingFunders')}
+                title={label('WizardModalHeadingFunders')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
@@ -402,9 +404,7 @@ const RenderFunderCard = ({
                             ? ''
                             : reflection[0]?.Description__c,
                 }}
-                inputLabel={label(
-                    'custom.FA_ReportWizardFunderReflectionSubHeading'
-                )}
+                inputLabel={label('ReportWizardFunderReflectionSubHeading')}
             />
         );
     });

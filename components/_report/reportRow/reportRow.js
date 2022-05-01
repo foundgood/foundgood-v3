@@ -7,7 +7,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 
 // Icons
 import { FiFileText } from 'react-icons/fi';
@@ -24,7 +24,7 @@ const ReportRowComponent = ({
     dueDate,
 }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
     return (
         <Link href={`/${initiativeId}/reports/${reportId}`}>
             <a className="flex flex-col justify-between p-16 mt-24 bg-white cursor-pointer md:flex-row rounded-8">
@@ -49,7 +49,7 @@ const ReportRowComponent = ({
                     {dueDate && (
                         <div className="p-8 space-y-4 border-4 sm:w-2/5 md:w-auto border-amber-20 rounded-4">
                             <div className="t-sh7 text-blue-60">
-                                {label('custom.FA_ReportManagerCardDeadline')}
+                                {label('ReportManagerCardDeadline')}
                             </div>
                             <div className="text-blue-100 t-caption-bold">
                                 <span className="mr-8">
@@ -61,7 +61,7 @@ const ReportRowComponent = ({
                     {status && (
                         <div className="p-8 space-y-4 border-4 sm:w-2/5 md:w-auto border-amber-20 rounded-4">
                             <div className="t-sh7 text-blue-60">
-                                {label('custom.FA_ReportManagerCardStatus')}
+                                {label('ReportManagerCardStatus')}
                             </div>
                             <div className="text-teal-100 t-caption-bold">
                                 <div className="inline-block px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">

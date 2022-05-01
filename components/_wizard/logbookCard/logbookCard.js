@@ -6,7 +6,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useMetadata } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -20,7 +20,7 @@ const LogbookCardsComponent = ({
     disableCreate,
 }) => {
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     const { utilities } = useInitiativeDataStore();
 
@@ -37,7 +37,7 @@ const LogbookCardsComponent = ({
                         theme="teal"
                         variant="primary"
                         action={actionCreate}>
-                        {label('custom.FA_ButtonAddLogEntry')}
+                        {label('ButtonAddLogEntry')}
                     </Button>
                 )}
             </div>
@@ -100,7 +100,7 @@ const LogbookCardsComponent = ({
                                         theme="teal"
                                         variant="quaternary"
                                         action={() => actionUpdate(item)}>
-                                        {label('custom.FA_Update')}
+                                        {label('Update')}
                                     </Button>
                                 </div>
                             </div>

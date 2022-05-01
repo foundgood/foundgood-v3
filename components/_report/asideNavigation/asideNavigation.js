@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import Scrollspy from 'react-scrollspy';
 
 // Utilities
-import { useMetadata, useContext } from 'utilities/hooks';
+import { useLabels, useContext } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useReportNavigationStore,
@@ -18,7 +18,7 @@ const AsideNavigationComponent = () => {
     const { REPORT_ID } = useContext();
 
     // Hook: Metadata
-    const { getValueLabel, label } = useMetadata();
+    const { getValueLabel, label } = useLabels();
 
     // Store: Initiative data
     const { initiative, utilities } = useInitiativeDataStore();
@@ -45,7 +45,7 @@ const AsideNavigationComponent = () => {
                             {`${getValueLabel(
                                 'initiativeReport.Report_Type__c',
                                 initiative._reports[REPORT_ID]?.Report_Type__c
-                            )} ${label('custom.FA_TitleReport')} ${dayjs(
+                            )} ${label('TitleReport')} ${dayjs(
                                 initiative._reports[REPORT_ID]?.Due_Date__c
                             ).format('YYYY')}`}
                         </h2>

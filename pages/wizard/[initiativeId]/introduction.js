@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Utilities
-import { useAuth, useMetadata, useElseware, useContext } from 'utilities/hooks';
+import { useAuth, useLabels, useElseware, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -23,7 +23,7 @@ const IntroductionComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Hook: elseware setup
     const { ewCreate } = useElseware();
@@ -87,11 +87,9 @@ const IntroductionComponent = ({ pageProps }) => {
     useEffect(() => {
         let bodyTexts;
         if (MODE === CONTEXTS.REPORT) {
-            bodyTexts = label('custom.FA_ReportWizardWelcomeMain')?.split('\n');
+            bodyTexts = label('ReportWizardWelcomeMain')?.split('\n');
         } else {
-            bodyTexts = label('custom.FA_InitiativeWizardWelcomeMain')?.split(
-                '\n'
-            );
+            bodyTexts = label('InitiativeWizardWelcomeMain')?.split('\n');
         }
         bodyTexts = bodyTexts === undefined ? [] : bodyTexts;
         setBodyTexts(bodyTexts);
@@ -100,8 +98,8 @@ const IntroductionComponent = ({ pageProps }) => {
     return MODE === CONTEXTS.REPORT ? (
         <>
             <TitlePreamble
-                title={label('custom.FA_ReportWizardWelcomeHeading')}
-                preamble={label('custom.FA_ReportWizardWelcomeSubHeading')}
+                title={label('ReportWizardWelcomeHeading')}
+                preamble={label('ReportWizardWelcomeSubHeading')}
             />
             <div className="flex justify-center">
                 <Image src="/images/new-report.png" width="600" height="471" />
@@ -122,8 +120,8 @@ const IntroductionComponent = ({ pageProps }) => {
     ) : (
         <>
             <TitlePreamble
-                title={label('custom.FA_InitiativeWizardWelcomeHeading')}
-                preamble={label('custom.FA_InitiativeWizardWelcomeSubHeading')}
+                title={label('InitiativeWizardWelcomeHeading')}
+                preamble={label('InitiativeWizardWelcomeSubHeading')}
             />
             <div className="flex justify-center my-64">
                 <Image

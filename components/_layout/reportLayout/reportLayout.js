@@ -7,12 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useReportLayoutStore } from 'utilities/store';
-import {
-    useResponsive,
-    useMetadata,
-    useContext,
-    useAuth,
-} from 'utilities/hooks';
+import { useResponsive, useLabels, useContext, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -31,7 +26,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
     const { populateInitiative } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label } = useMetadata();
+    const { label } = useLabels();
 
     // Hook: Context
     const { INITIATIVE_ID } = useContext();
@@ -88,7 +83,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
                         variant="secondary"
                         className="self-start hidden xl:flex"
                         action={`/${INITIATIVE_ID}/reports`}>
-                        {label('custom.FA_ButtonBackReports')}
+                        {label('ButtonBackReports')}
                     </Button>
                 </div>
 
@@ -107,7 +102,7 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
                         action={() => toggleLeftMenu(true)}
                     />
                     <Button variant="secondary">
-                        {label('custom.FA_ButtonBackReports')}
+                        {label('ButtonBackReports')}
                     </Button>
                 </div>
                 {/* Wizard status */}

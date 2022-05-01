@@ -7,7 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useWizardLayoutStore, useInitiativeDataStore } from 'utilities/store';
-import { useResponsive, useMetadata, useContext } from 'utilities/hooks';
+import { useResponsive, useLabels, useContext } from 'utilities/hooks';
 
 // Components
 import IconButton from 'components/iconButton';
@@ -41,7 +41,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, log } = useMetadata();
+    const { label, log } = useLabels();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -126,7 +126,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                     action={() => {
                         toggleRightMenu(false);
                     }}>
-                    {label('custom.FA_ButtonCloseHelp')}
+                    {label('ButtonCloseHelp')}
                 </Button>
                 {/* Help content */}
                 <div className="mt-32 overflow-y-auto scrolling-touch">
@@ -165,7 +165,7 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
                                 toggleRightMenu(true);
                             }
                         }}>
-                        {label('custom.FA_ButtonHelp')}
+                        {label('ButtonHelp')}
                     </Button>
                 )}
             </div>
