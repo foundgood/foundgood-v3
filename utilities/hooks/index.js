@@ -5,6 +5,7 @@ import useSalesForce from './useSalesForce';
 import useContext from './useContext';
 import useElseware from './useElseware';
 import useReflections from './useReflections';
+import useLabels from './useLabels';
 
 export {
     useElseware,
@@ -14,4 +15,5 @@ export {
     useSalesForce,
     useContext,
     useReflections,
+    useLabels,
 };

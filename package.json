@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "metadata": "run-func ./utilities/metadata/extract extractToJsonFile",
-    "dev": "yarn metadata; next dev",
+    "labels": "run-func ./utilities/labels/writeLabels extractToJsonFile",
+    "dev": "yarn metadata; yarn labels; next dev",
     "build": "yarn metadata; next build",
     "start": "next start",
     "test-api": "curl -v https://foundgood.remotely.sh/api/foundgood/initiativeReportSnapshotTest"
@@ -25,6 +26,7 @@
     "dotenv": "^9.0.2",
     "fast-xml-parser": "^4.0.7",
     "formidable": "^1.2.2",
+    "html-react-parser": "^1.4.12",
     "lodash.defaultto": "^4.14.0",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
