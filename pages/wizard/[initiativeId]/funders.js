@@ -55,7 +55,9 @@ const FundersComponent = ({ pageProps }) => {
         submitMultipleNoReflections,
         submitMultipleReflections,
     } = useReflections({
-        dataSet: utilities.funders.getAll,
+        dataSet() {
+            return utilities.funders.getAll;
+        },
         parentKey: 'Initiative_Funder__c',
         type: CONSTANTS.REPORT_DETAILS.FUNDER_OVERVIEW,
     });

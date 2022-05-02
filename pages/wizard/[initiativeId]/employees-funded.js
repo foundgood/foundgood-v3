@@ -59,7 +59,9 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     const { label, object, valueSet } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
     const { submitNoReflection, submitReflection } = useReflections({
-        dataSet: utilities.collaborators.getTypeAdditional,
+        dataSet() {
+            return utilities.collaborators.getTypeAdditional;
+        },
         reflectionKey: 'Employees_Funded_Overview',
         type: CONSTANTS.REPORT_DETAILS.EMPLOYEES_FUNDED_OVERVIEW,
     });

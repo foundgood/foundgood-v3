@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Utilities
-import { useAuth, useLabels, useContext } from 'utilities/hooks';
+import { useAuth, useLabels } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -15,23 +15,40 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 
 const CompleteComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
-    const { MODE, CONTEXTS } = useContext();
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Metadata
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { initiative } = useInitiativeDataStore();
+
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label } = useLabels();
+
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
 
     const [bodyTexts, setBodyTexts] = useState([]);
 
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
-
-    // Store: Initiative data / Wizard navigation
-    const { initiative } = useInitiativeDataStore();
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     useEffect(() => {
         setTimeout(() => {
@@ -41,7 +58,7 @@ const CompleteComponent = ({ pageProps }) => {
 
     useEffect(() => {
         let bodyTexts;
-        bodyTexts = label('InitiativeWizardCompleteText')?.split('\n');
+        bodyTexts = text('InitiativeWizardCompleteText')?.split('\n');
         bodyTexts = bodyTexts === undefined ? [] : bodyTexts;
         setBodyTexts(bodyTexts);
     }, []);

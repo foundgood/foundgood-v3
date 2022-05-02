@@ -1,5 +1,5 @@
 // React
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Utiities
 import useElseware from './useElseware';
@@ -42,18 +42,18 @@ const useReflections = ({ dataSet, parentKey, reflectionKey, type }) => {
     }
 
     async function submitMultipleReflections(formData) {
-        rDataSet()
-            .reduce((acc, key) => {
+        const reportDetails = rDataSet()
+            .reduce((acc, dataItem) => {
                 const currentReflection = utilities.reportDetails
                     .getFromReportId(REPORT_ID)
-                    .filter(item => item[parentKey] === key);
+                    .filter(item => item[parentKey] === dataItem.Id);
                 return [
                     ...acc,
                     {
                         reportDetailId: currentReflection[0]?.Id ?? false,
-                        relationId: key,
-                        value: formData[`${key}-reflection`],
-                        selected: formData[`${key}-selector`],
+                        relationId: dataItem.Id,
+                        value: formData[`${dataItem.Id}-reflection`],
+                        selected: formData[`${dataItem.Id}-selector`],
                     },
                 ];
             }, [])

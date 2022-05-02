@@ -55,7 +55,9 @@ const CollaboratorsComponent = ({ pageProps }) => {
         submitMultipleNoReflections,
         submitMultipleReflections,
     } = useReflections({
-        dataSet: utilities.collaborators.getTypeAdditional,
+        dataSet() {
+            return utilities.collaborators.getTypeAdditional;
+        },
         parentKey: 'Initiative_Collaborator__c',
         type: CONSTANTS.REPORT_DETAILS.COLLABORATOR_OVERVIEW,
     });

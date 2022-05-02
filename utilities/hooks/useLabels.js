@@ -60,17 +60,17 @@ const useLabels = () => {
         if (founderId) {
             text = _get(texts, `${path}.${founderId}.${locale}`);
             if (typeof text === 'string') {
-                return parse(text);
+                return text;
             }
         }
         // 2. Default
         text = _get(texts, `${path}.${locale}`);
         if (typeof text === 'string') {
-            return parse(text);
+            return text;
         }
         // 3. Missing
-        text = missing(path, '(text)');
-        return parse(text);
+        text = `${path} missing`;
+        return text;
     }
 
     const object = {

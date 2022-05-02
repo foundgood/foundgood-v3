@@ -56,7 +56,9 @@ const SharingResultsComponent = ({ pageProps }) => {
         submitMultipleNoReflections,
         submitMultipleReflections,
     } = useReflections({
-        dataSet: utilities.activities.getTypeDissemination,
+        dataSet() {
+            return utilities.activities.getTypeDissemination;
+        },
         parentKey: 'Initiative_Activity__c',
         type: CONSTANTS.REPORT_DETAILS.ACTIVITY_OVERVIEW,
     });

@@ -95,7 +95,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 updateId,
                 data,
                 { Initiative__c: initiative.Id },
-                '_activities'
+                '_reports'
             );
 
             // Close modal

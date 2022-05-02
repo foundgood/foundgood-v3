@@ -24,8 +24,6 @@ const TitlePreambleComponent = ({ title, preamble, preload }) => {
 };
 
 TitlePreambleComponent.propTypes = {
-    title: t.string,
-    preamble: t.string,
     preload: t.bool,
 };
 

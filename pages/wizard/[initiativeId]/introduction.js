@@ -23,7 +23,7 @@ const IntroductionComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS } = useContext();
 
     // Hook: Metadata
-    const { label } = useLabels();
+    const { label, text } = useLabels();
 
     // Hook: elseware setup
     const { ewCreate } = useElseware();
@@ -87,9 +87,9 @@ const IntroductionComponent = ({ pageProps }) => {
     useEffect(() => {
         let bodyTexts;
         if (MODE === CONTEXTS.REPORT) {
-            bodyTexts = label('ReportWizardWelcomeMain')?.split('\n');
+            bodyTexts = text('ReportWizardWelcomeMain')?.split('\n');
         } else {
-            bodyTexts = label('InitiativeWizardWelcomeMain')?.split('\n');
+            bodyTexts = text('InitiativeWizardWelcomeMain')?.split('\n');
         }
         bodyTexts = bodyTexts === undefined ? [] : bodyTexts;
         setBodyTexts(bodyTexts);

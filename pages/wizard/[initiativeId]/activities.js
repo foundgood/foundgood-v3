@@ -55,7 +55,9 @@ const ActivitiesComponent = ({ pageProps }) => {
         submitMultipleNoReflections,
         submitMultipleReflections,
     } = useReflections({
-        dataSet: utilities.activities.getAll,
+        dataSet() {
+            return utilities.activities.getAll;
+        },
         parentKey: 'Initiative_Activity__c',
         type: CONSTANTS.REPORT_DETAILS.ACTIVITY_OVERVIEW,
     });
