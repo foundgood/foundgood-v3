@@ -272,10 +272,10 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                     <Select
                         name="Who_Is_Evaluating__c"
                         label={object.label(
-                            'Initiative__c.Detail.Who_Is_Evaluating__c'
+                            'Initiative_Report_Detail__c.Who_Is_Evaluating__c'
                         )}
                         subLabel={object.helpText(
-                            'Initiative__c.Detail.Who_Is_Evaluating__c'
+                            'Initiative_Report_Detail__c.Who_Is_Evaluating__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet(

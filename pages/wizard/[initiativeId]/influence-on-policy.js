@@ -264,10 +264,10 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                     <Text
                         name="Type_Of_Influence__c"
                         label={object.label(
-                            'Initiative__c.Detail.Type_Of_Influence__c'
+                            'Initiative_Report_Detail__c.Type_Of_Influence__c'
                         )}
                         subLabel={object.helpText(
-                            'Initiative__c.Detail.Type_Of_Influence__c'
+                            'Initiative_Report_Detail__c.Type_Of_Influence__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={80}

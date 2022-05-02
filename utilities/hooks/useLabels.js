@@ -27,6 +27,14 @@ const useLabels = () => {
     // TODO FounderId logic
     const founderId = null;
 
+    function missing(path, label = '') {
+        return (
+            <span className="px-6 pt-4 pb-2 font-bold text-white bg-error rounded-4 text-14">
+                {path} {label}
+            </span>
+        );
+    }
+
     function label(path) {
         let label;
         // 1. Founder based
@@ -42,7 +50,7 @@ const useLabels = () => {
             return label;
         }
         // 3. Missing
-        label = `${path} missing`;
+        label = missing(path, '(label)');
         return label;
     }
 
@@ -61,7 +69,7 @@ const useLabels = () => {
             return parse(text);
         }
         // 3. Missing
-        text = `${path} missing`;
+        text = missing(path, '(text)');
         return parse(text);
     }
 
@@ -81,7 +89,7 @@ const useLabels = () => {
                 return label;
             }
             // 3. Missing
-            label = `object ${path} label missing`;
+            label = missing(path, '(object label)');
             return label;
         },
         helpText(path) {
@@ -102,7 +110,7 @@ const useLabels = () => {
                 return label;
             }
             // 3. Missing
-            label = `object ${path} helpText missing`;
+            label = missing(path, '(object help text)');
             return label;
         },
     };

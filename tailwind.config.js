@@ -1,5 +1,3 @@
-const colors = require('tailwindcss/colors');
-
 const emInPx = px => `${px / 16}em`;
 const remInPx = (num, name = false) => ({
     [name ? name : num]: `${num / 16}rem`,
@@ -11,6 +9,7 @@ module.exports = {
         options: {},
         content: [
             './components/**/*.{js,ts,jsx,tsx,md}',
+            './utilities/**/*.{js,ts,jsx,tsx,md}',
             './pages/**/*.{js,ts,jsx,tsx}',
         ],
     },
@@ -23,8 +22,8 @@ module.exports = {
             transparent: 'transparent',
             // Utility
             current: 'currentColor',
-            grid: colors.pink,
             white: '#ffffff',
+            error: 'rgb(227, 40, 64)',
             // Theme colors
             blue: {
                 300: 'hsl(231, 50%, 50%)',
