@@ -185,6 +185,14 @@ const useInitiativeDataStore = create((set, get) => ({
                         item.Activity_Type__c
                 );
             },
+            // Returns activities with specific type as array
+            getTypeDissemination() {
+                return Object.values(get().initiative._activities).filter(
+                    item =>
+                        constants.ACTIVITIES.ACTIVITY_DISSEMINATION ===
+                        item.Activity_Type__c
+                );
+            },
         },
         activityGoals: {},
         activitySuccessMetrics: {
@@ -304,6 +312,12 @@ const useInitiativeDataStore = create((set, get) => ({
             get(id) {
                 return get().initiative._reports[id] || {};
             },
+            // Returns array of objects of reports based on Initiative_Funder__c id
+            getFromFunderId(funderId) {
+                return Object.values(get().initiative?._reports).filter(
+                    item => item.Funder_Report__c === funderId
+                );
+            },
         },
         updateContents: {
             // Returns updateContent as object based on Initiative_Update__c id
@@ -315,7 +329,19 @@ const useInitiativeDataStore = create((set, get) => ({
                 );
             },
         },
-        updates: {},
+        updates: {
+            // Returns update as object based on id
+            get(id) {
+                return get().initiative._updates[id] || {};
+            },
+            // Returns updates with specific type as array
+            getTypeLogbookUpdate() {
+                return Object.values(get().initiative._updates).filter(
+                    item =>
+                        item.Type__c === constants.REPORT_DETAILS.LOGBOOK_UPDATE
+                );
+            },
+        },
         // Returns id of initiative - to make sure it's the latest
         getInitiativeId() {
             return get().initiative.Id;

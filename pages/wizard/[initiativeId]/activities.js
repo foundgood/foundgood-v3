@@ -244,18 +244,12 @@ const ActivitiesComponent = ({ pageProps }) => {
     const customGoals = utilities.goals.getTypeCustom();
 
     // Check if there is relevant report details yet
-    const reportDetailsItems = currentReportDetails
-        .filter(item =>
-            Object.keys(initiative?._activities).includes(
-                item.Initiative_Activity__c
-            )
-        )
-        .filter(
-            item =>
-                utilities.activities.get(item.Initiative_Activity__c)
-                    .Activity_Type__c ===
-                CONSTANTS.ACTIVITIES.ACTIVITY_INTERVENTION
-        );
+    const reportDetailsItems = currentReportDetails.filter(item =>
+        utilities.activities
+            .getTypeIntervention()
+            .map(item => item.Id)
+            .includes(item.Initiative_Activity__c)
+    );
 
     // Get activities
     const activities = utilities.activities.getTypeIntervention();

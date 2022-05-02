@@ -20,12 +20,45 @@ import { InputWrapper, Select, LongText, Attach } from 'components/_inputs';
 import LogbookCard from 'components/_wizard/logbookCard';
 
 const LogbookComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Hook: Metadata
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label, object } = useLabels();
+    const { ewCreateUpdateWrapper } = useElseware();
+
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+    const [updateType, setUpdateType] = useState('text');
+    const [attachLoading, setAttachLoading] = useState(false);
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
 
     // Hook: useForm setup
     const { handleSubmit, control, setValue, reset } = useForm();
@@ -43,14 +76,10 @@ const LogbookComponent = ({ pageProps }) => {
     });
     const { isDirty } = useFormState({ control });
 
-    // Hook: Elseware setup
-    const { ewCreateUpdateWrapper } = useElseware();
-
-    // Store: Initiative data
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -132,21 +161,17 @@ const LogbookComponent = ({ pageProps }) => {
         }
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
-    const [updateType, setUpdateType] = useState('text');
-
-    // Local state to handle attach loading
-    const [attachLoading, setAttachLoading] = useState(false);
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        const { Description__c, Initiative_Activity__c } =
-            initiative?._updates[updateId] ?? {};
+        const {
+            Description__c,
+            Initiative_Activity__c,
+        } = utilities.updates.get(updateId);
 
         // Check if there is content
         const content = utilities.updateContents.getFromUpdateId(updateId);
@@ -167,19 +192,17 @@ const LogbookComponent = ({ pageProps }) => {
         }, 100);
     }, [initiative]);
 
-    // Activities
-    const activities = Object.values(initiative?._activities).filter(
-        activity => {
-            return (
-                activity.Activity_Type__c ===
-                CONSTANTS.TYPES.ACTIVITY_INTERVENTION
-            );
-        }
-    );
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Get activities
+    const activities = utilities.activities.getTypeIntervention();
 
     // Logbook entries
-    const logbookEntries = Object.values(initiative?._updates)
-        .filter(update => update.Type__c === CONSTANTS.TYPES.LOGBOOK_UPDATE)
+    const logbookEntries = utilities.updates
+        .getTypeLogbookUpdate()
         .sort((a, b) => new Date(b.CreatedDate) - new Date(a.CreatedDate));
 
     // Get update content
@@ -288,7 +311,7 @@ const LogbookComponent = ({ pageProps }) => {
                                             attachDocument) ||
                                         currentInitiativeUpdateContent.URL__c
                                     }>
-                                    View document
+                                    {label('LogbookViewDocument')}
                                 </a>
                             )}
                         </div>

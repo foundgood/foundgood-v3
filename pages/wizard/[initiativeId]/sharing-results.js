@@ -7,7 +7,13 @@ import _get from 'lodash.get';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
+import {
+    useAuth,
+    useLabels,
+    useElseware,
+    useContext,
+    useReflections,
+} from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -17,28 +23,60 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import {
-    InputWrapper,
-    Select,
-    SelectList,
-    Text,
-    DatePicker,
-} from 'components/_inputs';
+import { InputWrapper, Select, SelectList, Text } from 'components/_inputs';
 import ResultCard from 'components/_wizard/resultCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const SharingResultsComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Hook: Metadata
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
     const { getValueLabel, valueSet, label, object } = useLabels();
 
-    // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
 
-    // Hook: useForm setup
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
+    const { ewCreateUpdateWrapper } = useElseware();
+    const {
+        submitMultipleNoReflections,
+        submitMultipleReflections,
+    } = useReflections({
+        dataSet: utilities.activities.getTypeDissemination,
+        parentKey: 'Initiative_Activity__c',
+        type: CONSTANTS.REPORT_DETAILS.ACTIVITY_OVERVIEW,
+    });
+
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [reflecting, setReflecting] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+    const [disseminationType, setDisseminationType] = useState(null);
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { handleSubmit, control, setValue, reset } = useForm();
     const {
         handleSubmit: handleSubmitReflections,
@@ -51,35 +89,10 @@ const SharingResultsComponent = ({ pageProps }) => {
         name: 'Dissemination_Method__c',
     });
 
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
-
-    // Store: Initiative data
-    const {
-        initiative,
-        utilities,
-        updateActivity,
-        updateReportDetails,
-        CONSTANTS,
-    } = useInitiativeDataStore();
-
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-
-    // Array of years - Publication year
-    const getYears = () => {
-        const years = [];
-        const currentYear = new Date().getFullYear();
-        let startYear = currentYear - 10; // 10 years back
-        while (startYear <= currentYear) {
-            const year = startYear++;
-            years.push({
-                label: `${year}`,
-                value: `${year}-01-01`,
-            });
-        }
-        return years;
-    };
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -99,12 +112,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                 Publication_DOI__c,
             } = formData;
 
-            // Object name
-            const object = 'Initiative_Activity__c';
-
             // Data for sf
             const data = {
-                Activity_Type__c: CONSTANTS.TYPES.ACTIVITY_DISSEMINATION,
+                Activity_Type__c: CONSTANTS.ACTIVITIES.ACTIVITY_DISSEMINATION,
 
                 Things_To_Do__c,
                 Dissemination_Method__c,
@@ -121,15 +131,13 @@ const SharingResultsComponent = ({ pageProps }) => {
             };
 
             // Update / Save
-            const activityId = updateId
-                ? await sfUpdate({ object, data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative__c: initiative.Id },
-                  });
-
-            // Update store
-            await updateActivity(activityId);
+            const activityData = await ewCreateUpdateWrapper(
+                'initiative-activity/initiative-activity',
+                updateId,
+                data,
+                { Initiative__c: initiative.Id },
+                '_activities'
+            );
 
             // Close modal
             setModalIsOpen(false);
@@ -144,7 +152,7 @@ const SharingResultsComponent = ({ pageProps }) => {
             // setValue: setValueReflections,
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    setValueReflections(`${activityId}-selector`, true);
+                    setValueReflections(`${activityData.Id}-selector`, true);
                 }
             }, 500);
         } catch (error) {
@@ -154,105 +162,31 @@ const SharingResultsComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Adds reflections
-    async function submitReflections(formData) {
-        // Reformat form data based on topic keys
-        const reportDetails = Object.keys(initiative?._activities)
-            .reduce((acc, key) => {
-                // Does the reflection relation exist already?
-                const currentReflection = currentReportDetails.filter(
-                    item => item.Initiative_Activity__c === key
-                );
-                return [
-                    ...acc,
-                    {
-                        reportDetailId: currentReflection[0]?.Id ?? false,
-                        relationId: key,
-                        value: formData[`${key}-reflection`],
-                        selected: formData[`${key}-selector`],
-                    },
-                ];
-            }, [])
-            .filter(item => item.selected);
-
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Create or update report detail ids based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailIds = await Promise.all(
-            reportDetails.map(item =>
-                item.reportDetailId
-                    ? sfUpdate({
-                          object,
-                          id: item.reportDetailId,
-                          data: {
-                              Description__c: item.value,
-                          },
-                      })
-                    : sfCreate({
-                          object,
-                          data: {
-                              Type__c: CONSTANTS.TYPES.ACTIVITY_OVERVIEW,
-                              Initiative_Activity__c: item.relationId,
-                              Description__c: item.value,
-                              Initiative_Report__c: REPORT_ID,
-                          },
-                      })
-            )
-        );
-
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
-    }
-
-    // Method: Submits no reflections flag
-    async function submitNoReflections() {
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Create or update report detail ids based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailIds = await Promise.all(
-            Object.values(initiative?._activities)
-                .filter(
-                    item =>
-                        item.Activity_Type__c ===
-                        CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
-                )
-                .map(activity =>
-                    sfCreate({
-                        object,
-                        data: {
-                            Type__c: CONSTANTS.TYPES.ACTIVITY_OVERVIEW,
-                            Initiative_Activity__c: activity.Id,
-                            Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
-                            Initiative_Report__c: REPORT_ID,
-                        },
-                    })
-                )
-        );
-
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
-    }
-
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
         throw error;
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
+    // Array of years - Publication year
+    const getYears = () => {
+        const years = [];
+        const currentYear = new Date().getFullYear();
+        let startYear = currentYear - 10; // 10 years back
+        while (startYear <= currentYear) {
+            const year = startYear++;
+            years.push({
+                label: `${year}`,
+                value: `${year}-01-01`,
+            });
+        }
+        return years;
+    };
 
-    // Local state to handle reflection
-    const [reflecting, setReflecting] = useState(false);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
-    const [disseminationType, setDisseminationType] = useState(null);
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
@@ -267,7 +201,7 @@ const SharingResultsComponent = ({ pageProps }) => {
             Publication_Publisher__c,
             Publication_Author__c,
             Publication_DOI__c,
-        } = initiative?._activities[updateId] ?? {};
+        } = utilities.activities.get(updateId);
 
         setValue('Things_To_Do__c', Things_To_Do__c);
         setValue('Dissemination_Method__c', Dissemination_Method__c);
@@ -296,18 +230,19 @@ const SharingResultsComponent = ({ pageProps }) => {
 
     // Add submit handler to wizard navigation store
     useEffect(() => {
-        if (MODE === CONTEXTS.REPORT) {
-            setTimeout(() => {
-                setCurrentSubmitHandler(
-                    handleSubmitReflections(submitReflections, error)
-                );
-            }, 100);
-        } else {
-            setTimeout(() => {
-                setCurrentSubmitHandler(null);
-            }, 100);
-        }
+        setTimeout(() => {
+            setCurrentSubmitHandler(
+                MODE === CONTEXTS.REPORT
+                    ? handleSubmitReflections(submitMultipleReflections, error)
+                    : null
+            );
+        }, 100);
     }, [initiative]);
+
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
 
     // Current report details
     const currentReportDetails = utilities.reportDetails.getFromReportId(
@@ -315,21 +250,15 @@ const SharingResultsComponent = ({ pageProps }) => {
     );
 
     // Check if there is relevant report details yet
-    const reportDetailsItems = currentReportDetails
-        .filter(item =>
-            Object.keys(initiative?._activities).includes(
-                item.Initiative_Activity__c
-            )
-        )
-        .filter(item => {
-            // Activity
-            const activity =
-                initiative?._activities[item.Initiative_Activity__c];
-            return (
-                activity.Activity_Type__c ===
-                CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
-            );
-        });
+    const reportDetailsItems = currentReportDetails.filter(item =>
+        utilities.activities
+            .getTypeDissemination()
+            .map(item => item.Id)
+            .includes(item.Initiative_Activity__c)
+    );
+
+    // Get activities
+    const activities = utilities.activities.getTypeDissemination();
 
     return (
         <>
@@ -339,119 +268,99 @@ const SharingResultsComponent = ({ pageProps }) => {
                 preload={!initiative.Id}
             />
             <InputWrapper preload={!initiative.Id}>
-                {MODE === CONTEXTS.REPORT &&
-                    Object.values(initiative._activities).filter(
-                        activity =>
-                            activity.Activity_Type__c ===
-                            CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
-                    ).length > 0 && (
-                        <NoReflections
-                            onClick={submitNoReflections}
-                            reflectionItems={reportDetailsItems.map(
-                                item => item.Description__c
-                            )}
-                            reflecting={reflecting}
-                        />
-                    )}
-                {Object.keys(initiative?._activities)
-                    .filter(activityKey => {
-                        const activity = initiative?._activities[activityKey];
-                        return (
-                            activity.Activity_Type__c ===
-                            CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
-                        );
-                    })
-                    .map(activityKey => {
-                        const activity = initiative?._activities[activityKey];
-                        console.log(activity);
+                {MODE === CONTEXTS.REPORT && activities.length > 0 && (
+                    <NoReflections
+                        onClick={submitMultipleNoReflections}
+                        reflectionItems={reportDetailsItems.map(
+                            item => item.Description__c
+                        )}
+                        reflecting={reflecting}
+                    />
+                )}
+                {activities.map(activity => {
+                    const headline = _get(activity, 'Things_To_Do__c') || '';
 
-                        const headline =
-                            _get(activity, 'Things_To_Do__c') || '';
+                    const footnote = `${
+                        getValueLabel(
+                            'initiativeActivity.Dissemination_Method__c',
+                            _get(activity, 'Dissemination_Method__c')
+                        ) || ''
+                    } ${
+                        activity.Dissemination_Method__c &&
+                        activity.KPI_Category__c
+                            ? '•'
+                            : ''
+                    } ${_get(activity, 'KPI_Category__c') || ''}`;
 
-                        const footnote = `${
-                            getValueLabel(
-                                'initiativeActivity.Dissemination_Method__c',
-                                _get(activity, 'Dissemination_Method__c')
-                            ) || ''
-                        } ${
-                            activity.Dissemination_Method__c &&
-                            activity.KPI_Category__c
-                                ? '•'
-                                : ''
-                        } ${_get(activity, 'KPI_Category__c') || ''}`;
-
-                        const tagsString = activity?.Audience_Tag__c ?? null;
-                        const tags = tagsString
-                            ? tagsString
-                                  .split(';')
-                                  .map(tag =>
-                                      getValueLabel(
-                                          'initiativeActivity.Audience_Tag__c',
-                                          tag
-                                      )
+                    const tagsString = activity?.Audience_Tag__c ?? null;
+                    const tags = tagsString
+                        ? tagsString
+                              .split(';')
+                              .map(tag =>
+                                  getValueLabel(
+                                      'initiativeActivity.Audience_Tag__c',
+                                      tag
                                   )
-                            : [];
+                              )
+                        : [];
 
-                        const reflection = currentReportDetails.filter(
-                            item => item.Initiative_Activity__c === activityKey
-                        );
+                    const reflection = currentReportDetails.filter(
+                        item => item.Initiative_Activity__c === activity.Id
+                    );
 
-                        const showJournalPublication =
-                            activity.Dissemination_Method__c ===
-                            CONSTANTS.TYPES.ACTIVITY_JOURNAL;
+                    const showJournalPublication =
+                        activity.Dissemination_Method__c ===
+                        CONSTANTS.ACTIVITIES.ACTIVITY_JOURNAL;
 
-                        return (
-                            <ResultCard
-                                key={activityKey}
-                                headline={headline}
-                                footnote={footnote}
-                                tags={tags}
-                                action={() => {
-                                    setUpdateId(activityKey);
-                                    setModalIsOpen(true);
-                                }}
-                                reflectAction={setReflecting}
-                                controller={
-                                    MODE === CONTEXTS.REPORT &&
-                                    controlReflections
-                                }
-                                name={activityKey}
-                                defaultValue={{
-                                    selected:
-                                        reflection[0] &&
-                                        (reflection[0]?.Description__c !==
-                                            CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                            false),
-                                    value:
-                                        reflection[0]?.Description__c ===
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                            ? ''
-                                            : reflection[0]?.Description__c,
-                                }}
-                                journalPublication={
-                                    showJournalPublication
-                                        ? {
-                                              type:
-                                                  activity.Publication_Type__c,
-                                              year: dayjs(
-                                                  activity.Publication_Year__c
-                                              ).format('YYYY'),
-                                              title:
-                                                  activity.Publication_Title__c,
-                                              publisher:
-                                                  activity.Publication_Publisher__c,
-                                              author:
-                                                  activity.Publication_Author__c,
-                                              doi: activity.Publication_DOI__c,
-                                          }
-                                        : null
-                                }
-                                input={label(
-                                    'ReportWizardSharingReflectionSubHeading'
-                                )}
-                            />
-                        );
-                    })}
+                    return (
+                        <ResultCard
+                            key={activity.Id}
+                            headline={headline}
+                            footnote={footnote}
+                            tags={tags}
+                            action={() => {
+                                setUpdateId(activity.Id);
+                                setModalIsOpen(true);
+                            }}
+                            reflectAction={setReflecting}
+                            controller={
+                                MODE === CONTEXTS.REPORT && controlReflections
+                            }
+                            name={activity.Id}
+                            defaultValue={{
+                                selected:
+                                    reflection[0] &&
+                                    (reflection[0]?.Description__c !==
+                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                                        false),
+                                value:
+                                    reflection[0]?.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                        ? ''
+                                        : reflection[0]?.Description__c,
+                            }}
+                            journalPublication={
+                                showJournalPublication
+                                    ? {
+                                          type: activity.Publication_Type__c,
+                                          year: dayjs(
+                                              activity.Publication_Year__c
+                                          ).format('YYYY'),
+                                          title: activity.Publication_Title__c,
+                                          publisher:
+                                              activity.Publication_Publisher__c,
+                                          author:
+                                              activity.Publication_Author__c,
+                                          doi: activity.Publication_DOI__c,
+                                      }
+                                    : null
+                            }
+                            input={label(
+                                'ReportWizardSharingReflectionSubHeading'
+                            )}
+                        />
+                    );
+                })}
                 <Button
                     theme="teal"
                     className="self-start"
@@ -516,7 +425,8 @@ const SharingResultsComponent = ({ pageProps }) => {
                     />
 
                     {/* Predefined goal */}
-                    {disseminationType === CONSTANTS.TYPES.ACTIVITY_JOURNAL && (
+                    {disseminationType ===
+                        CONSTANTS.ACTIVITIES.ACTIVITY_JOURNAL && (
                         <>
                             <Text
                                 name="Publication_Type__c"

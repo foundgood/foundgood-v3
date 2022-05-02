@@ -206,7 +206,10 @@ const FundersComponent = ({ pageProps }) => {
 
     // Check if there is relevant report details yet
     const reportDetailsItems = currentReportDetails.filter(item =>
-        Object.keys(initiative?._funders).includes(item.Initiative_Funder__c)
+        utilities.funders
+            .getAll()
+            .map(item => item.Id)
+            .includes(item.Initiative_Funder__c)
     );
 
     // Get funders

@@ -207,18 +207,12 @@ const ApplicantsComponent = ({ pageProps }) => {
     );
 
     // Check if there is relevant report details yet
-    const reportDetailsItems = currentReportDetails
-        .filter(item =>
-            Object.keys(initiative?._collaborators).includes(
-                item.Initiative_Collaborator__c
-            )
-        )
-        .filter(item =>
-            CONSTANTS.COLLABORATORS.APPLICANTS_ALL.includes(
-                utilities.collaborators.get(item.Initiative_Collaborator__c)
-                    .Type__c
-            )
-        );
+    const reportDetailsItems = currentReportDetails.filter(item =>
+        utilities.collaborators
+            .getTypeApplicantsAll()
+            .map(item => item.Id)
+            .includes(item.Initiative_Collaborator__c)
+    );
 
     // Get applicants
     const applicants = utilities.collaborators.getTypeApplicantsAll();

@@ -7,7 +7,7 @@
     "metadata": "run-func ./utilities/metadata/extract extractToJsonFile",
     "labels": "run-func ./utilities/labels/writeLabels extractToJsonFile",
     "dev": "yarn metadata; yarn labels; next dev",
-    "build": "yarn metadata; next build",
+    "build": "yarn metadata; yarn labels; next build",
     "start": "next start",
     "test-api": "curl -v https://foundgood.remotely.sh/api/foundgood/initiativeReportSnapshotTest"
   },

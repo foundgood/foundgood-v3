@@ -197,18 +197,12 @@ const CollaboratorsComponent = ({ pageProps }) => {
     );
 
     // Check if there is relevant report details yet
-    const reportDetailsItems = currentReportDetails
-        .filter(item =>
-            Object.keys(initiative?._collaborators).includes(
-                item.Initiative_Collaborator__c
-            )
-        )
-        .filter(item =>
-            CONSTANTS.COLLABORATORS.ADDITIONAL_COLLABORATORS.includes(
-                utilities.collaborators.get(item.Initiative_Collaborator__c)
-                    .Type__c
-            )
-        );
+    const reportDetailsItems = currentReportDetails.filter(item =>
+        utilities.collaborators
+            .getTypeAdditional()
+            .map(item => item.Id)
+            .includes(item.Initiative_Collaborator__c)
+    );
 
     // Get list of already selected collaborators so they can be removed from accountOrganisations records
     const alreadySelectedCollaborators = utilities.collaborators

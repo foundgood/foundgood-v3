@@ -6,7 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useLabels, useSalesForce } from 'utilities/hooks';
+import { useAuth, useLabels, useElseware } from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -24,30 +24,52 @@ import {
 import ReportCard from 'components/_wizard/reportCard';
 
 const ReportScheduleComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Hook: Metadata
-    const { labelTodo, label, object, valueSet } = useLabels();
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: useForm setup
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
+
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { labelTodo, label, object, valueSet } = useLabels();
+    const { ewCreateUpdateWrapper } = useElseware();
+
+    // ///////////////////
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+    const [funder, setFunder] = useState(null);
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { handleSubmit, control, setValue, reset } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // Store: Wizard navigation
-    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
-
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
-
-    // Store: Initiative data
-    const {
-        initiative,
-        updateReport,
-        isNovoLeadFunder,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
@@ -55,9 +77,6 @@ const ReportScheduleComponent = ({ pageProps }) => {
         setModalIsSaving(true);
         try {
             const { ReportDates, Report_Type__c, Due_Date__c } = formData;
-
-            // Object name
-            const object = 'Initiative_Report__c';
 
             // Data for sf
             const data = {
@@ -71,15 +90,13 @@ const ReportScheduleComponent = ({ pageProps }) => {
             };
 
             // Update / Save
-            const ReportId = updateId
-                ? await sfUpdate({ object, data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative__c: initiative.Id },
-                  });
-
-            // Update store
-            await updateReport(ReportId);
+            await ewCreateUpdateWrapper(
+                'initiative-report/initiative-report',
+                updateId,
+                data,
+                { Initiative__c: initiative.Id },
+                '_activities'
+            );
 
             // Close modal
             setModalIsOpen(false);
@@ -96,13 +113,10 @@ const ReportScheduleComponent = ({ pageProps }) => {
         }
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
-    const [funder, setFunder] = useState(null);
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
@@ -111,7 +125,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
             Report_Period_End_Date__c,
             Report_Type__c,
             Due_Date__c,
-        } = initiative?._reports[updateId] ?? {};
+        } = utilities.reports.get(updateId);
 
         setValue('Report_Type__c', Report_Type__c);
         setValue('Due_Date__c', Due_Date__c);
@@ -121,15 +135,20 @@ const ReportScheduleComponent = ({ pageProps }) => {
         });
     }, [updateId, modalIsOpen]);
 
-    // Funders
-    const funders = Object.keys(initiative._funders);
-
     // Reset submithandler
     useEffect(() => {
         setTimeout(() => {
             setCurrentSubmitHandler(null);
         }, 100);
     }, [initiative]);
+
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Funders
+    const funders = utilities.funders.getAll();
 
     return (
         <>
@@ -140,16 +159,11 @@ const ReportScheduleComponent = ({ pageProps }) => {
             />
             <InputWrapper preload={!initiative.Id}>
                 {funders.length > 0 ? (
-                    funders.map(funderKey => {
-                        const funder = initiative?._funders[funderKey];
-                        // Get report items based on funder id (funderKey) and report.Funder_Report__c
-                        const reportItems = Object.keys(initiative?._reports)
-                            .filter(
-                                reportKey =>
-                                    initiative?._reports[reportKey]
-                                        .Funder_Report__c === funderKey
-                            )
-                            .map(reportKey => initiative?._reports[reportKey]);
+                    funders.map(funder => {
+                        // Get report items based on funder id (funder.Id) and report.Funder_Report__c
+                        const reportItems = utilities.reports.getFromFunderId(
+                            funder.Id
+                        );
                         return (
                             <ReportCard
                                 key={funder.Id}
