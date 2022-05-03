@@ -7,7 +7,7 @@ import t from 'prop-types';
 import { useForm, useWatch } from 'react-hook-form';
 
 // Utilities
-import { useSalesForce, useLabels, useAuth } from 'utilities/hooks';
+import { useLabels, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -18,49 +18,36 @@ import ReportRow from 'components/_report/reportRow';
 import { SearchFilterMultiselect } from 'components/_inputs';
 
 const ReportComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { user, verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Hook: Metadata
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label, labelTodo, valueSet } = useLabels();
-
-    // Reset initiative data
     const { CONSTANTS } = useInitiativeDataStore();
+    const { ewGet } = useElseware();
 
-    // Hook: Get sales force data methods
-    const { sfQuery, queries } = useSalesForce();
+    // ///////////////////
+    // STATE
+    // ///////////////////
 
-    // Get all reports data
-    const { data: reportsData } = sfQuery(queries.reports.getAll());
-
-    // Get data for form
-    const { data: accountFoundations } = sfQuery(
-        queries.account.allFoundations()
-    );
-
-    // Effect: Control which accountFoundations is used
+    const [initial, setInitial] = useState(null);
+    const [filtered, setFiltered] = useState(null);
     const [
         controlledAccountFoundations,
         setControlledAccountFoundations,
     ] = useState([]);
-    useEffect(() => {
-        if (reportsData) {
-            const reportsDataFunders = new Set([
-                ...reportsData?.records
-                    .map(item => item.Funder_Report__r?.Account__r?.Id)
-                    .filter(item => item),
-            ]);
 
-            const test = accountFoundations?.records.filter(item =>
-                [...reportsDataFunders].includes(item.Id)
-            );
+    // ///////////////////
+    // FORMS
+    // ///////////////////
 
-            setControlledAccountFoundations(test);
-        }
-    }, [accountFoundations, reportsData]);
-
-    // Hook: useForm setup
     const { control, register, getValues } = useForm({
         mode: 'onChange',
     });
@@ -85,33 +72,9 @@ const ReportComponent = ({ pageProps }) => {
         name: 'filter.foundation',
     });
 
-    // Search results data
-    const [initial, setInitial] = useState(null);
-    const [filtered, setFiltered] = useState(null);
-
-    useEffect(() => {
-        const reports = reportsData?.records.filter(item => {
-            // If User type is Foundation
-            // Only show reports with same Id as users AccountId
-            if (
-                user.User_Account_Type__c ===
-                CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
-            ) {
-                return (
-                    item.Initiative__c !== null &&
-                    item.Report_Type__c !== null &&
-                    item.Funder_Report__r?.Account__r?.Id === user.AccountId
-                );
-            } else {
-                return (
-                    item.Initiative__c !== null && item.Report_Type__c !== null
-                );
-            }
-        });
-
-        setInitial(reports);
-        setFiltered(reports);
-    }, [reportsData, user]);
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     function onFilter(data) {
         if (initial) {
@@ -175,6 +138,50 @@ const ReportComponent = ({ pageProps }) => {
         }
     }
 
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    useEffect(() => {
+        if (reportsData) {
+            const reportsDataFunders = new Set([
+                ...Object.values(reportsData)
+                    .map(item => item.Funder_Report__r?.Account__r?.Id)
+                    .filter(item => item),
+            ]);
+
+            const accountFoundationsData = Object.values(
+                accountFoundations
+            ).filter(item => [...reportsDataFunders].includes(item.Id));
+
+            setControlledAccountFoundations(accountFoundationsData);
+        }
+    }, [accountFoundations, reportsData]);
+
+    useEffect(() => {
+        const reports = Object.values(reportsData).filter(item => {
+            // If User type is Foundation
+            // Only show reports with same Id as users AccountId
+            if (
+                user.User_Account_Type__c ===
+                CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
+            ) {
+                return (
+                    item.Initiative__c !== null &&
+                    item.Report_Type__c !== null &&
+                    item.Funder_Report__r?.Account__r?.Id === user.AccountId
+                );
+            } else {
+                return (
+                    item.Initiative__c !== null && item.Report_Type__c !== null
+                );
+            }
+        });
+
+        setInitial(reports);
+        setFiltered(reports);
+    }, [reportsData, user]);
+
     useEffect(() => {
         onFilter(getValues());
     }, [
@@ -184,6 +191,19 @@ const ReportComponent = ({ pageProps }) => {
         filterType,
         filterFoundation,
     ]);
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const { data: reportsData } = ewGet('initiative/initiatives-overview');
+    const { data: accountFoundations } = ewGet('account/account', {
+        type: 'foundation',
+    });
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <div

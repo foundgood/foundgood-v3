@@ -29,7 +29,6 @@ const HomeComponent = () => {
 
     // Hook: Metadata
     const { label, valueSet, log } = useLabels();
-    log();
 
     // Hook: Get data from elseware
     const { ewGet } = useElseware();
