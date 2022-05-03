@@ -73,53 +73,11 @@ const useSalesForce = () => {
         }
     }
 
-    // Method for setting the user language in the SalesForce API
-    // Language is either 'da' or 'en_US'
-    async function sfSetUserLanguage(language) {
-        try {
-            await salesForce.custom.setUserLanguage({ language });
-
-            // Update user timeout
-            updateUserTimeout();
-        } catch (error) {
-            console.warn(error);
-        }
-    }
-
-    // Method for getting current user initiative rights of the SalesForce API
-    // Returns normal swr object ({ data, error, isValidating, mutate })
-    function sfGetUserInitiativeRights() {
-        return useSWR(
-            loggedIn ? initiativeId : null,
-            salesForce.custom.getUserInitiativeRights(initiativeId),
-            {
-                revalidateOnFocus: false,
-                onSuccess: updateUserTimeout,
-            }
-        );
-    }
-
-    // Method for getting intiatives list of the SalesForce API
-    // Returns normal swr object ({ data, error, isValidating, mutate })
-    function sfGetInitiativeList() {
-        return useSWR(
-            loggedIn ? 'custom/getInitiativeList' : null,
-            salesForce.custom.getInitiativeList,
-            {
-                revalidateOnFocus: false,
-                onSuccess: updateUserTimeout,
-            }
-        );
-    }
-
     return {
         sfQuery,
         sfCreate,
         sfUpdate,
         sfDelete,
-        sfSetUserLanguage,
-        sfGetUserInitiativeRights,
-        sfGetInitiativeList,
         queries: salesForce.queries,
     };
 };

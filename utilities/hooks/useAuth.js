@@ -170,15 +170,18 @@ const useAuth = () => {
     // Get current user access rights
     function getUserInitiativeRights(initiativeId) {
         // Get user access rights info from sf api
-        salesForce.custom
-            .getUserInitiativeRights(initiativeId)
+        elseware
+            .get({
+                path: 'user/user-initiative-rights',
+                params: { id: initiativeId },
+            })
             .then(data => {
                 if (data) {
                     setUserInitiativeRights({
-                        canView: data?.data.bHasCreateRelatedRecordsAccess,
-                        canEdit: data?.data.bHasCreateTeamMemberAccess,
+                        canView: data?.bHasCreateRelatedRecordsAccess,
+                        canEdit: data?.bHasCreateTeamMemberAccess,
                         other: {
-                            ...data?.data,
+                            ...data,
                         },
                     });
                 }
