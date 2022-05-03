@@ -5,15 +5,6 @@ const initiativeWizardDictionary = {
         visible: false,
         hideBack: true,
     },
-    informationCapture: {
-        title: 'Information capture',
-        baseUrl: 'information-capture',
-        url(initiativeId) {
-            return `/wizard/${initiativeId}/information-capture`;
-        },
-        visible: false,
-        hideBack: true,
-    },
     context: {
         title: 'MenuContext',
         visible: true,

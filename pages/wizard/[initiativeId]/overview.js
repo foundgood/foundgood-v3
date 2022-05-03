@@ -5,7 +5,13 @@ import React, { useEffect } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useLabels, useElseware, useContext } from 'utilities/hooks';
+import {
+    useAuth,
+    useLabels,
+    useElseware,
+    useContext,
+    useWizardSubmit,
+} from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -17,7 +23,6 @@ import { InputWrapper, FormFields } from 'components/_inputs';
 
 const OverviewComponent = () => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
@@ -25,13 +30,11 @@ const OverviewComponent = () => {
     verifyLoggedIn();
 
     // ///////////////////
-    // ///////////////////
     // STORES
     // ///////////////////
 
     const { CONSTANTS, initiative, utilities } = useInitiativeDataStore();
 
-    // ///////////////////
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -40,10 +43,6 @@ const OverviewComponent = () => {
     const { label, object, valueSet, controlledValueSet } = useLabels();
     const { ewGet, ewCreate, ewUpdate, ewCreateUpdateWrapper } = useElseware();
 
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-
-    // ///////////////////
     // ///////////////////
     // FORMS
     // ///////////////////
@@ -56,11 +55,9 @@ const OverviewComponent = () => {
     });
 
     // ///////////////////
-    // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Submit page content
     async function submit(formData) {
         try {
             const {
@@ -75,9 +72,9 @@ const OverviewComponent = () => {
                 Funder_Objective__c,
             } = formData;
 
-            const initiativeData = await ewUpdate(
+            const { data: initiativeData } = await ewUpdate(
                 'initiative/initiative',
-                initiative.Id,
+                utilities.initiative.get().Id,
                 {
                     Name,
                     Summary__c,
@@ -99,11 +96,11 @@ const OverviewComponent = () => {
 
             // Only create collaborator if main collaborator have not been set
             if (!mainCollaborator?.Account__c || false) {
-                const collaboratorData = await ewCreate(
+                const { data: collaboratorData } = await ewCreate(
                     'initiative-collaborator/initiative-collaborator',
                     {
                         Type__c: CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR,
-                        Initiative__c: initiative.Id,
+                        Initiative__c: initiativeData.Id,
                         Account__c,
                     }
                 );
@@ -124,7 +121,7 @@ const OverviewComponent = () => {
                     Funder_Objective__c,
                     KPI_Category__c: Category__c,
                 },
-                { Initiative__c: initiative.Id },
+                { Initiative__c: initiativeData.Id },
                 '_goals'
             );
         } catch (error) {
@@ -132,25 +129,11 @@ const OverviewComponent = () => {
         }
     }
 
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
+    useWizardSubmit({
+        [CONTEXTS.INITIATIVE]: [mainForm, submit],
+        [CONTEXTS.REPORT]: [mainForm, submit],
+    });
 
-    // ///////////////////
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(mainForm.handleSubmit(submit, error));
-        }, 100);
-    }, [initiative]);
-
-    // ///////////////////
     // ///////////////////
     // DATA
     // ///////////////////
@@ -166,7 +149,6 @@ const OverviewComponent = () => {
     // Funder objective (predefined goal)
     const funderObjective = utilities.goals.getTypePredefined();
 
-    // ///////////////////
     // ///////////////////
     // FIELDS
     // ///////////////////
@@ -302,19 +284,13 @@ const OverviewComponent = () => {
     ];
 
     // ///////////////////
-    // ///////////////////
     // RENDER
     // ///////////////////
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 <FormFields
                     {...{
                         fields,

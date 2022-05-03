@@ -35,7 +35,6 @@ import NoReflections from 'components/_wizard/noReflections';
 
 const EmployeesFundedComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
@@ -43,14 +42,12 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // ///////////////////
-    // ///////////////////
     // STORES
     // ///////////////////
 
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
-    // ///////////////////
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -67,7 +64,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     });
 
     // ///////////////////
-    // ///////////////////
     // STATE
     // ///////////////////
 
@@ -76,7 +72,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     const [reflecting, setReflecting] = useState(false);
     const [updateId, setUpdateId] = useState(null);
 
-    // ///////////////////
     // ///////////////////
     // FORMS
     // ///////////////////
@@ -92,7 +87,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     });
     const { isDirty } = useFormState({ control });
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -152,7 +146,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -196,7 +189,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -215,12 +207,8 @@ const EmployeesFundedComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {MODE === CONTEXTS.REPORT && employeesFunded.length > 0 && (
                     <NoReflections
                         onClick={submitNoReflection}

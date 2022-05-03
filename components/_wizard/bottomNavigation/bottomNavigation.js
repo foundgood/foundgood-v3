@@ -56,7 +56,7 @@ const BottomNavigationComponent = () => {
             router.push(
                 nextItemUrl(
                     INITIATIVE_ID === 'new'
-                        ? utilities.getInitiativeId()
+                        ? utilities.initiative.get().Id
                         : INITIATIVE_ID,
                     REPORT_ID
                 )

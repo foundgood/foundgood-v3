@@ -27,7 +27,6 @@
     "dotenv": "^9.0.2",
     "fast-xml-parser": "^4.0.7",
     "formidable": "^1.2.2",
-    "html-react-parser": "^1.4.12",
     "lodash.defaultto": "^4.14.0",
     "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",

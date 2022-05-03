@@ -6,53 +6,55 @@ import t from 'prop-types';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useLabels, useContext, useAuth, useSalesForce } from 'utilities/hooks';
+import { useLabels, useContext, useAuth } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
 
 const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
-    // Hook: Context
-    const { INITIATIVE_ID, REPORT_ID } = useContext();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Router
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const router = useRouter();
-
-    // Hook: Metadata
+    const { INITIATIVE_ID, REPORT_ID } = useContext();
     const { label } = useLabels();
-
-    // Hook: Salesforce setup
-    const { sfUpdate } = useSalesForce();
-
-    // Hook: Auth
     const { userInitiativeRights } = useAuth();
+    const { ewUpdate } = useElseware();
 
-    // Initiative data
-    const { updateReport, utilities, CONSTANTS } = useInitiativeDataStore();
+    // ///////////////////
+    // STATE
+    // ///////////////////
 
     const [canUpdate, setCanUpdate] = useState(true);
 
-    // method: set report to in progress
+    // ///////////////////
+    // METHODS
+    // ///////////////////
+
     async function reportInProgress() {
         try {
             if (
                 utilities.reports.get(REPORT_ID).Status__c ===
                 CONSTANTS.TYPES.REPORT_NOT_STARTED
             ) {
-                // Object name
-                const object = 'Initiative_Report__c';
-
-                // Data for sf
-                const data = {
-                    Status__c: CONSTANTS.TYPES.REPORT_IN_PROGRESS,
-                };
-
-                // Update
-                await sfUpdate({ object, data, id: REPORT_ID });
+                const { data: reportData } = await ewUpdate(
+                    'initiative-report/initiative-report',
+                    REPORT_ID,
+                    {
+                        Status__c: CONSTANTS.REPORTS.REPORT_IN_PROGRESS,
+                    }
+                );
 
                 // Update store
-                await updateReport(REPORT_ID);
+                utilities.updateInitiativeData('_reports', reportData);
             }
 
             // Change location
@@ -63,6 +65,10 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
             console.warn(error);
         }
     }
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     useEffect(() => {
         // User needs to have rights to edit
@@ -79,6 +85,10 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
 
         setCanUpdate(canUpdate);
     }, [userInitiativeRights]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>

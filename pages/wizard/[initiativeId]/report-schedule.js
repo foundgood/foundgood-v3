@@ -25,14 +25,12 @@ import ReportCard from 'components/_wizard/reportCard';
 
 const ReportScheduleComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // ///////////////////
     // ///////////////////
     // STORES
     // ///////////////////
@@ -41,14 +39,12 @@ const ReportScheduleComponent = ({ pageProps }) => {
     const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
 
     // ///////////////////
-    // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { labelTodo, label, object, valueSet } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
 
-    // ///////////////////
     // ///////////////////
     // STATE
     // ///////////////////
@@ -59,14 +55,12 @@ const ReportScheduleComponent = ({ pageProps }) => {
     const [funder, setFunder] = useState(null);
 
     // ///////////////////
-    // ///////////////////
     // FORMS
     // ///////////////////
 
     const { handleSubmit, control, setValue, reset } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -114,7 +108,6 @@ const ReportScheduleComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -143,7 +136,6 @@ const ReportScheduleComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -152,12 +144,8 @@ const ReportScheduleComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {funders.length > 0 ? (
                     funders.map(funder => {
                         // Get report items based on funder id (funder.Id) and report.Funder_Report__c

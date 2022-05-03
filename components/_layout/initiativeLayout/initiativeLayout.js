@@ -11,7 +11,6 @@ import { useContext, useAuth, useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
-import Footer from 'components/_layout/footer';
 import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
 

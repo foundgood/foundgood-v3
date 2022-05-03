@@ -1,11 +1,28 @@
 // React
 import React from 'react';
 
+// Utilities
+import { useLabels } from 'utilities/hooks';
+import {
+    useWizardNavigationStore,
+    useInitiativeDataStore,
+} from 'utilities/store';
+
 // Packages
 import t from 'prop-types';
 import cc from 'classcat';
 
-const TitlePreambleComponent = ({ title, preamble, preload }) => {
+const TitlePreambleComponent = ({ title = null, preamble = null }) => {
+    // Stores
+    const { currentItem } = useWizardNavigationStore();
+    const { utilities } = useInitiativeDataStore();
+
+    // Hooks
+    const { label } = useLabels();
+
+    // Preload
+    const preload = !utilities.initiative.get().Id;
+
     return (
         <>
             <div
@@ -16,8 +33,18 @@ const TitlePreambleComponent = ({ title, preamble, preload }) => {
                         'opacity-100 text-teal-100': !preload,
                     },
                 ])}>
-                <h2 className="t-h2">{title}</h2>
-                {preamble && <p className="mt-16 t-preamble">{preamble}</p>}
+                <h2 className="t-h2">
+                    {title
+                        ? title
+                        : label(currentItem?.item?.labels?.form?.title)}
+                </h2>
+                {preamble && (
+                    <p className="mt-16 t-preamble">
+                        {title
+                            ? title
+                            : label(currentItem?.item?.labels?.form?.preamble)}
+                    </p>
+                )}
             </div>
         </>
     );

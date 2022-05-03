@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useLabels, useContext, useAuth, useSalesForce } from 'utilities/hooks';
+import { useLabels, useContext, useAuth, useElseware } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -13,46 +13,44 @@ import Button from 'components/button';
 import Modal from 'components/modal';
 
 const WizardStatusComponent = () => {
-    // Router
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const router = useRouter();
-
-    // Hook: Metadata
     const { label } = useLabels();
-
-    // Hook: Auth
     const { userInitiativeRights } = useAuth();
-
-    // Context for wizard pages
     const { INITIATIVE_ID, REPORT_ID } = useContext();
+    const { ewUpdate } = useElseware();
 
-    // Hook: Salesforce setup
-    const { sfUpdate } = useSalesForce();
+    // ///////////////////
+    // STATE
+    // ///////////////////
 
-    // Initiative data
-    const { updateReport, utilities, CONSTANTS } = useInitiativeDataStore();
-
-    // Current report
-    const currentReport = utilities.reports.get(REPORT_ID);
-
-    // State: Modal
     const [showModal, setShowModal] = useState(false);
 
-    // method: set report to in progress
+    // ///////////////////
+    // METHODS
+    // ///////////////////
+
     async function reportInProgress() {
         try {
-            // Object name
-            const object = 'Initiative_Report__c';
-
-            // Data for sf
-            const data = {
-                Status__c: CONSTANTS.TYPES.REPORT_IN_PROGRESS,
-            };
-
-            // Update
-            await sfUpdate({ object, data, id: REPORT_ID });
+            const { data: reportData } = await ewUpdate(
+                'initiative-report/initiative-report',
+                REPORT_ID,
+                {
+                    Status__c: CONSTANTS.REPORTS.REPORT_IN_PROGRESS,
+                }
+            );
 
             // Update store
-            await updateReport(REPORT_ID);
+            utilities.updateInitiativeData('_reports', reportData);
 
             // Change location
             router.push(`/wizard/${INITIATIVE_ID}/introduction/${REPORT_ID}`);
@@ -61,22 +59,18 @@ const WizardStatusComponent = () => {
         }
     }
 
-    // method: cmplete report
     async function completeReport() {
         try {
-            // Object name
-            const object = 'Initiative_Report__c';
-
-            // Data for sf
-            const data = {
-                Status__c: CONSTANTS.TYPES.REPORT_IN_REVIEW,
-            };
-
-            // Update
-            await sfUpdate({ object, data, id: REPORT_ID });
+            const { data: reportData } = await ewUpdate(
+                'initiative-report/initiative-report',
+                REPORT_ID,
+                {
+                    Status__c: CONSTANTS.REPORTS.REPORT_IN_REVIEW,
+                }
+            );
 
             // Update store
-            await updateReport(REPORT_ID);
+            utilities.updateInitiativeData('_reports', reportData);
 
             // Close modal
             setShowModal(false);
@@ -84,6 +78,16 @@ const WizardStatusComponent = () => {
             console.warn(error);
         }
     }
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const currentReport = utilities.reports.get(REPORT_ID);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>

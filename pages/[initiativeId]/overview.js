@@ -607,7 +607,7 @@ const ProjectComponent = ({ pageProps }) => {
                                             />
                                         </div>
                                         */}
-                                        {item.Account__r.Name}
+                                        {item.Account__r?.Name}
                                     </h3>
                                     <p className="mt-16 t-sh5 text-blue-60">
                                         {/* Display year, not full date */}

@@ -28,7 +28,6 @@ import NoReflections from 'components/_wizard/noReflections';
 
 const ApplicantsComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
@@ -36,14 +35,12 @@ const ApplicantsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // ///////////////////
-    // ///////////////////
     // STORES
     // ///////////////////
 
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
-    // ///////////////////
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -63,7 +60,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     });
 
     // ///////////////////
-    // ///////////////////
     // STATE
     // ///////////////////
 
@@ -73,7 +69,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     const [updateId, setUpdateId] = useState(null);
     const [applicantType, setApplicantType] = useState(null);
 
-    // ///////////////////
     // ///////////////////
     // FORMS
     // ///////////////////
@@ -87,7 +82,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     const { isDirty } = useFormState({ control });
     const applicantTypeSelect = useWatch({ control, name: 'Type__c' });
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -151,7 +145,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -194,7 +187,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     }, [applicantTypeSelect]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -221,12 +213,8 @@ const ApplicantsComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {MODE === CONTEXTS.REPORT && applicants.length > 0 && (
                     <NoReflections
                         onClick={submitMultipleNoReflections}

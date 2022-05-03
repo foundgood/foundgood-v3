@@ -29,7 +29,6 @@ import NoReflections from 'components/_wizard/noReflections';
 
 const SharingResultsComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
@@ -37,20 +36,18 @@ const SharingResultsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // ///////////////////
-    // ///////////////////
     // STORES
     // ///////////////////
 
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-    const { getValueLabel, valueSet, label, object } = useLabels();
 
-    // ///////////////////
     // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
+    const { getValueLabel, valueSet, label, object } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -64,7 +61,6 @@ const SharingResultsComponent = ({ pageProps }) => {
     });
 
     // ///////////////////
-    // ///////////////////
     // STATE
     // ///////////////////
 
@@ -74,7 +70,6 @@ const SharingResultsComponent = ({ pageProps }) => {
     const [updateId, setUpdateId] = useState(null);
     const [disseminationType, setDisseminationType] = useState(null);
 
-    // ///////////////////
     // ///////////////////
     // FORMS
     // ///////////////////
@@ -91,7 +86,6 @@ const SharingResultsComponent = ({ pageProps }) => {
         name: 'Dissemination_Method__c',
     });
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -186,7 +180,6 @@ const SharingResultsComponent = ({ pageProps }) => {
     };
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -242,7 +235,6 @@ const SharingResultsComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -264,12 +256,8 @@ const SharingResultsComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {MODE === CONTEXTS.REPORT && activities.length > 0 && (
                     <NoReflections
                         onClick={submitMultipleNoReflections}

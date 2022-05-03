@@ -2,35 +2,8 @@ import create from 'zustand';
 import _get from 'lodash.get';
 import _set from 'lodash.set';
 import _unset from 'lodash.unset';
-import { query } from 'utilities/api/salesForce/fetchers';
-import { queries } from 'utilities/api/salesForce/queries';
 import { authStore } from 'utilities/store';
 import ew from 'utilities/api/elseware';
-
-// Wrapper for sales force query
-async function sfQuery(q) {
-    try {
-        const { records, totalSize } = await query(q);
-        if (totalSize === 1) {
-            return records[0];
-        } else if (totalSize > 1) {
-            return records;
-        } else return null;
-    } catch (error) {
-        console.warn(error);
-    }
-}
-
-function _returnAsKeys(data) {
-    if (data) {
-        const keyedData = [...(Array.isArray(data) ? data : [data])].reduce(
-            (acc, item) => ({ ...acc, [item.Id]: item }),
-            {}
-        );
-        return keyedData;
-    }
-    return {};
-}
 
 function _updateAuth() {
     const { getState } = authStore;
@@ -168,16 +141,22 @@ const useInitiativeDataStore = create((set, get) => ({
     },
 
     utilities: {
+        initiative: {
+            // Returns object
+            get() {
+                return get().initiative;
+            },
+        },
         activities: {
-            // Returns activity as object based on id
+            // Returns object
             get(id) {
                 return get().initiative._activities[id] || {};
             },
-            // Returns activities as array
+            // Returns array
             getAll() {
                 return Object.values(get().initiative._activities);
             },
-            // Returns activities with specific type as array
+            // Returns array
             getTypeIntervention() {
                 return Object.values(get().initiative._activities).filter(
                     item =>
@@ -185,7 +164,7 @@ const useInitiativeDataStore = create((set, get) => ({
                         item.Activity_Type__c
                 );
             },
-            // Returns activities with specific type as array
+            // Returns array
             getTypeDissemination() {
                 return Object.values(get().initiative._activities).filter(
                     item =>
@@ -196,16 +175,17 @@ const useInitiativeDataStore = create((set, get) => ({
         },
         activityGoals: {},
         activitySuccessMetrics: {
-            // Returns activitySuccessMetric as object based on id
+            // Returns object
             get(id) {
                 return get().initiative._activitySuccessMetrics[id] || {};
             },
-            // Returns array of objects of activitySuccessMetrics based on Initiative_Activity__c id
+            // Returns array
             getFromActivityId(activityId) {
                 return Object.values(
                     get().initiative?._activitySuccessMetrics
                 ).filter(item => item.Initiative_Activity__c === activityId);
             },
+            // Returns array
             getTypePredefinedFromActivityId(activityId) {
                 return this.getFromActivityId(activityId).filter(
                     item =>
@@ -213,6 +193,7 @@ const useInitiativeDataStore = create((set, get) => ({
                         constants.ACTIVITY_SUCCESS_METRICS.INDICATOR_PREDEFINED
                 );
             },
+            // Returns array
             getTypeCustomFromActivityId(activityId) {
                 return this.getFromActivityId(activityId).filter(
                     item =>
@@ -222,11 +203,11 @@ const useInitiativeDataStore = create((set, get) => ({
             },
         },
         collaborators: {
-            // Returns collaborator as object based on id
+            // Returns object
             get(id) {
                 return get().initiative._collaborators[id] || {};
             },
-            // Returns collaborater with specific type as object
+            // Returns object
             getTypeMain() {
                 return (
                     Object.values(get().initiative._collaborators).find(
@@ -236,7 +217,7 @@ const useInitiativeDataStore = create((set, get) => ({
                     ) || {}
                 );
             },
-            // Returns collaboraters with specific type as array
+            // Returns array
             getTypeAdditional() {
                 return Object.values(
                     get().initiative._collaborators
@@ -246,7 +227,7 @@ const useInitiativeDataStore = create((set, get) => ({
                     )
                 );
             },
-            // Returns collaboraters with specific type as array
+            // Returns array
             getTypeApplicantsAll() {
                 return Object.values(
                     get().initiative._collaborators
@@ -258,31 +239,31 @@ const useInitiativeDataStore = create((set, get) => ({
             },
         },
         employeesFunded: {
-            // Returns employeeFunded as object based on id
+            // Returns object
             get(id) {
                 return get().initiative._employeesFunded[id] || {};
             },
-            // Returns employeesFunded as array
+            // Returns array
             getAll() {
                 return Object.values(get().initiative._employeesFunded);
             },
         },
         funders: {
-            // Returns funder as object based on id
+            // Returns object
             get(id) {
                 return get().initiative._funders[id] || {};
             },
-            // Returns funders as array
+            // Returns array
             getAll() {
                 return Object.values(get().initiative._funders);
             },
         },
         goals: {
-            // Returns goal as object based on id
+            // Returns object
             get(id) {
                 return get().initiative._goals[id] || {};
             },
-            // Returns goal with specific type as object
+            // Returns object
             getTypePredefined() {
                 return (
                     Object.values(get().initiative?._goals).find(
@@ -290,7 +271,7 @@ const useInitiativeDataStore = create((set, get) => ({
                     ) || {}
                 );
             },
-            // Returns collaboraters with specific type as array
+            // Returns array
             getTypeCustom() {
                 return Object.values(get().initiative._goals).filter(item =>
                     constants.GOALS.GOAL_CUSTOM.includes(item.Type__c)
@@ -300,19 +281,51 @@ const useInitiativeDataStore = create((set, get) => ({
         reportDetailEntries: {},
         reportDetailGoals: {},
         reportDetails: {
-            // Returns array of objects of reportDetails based on Initiative_Report__c id
+            // Returns object
+            get(id) {
+                return get().initiative._reportDetails[id] || {};
+            },
+            // Returns array
             getFromReportId(reportId) {
                 return Object.values(get().initiative?._reportDetails).filter(
                     item => item.Initiative_Report__c === reportId
                 );
             },
+            // Returns array
+            getTypeInfluenceOnPolicy() {
+                return Object.values(get().initiative._reportDetails).filter(
+                    item =>
+                        item.Type__c ===
+                        constants.REPORT_DETAILS.INFLUENCE_ON_POLICY
+                );
+            },
+            // Returns array
+            getTypeEvaluation() {
+                return Object.values(get().initiative._reportDetails).filter(
+                    item => item.Type__c === constants.REPORT_DETAILS.EVALUATION
+                );
+            },
+            // Returns array
+            getTypeInfluenceOnPolicyFromReportId(reportId) {
+                return this.getFromReportId(reportId).filter(
+                    item =>
+                        item.Type__c ===
+                        constants.REPORT_DETAILS.INFLUENCE_ON_POLICY
+                );
+            },
+            // Returns array
+            getTypeEvaluationFromReportId(reportId) {
+                return this.getFromReportId(reportId).filter(
+                    item => item.Type__c === constants.REPORT_DETAILS.EVALUATION
+                );
+            },
         },
         reports: {
-            // Returns report as object based on id
+            // Returns object
             get(id) {
                 return get().initiative._reports[id] || {};
             },
-            // Returns array of objects of reports based on Initiative_Funder__c id
+            // Returns array
             getFromFunderId(funderId) {
                 return Object.values(get().initiative?._reports).filter(
                     item => item.Funder_Report__c === funderId
@@ -320,7 +333,7 @@ const useInitiativeDataStore = create((set, get) => ({
             },
         },
         updateContents: {
-            // Returns updateContent as object based on Initiative_Update__c id
+            // Returns object
             getFromUpdateId(initiativeUpdateId) {
                 return (
                     Object.values(get().initiative?._updateContents).find(
@@ -330,21 +343,17 @@ const useInitiativeDataStore = create((set, get) => ({
             },
         },
         updates: {
-            // Returns update as object based on id
+            // Returns object
             get(id) {
                 return get().initiative._updates[id] || {};
             },
-            // Returns updates with specific type as array
+            // Returns array
             getTypeLogbookUpdate() {
                 return Object.values(get().initiative._updates).filter(
                     item =>
                         item.Type__c === constants.REPORT_DETAILS.LOGBOOK_UPDATE
                 );
             },
-        },
-        // Returns id of initiative - to make sure it's the latest
-        getInitiativeId() {
-            return get().initiative.Id;
         },
         // Update initiative with new data
         updateInitiative(data) {
@@ -397,88 +406,6 @@ const useInitiativeDataStore = create((set, get) => ({
                 );
             return funders?.length > 0;
         },
-    },
-
-    async updateReport(id) {
-        const data = await sfQuery(queries.initiativeReport.get(id));
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _reports: {
-                        ...state.initiative._reports,
-                        [id]: data,
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    async updateReportDetails(ids) {
-        const data = await sfQuery(
-            queries.initiativeReportDetail.getMultiple(ids)
-        );
-
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _reportDetails: {
-                        ...state.initiative._reportDetails,
-                        ..._returnAsKeys(data),
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    // Custom data updaters
-    async populateReportDetails(reportId) {
-        if (reportId && reportId !== '[reportId]') {
-            const reportDetailsData = await sfQuery(
-                queries.initiativeReportDetail.getAllReport(reportId)
-            );
-
-            // Update state
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _reportDetails: {
-                        // ...state.initiative._reportDetails,
-                        ..._returnAsKeys(reportDetailsData),
-                    },
-                },
-            }));
-
-            // Update auth
-            _updateAuth();
-        }
-    },
-
-    // Populate report data
-    async populateReport(id) {
-        if (id && id !== '[reportId]' && !get().initiative._reports[id]) {
-            const data = await sfQuery(queries.initiativeReport.get(id));
-            if (data) {
-                set(state => ({
-                    initiative: {
-                        ...state.initiative,
-                        _reports: {
-                            [id]: data,
-                        },
-                    },
-                }));
-            }
-
-            // Update auth
-            _updateAuth();
-        }
     },
 
     // Get initiative and all sub data based on initiative ID

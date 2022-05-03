@@ -25,17 +25,9 @@ const ReportComponent = () => {
     // Store: InitiativeData
     const {
         initiative: initiativeFromSalesForce,
-        populateReportDetails,
-        populateReport,
         utilities,
         CONSTANTS,
     } = useInitiativeDataStore();
-
-    // Effect: Populate report and reportDetails based on id
-    useEffect(() => {
-        populateReport(REPORT_ID);
-        populateReportDetails(REPORT_ID);
-    }, [REPORT_ID]);
 
     // State: Report version
     const [reportVersion, setReportVersion] = useState(null);

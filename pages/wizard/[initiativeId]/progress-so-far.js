@@ -19,14 +19,12 @@ import ProgressCard from 'components/_wizard/progressCard';
 
 const ProgressSoFarComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // ///////////////////
     // ///////////////////
     // STORES
     // ///////////////////
@@ -35,7 +33,6 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
-    // ///////////////////
     // HOOKS
     // ///////////////////
 
@@ -43,14 +40,12 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     const { ewUpdate } = useElseware();
 
     // ///////////////////
-    // ///////////////////
     // FORMS
     // ///////////////////
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -94,7 +89,6 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -106,7 +100,6 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -115,12 +108,8 @@ const ProgressSoFarComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {activities.length > 0 ? (
                     activities.map(activity => {
                         // Get success metric items based on activity id (activity.Id) and activitySuccessMetric.XXX

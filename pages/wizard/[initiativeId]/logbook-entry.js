@@ -21,14 +21,12 @@ import LogbookCard from 'components/_wizard/logbookCard';
 
 const LogbookComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // ///////////////////
     // ///////////////////
     // STORES
     // ///////////////////
@@ -37,14 +35,12 @@ const LogbookComponent = ({ pageProps }) => {
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
     // ///////////////////
-    // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { label, object } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
 
-    // ///////////////////
     // ///////////////////
     // STATE
     // ///////////////////
@@ -55,7 +51,6 @@ const LogbookComponent = ({ pageProps }) => {
     const [updateType, setUpdateType] = useState('text');
     const [attachLoading, setAttachLoading] = useState(false);
 
-    // ///////////////////
     // ///////////////////
     // FORMS
     // ///////////////////
@@ -76,7 +71,6 @@ const LogbookComponent = ({ pageProps }) => {
     });
     const { isDirty } = useFormState({ control });
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -162,7 +156,6 @@ const LogbookComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -193,7 +186,6 @@ const LogbookComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -212,12 +204,8 @@ const LogbookComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 <LogbookCard
                     headline={label('MenuLogbook')}
                     actionCreate={() => {

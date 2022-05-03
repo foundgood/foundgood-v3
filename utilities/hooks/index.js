@@ -6,6 +6,7 @@ import useContext from './useContext';
 import useElseware from './useElseware';
 import useReflections from './useReflections';
 import useLabels from './useLabels';
+import useWizardSubmit from './useWizardSubmit';
 
 export {
     useElseware,
@@ -16,4 +17,5 @@ export {
     useContext,
     useReflections,
     useLabels,
+    useWizardSubmit,
 };

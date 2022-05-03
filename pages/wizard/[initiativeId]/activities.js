@@ -28,7 +28,6 @@ import NoReflections from 'components/_wizard/noReflections';
 
 const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
@@ -36,14 +35,12 @@ const ActivitiesComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // ///////////////////
-    // ///////////////////
     // STORES
     // ///////////////////
 
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
 
-    // ///////////////////
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -51,10 +48,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label, object, valueSet, controlledValueSet } = useLabels();
     const { ewUpdate, ewCreate } = useElseware();
-    const {
-        submitMultipleNoReflections,
-        submitMultipleReflections,
-    } = useReflections({
+    const { submitNoReflection, submitMultipleReflections } = useReflections({
         dataSet() {
             return utilities.activities.getAll;
         },
@@ -62,7 +56,6 @@ const ActivitiesComponent = ({ pageProps }) => {
         type: CONSTANTS.REPORT_DETAILS.ACTIVITY_OVERVIEW,
     });
 
-    // ///////////////////
     // ///////////////////
     // STATE
     // ///////////////////
@@ -72,7 +65,6 @@ const ActivitiesComponent = ({ pageProps }) => {
     const [reflecting, setReflecting] = useState(false);
     const [updateId, setUpdateId] = useState(null);
 
-    // ///////////////////
     // ///////////////////
     // FORMS
     // ///////////////////
@@ -85,7 +77,6 @@ const ActivitiesComponent = ({ pageProps }) => {
     } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -180,7 +171,6 @@ const ActivitiesComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -233,7 +223,6 @@ const ActivitiesComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -258,15 +247,11 @@ const ActivitiesComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {MODE === CONTEXTS.REPORT && activities.length > 0 && (
                     <NoReflections
-                        onClick={submitMultipleNoReflections}
+                        onClick={submitNoReflection}
                         reflectionItems={reportDetailsItems.map(
                             item => item.Description__c
                         )}

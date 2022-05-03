@@ -6,7 +6,7 @@ import useElseware from './useElseware';
 import useContext from './useContext';
 import { useInitiativeDataStore } from 'utilities/store';
 
-const useReflections = ({ dataSet, parentKey, reflectionKey, type }) => {
+const useReflections = ({ dataSet, parentKey = null, reflectionKey, type }) => {
     const { ewCreate, ewCreateUpdateWrapper } = useElseware();
     const { REPORT_ID } = useContext();
     const { utilities, CONSTANTS } = useInitiativeDataStore();
@@ -46,7 +46,7 @@ const useReflections = ({ dataSet, parentKey, reflectionKey, type }) => {
             .reduce((acc, dataItem) => {
                 const currentReflection = utilities.reportDetails
                     .getFromReportId(REPORT_ID)
-                    .filter(item => item[parentKey] === dataItem.Id);
+                    .filter(item => item[rParentKey] === dataItem.Id);
                 return [
                     ...acc,
                     {
@@ -69,7 +69,39 @@ const useReflections = ({ dataSet, parentKey, reflectionKey, type }) => {
                     },
                     {
                         Type__c: rType,
-                        [parentKey]: item.relationId,
+                        [rParentKey]: item.relationId,
+                        Initiative_Report__c: REPORT_ID,
+                    },
+                    '_reportDetails'
+                )
+            )
+        );
+    }
+
+    async function submitMultipleReflectionsToSelf(formData) {
+        const reportDetails = rDataSet()
+            .reduce((acc, dataItem) => {
+                return [
+                    ...acc,
+                    {
+                        reportDetailId: dataItem.Id,
+                        value: formData[`${dataItem.Id}-reflection`],
+                        selected: formData[`${dataItem.Id}-selector`],
+                    },
+                ];
+            }, [])
+            .filter(item => item.selected);
+
+        await Promise.all(
+            reportDetails.map(item =>
+                ewCreateUpdateWrapper(
+                    'initiative-report-detail/initiative-report-detail',
+                    item.reportDetailId,
+                    {
+                        Description__c: item.value,
+                    },
+                    {
+                        Type__c: rType,
                         Initiative_Report__c: REPORT_ID,
                     },
                     '_reportDetails'
@@ -110,6 +142,7 @@ const useReflections = ({ dataSet, parentKey, reflectionKey, type }) => {
     return {
         submitReflection,
         submitMultipleReflections,
+        submitMultipleReflectionsToSelf,
         submitNoReflection,
         submitMultipleNoReflections,
     };

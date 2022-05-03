@@ -6,10 +6,17 @@ import cc from 'classcat';
 import t from 'prop-types';
 
 // Utilities
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 
-const InputWrapperComponent = ({ children, preload }) => {
+const InputWrapperComponent = ({ children }) => {
+    // Stores
+    const { utilities } = useInitiativeDataStore();
+
+    // Preload
+    const preload = !utilities.initiative.get().Id;
+
     return (
         <div
             style={{ willChange: 'transform opacity' }}

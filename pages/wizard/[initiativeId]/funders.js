@@ -28,7 +28,6 @@ import { InputWrapper, FormFields } from 'components/_inputs';
 
 const FundersComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
@@ -36,14 +35,12 @@ const FundersComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // ///////////////////
-    // ///////////////////
     // STORES
     // ///////////////////
 
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
-    // ///////////////////
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -63,7 +60,6 @@ const FundersComponent = ({ pageProps }) => {
     });
 
     // ///////////////////
-    // ///////////////////
     // STATE
     // ///////////////////
 
@@ -74,7 +70,6 @@ const FundersComponent = ({ pageProps }) => {
     const [funder, setFunder] = useState(null);
 
     // ///////////////////
-    // ///////////////////
     // FORMS
     // ///////////////////
 
@@ -82,7 +77,6 @@ const FundersComponent = ({ pageProps }) => {
     const { isDirty } = useFormState({ control: mainForm.control });
     const reflectionForm = useForm();
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -149,7 +143,6 @@ const FundersComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -192,7 +185,6 @@ const FundersComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -217,7 +209,6 @@ const FundersComponent = ({ pageProps }) => {
     // Get funders
     const funders = utilities.funders.getAll();
 
-    // ///////////////////
     // ///////////////////
     // FIELDS
     // ///////////////////
@@ -294,12 +285,8 @@ const FundersComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {MODE === CONTEXTS.REPORT && funders.length > 0 && (
                     <NoReflections
                         onClick={submitMultipleNoReflections}

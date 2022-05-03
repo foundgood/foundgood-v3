@@ -20,14 +20,12 @@ import KpiCard from 'components/_wizard/kpiCard';
 
 const IndicatorsComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // ///////////////////
     // ///////////////////
     // STORES
     // ///////////////////
@@ -38,7 +36,6 @@ const IndicatorsComponent = ({ pageProps }) => {
     // Store: Initiative data
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
-    // ///////////////////
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -53,7 +50,6 @@ const IndicatorsComponent = ({ pageProps }) => {
     const { ewCreateUpdateWrapper } = useElseware();
 
     // ///////////////////
-    // ///////////////////
     // STATE
     // ///////////////////
 
@@ -64,14 +60,12 @@ const IndicatorsComponent = ({ pageProps }) => {
     const [activity, setActivity] = useState(null);
 
     // ///////////////////
-    // ///////////////////
     // FORMS
     // ///////////////////
 
     const { handleSubmit, control, setValue, reset } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -138,7 +132,6 @@ const IndicatorsComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -171,7 +164,6 @@ const IndicatorsComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -180,12 +172,8 @@ const IndicatorsComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {activities.length > 0 ? (
                     activities.map(activity => (
                         <KpiCard

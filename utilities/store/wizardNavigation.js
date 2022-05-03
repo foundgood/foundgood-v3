@@ -55,7 +55,6 @@ const useWizardNavigationStore = create((set, get) => ({
         const items = [
             d.introduction,
             // TODO Add in when we have more reporting options
-            // d.informationCapture,
             {
                 ...d.context,
                 items: [

@@ -337,24 +337,24 @@ const reportWizardDictionary = {
             return `/wizard/${initiativeId}/end-of-grant-reflections/${reportId}`;
         },
     },
-    postProjectActivities: {
-        title: 'ReportWizardMenuPostProjectActivities',
-        labels: {
-            form: {
-                title: 'ReportWizardPostProjectActivitiesHeading',
-                preamble: 'ReportWizardPostProjectActivitiesSubHeading',
-            },
-            help: {
-                why: 'ReportWizardPostProjectActivitiesHelpWhy',
-                what: 'ReportWizardPostProjectActivitiesHelpWhat',
-                guide: 'ReportWizardPostProjectActivitiesHelpGuide',
-            },
-        },
-        baseUrl: 'post-project-activities',
-        url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/post-project-activities/${reportId}`;
-        },
-    },
+    // postProjectActivities: {
+    //     title: 'ReportWizardMenuPostProjectActivities',
+    //     labels: {
+    //         form: {
+    //             title: 'ReportWizardPostProjectActivitiesHeading',
+    //             preamble: 'ReportWizardPostProjectActivitiesSubHeading',
+    //         },
+    //         help: {
+    //             why: 'ReportWizardPostProjectActivitiesHelpWhy',
+    //             what: 'ReportWizardPostProjectActivitiesHelpWhat',
+    //             guide: 'ReportWizardPostProjectActivitiesHelpGuide',
+    //         },
+    //     },
+    //     baseUrl: 'post-project-activities',
+    //     url(initiativeId, reportId) {
+    //         return `/wizard/${initiativeId}/post-project-activities/${reportId}`;
+    //     },
+    // },
 };
 
 export { reportWizardDictionary };

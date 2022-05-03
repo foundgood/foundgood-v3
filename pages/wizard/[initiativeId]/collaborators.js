@@ -28,7 +28,6 @@ import NoReflections from 'components/_wizard/noReflections';
 
 const CollaboratorsComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
@@ -36,14 +35,12 @@ const CollaboratorsComponent = ({ pageProps }) => {
     verifyLoggedIn();
 
     // ///////////////////
-    // ///////////////////
     // STORES
     // ///////////////////
 
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
     const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
 
-    // ///////////////////
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -63,7 +60,6 @@ const CollaboratorsComponent = ({ pageProps }) => {
     });
 
     // ///////////////////
-    // ///////////////////
     // STATE
     // ///////////////////
 
@@ -72,7 +68,6 @@ const CollaboratorsComponent = ({ pageProps }) => {
     const [reflecting, setReflecting] = useState(false);
     const [updateId, setUpdateId] = useState(null);
 
-    // ///////////////////
     // ///////////////////
     // FORMS
     // ///////////////////
@@ -85,7 +80,6 @@ const CollaboratorsComponent = ({ pageProps }) => {
     } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // ///////////////////
     // ///////////////////
     // METHODS
     // ///////////////////
@@ -149,7 +143,6 @@ const CollaboratorsComponent = ({ pageProps }) => {
     }
 
     // ///////////////////
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -184,7 +177,6 @@ const CollaboratorsComponent = ({ pageProps }) => {
     }, [initiative]);
 
     // ///////////////////
-    // ///////////////////
     // DATA
     // ///////////////////
 
@@ -213,12 +205,8 @@ const CollaboratorsComponent = ({ pageProps }) => {
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {MODE === CONTEXTS.REPORT &&
                     Object.values(
                         initiative._collaborators

@@ -6,7 +6,13 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
+import {
+    useAuth,
+    useLabels,
+    useElseware,
+    useReflections,
+    useContext,
+} from 'utilities/hooks';
 import {
     useInitiativeDataStore,
     useWizardNavigationStore,
@@ -16,22 +22,54 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import Modal from 'components/modal';
-import { InputWrapper, Text, LongText } from 'components/_inputs';
+import { InputWrapper, Text } from 'components/_inputs';
 import ListCard from 'components/_wizard/listCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const InfluenceOnPolicyComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Metadata
-    const { labelTodo, label, object } = useLabels();
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
 
-    // Hook: useForm setup
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
+    const { label, object } = useLabels();
+    const { ewCreateUpdateWrapper } = useElseware();
+    const {
+        submitNoReflection,
+        submitMultipleReflectionsToSelf,
+    } = useReflections({
+        dataSet() {
+            return utilities.reportDetails.getTypeInfluenceOnPolicy;
+        },
+        type: CONSTANTS.REPORT_DETAILS.INFLUENCE_ON_POLICY,
+    });
+
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [reflecting, setReflecting] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { handleSubmit, control, setValue, reset } = useForm();
     const {
         handleSubmit: handleSubmitReflections,
@@ -39,44 +77,29 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     } = useForm();
     const { isDirty } = useFormState({ control });
 
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
-
-    // Store: Initiative data
-    const {
-        initiative,
-        utilities,
-        updateReportDetails,
-        CONSTANTS,
-    } = useInitiativeDataStore();
-
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
             const { Type_Of_Influence__c } = formData;
 
-            // Object name
-            const object = 'Initiative_Report_Detail__c';
-
             // Data for sf
             const data = {
-                Type__c: CONSTANTS.TYPES.INFLUENCE_ON_POLICY,
+                Type__c: CONSTANTS.REPORT_DETAILS.INFLUENCE_ON_POLICY,
                 Type_Of_Influence__c,
             };
 
             // Update / Save
-            const reportDetailId = updateId
-                ? await sfUpdate({ object, data, id: updateId })
-                : await sfCreate({
-                      object,
-                      data: { ...data, Initiative_Report__c: REPORT_ID },
-                  });
-
-            // Bulk update affected activity goals
-            await updateReportDetails([reportDetailId]);
+            await ewCreateUpdateWrapper(
+                'initiative-report-detail/initiative-report-detail',
+                updateId,
+                data,
+                { Initiative_Report__c: REPORT_ID },
+                '_reportDetails'
+            );
 
             // Close modal
             setModalIsOpen(false);
@@ -88,116 +111,53 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Adds reflections
-    async function submitReflections(formData) {
-        // Reformat form data based on topic keys
-        const reportDetails = Object.keys(initiative?._reportDetails)
-            .reduce((acc, key) => {
-                return [
-                    ...acc,
-                    {
-                        reportDetailId: key,
-                        value: formData[`${key}-reflection`],
-                        selected: formData[`${key}-selector`],
-                    },
-                ];
-            }, [])
-            .filter(item => item.selected);
-
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Update report detail ids based on reformatted form data
-        // Update always as the item is already a report detail item
-        const reportDetailIds = await Promise.all(
-            reportDetails.map(item =>
-                sfUpdate({
-                    object,
-                    id: item.reportDetailId,
-                    data: {
-                        Description__c: item.value,
-                    },
-                })
-            )
-        );
-        // Bulk update affected activity goals
-        await updateReportDetails(reportDetailIds);
-    }
-
-    // Method: Submits no reflections flag
-    async function submitNoReflections() {
-        // Object name
-        const object = 'Initiative_Report_Detail__c';
-
-        // Create or update report detail ids based on reformatted form data
-        // Update if reportDetailId exist in item - this means we have it already in the store
-        const reportDetailId = await sfCreate({
-            object,
-            data: {
-                Type__c: CONSTANTS.TYPES.INFLUENCE_ON_POLICY,
-                Description__c: CONSTANTS.CUSTOM.NO_REFLECTIONS,
-                Initiative_Report__c: REPORT_ID,
-            },
-        });
-
-        // Bulk update affected activity goals
-        await updateReportDetails([reportDetailId]);
-    }
-
     // Method: Form error/validation handler
     function error(error) {
         console.warn('Form invalid', error);
         throw error;
     }
 
-    // Local state to handle modal
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-
-    // Local state to handle reflection
-    const [reflecting, setReflecting] = useState(false);
-
-    // We set an update id when updating and remove when adding
-    const [updateId, setUpdateId] = useState(null);
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        const { Type_Of_Influence__c } =
-            initiative?._reportDetails[updateId] ?? {};
+        const { Type_Of_Influence__c } = utilities.reportDetails.get(updateId);
 
         setValue('Type_Of_Influence__c', Type_Of_Influence__c);
     }, [updateId, modalIsOpen]);
 
     // Add submit handler to wizard navigation store
     useEffect(() => {
-        if (MODE === CONTEXTS.REPORT) {
-            setTimeout(() => {
-                setCurrentSubmitHandler(
-                    handleSubmitReflections(submitReflections, error)
-                );
-            }, 100);
-        } else {
-            setTimeout(() => {
-                setCurrentSubmitHandler(null);
-            }, 100);
-        }
+        setTimeout(() => {
+            setCurrentSubmitHandler(
+                MODE === CONTEXTS.REPORT
+                    ? handleSubmitReflections(
+                          submitMultipleReflectionsToSelf,
+                          error
+                      )
+                    : null
+            );
+        }, 100);
     }, [initiative]);
 
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
     // Current report details
-    const currentReportDetails = utilities.reportDetails
-        .getFromReportId(REPORT_ID)
-        .filter(item => item.Type__c === CONSTANTS.TYPES.INFLUENCE_ON_POLICY);
+    const currentReportDetails = utilities.reportDetails.getTypeInfluenceOnPolicyFromReportId(
+        REPORT_ID
+    );
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 {MODE === CONTEXTS.REPORT && (
                     <NoReflections
-                        onClick={submitNoReflections}
+                        onClick={submitNoReflection}
                         reflectionItems={currentReportDetails.map(
                             item => item.Description__c
                         )}
@@ -256,7 +216,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
             </InputWrapper>
             <Modal
                 isOpen={modalIsOpen}
-                title={labelTodo('Add new influence on policy')}
+                title={label('WizardModalHeadingInfluence')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
                 onSave={handleSubmit(submit)}>

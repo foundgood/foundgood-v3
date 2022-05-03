@@ -1,7 +1,6 @@
 // Packages
 import { useRouter } from 'next/router';
 import _get from 'lodash.get';
-import parse from 'html-react-parser';
 
 import { useMetadata } from 'utilities/hooks';
 
@@ -19,7 +18,6 @@ const useLabels = () => {
     const {
         labelTodo,
         valueSet,
-        log: logMetadata,
         controlledValueSet,
         getValueLabel,
     } = useMetadata();

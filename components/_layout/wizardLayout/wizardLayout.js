@@ -33,15 +33,10 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
     } = useWizardLayoutStore();
 
     // Store: Initiaitive Data
-    const {
-        populateReport,
-        populateReportDetails,
-        populateInitiative,
-        initiative,
-    } = useInitiativeDataStore();
+    const { populateInitiative } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, log } = useLabels();
+    const { label } = useLabels();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -65,8 +60,6 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
         // Report mode - check to populate both report and initiative
         if (MODE === CONTEXTS.REPORT && REPORT_ID && INITIATIVE_ID) {
             populateInitiative(INITIATIVE_ID);
-            populateReport(REPORT_ID);
-            populateReportDetails(REPORT_ID);
         }
 
         // Initiative mode - check to populate initiative

@@ -1,11 +1,11 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
+import { useAuth, useLabels, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -22,27 +22,37 @@ import {
 } from 'components/_inputs';
 
 const ReportDetailsComponent = () => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
-    const { REPORT_ID } = useContext();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Metadata
-    const { labelTodo, label, object, valueSet } = useLabels();
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { initiative, utilities } = useInitiativeDataStore();
 
-    // Hook: useForm setup
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { REPORT_ID, CONTEXTS } = useContext();
+    const { label, object, valueSet } = useLabels();
+    const { ewUpdate } = useElseware();
+
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { handleSubmit, control } = useForm();
 
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
-
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-
-    // Store: Initiative data
-    const { initiative, updateReport, utilities } = useInitiativeDataStore();
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Submit page content
     async function submit(formData) {
@@ -54,19 +64,20 @@ const ReportDetailsComponent = () => {
                 ReportDuration,
             } = formData;
 
-            await sfUpdate({
-                object: 'Initiative_Report__c',
-                id: REPORT_ID,
-                data: {
+            const reportData = await ewUpdate(
+                'initiative-report/initiative-report',
+                REPORT_ID,
+                {
                     Name,
                     Report_Type__c,
                     Due_Date__c,
                     Report_Period_Start_Date__c: ReportDuration.from,
                     Report_Period_End_Date__c: ReportDuration.to,
-                },
-            });
+                }
+            );
 
-            await updateReport(REPORT_ID);
+            // Update store
+            utilities.updateInitiativeData('_reports', reportData);
         } catch (error) {
             console.warn(error);
         }
@@ -78,6 +89,10 @@ const ReportDetailsComponent = () => {
         throw error;
     }
 
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
     // Add submit handler to wizard navigation store
     useEffect(() => {
         setTimeout(() => {
@@ -85,18 +100,21 @@ const ReportDetailsComponent = () => {
         }, 100);
     }, [initiative]);
 
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
     // Get current report
     const currentReport = utilities.reports.get(REPORT_ID);
 
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id && currentReport.Id}
-            />
-
-            <InputWrapper preload={!initiative.Id && currentReport.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 <Text
                     name="Name"
                     defaultValue={currentReport.Name}
@@ -112,7 +130,7 @@ const ReportDetailsComponent = () => {
                     defaultValue={currentReport.Report_Type__c}
                     label={object.label('Initiative__c.Report_Type__c')}
                     subLabel={object.helpText('Initiative__c.Report_Type__c')}
-                    placeholder={labelTodo('Type')}
+                    placeholder={label('FormCaptureSelectEmpty')}
                     options={valueSet('initiativeReport.Report_Type__c')}
                     disabled={utilities.isNovoLeadFunder()}
                     required={!utilities.isNovoLeadFunder()}

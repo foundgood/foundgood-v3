@@ -1,11 +1,11 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useLabels, useSalesForce, useContext } from 'utilities/hooks';
+import { useAuth, useLabels, useContext } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -16,45 +16,54 @@ import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, Reflection } from 'components/_inputs';
 
 const RisksAndChallengesComponent = () => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
-    const { MODE, CONTEXTS, UPDATE, REPORT_ID } = useContext();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Metadata
+    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { initiative, utilities } = useInitiativeDataStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { CONTEXTS, REPORT_ID } = useContext();
     const { label } = useLabels();
+    const { ewUpdate } = useElseware();
 
-    // Hook: useForm setup
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { handleSubmit, control } = useForm();
 
-    // Hook: Salesforce setup
-    const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
-
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-
-    // Store: Initiative data
-    const { initiative, utilities, updateReport } = useInitiativeDataStore();
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Submit page content
     async function submit(formData) {
         try {
-            const {
-                Summary_Of_Initiative_Risks__c,
-                Summary_Of_Challenges_And_Learnings__c,
-            } = formData;
+            const { Summary_Of_Initiative_Risks__c } = formData;
 
-            await sfUpdate({
-                object: 'Initiative_Report__c',
-                id: REPORT_ID,
-                data: {
+            // Update
+            const reportData = await ewUpdate(
+                'initiative-report/initiative-report',
+                REPORT_ID,
+                {
                     Summary_Of_Initiative_Risks__c,
-                },
-            });
+                }
+            );
 
-            await updateReport(REPORT_ID);
+            // Update store
+            utilities.updateInitiativeData('_reports', reportData);
         } catch (error) {
             console.warn(error);
         }
@@ -66,6 +75,10 @@ const RisksAndChallengesComponent = () => {
         throw error;
     }
 
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
     // Add submit handler to wizard navigation store
     useEffect(() => {
         setTimeout(() => {
@@ -73,17 +86,17 @@ const RisksAndChallengesComponent = () => {
         }, 100);
     }, [initiative]);
 
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
     // Get current report
     const currentReport = utilities.reports.get(REPORT_ID);
 
     return (
         <>
-            <TitlePreamble
-                title={label(currentItem?.item?.labels?.form?.title)}
-                preamble={label(currentItem?.item?.labels?.form?.preamble)}
-                preload={!initiative.Id}
-            />
-            <InputWrapper preload={!initiative.Id}>
+            <TitlePreamble />
+            <InputWrapper>
                 <Reflection
                     name="Summary_Of_Initiative_Risks__c"
                     defaultValue={currentReport.Summary_Of_Initiative_Risks__c}

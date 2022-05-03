@@ -16,14 +16,12 @@ import TitlePreamble from 'components/_wizard/titlePreamble';
 
 const CompleteComponent = ({ pageProps }) => {
     // ///////////////////
-    // ///////////////////
     // AUTH
     // ///////////////////
 
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // ///////////////////
     // ///////////////////
     // STORES
     // ///////////////////
@@ -32,20 +30,17 @@ const CompleteComponent = ({ pageProps }) => {
     const { initiative } = useInitiativeDataStore();
 
     // ///////////////////
-    // ///////////////////
     // HOOKS
     // ///////////////////
 
-    const { label } = useLabels();
+    const { label, text } = useLabels();
 
-    // ///////////////////
     // ///////////////////
     // STATE
     // ///////////////////
 
     const [bodyTexts, setBodyTexts] = useState([]);
 
-    // ///////////////////
     // ///////////////////
     // EFFECTS
     // ///////////////////
