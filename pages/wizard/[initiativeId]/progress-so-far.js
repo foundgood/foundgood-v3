@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useLabels, useSalesForce } from 'utilities/hooks';
+import { useAuth, useElseware, useLabels } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -18,42 +18,54 @@ import { InputWrapper } from 'components/_inputs';
 import ProgressCard from 'components/_wizard/progressCard';
 
 const ProgressSoFarComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Hook: Metadata
-    const { labelTodo, label } = useLabels();
+    // ///////////////////
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+
+    // ///////////////////
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { label } = useLabels();
+    const { ewUpdate } = useElseware();
+
+    // ///////////////////
+    // ///////////////////
+    // FORMS
+    // ///////////////////
 
     // Hook: useForm setup
     const { handleSubmit, control } = useForm();
 
-    // Hook: Salesforce setup
-    const { sfUpdate } = useSalesForce();
-
-    // Store: Wizard navigation
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-
-    // Store: Initiative data
-    const {
-        initiative,
-        updateActivitySuccessMetrics,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+    // ///////////////////
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
-            // Object name
-            const object = 'Initiative_Activity_Success_Metric__c';
-
             await Promise.all(
                 Object.keys(formData)
                     .filter(key => formData[key])
-                    .map(key => {
-                        sfUpdate({
-                            object,
-                            data: {
+                    .map(async key => {
+                        const { data } = await ewUpdate(
+                            'initiative-activity-success-metric/initiative-activity-success-metric',
+                            key,
+                            {
                                 // Previous behaviour was to add numbers
                                 // Current_Status__c:
                                 //     (initiative?._activitySuccessMetrics[key]
@@ -61,18 +73,15 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                                 //     parseInt(formData[key], 10),
                                 // Current status is just to show
                                 Current_Status__c: parseInt(formData[key], 10),
-                            },
-                            id: key,
-                        });
+                            }
+                        );
+
+                        utilities.updateInitiativeData(
+                            '_activitySuccessMetrics',
+                            data
+                        );
                     })
             );
-
-            setTimeout(async () => {
-                // Update store
-                await updateActivitySuccessMetrics(
-                    Object.keys(formData).filter(key => formData[key])
-                );
-            }, 1000);
         } catch (error) {
             console.warn(error);
         }
@@ -84,6 +93,11 @@ const ProgressSoFarComponent = ({ pageProps }) => {
         throw error;
     }
 
+    // ///////////////////
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
     // Add submit handler to wizard navigation store
     useEffect(() => {
         setTimeout(() => {
@@ -91,8 +105,13 @@ const ProgressSoFarComponent = ({ pageProps }) => {
         }, 100);
     }, [initiative]);
 
+    // ///////////////////
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
     // Activities
-    const activities = Object.keys(initiative?._activities);
+    const activities = utilities.activities.getTypeIntervention();
 
     return (
         <>
@@ -103,50 +122,37 @@ const ProgressSoFarComponent = ({ pageProps }) => {
             />
             <InputWrapper preload={!initiative.Id}>
                 {activities.length > 0 ? (
-                    activities
-                        .filter(activityKey => {
-                            const activity =
-                                initiative?._activities[activityKey];
-                            return (
-                                activity.Activity_Type__c ==
-                                CONSTANTS.TYPES.ACTIVITY_INTERVENTION
-                            );
-                        })
-                        .map(activityKey => {
-                            const activity =
-                                initiative?._activities[activityKey];
-                            // Get success metric items based on activity id (activityKey) and activitySuccessMetric.XXX
-                            const successMetricItems = Object.values(
-                                initiative?._activitySuccessMetrics
-                            ).filter(
-                                item =>
-                                    item.Initiative_Activity__c === activityKey
-                            );
+                    activities.map(activity => {
+                        // Get success metric items based on activity id (activity.Id) and activitySuccessMetric.XXX
+                        const successMetricItems = utilities.activitySuccessMetrics.getFromActivityId(
+                            activity.Id
+                        );
 
-                            return (
-                                <ProgressCard
-                                    key={activity.Id}
-                                    headline={
-                                        _get(activity, 'Things_To_Do__c') || ''
-                                    }
-                                    controller={control}
-                                    items={successMetricItems.map(item => ({
-                                        id: item.Id,
-                                        headline:
-                                            item.Type__c ===
-                                            CONSTANTS.TYPES.INDICATOR_CUSTOM
-                                                ? item.Name
-                                                : `${item.Gender__c} ${
-                                                      item.Gender_Other__c
-                                                          ? `(${item.Gender_Other__c})`
-                                                          : ''
-                                                  } ${item.KPI__c}`,
-                                        label: item.Type__c,
-                                        currently: item.Current_Status__c,
-                                    }))}
-                                />
-                            );
-                        })
+                        return (
+                            <ProgressCard
+                                key={activity.Id}
+                                headline={
+                                    _get(activity, 'Things_To_Do__c') || ''
+                                }
+                                controller={control}
+                                items={successMetricItems.map(item => ({
+                                    id: item.Id,
+                                    headline:
+                                        item.Type__c ===
+                                        CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                                            .INDICATOR_CUSTOM
+                                            ? item.Name
+                                            : `${item.Gender__c} ${
+                                                  item.Gender_Other__c
+                                                      ? `(${item.Gender_Other__c})`
+                                                      : ''
+                                              } ${item.KPI__c}`,
+                                    label: item.Type__c,
+                                    currently: item.Current_Status__c,
+                                }))}
+                            />
+                        );
+                    })
                 ) : (
                     <p className="t-h5">{label('WizardEmptyStatesProgress')}</p>
                 )}

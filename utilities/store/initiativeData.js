@@ -417,66 +417,6 @@ const useInitiativeDataStore = create((set, get) => ({
         _updateAuth();
     },
 
-    async updateActivity(id) {
-        const data = await sfQuery(queries.initiativeActivity.get(id));
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _activities: {
-                        ...state.initiative._activities,
-                        [id]: data,
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    async updateActivitySuccessMetric(id) {
-        const data = await sfQuery(
-            queries.initiativeActivitySuccessMetric.get(id)
-        );
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _activitySuccessMetrics: {
-                        ...state.initiative._activitySuccessMetrics,
-                        [id]: data,
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
-    async updateActivitySuccessMetrics(ids) {
-        const data = await sfQuery(
-            queries.initiativeActivitySuccessMetric.getMultiple(ids)
-        );
-
-        console.log({ data });
-        if (data) {
-            set(state => ({
-                initiative: {
-                    ...state.initiative,
-                    _activitySuccessMetrics: {
-                        ...state.initiative._activitySuccessMetrics,
-                        ..._returnAsKeys(data),
-                    },
-                },
-            }));
-        }
-
-        // Update auth
-        _updateAuth();
-    },
-
     async updateReportDetails(ids) {
         const data = await sfQuery(
             queries.initiativeReportDetail.getMultiple(ids)

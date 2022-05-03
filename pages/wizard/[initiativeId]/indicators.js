@@ -296,10 +296,10 @@ const IndicatorsComponent = ({ pageProps }) => {
                             <Select
                                 name="KPI__c"
                                 label={object.label(
-                                    'Initiative_Success_Metric_Activity__c.KPI__c'
+                                    'Initiative_Activity_Success_Metric__c.KPI__c'
                                 )}
                                 subLabel={object.helpText(
-                                    'Initiative_Success_Metric_Activity__c.KPI__c'
+                                    'Initiative_Activity_Success_Metric__c.KPI__c'
                                 )}
                                 placeholder={label('FormCaptureSelectEmpty')}
                                 options={controlledValueSet(
@@ -311,16 +311,16 @@ const IndicatorsComponent = ({ pageProps }) => {
                             <SelectList
                                 name="Gender"
                                 label={object.label(
-                                    'Initiative_Success_Metric_Activity__c.Gender__c'
+                                    'Initiative_Activity_Success_Metric__c.Gender__c'
                                 )}
                                 subLabel={object.helpText(
-                                    'Initiative_Success_Metric_Activity__c.Gender__c'
+                                    'Initiative_Activity_Success_Metric__c.Gender__c'
                                 )}
                                 selectPlaceholder={label(
                                     'FormCaptureSelectEmpty'
                                 )}
                                 textPlaceholder={object.label(
-                                    'Initiative_Success_Metric_Activity__c.Gender_Other__c'
+                                    'Initiative_Activity_Success_Metric__c.Gender_Other__c'
                                 )}
                                 options={valueSet(
                                     'initiativeActivitySuccessMetric.Gender__c'
