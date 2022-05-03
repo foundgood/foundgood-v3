@@ -1,5 +1,5 @@
 // React
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Packages
 import { useForm, useWatch } from 'react-hook-form';
@@ -7,15 +7,12 @@ import { useForm, useWatch } from 'react-hook-form';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
     useContext,
+    useElseware,
+    useLabels,
     useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useWizardNavigationStore,
-    useInitiativeDataStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';

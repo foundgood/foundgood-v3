@@ -5,11 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Utilities
-import { useAuth, useLabels } from 'utilities/hooks';
-import {
-    useWizardNavigationStore,
-    useInitiativeDataStore,
-} from 'utilities/store';
+import { useAuth, useLabels, useWizardSubmit } from 'utilities/hooks';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -21,13 +17,6 @@ const CompleteComponent = ({ pageProps }) => {
 
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
-
-    // ///////////////////
-    // STORES
-    // ///////////////////
-
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
-    const { initiative } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -42,14 +31,14 @@ const CompleteComponent = ({ pageProps }) => {
     const [bodyTexts, setBodyTexts] = useState([]);
 
     // ///////////////////
-    // EFFECTS
+    // SUBMIT
     // ///////////////////
 
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(null);
-        }, 100);
-    }, [initiative]);
+    useWizardSubmit();
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     useEffect(() => {
         let bodyTexts;

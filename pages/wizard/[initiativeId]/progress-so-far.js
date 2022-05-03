@@ -1,16 +1,18 @@
 // React
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Packages
 import { useForm } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useElseware, useLabels } from 'utilities/hooks';
 import {
-    useWizardNavigationStore,
-    useInitiativeDataStore,
-} from 'utilities/store';
+    useAuth,
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -29,8 +31,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -44,60 +45,50 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     // ///////////////////
 
     // Hook: useForm setup
-    const { handleSubmit, control } = useForm();
+    const mainForm = useForm();
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
-    async function submit(formData) {
-        try {
-            await Promise.all(
-                Object.keys(formData)
-                    .filter(key => formData[key])
-                    .map(async key => {
-                        const { data } = await ewUpdate(
-                            'initiative-activity-success-metric/initiative-activity-success-metric',
-                            key,
-                            {
-                                // Previous behaviour was to add numbers
-                                // Current_Status__c:
-                                //     (initiative?._activitySuccessMetrics[key]
-                                //         ?.Current_Status__c ?? 0) +
-                                //     parseInt(formData[key], 10),
-                                // Current status is just to show
-                                Current_Status__c: parseInt(formData[key], 10),
-                            }
-                        );
+    useWizardSubmit({
+        [CONTEXTS.INITIATIVE]: [
+            mainForm,
+            async formData => {
+                try {
+                    await Promise.all(
+                        Object.keys(formData)
+                            .filter(key => formData[key])
+                            .map(async key => {
+                                const { data } = await ewUpdate(
+                                    'initiative-activity-success-metric/initiative-activity-success-metric',
+                                    key,
+                                    {
+                                        // Previous behaviour was to add numbers
+                                        // Current_Status__c:
+                                        //     (initiative?._activitySuccessMetrics[key]
+                                        //         ?.Current_Status__c ?? 0) +
+                                        //     parseInt(formData[key], 10),
+                                        // Current status is just to show
+                                        Current_Status__c: parseInt(
+                                            formData[key],
+                                            10
+                                        ),
+                                    }
+                                );
 
-                        utilities.updateInitiativeData(
-                            '_activitySuccessMetrics',
-                            data
-                        );
-                    })
-            );
-        } catch (error) {
-            console.warn(error);
-        }
-    }
-
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 100);
-    }, [initiative]);
+                                utilities.updateInitiativeData(
+                                    '_activitySuccessMetrics',
+                                    data
+                                );
+                            })
+                    );
+                } catch (error) {
+                    console.warn(error);
+                }
+            },
+        ],
+    });
 
     // ///////////////////
     // DATA
@@ -105,6 +96,10 @@ const ProgressSoFarComponent = ({ pageProps }) => {
 
     // Activities
     const activities = utilities.activities.getTypeIntervention();
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -123,7 +118,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                                 headline={
                                     _get(activity, 'Things_To_Do__c') || ''
                                 }
-                                controller={control}
+                                controller={mainForm.control}
                                 items={successMetricItems.map(item => ({
                                     id: item.Id,
                                     headline:

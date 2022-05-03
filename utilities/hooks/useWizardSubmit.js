@@ -12,7 +12,7 @@ function error(error) {
     throw error;
 }
 
-const useWizardSubmit = submitOptions => {
+const useWizardSubmit = (submitOptions = {}) => {
     const { setCurrentSubmitHandler } = useWizardNavigationStore();
     const { initiative } = useInitiativeDataStore();
     const { MODE, CONTEXTS } = useContext();

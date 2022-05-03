@@ -8,15 +8,13 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
-    useReflections,
     useContext,
+    useElseware,
+    useLabels,
+    useReflections,
+    useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -38,8 +36,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -72,18 +69,14 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // ///////////////////
 
     // Hook: useForm setup
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-    } = useForm();
-    const { isDirty } = useFormState({ control });
+    const mainForm = useForm();
+    const reflectionForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
         setModalIsSaving(true);
@@ -112,7 +105,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
         } catch (error) {
             // Modal save button state
             setModalIsSaving(false);
@@ -120,36 +113,9 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Effect: Set value based on modal elements based on updateId
-    useEffect(() => {
-        const { Who_Is_Evaluating__c } = utilities.reportDetails.get(updateId);
-
-        setValue('Who_Is_Evaluating__c', Who_Is_Evaluating__c);
-    }, [updateId, modalIsOpen]);
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                MODE === CONTEXTS.REPORT
-                    ? handleSubmitReflections(
-                          submitMultipleReflectionsToSelf,
-                          error
-                      )
-                    : null
-            );
-        }, 100);
-    }, [initiative]);
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflectionsToSelf],
+    });
 
     // ///////////////////
     // DATA
@@ -159,6 +125,21 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const currentReportDetails = utilities.reportDetails.getTypeEvaluationFromReportId(
         REPORT_ID
     );
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Effect: Set value based on modal elements based on updateId
+    useEffect(() => {
+        const { Who_Is_Evaluating__c } = utilities.reportDetails.get(updateId);
+
+        mainForm.setValue('Who_Is_Evaluating__c', Who_Is_Evaluating__c);
+    }, [updateId, modalIsOpen]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -193,7 +174,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                 reflectAction={setReflecting}
                                 controller={
                                     MODE === CONTEXTS.REPORT &&
-                                    controlReflections
+                                    reflectionForm.control
                                 }
                                 name={item.Id}
                                 defaultValue={{
@@ -228,7 +209,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingEvaluation')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
                         name="Who_Is_Evaluating__c"
@@ -243,7 +224,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                             'initiativeReportDetail.Who_Is_Evaluating__c'
                         )}
                         required
-                        controller={control}
+                        controller={mainForm.control}
                     />
                 </InputWrapper>
             </Modal>

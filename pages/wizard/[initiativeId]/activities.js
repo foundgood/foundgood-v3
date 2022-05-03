@@ -8,15 +8,13 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
     useContext,
+    useElseware,
+    useLabels,
     useReflections,
+    useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -38,8 +36,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -69,19 +66,14 @@ const ActivitiesComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-        setValue: setValueReflections,
-    } = useForm();
-    const { isDirty } = useFormState({ control });
+    const mainForm = useForm();
+    const reflectionForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
         setModalIsSaving(true);
@@ -104,7 +96,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                 Activity_Tag__c: Activities.map(item => item.selectValue).join(
                     ';'
                 ),
-                KPI_Category__c: initiative?.Category__c,
+                KPI_Category__c: utilities.initiative.get().Category__c,
                 _activityGoals: Goals.map(item => item.selectValue),
             };
 
@@ -119,7 +111,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                       'initiative-activity/initiative-activity-intervention',
                       {
                           ...data,
-                          Initiative__c: initiative.Id,
+                          Initiative__c: utilities.initiative.get().Id,
                       }
                   );
 
@@ -148,13 +140,16 @@ const ActivitiesComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
 
             // Fold out shit when done if report
-            // setValue: setValueReflections,
+            // setValue: reflectionForm.setValue,
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    setValueReflections(`${activityData.Id}-selector`, true);
+                    reflectionForm.setValue(
+                        `${activityData.Id}-selector`,
+                        true
+                    );
                 }
             }, 500);
         } catch (error) {
@@ -164,63 +159,9 @@ const ActivitiesComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Effect: Set value based on modal elements based on updateId
-    useEffect(() => {
-        const {
-            Id,
-            Things_To_Do__c,
-            Things_To_Do_Description__c,
-            Activity_Tag__c,
-            Initiative_Location__c,
-            Additional_Location_Information__c,
-        } = utilities.activities.get(updateId);
-
-        setValue('Things_To_Do_Description__c', Things_To_Do_Description__c);
-        setValue('Things_To_Do__c', Things_To_Do__c);
-        setValue('Location', [
-            {
-                selectValue: Initiative_Location__c,
-                textValue: Additional_Location_Information__c,
-            },
-        ]);
-
-        setValue(
-            'Activities',
-            Activity_Tag__c?.split(';').map(value => ({
-                selectValue: value,
-            }))
-        );
-
-        setValue(
-            'Goals',
-            Object.values(initiative?._activityGoals)
-                .filter(item => item.Initiative_Activity__c === Id)
-                .map(activityGoal => ({
-                    selectValue: activityGoal.Initiative_Goal__c,
-                }))
-        );
-    }, [updateId, modalIsOpen]);
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                MODE === CONTEXTS.REPORT
-                    ? handleSubmitReflections(submitMultipleReflections, error)
-                    : null
-            );
-        }, 100);
-    }, [initiative]);
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflections],
+    });
 
     // ///////////////////
     // DATA
@@ -245,6 +186,52 @@ const ActivitiesComponent = ({ pageProps }) => {
     // Get activities
     const activities = utilities.activities.getTypeIntervention();
 
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Effect: Set value based on modal elements based on updateId
+    useEffect(() => {
+        const {
+            Id,
+            Things_To_Do__c,
+            Things_To_Do_Description__c,
+            Activity_Tag__c,
+            Initiative_Location__c,
+            Additional_Location_Information__c,
+        } = utilities.activities.get(updateId);
+
+        mainForm.setValue(
+            'Things_To_Do_Description__c',
+            Things_To_Do_Description__c
+        );
+        mainForm.setValue('Things_To_Do__c', Things_To_Do__c);
+        mainForm.setValue('Location', [
+            {
+                selectValue: Initiative_Location__c,
+                textValue: Additional_Location_Information__c,
+            },
+        ]);
+
+        mainForm.setValue(
+            'Activities',
+            Activity_Tag__c?.split(';').map(value => ({
+                selectValue: value,
+            }))
+        );
+
+        mainForm.setValue(
+            'Goals',
+            utilities.activityGoals.getFromActivityId(Id).map(activityGoal => ({
+                selectValue: activityGoal.Initiative_Goal__c,
+            }))
+        );
+    }, [updateId, modalIsOpen]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     return (
         <>
             <TitlePreamble />
@@ -265,15 +252,13 @@ const ActivitiesComponent = ({ pageProps }) => {
 
                     const tagsString = activity?.Activity_Tag__c ?? null;
                     const tags = tagsString ? tagsString.split(';') : [];
-                    const goals = Object.values(initiative?._activityGoals)
-                        .filter(
-                            item => item.Initiative_Activity__c === activity.Id
-                        )
+                    const goals = utilities.activityGoals
+                        .getFromActivityId()
                         .map(
                             activityGoal =>
-                                activityGoal.Initiative_Goal__r.Goal__c
+                                activityGoal?.Initiative_Goal__r?.Goal__c
                         );
-                    const reflection = currentReportDetails.filter(
+                    const reflection = currentReportDetails.find(
                         item => item.Initiative_Activity__c === activity.Id
                     );
 
@@ -290,20 +275,21 @@ const ActivitiesComponent = ({ pageProps }) => {
                             }}
                             reflectAction={setReflecting}
                             controller={
-                                MODE === CONTEXTS.REPORT && controlReflections
+                                MODE === CONTEXTS.REPORT &&
+                                reflectionForm.control
                             }
                             name={activity.Id}
                             defaultValue={{
                                 selected:
-                                    reflection[0] &&
-                                    (reflection[0]?.Description__c !==
+                                    reflection &&
+                                    (reflection?.Description__c !==
                                         CONSTANTS.CUSTOM.NO_REFLECTIONS ??
                                         false),
                                 value:
-                                    reflection[0]?.Description__c ===
+                                    reflection?.Description__c ===
                                     CONSTANTS.CUSTOM.NO_REFLECTIONS
                                         ? ''
-                                        : reflection[0]?.Description__c,
+                                        : reflection?.Description__c,
                             }}
                             inputLabel={label(
                                 'ReportWizardActivitiesReflectionSubHeading'
@@ -326,7 +312,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingActivities')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Text
                         name="Things_To_Do__c"
@@ -338,7 +324,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={200}
-                        controller={control}
+                        controller={mainForm.control}
                         required
                     />
                     <LongText
@@ -351,7 +337,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={400}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     <SelectList
                         name="Activities"
@@ -364,11 +350,11 @@ const ActivitiesComponent = ({ pageProps }) => {
                         selectPlaceholder={label('FormCaptureSelectEmpty')}
                         options={controlledValueSet(
                             'initiativeActivity.Activity_Tag__c',
-                            initiative?.Category__c
+                            utilities.initiative.get().Category__c
                         )}
                         buttonLabel={label('ButtonAddActivityTag')}
                         listMaxLength={utilities.isNovoLeadFunder() ? 1 : 4}
-                        controller={control}
+                        controller={mainForm.control}
                         required={utilities.isNovoLeadFunder()}
                     />
                     <SelectList
@@ -387,7 +373,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                         selectPlaceholder={label('FormCaptureSelectEmpty')}
                         selectLabel={label('FormCaptureCountry')}
                         textLabel={label('FormCaptureRegion')}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     {customGoals.length > 0 && (
                         <SelectList
@@ -401,7 +387,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 label: goal.Goal__c,
                             }))}
                             selectPlaceholder={label('FormCaptureSelectEmpty')}
-                            controller={control}
+                            controller={mainForm.control}
                             buttonLabel={label('ButtonAddGoal')}
                         />
                     )}

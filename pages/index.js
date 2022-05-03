@@ -20,21 +20,32 @@ import InitiativeRow from 'components/_initiative/initiativeRow';
 import { SearchFilterMultiselect, SearchFilterDate } from 'components/_inputs';
 
 const HomeComponent = () => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { user, verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Reset initiative data
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { label, valueSet } = useLabels();
     const { CONSTANTS } = useInitiativeDataStore();
-
-    // Hook: Metadata
-    const { label, valueSet, log } = useLabels();
-
-    // Hook: Get data from elseware
     const { ewGet } = useElseware();
-    const { data } = ewGet('initiative/initiatives-overview');
 
-    // Hook: useForm setup
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [initial, setInitial] = useState(null);
+    const [filtered, setFiltered] = useState(null);
+
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
     const { control, register, getValues } = useForm({
         mode: 'onChange',
     });
@@ -55,17 +66,9 @@ const HomeComponent = () => {
         name: 'filter.endDate',
     });
 
-    // Search results data
-    const [initial, setInitial] = useState(null);
-    const [filtered, setFiltered] = useState(null);
-
-    // Add data results to initial data set
-    useEffect(() => {
-        if (data) {
-            setInitial(data);
-            setFiltered(data);
-        }
-    }, [data]);
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     function onFilter(data) {
         if (initial) {
@@ -122,9 +125,31 @@ const HomeComponent = () => {
         }
     }
 
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const { data: initiativesData } = ewGet('initiative/initiatives-overview');
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Add data results to initial data set
+    useEffect(() => {
+        if (initiativesData?.data) {
+            setInitial(initiativesData.data);
+            setFiltered(initiativesData.data);
+        }
+    }, [initiativesData]);
+
     useEffect(() => {
         onFilter(getValues());
     }, [filterCategory, filterText, filterStartDate, filterEndDate]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <div
@@ -160,7 +185,7 @@ const HomeComponent = () => {
                                 label={label(
                                     'InitiativeManagerFilterFilterGrantGivingArea'
                                 )}
-                                controller={control}
+                                controller={mainForm.control}
                                 options={valueSet('initiative.Category__c')}
                             />
                             <SearchFilterDate
@@ -168,19 +193,19 @@ const HomeComponent = () => {
                                 label={label(
                                     'InitiativeManagerFilterGrantStartDate'
                                 )}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                             <SearchFilterDate
                                 name="filter.endDate"
                                 label={label(
                                     'InitiativeManagerFilterGrantEndDate'
                                 )}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                         </div>
                     </div>
                 </SectionWrapper>
-                {data ? (
+                {initiativesData ? (
                     <>
                         <SectionWrapper>
                             {filtered?.map(item => (

@@ -7,9 +7,9 @@ import { useForm } from 'react-hook-form';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
     useContext,
+    useElseware,
+    useLabels,
     useWizardSubmit,
 } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';

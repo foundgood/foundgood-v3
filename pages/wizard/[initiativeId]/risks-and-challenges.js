@@ -1,15 +1,18 @@
 // React
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Packages
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useLabels, useContext } from 'utilities/hooks';
 import {
-    useWizardNavigationStore,
-    useInitiativeDataStore,
-} from 'utilities/store';
+    useAuth,
+    useContext,
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -27,14 +30,13 @@ const RisksAndChallengesComponent = () => {
     // STORES
     // ///////////////////
 
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
-    const { initiative, utilities } = useInitiativeDataStore();
+    const { utilities } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
     // ///////////////////
 
-    const { CONTEXTS, REPORT_ID } = useContext();
+    const { REPORT_ID } = useContext();
     const { label } = useLabels();
     const { ewUpdate } = useElseware();
 
@@ -42,49 +44,36 @@ const RisksAndChallengesComponent = () => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control } = useForm();
+    const mainForm = useForm();
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Submit page content
-    async function submit(formData) {
-        try {
-            const { Summary_Of_Initiative_Risks__c } = formData;
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [
+            mainForm,
+            async formData => {
+                try {
+                    const { Summary_Of_Initiative_Risks__c } = formData;
 
-            // Update
-            const reportData = await ewUpdate(
-                'initiative-report/initiative-report',
-                REPORT_ID,
-                {
-                    Summary_Of_Initiative_Risks__c,
+                    // Update
+                    const reportData = await ewUpdate(
+                        'initiative-report/initiative-report',
+                        REPORT_ID,
+                        {
+                            Summary_Of_Initiative_Risks__c,
+                        }
+                    );
+
+                    // Update store
+                    utilities.updateInitiativeData('_reports', reportData);
+                } catch (error) {
+                    console.warn(error);
                 }
-            );
-
-            // Update store
-            utilities.updateInitiativeData('_reports', reportData);
-        } catch (error) {
-            console.warn(error);
-        }
-    }
-
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 100);
-    }, [initiative]);
+            },
+        ],
+    });
 
     // ///////////////////
     // DATA
@@ -92,6 +81,10 @@ const RisksAndChallengesComponent = () => {
 
     // Get current report
     const currentReport = utilities.reports.get(REPORT_ID);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -104,7 +97,7 @@ const RisksAndChallengesComponent = () => {
                     placeholder={label('FormCaptureTextEntryEmpty')}
                     maxLength={750}
                     required
-                    controller={control}
+                    controller={mainForm.control}
                 />
             </InputWrapper>
         </>

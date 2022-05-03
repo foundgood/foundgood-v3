@@ -90,16 +90,16 @@ return (
         </Button>
     </InputWrapper>
     <Modal isOpen={modalIsOpen} title={labelTodo('Add new ...')} onCancel={()=> setModalIsOpen(false)}
-        onSave={handleSubmit(submit)}>
+        onSave={mainForm.handleSubmit(submit)}>
         <InputWrapper>
             <Text name="myTextField" defaultValue={initiative?.myTextField} label={labelTodo('myTextField')}
-                placeholder={labelTodo('myTextField placeholder')} maxLength={80} controller={control} />
+                placeholder={labelTodo('myTextField placeholder')} maxLength={80} controller={mainForm.control} />
         </InputWrapper>
     </Modal>
     {{else}}
     <InputWrapper>
         <Text name="myTextField" defaultValue={initiative?.myTextField} label={labelTodo('myTextField')}
-            placeholder={labelTodo('myTextField placeholder')} maxLength={80} controller={control} />
+            placeholder={labelTodo('myTextField placeholder')} maxLength={80} controller={mainForm.control} />
     </InputWrapper>
     {{/if}}
 </>

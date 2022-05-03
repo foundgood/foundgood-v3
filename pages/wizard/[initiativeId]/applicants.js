@@ -8,15 +8,13 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useLabels,
     useContext,
     useElseware,
+    useLabels,
     useReflections,
+    useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -38,8 +36,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -73,20 +70,18 @@ const ApplicantsComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-        setValue: setValueReflections,
-    } = useForm();
-    const { isDirty } = useFormState({ control });
-    const applicantTypeSelect = useWatch({ control, name: 'Type__c' });
+    const mainForm = useForm();
+    const reflectionForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
+    const applicantTypeSelect = useWatch({
+        control: mainForm.control,
+        name: 'Type__c',
+    });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
             // Modal save button state
@@ -108,7 +103,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                 'initiative-collaborator/initiative-collaborator',
                 updateId,
                 data,
-                { Initiative__c: initiative.Id },
+                { Initiative__c: utilities.initiative.get().Id },
                 '_collaborators'
             );
 
@@ -119,13 +114,13 @@ const ApplicantsComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
 
             // Fold out shit when done if report
-            // setValue: setValueReflections,
+            // setValue: reflectionForm.setValue,
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    setValueReflections(
+                    reflectionForm.setValue(
                         `${collaboratorData.Id}-selector`,
                         true
                     );
@@ -138,53 +133,9 @@ const ApplicantsComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Effect: Set value based on modal elements based on updateId
-    useEffect(() => {
-        const {
-            Start_Date__c,
-            End_Date__c,
-            Account__c,
-            Type__c,
-            Description__c,
-        } = utilities.collaborators.get(updateId);
-
-        setValue('Type__c', Type__c);
-        setValue('Account__c', Account__c);
-        setValue('Dates', {
-            from: Start_Date__c,
-            to: End_Date__c,
-        });
-        setValue('Description__c', Description__c);
-
-        // Set goal type
-        setApplicantType(Type__c);
-    }, [updateId, modalIsOpen]);
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                MODE === CONTEXTS.REPORT
-                    ? handleSubmitReflections(submitMultipleReflections, error)
-                    : null
-            );
-        }, 100);
-    }, [initiative]);
-
-    // Watch the change of goal type
-    useEffect(() => {
-        setApplicantType(applicantTypeSelect);
-    }, [applicantTypeSelect]);
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflections],
+    });
 
     // ///////////////////
     // DATA
@@ -211,6 +162,41 @@ const ApplicantsComponent = ({ pageProps }) => {
     // Get applicants
     const applicants = utilities.collaborators.getTypeApplicantsAll();
 
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Effect: Set value based on modal elements based on updateId
+    useEffect(() => {
+        const {
+            Start_Date__c,
+            End_Date__c,
+            Account__c,
+            Type__c,
+            Description__c,
+        } = utilities.collaborators.get(updateId);
+
+        mainForm.setValue('Type__c', Type__c);
+        mainForm.setValue('Account__c', Account__c);
+        mainForm.setValue('Dates', {
+            from: Start_Date__c,
+            to: End_Date__c,
+        });
+        mainForm.setValue('Description__c', Description__c);
+
+        // Set goal type
+        setApplicantType(Type__c);
+    }, [updateId, modalIsOpen]);
+
+    // Watch the change of goal type
+    useEffect(() => {
+        setApplicantType(applicantTypeSelect);
+    }, [applicantTypeSelect]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     return (
         <>
             <TitlePreamble />
@@ -225,7 +211,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                     />
                 )}
                 {applicants.map(collaborator => {
-                    const reflection = currentReportDetails.filter(
+                    const reflection = currentReportDetails.find(
                         item =>
                             item.Initiative_Collaborator__c === collaborator.Id
                     );
@@ -243,20 +229,21 @@ const ApplicantsComponent = ({ pageProps }) => {
                             }}
                             reflectAction={setReflecting}
                             controller={
-                                MODE === CONTEXTS.REPORT && controlReflections
+                                MODE === CONTEXTS.REPORT &&
+                                reflectionForm.control
                             }
                             name={collaborator.Id}
                             defaultValue={{
                                 selected:
-                                    reflection[0] &&
-                                    (reflection[0]?.Description__c !==
+                                    reflection &&
+                                    (reflection?.Description__c !==
                                         CONSTANTS.CUSTOM.NO_REFLECTIONS ??
                                         false),
                                 value:
-                                    reflection[0]?.Description__c ===
+                                    reflection?.Description__c ===
                                     CONSTANTS.CUSTOM.NO_REFLECTIONS
                                         ? ''
-                                        : reflection[0]?.Description__c,
+                                        : reflection?.Description__c,
                             }}
                             inputLabel={label(
                                 'ReportWizardCoApplicantReflectionSubHeading'
@@ -280,7 +267,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingApplicants')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
                         name="Account__c"
@@ -302,10 +289,10 @@ const ApplicantsComponent = ({ pageProps }) => {
                                 : []
                         }
                         required
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     {/* Hide if main applicant */}
-                    {initiative?._collaborators[updateId]?.Type__c !==
+                    {utilities.collaborators.get(updateId)?.Type__c !==
                         CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR && (
                         <Select
                             name="Type__c"
@@ -324,7 +311,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                                 )
                             )}
                             required
-                            controller={control}
+                            controller={mainForm.control}
                         />
                     )}
                     <LongText
@@ -336,7 +323,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                             'Initiative_Collaborator__c.Description__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     {applicantType ===
                         CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR && (
@@ -347,7 +334,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                             )} / ${object.label(
                                 'Initiative_Collaborator__c.End_Date__c'
                             )}`}
-                            controller={control}
+                            controller={mainForm.control}
                         />
                     )}
                 </InputWrapper>

@@ -8,15 +8,13 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
     useContext,
+    useElseware,
+    useLabels,
     useReflections,
+    useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useWizardNavigationStore,
-    useInitiativeDataStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -45,8 +43,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -76,22 +73,18 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-    } = useForm();
+    const mainForm = useForm();
+    const reflectionForm = useForm();
     const reflectSelected = useWatch({
-        control: controlReflections,
+        control: reflectionForm.control,
         name: 'Employees_Funded_Overview',
     });
-    const { isDirty } = useFormState({ control });
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
         setModalIsSaving(true);
@@ -102,9 +95,6 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 Role_Type__c,
                 Percent_Involvement__c,
             } = formData;
-
-            // Object name
-            const object = 'Initiative_Employee_Funded__c';
 
             // Data for sf
             const data = {
@@ -120,7 +110,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 'initiative-employee-funded/initiative-employee-funded',
                 updateId,
                 data,
-                { Initiative__c: initiative.Id },
+                { Initiative__c: utilities.initiative.get().Id },
                 '_employeesFunded'
             );
 
@@ -131,7 +121,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
         } catch (error) {
             // Modal save button state
             setModalIsSaving(false);
@@ -139,11 +129,21 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [mainForm, submitReflection],
+    });
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Current report detail
+    const currentReflection = utilities.reportDetails.getTypeEmployeesFundedFromReportId(
+        REPORT_ID
+    );
+
+    // Get emloyeesFunded
+    const employeesFunded = utilities.employeesFunded.getAll();
 
     // ///////////////////
     // EFFECTS
@@ -166,44 +166,20 @@ const EmployeesFundedComponent = ({ pageProps }) => {
             Percent_Involvement__c,
         } = utilities.employeesFunded.get(updateId);
 
-        setValue('Job_Title__c', Job_Title__c);
-        setValue('Role_Type__c', Role_Type__c);
-        setValue('Gender', [
+        mainForm.setValue('Job_Title__c', Job_Title__c);
+        mainForm.setValue('Role_Type__c', Role_Type__c);
+        mainForm.setValue('Gender', [
             {
                 selectValue: Gender__c,
                 textValue: Gender_Other__c,
             },
         ]);
-        setValue('Percent_Involvement__c', Percent_Involvement__c);
+        mainForm.setValue('Percent_Involvement__c', Percent_Involvement__c);
     }, [updateId, modalIsOpen]);
 
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                MODE === CONTEXTS.REPORT
-                    ? handleSubmitReflections(submitReflection, error)
-                    : null
-            );
-        }, 100);
-    }, [initiative]);
-
     // ///////////////////
-    // DATA
+    // RENDER
     // ///////////////////
-
-    // Current report details
-    const currentReflection =
-        utilities.reportDetails
-            .getFromReportId(REPORT_ID)
-            .find(
-                detail =>
-                    detail.Type__c ===
-                    CONSTANTS.REPORT_DETAILS.EMPLOYEES_FUNDED_OVERVIEW
-            ) || null;
-
-    // Get emloyeesFunded
-    const employeesFunded = utilities.employeesFunded.getAll();
 
     return (
         <>
@@ -230,7 +206,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={750}
-                        controller={controlReflections}
+                        controller={reflectionForm.control}
                     />
                 )}
                 {employeesFunded.map(employee => (
@@ -265,7 +241,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingEmployees')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Text
                         name="Job_Title__c"
@@ -278,7 +254,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={80}
                         required
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     <Select
                         name="Role_Type__c"
@@ -293,7 +269,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                             'initiativeEmployeeFunded.Role_Type__c'
                         )}
                         required
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     <SelectList
                         name="Gender"
@@ -310,7 +286,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         options={valueSet('initiativeEmployeeFunded.Gender__c')}
                         showText
                         listMaxLength={1}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     <Number
                         name="Percent_Involvement__c"
@@ -323,7 +299,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         placeholder={label('FormCaptureNumberEmpty')}
                         minValue={0}
                         maxValue={100}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                 </InputWrapper>
             </Modal>

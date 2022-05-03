@@ -8,15 +8,13 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
-    useReflections,
     useContext,
+    useElseware,
+    useLabels,
+    useReflections,
+    useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -38,8 +36,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -70,18 +67,14 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-    } = useForm();
-    const { isDirty } = useFormState({ control });
+    const mainForm = useForm();
+    const reflectionForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         try {
             const { Type_Of_Influence__c } = formData;
@@ -105,42 +98,15 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
             setModalIsOpen(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
         } catch (error) {
             console.warn(error);
         }
     }
 
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Effect: Set value based on modal elements based on updateId
-    useEffect(() => {
-        const { Type_Of_Influence__c } = utilities.reportDetails.get(updateId);
-
-        setValue('Type_Of_Influence__c', Type_Of_Influence__c);
-    }, [updateId, modalIsOpen]);
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                MODE === CONTEXTS.REPORT
-                    ? handleSubmitReflections(
-                          submitMultipleReflectionsToSelf,
-                          error
-                      )
-                    : null
-            );
-        }, 100);
-    }, [initiative]);
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflectionsToSelf],
+    });
 
     // ///////////////////
     // DATA
@@ -150,6 +116,21 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const currentReportDetails = utilities.reportDetails.getTypeInfluenceOnPolicyFromReportId(
         REPORT_ID
     );
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Effect: Set value based on modal elements based on updateId
+    useEffect(() => {
+        const { Type_Of_Influence__c } = utilities.reportDetails.get(updateId);
+
+        mainForm.setValue('Type_Of_Influence__c', Type_Of_Influence__c);
+    }, [updateId, modalIsOpen]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -184,7 +165,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                                 reflectAction={setReflecting}
                                 controller={
                                     MODE === CONTEXTS.REPORT &&
-                                    controlReflections
+                                    reflectionForm.control
                                 }
                                 name={item.Id}
                                 defaultValue={{
@@ -219,7 +200,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingInfluence')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Text
                         name="Type_Of_Influence__c"
@@ -231,7 +212,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={80}
-                        controller={control}
+                        controller={mainForm.control}
                         required
                     />
                 </InputWrapper>

@@ -1,15 +1,18 @@
 // React
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Packages
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useLabels, useContext } from 'utilities/hooks';
 import {
-    useWizardNavigationStore,
-    useInitiativeDataStore,
-} from 'utilities/store';
+    useAuth,
+    useContext,
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -33,14 +36,13 @@ const ReportDetailsComponent = () => {
     // STORES
     // ///////////////////
 
-    const { setCurrentSubmitHandler } = useWizardNavigationStore();
-    const { initiative, utilities } = useInitiativeDataStore();
+    const { utilities } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
     // ///////////////////
 
-    const { REPORT_ID, CONTEXTS } = useContext();
+    const { REPORT_ID } = useContext();
     const { label, object, valueSet } = useLabels();
     const { ewUpdate } = useElseware();
 
@@ -48,57 +50,44 @@ const ReportDetailsComponent = () => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control } = useForm();
+    const mainForm = useForm();
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Submit page content
-    async function submit(formData) {
-        try {
-            const {
-                Name,
-                Report_Type__c,
-                Due_Date__c,
-                ReportDuration,
-            } = formData;
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [
+            mainForm,
+            async formData => {
+                try {
+                    const {
+                        Name,
+                        Report_Type__c,
+                        Due_Date__c,
+                        ReportDuration,
+                    } = formData;
 
-            const reportData = await ewUpdate(
-                'initiative-report/initiative-report',
-                REPORT_ID,
-                {
-                    Name,
-                    Report_Type__c,
-                    Due_Date__c,
-                    Report_Period_Start_Date__c: ReportDuration.from,
-                    Report_Period_End_Date__c: ReportDuration.to,
+                    const reportData = await ewUpdate(
+                        'initiative-report/initiative-report',
+                        REPORT_ID,
+                        {
+                            Name,
+                            Report_Type__c,
+                            Due_Date__c,
+                            Report_Period_Start_Date__c: ReportDuration.from,
+                            Report_Period_End_Date__c: ReportDuration.to,
+                        }
+                    );
+
+                    // Update store
+                    utilities.updateInitiativeData('_reports', reportData);
+                } catch (error) {
+                    console.warn(error);
                 }
-            );
-
-            // Update store
-            utilities.updateInitiativeData('_reports', reportData);
-        } catch (error) {
-            console.warn(error);
-        }
-    }
-
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(handleSubmit(submit, error));
-        }, 100);
-    }, [initiative]);
+            },
+        ],
+    });
 
     // ///////////////////
     // DATA
@@ -123,7 +112,7 @@ const ReportDetailsComponent = () => {
                     maxLength={80}
                     disabled={utilities.isNovoLeadFunder()}
                     required={!utilities.isNovoLeadFunder()}
-                    controller={control}
+                    controller={mainForm.control}
                 />
                 <Select
                     name="Report_Type__c"
@@ -134,14 +123,14 @@ const ReportDetailsComponent = () => {
                     options={valueSet('initiativeReport.Report_Type__c')}
                     disabled={utilities.isNovoLeadFunder()}
                     required={!utilities.isNovoLeadFunder()}
-                    controller={control}
+                    controller={mainForm.control}
                 />
                 <DatePicker
                     name="Due_Date__c"
                     label={object.label('Initiative__c.Due_Date__c')}
                     subLabel={object.helpText('Initiative__c.Due_Date__c')}
                     defaultValue={currentReport.Due_Date__c}
-                    controller={control}
+                    controller={mainForm.control}
                     disabled={utilities.isNovoLeadFunder()}
                     required={!utilities.isNovoLeadFunder()}
                 />
@@ -157,7 +146,7 @@ const ReportDetailsComponent = () => {
                     )} / ${object.label(
                         'Initiative__c.Report_Period_End_Date__c'
                     )}`}
-                    controller={control}
+                    controller={mainForm.control}
                     required={!utilities.isNovoLeadFunder()}
                 />
             </InputWrapper>

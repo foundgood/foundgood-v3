@@ -173,7 +173,14 @@ const useInitiativeDataStore = create((set, get) => ({
                 );
             },
         },
-        activityGoals: {},
+        activityGoals: {
+            // Returns array
+            getFromActivityId(activityId) {
+                return Object.values(get().initiative?._activityGoals).filter(
+                    item => item.Initiative_Activity__c === activityId
+                );
+            },
+        },
         activitySuccessMetrics: {
             // Returns object
             get(id) {
@@ -317,6 +324,16 @@ const useInitiativeDataStore = create((set, get) => ({
             getTypeEvaluationFromReportId(reportId) {
                 return this.getFromReportId(reportId).filter(
                     item => item.Type__c === constants.REPORT_DETAILS.EVALUATION
+                );
+            },
+            // Returns object
+            getTypeEmployeesFundedFromReportId(reportId) {
+                return (
+                    this.getFromReportId(reportId).find(
+                        item =>
+                            item.Type__c ===
+                            constants.REPORT_DETAILS.EMPLOYEES_FUNDED_OVERVIEW
+                    ) || {}
                 );
             },
         },

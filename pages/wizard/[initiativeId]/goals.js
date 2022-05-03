@@ -6,11 +6,13 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useLabels, useElseware } from 'utilities/hooks';
 import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+    useAuth,
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -31,8 +33,7 @@ const GoalsComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -53,14 +54,13 @@ const GoalsComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const { isDirty } = useFormState({ control });
+    const mainForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
         setModalIsSaving(true);
@@ -72,7 +72,7 @@ const GoalsComponent = ({ pageProps }) => {
             const data = {
                 Type__c: CONSTANTS.GOALS.GOAL_CUSTOM,
                 Goal__c,
-                KPI_Category__c: initiative?.Category__c,
+                KPI_Category__c: utilities.initiative.get().Category__c,
             };
 
             // Update / Save
@@ -80,7 +80,7 @@ const GoalsComponent = ({ pageProps }) => {
                 'initiative-goal/initiative-goal',
                 updateId,
                 data,
-                { Initiative__c: initiative.Id },
+                { Initiative__c: utilities.initiative.get().Id },
                 '_goals'
             );
 
@@ -91,13 +91,15 @@ const GoalsComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
         } catch (error) {
             // Modal save button state
             setModalIsSaving(false);
             console.warn(error);
         }
     }
+
+    useWizardSubmit();
 
     // ///////////////////
     // EFFECTS
@@ -106,15 +108,12 @@ const GoalsComponent = ({ pageProps }) => {
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
         const { Goal__c } = utilities.goals.get(updateId);
-        setValue('Goal__c', Goal__c);
+        mainForm.setValue('Goal__c', Goal__c);
     }, [updateId, modalIsOpen]);
 
-    // Reset submithandler
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(null);
-        }, 100);
-    }, [initiative]);
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -146,7 +145,7 @@ const GoalsComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingGoals')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <LongText
                         name="Goal__c"
@@ -154,7 +153,7 @@ const GoalsComponent = ({ pageProps }) => {
                         subLabel={object.helpText('Initiative_Goal__c.Goal__c')}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={200}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                 </InputWrapper>
             </Modal>

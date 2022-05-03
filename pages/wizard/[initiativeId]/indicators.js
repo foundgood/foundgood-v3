@@ -6,11 +6,13 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useLabels, useElseware } from 'utilities/hooks';
 import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+    useAuth,
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -30,11 +32,7 @@ const IndicatorsComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    // Store: Wizard navigation
-    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
-
-    // Store: Initiative data
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -63,11 +61,11 @@ const IndicatorsComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const { isDirty } = useFormState({ control });
+    const mainForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
@@ -89,7 +87,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                 [CONSTANTS.ACTIVITY_SUCCESS_METRICS.INDICATOR_CUSTOM]: {
                     Type__c: indicatorType,
                     Name,
-                    KPI_Category__c: initiative?.Category__c,
+                    KPI_Category__c: utilities.initiative.get().Category__c,
                 },
                 [CONSTANTS.ACTIVITY_SUCCESS_METRICS.INDICATOR_PREDEFINED]: {
                     Type__c: indicatorType,
@@ -101,7 +99,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                         ? indicatorWithAge.max
                         : '',
                     Lowest_Age__c: indicatorWithAge ? indicatorWithAge.min : '',
-                    KPI_Category__c: initiative?.Category__c,
+                    KPI_Category__c: utilities.initiative.get().Category__c,
                 },
             };
 
@@ -121,7 +119,7 @@ const IndicatorsComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
             setActivity(null);
             setUpdateId(null);
         } catch (error) {
@@ -130,6 +128,15 @@ const IndicatorsComponent = ({ pageProps }) => {
             console.warn(error);
         }
     }
+
+    useWizardSubmit();
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Activities
+    const activities = utilities.activities.getTypeIntervention();
 
     // ///////////////////
     // EFFECTS
@@ -145,30 +152,16 @@ const IndicatorsComponent = ({ pageProps }) => {
             Name,
         } = utilities.activitySuccessMetrics.get(updateId);
 
-        setValue('Type__c', Type__c);
-        setValue('Name', Name);
-        setValue('KPI__c', KPI__c);
-        setValue('Gender', [
+        mainForm.setValue('Type__c', Type__c);
+        mainForm.setValue('Name', Name);
+        mainForm.setValue('KPI__c', KPI__c);
+        mainForm.setValue('Gender', [
             {
                 selectValue: Gender__c,
                 textValue: Gender_Other__c,
             },
         ]);
     }, [updateId, modalIsOpen]);
-
-    // Reset submithandler
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(null);
-        }, 100);
-    }, [initiative]);
-
-    // ///////////////////
-    // DATA
-    // ///////////////////
-
-    // Activities
-    const activities = utilities.activities.getTypeIntervention();
 
     return (
         <>
@@ -263,7 +256,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingIndicators')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     {/* Custom indicator */}
                     {indicatorType ===
@@ -273,7 +266,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                             label={label('InitiativeActivitySuccessMetricName')}
                             placeholder={label('FormCaptureTextEntryEmpty')}
                             maxLength={80}
-                            controller={control}
+                            controller={mainForm.control}
                         />
                     )}
                     {/* Predefined indicator */}
@@ -292,9 +285,9 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 placeholder={label('FormCaptureSelectEmpty')}
                                 options={controlledValueSet(
                                     'initiativeActivitySuccessMetric.KPI__c',
-                                    initiative?.Category__c
+                                    utilities.initiative.get().Category__c
                                 )}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                             <SelectList
                                 name="Gender"
@@ -315,7 +308,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 )}
                                 showText
                                 listMaxLength={1}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                         </>
                     )}

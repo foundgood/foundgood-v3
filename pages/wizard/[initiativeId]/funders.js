@@ -8,15 +8,13 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
     useContext,
+    useElseware,
+    useLabels,
     useReflections,
+    useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
@@ -38,8 +36,7 @@ const FundersComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -110,7 +107,7 @@ const FundersComponent = ({ pageProps }) => {
                 'initiative-funder/initiative-funder',
                 updateId,
                 data,
-                { Initiative__c: initiative.Id },
+                { Initiative__c: utilities.initiative.get().Id },
                 '_funders'
             );
 
@@ -142,6 +139,35 @@ const FundersComponent = ({ pageProps }) => {
         throw error;
     }
 
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflections],
+    });
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Get data for form
+    const { data: accountFoundations } = ewGet('account/account', {
+        type: 'foundation',
+    });
+
+    // Current report details
+    const currentReportDetails = utilities.reportDetails.getFromReportId(
+        REPORT_ID
+    );
+
+    // Check if there is relevant report details yet
+    const reportDetailsItems = currentReportDetails.filter(item =>
+        utilities.funders
+            .getAll()
+            .map(item => item.Id)
+            .includes(item.Initiative_Funder__c)
+    );
+
+    // Get funders
+    const funders = utilities.funders.getAll();
+
     // ///////////////////
     // EFFECTS
     // ///////////////////
@@ -169,45 +195,6 @@ const FundersComponent = ({ pageProps }) => {
         });
         mainForm.setValue('Application_Id__c', Application_Id__c);
     }, [updateId, modalIsOpen]);
-
-    // Effect: Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                MODE === CONTEXTS.REPORT
-                    ? reflectionForm.handleSubmit(
-                          submitMultipleReflections,
-                          error
-                      )
-                    : null
-            );
-        }, 100);
-    }, [initiative]);
-
-    // ///////////////////
-    // DATA
-    // ///////////////////
-
-    // Get data for form
-    const { data: accountFoundations } = ewGet('account/account', {
-        type: 'foundation',
-    });
-
-    // Current report details
-    const currentReportDetails = utilities.reportDetails.getFromReportId(
-        REPORT_ID
-    );
-
-    // Check if there is relevant report details yet
-    const reportDetailsItems = currentReportDetails.filter(item =>
-        utilities.funders
-            .getAll()
-            .map(item => item.Id)
-            .includes(item.Initiative_Funder__c)
-    );
-
-    // Get funders
-    const funders = utilities.funders.getAll();
 
     // ///////////////////
     // FIELDS
@@ -282,6 +269,10 @@ const FundersComponent = ({ pageProps }) => {
             subLabel: object.helpText('Initiative_Funder__c.Application_Id__c'),
         },
     ];
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -359,7 +350,7 @@ const RenderFunderCard = ({
     label,
 }) =>
     funders.map(funder => {
-        const reflection = currentReportDetails.filter(
+        const reflection = currentReportDetails.find(
             item => item.Initiative_Funder__c === funder.Id
         );
 
@@ -384,15 +375,15 @@ const RenderFunderCard = ({
                 name={funder.Id}
                 defaultValue={{
                     selected:
-                        reflection[0] &&
-                        (reflection[0]?.Description__c !==
+                        reflection &&
+                        (reflection?.Description__c !==
                             CONSTANTS.CUSTOM.NO_REFLECTIONS ??
                             false),
                     value:
-                        reflection[0]?.Description__c ===
+                        reflection?.Description__c ===
                         CONSTANTS.CUSTOM.NO_REFLECTIONS
                             ? ''
-                            : reflection[0]?.Description__c,
+                            : reflection?.Description__c,
                 }}
                 inputLabel={label('ReportWizardFunderReflectionSubHeading')}
             />

@@ -3,9 +3,16 @@ import React, { useEffect, useState } from 'react';
 
 // Packages
 import Image from 'next/image';
+import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useLabels, useElseware, useContext } from 'utilities/hooks';
+import {
+    useAuth,
+    useContext,
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+} from 'utilities/hooks';
 import {
     useWizardNavigationStore,
     useInitiativeDataStore,
@@ -15,52 +22,70 @@ import {
 import TitlePreamble from 'components/_wizard/titlePreamble';
 
 const IntroductionComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
+    // ///////////////////
+    // AUTH
+    // ///////////////////
+
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Context for wizard pages
-    const { MODE, CONTEXTS } = useContext();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Metadata
-    const { label, text } = useLabels();
-
-    // Hook: elseware setup
-    const { ewCreate } = useElseware();
-
-    const [bodyTexts, setBodyTexts] = useState([]);
-
-    // Store: Wizard navigation
     const {
-        setCurrentSubmitHandler,
         reset: resetWizardNavigationStore,
         buildReportWizardItems,
         buildInitiativeWizardItems,
     } = useWizardNavigationStore();
 
-    // Store: Initiative data / Wizard navigation
-    const {
-        initiative,
-        utilities,
-        reset: resetInitiativeStore,
-    } = useInitiativeDataStore();
+    const { utilities, reset: resetInitiativeStore } = useInitiativeDataStore();
 
-    // Method: Submit page content
-    async function submit() {
-        // Create initiative
-        if (MODE === CONTEXTS.INITIATIVE) {
-            const { data: initiativeData } = await ewCreate(
-                'initiative/initiative',
-                {
-                    Name: '___',
-                    Configuration_Type__c: 'Reporting',
-                }
-            );
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
 
-            // Update store
-            utilities.updateInitiative(initiativeData);
-        }
-    }
+    const { MODE, CONTEXTS } = useContext();
+    const { label, text } = useLabels();
+    const { ewCreate } = useElseware();
+
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [bodyTexts, setBodyTexts] = useState([]);
+
+    // ///////////////////
+    // FORMS
+    // ///////////////////
+
+    const mainForm = useForm();
+
+    // ///////////////////
+    // SUBMIT
+    // ///////////////////
+
+    useWizardSubmit({
+        [CONTEXTS.INITIATIVE]: [
+            mainForm,
+            async () => {
+                const { data: initiativeData } = await ewCreate(
+                    'initiative/initiative',
+                    {
+                        Name: '___',
+                        Configuration_Type__c: 'Reporting',
+                    }
+                );
+
+                // Update store
+                utilities.updateInitiative(initiativeData);
+            },
+        ],
+    });
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     useEffect(() => {
         // Reset navigation store in localstorage
@@ -73,16 +98,11 @@ const IntroductionComponent = ({ pageProps }) => {
         } else {
             // New initiative - reset store
             resetInitiativeStore();
-            buildInitiativeWizardItems(initiative.Configuration_Type__c);
+            buildInitiativeWizardItems(
+                utilities.initiative.get().Configuration_Type__c
+            );
         }
     }, [MODE]);
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(submit);
-        }, 100);
-    }, [initiative]);
 
     useEffect(() => {
         let bodyTexts;
@@ -94,6 +114,10 @@ const IntroductionComponent = ({ pageProps }) => {
         bodyTexts = bodyTexts === undefined ? [] : bodyTexts;
         setBodyTexts(bodyTexts);
     }, []);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return MODE === CONTEXTS.REPORT ? (
         <>

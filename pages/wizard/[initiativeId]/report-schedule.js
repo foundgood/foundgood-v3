@@ -6,11 +6,13 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useLabels, useElseware } from 'utilities/hooks';
 import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+    useAuth,
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -35,8 +37,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { currentItem, setCurrentSubmitHandler } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -58,14 +59,13 @@ const ReportScheduleComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const { isDirty } = useFormState({ control });
+    const mainForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
         setModalIsSaving(true);
@@ -74,7 +74,9 @@ const ReportScheduleComponent = ({ pageProps }) => {
 
             // Data for sf
             const data = {
-                Name: `${initiative.Id} - ${funder.Account__r.Name} - ${Report_Type__c} ${Due_Date__c}`,
+                Name: `${utilities.initiative.get().Id} - ${
+                    funder.Account__r.Name
+                } - ${Report_Type__c} ${Due_Date__c}`,
                 Report_Period_Start_Date__c: ReportDates.from,
                 Report_Period_End_Date__c: ReportDates.to,
                 Report_Type__c,
@@ -88,7 +90,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 'initiative-report/initiative-report',
                 updateId,
                 data,
-                { Initiative__c: initiative.Id },
+                { Initiative__c: utilities.initiative.get().Id },
                 '_reports'
             );
 
@@ -99,13 +101,22 @@ const ReportScheduleComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
         } catch (error) {
             // Modal save button state
             setModalIsSaving(false);
             console.warn(error);
         }
     }
+
+    useWizardSubmit();
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Funders
+    const funders = utilities.funders.getAll();
 
     // ///////////////////
     // EFFECTS
@@ -120,27 +131,17 @@ const ReportScheduleComponent = ({ pageProps }) => {
             Due_Date__c,
         } = utilities.reports.get(updateId);
 
-        setValue('Report_Type__c', Report_Type__c);
-        setValue('Due_Date__c', Due_Date__c);
-        setValue('ReportDates', {
+        mainForm.setValue('Report_Type__c', Report_Type__c);
+        mainForm.setValue('Due_Date__c', Due_Date__c);
+        mainForm.setValue('ReportDates', {
             from: Report_Period_Start_Date__c,
             to: Report_Period_End_Date__c,
         });
     }, [updateId, modalIsOpen]);
 
-    // Reset submithandler
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(null);
-        }, 100);
-    }, [initiative]);
-
     // ///////////////////
-    // DATA
+    // RENDER
     // ///////////////////
-
-    // Funders
-    const funders = utilities.funders.getAll();
 
     return (
         <>
@@ -190,7 +191,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingReports')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
                         name="Report_Type__c"
@@ -200,14 +201,14 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
                         options={valueSet('initiativeReport.Report_Type__c')}
-                        controller={control}
+                        controller={mainForm.control}
                         required
                     />
                     <DatePicker
                         name="Due_Date__c"
                         label={object.label('Initiative__c.Due_Date__c')}
                         subLabel={object.helpText('Initiative__c.Due_Date__c')}
-                        controller={control}
+                        controller={mainForm.control}
                         required
                     />
                     <DateRange
@@ -217,7 +218,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         )} / ${object.label(
                             'Initiative__c.Report_Period_End_Date__c'
                         )}`}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                 </InputWrapper>
             </Modal>

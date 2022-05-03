@@ -8,15 +8,13 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
     useContext,
+    useElseware,
+    useLabels,
     useReflections,
+    useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -38,8 +36,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -72,16 +69,12 @@ const CollaboratorsComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-        setValue: setValueReflections,
-    } = useForm();
-    const { isDirty } = useFormState({ control });
+    const mainForm = useForm();
+    const reflectionForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
@@ -106,7 +99,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                 'initiative-collaborator/initiative-collaborator',
                 updateId,
                 data,
-                { Initiative__c: initiative.Id },
+                { Initiative__c: utilities.initiative.get().Id },
                 '_collaborators'
             );
 
@@ -117,13 +110,13 @@ const CollaboratorsComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
 
             // Fold out shit when done if report
-            // setValue: setValueReflections,
+            // setValue: reflectionForm.setValue,
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    setValueReflections(
+                    reflectionForm.setValue(
                         `${collaboratorData.Id}-selector`,
                         true
                     );
@@ -136,45 +129,9 @@ const CollaboratorsComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Effect: Set value based on modal elements based on updateId
-    useEffect(() => {
-        const {
-            Start_Date__c,
-            End_Date__c,
-            Account__c,
-            Type__c,
-            Description__c,
-        } = utilities.collaborators.get(updateId);
-
-        setValue('Type__c', Type__c);
-        setValue('Account__c', Account__c);
-        setValue('Dates', {
-            from: Start_Date__c,
-            to: End_Date__c,
-        });
-        setValue('Description__c', Description__c);
-    }, [updateId, modalIsOpen]);
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                MODE === CONTEXTS.REPORT
-                    ? handleSubmitReflections(submitMultipleReflections, error)
-                    : null
-            );
-        }, 100);
-    }, [initiative]);
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflections],
+    });
 
     // ///////////////////
     // DATA
@@ -198,75 +155,86 @@ const CollaboratorsComponent = ({ pageProps }) => {
             .includes(item.Initiative_Collaborator__c)
     );
 
+    // Get all collaborators (additionaæ)
+    const collaborators = utilities.collaborators.getTypeAdditional();
+
     // Get list of already selected collaborators so they can be removed from accountOrganisations records
-    const alreadySelectedCollaborators = utilities.collaborators
-        .getTypeAdditional()
-        .map(collaborator => collaborator.Account__c);
+    const alreadySelectedCollaborators = collaborators.map(
+        collaborator => collaborator.Account__c
+    );
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Effect: Set value based on modal elements based on updateId
+    useEffect(() => {
+        const {
+            Start_Date__c,
+            End_Date__c,
+            Account__c,
+            Type__c,
+            Description__c,
+        } = utilities.collaborators.get(updateId);
+
+        mainForm.setValue('Type__c', Type__c);
+        mainForm.setValue('Account__c', Account__c);
+        mainForm.setValue('Dates', {
+            from: Start_Date__c,
+            to: End_Date__c,
+        });
+        mainForm.setValue('Description__c', Description__c);
+    }, [updateId, modalIsOpen]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
             <TitlePreamble />
             <InputWrapper>
-                {MODE === CONTEXTS.REPORT &&
-                    Object.values(
-                        initiative._collaborators
-                    ).filter(collaborator =>
-                        CONSTANTS.COLLABORATORS.ADDITIONAL_COLLABORATORS.includes(
-                            collaborator.Type__c
-                        )
-                    ).length > 0 && (
-                        <NoReflections
-                            onClick={submitMultipleNoReflections}
-                            reflectionItems={reportDetailsItems.map(
-                                item => item.Description__c
-                            )}
-                            reflecting={reflecting}
-                        />
-                    )}
-                {Object.keys(initiative._collaborators).map(collaboratorKey => {
-                    const collaborator =
-                        initiative._collaborators[collaboratorKey];
-                    const reflection = currentReportDetails.filter(
-                        item =>
-                            item.Initiative_Collaborator__c === collaboratorKey
-                    );
-                    return CONSTANTS.COLLABORATORS.ADDITIONAL_COLLABORATORS.includes(
-                        collaborator.Type__c
-                    ) ? (
-                        <CollaboratorCard
-                            key={collaboratorKey}
-                            headline={
-                                _get(collaborator, 'Account__r.Name') || ''
-                            }
-                            label={_get(collaborator, 'Type__c') || ''}
-                            body={_get(collaborator, 'Description__c') || ''}
-                            action={() => {
-                                setUpdateId(collaboratorKey);
-                                setModalIsOpen(true);
-                            }}
-                            reflectAction={setReflecting}
-                            controller={
-                                MODE === CONTEXTS.REPORT && controlReflections
-                            }
-                            name={collaboratorKey}
-                            defaultValue={{
-                                selected:
-                                    reflection[0] &&
-                                    (reflection[0]?.Description__c !==
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                        false),
-                                value:
-                                    reflection[0]?.Description__c ===
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                        ? ''
-                                        : reflection[0]?.Description__c,
-                            }}
-                            inputLabel={label(
-                                'ReportWizardCollaboratorReflectionSubHeading'
-                            )}
-                        />
-                    ) : null;
-                })}
+                {MODE === CONTEXTS.REPORT && collaborators.length > 0 && (
+                    <NoReflections
+                        onClick={submitMultipleNoReflections}
+                        reflectionItems={reportDetailsItems.map(
+                            item => item.Description__c
+                        )}
+                        reflecting={reflecting}
+                    />
+                )}
+                {collaborators.map(collaborator => (
+                    <CollaboratorCard
+                        key={collaborator.Id}
+                        headline={_get(collaborator, 'Account__r.Name') || ''}
+                        label={_get(collaborator, 'Type__c') || ''}
+                        body={_get(collaborator, 'Description__c') || ''}
+                        action={() => {
+                            setUpdateId(collaborator.Id);
+                            setModalIsOpen(true);
+                        }}
+                        reflectAction={setReflecting}
+                        controller={
+                            MODE === CONTEXTS.REPORT && reflectionForm.control
+                        }
+                        name={collaborator.Id}
+                        defaultValue={{
+                            selected:
+                                reflection &&
+                                (reflection?.Description__c !==
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                                    false),
+                            value:
+                                reflection?.Description__c ===
+                                CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                    ? ''
+                                    : reflection?.Description__c,
+                        }}
+                        inputLabel={label(
+                            'ReportWizardCollaboratorReflectionSubHeading'
+                        )}
+                    />
+                ))}
                 <Button
                     theme="teal"
                     className="self-start"
@@ -282,7 +250,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingCollaborators')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
                         name="Account__c"
@@ -310,7 +278,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                                 : []
                         }
                         required
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     <Select
                         name="Type__c"
@@ -329,7 +297,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                             )
                         )}
                         required
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     <LongText
                         name="Description__c"
@@ -340,7 +308,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                             'Initiative_Collaborator__c.Description__c'
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
-                        controller={control}
+                        controller={mainForm.control}
                         required
                     />
                     <DateRange
@@ -350,7 +318,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         )} / ${object.label(
                             'Initiative_Collaborator__c.End_Date__c'
                         )}`}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                 </InputWrapper>
             </Modal>

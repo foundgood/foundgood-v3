@@ -9,15 +9,13 @@ import dayjs from 'dayjs';
 // Utilities
 import {
     useAuth,
-    useLabels,
-    useElseware,
     useContext,
+    useElseware,
+    useLabels,
     useReflections,
+    useWizardSubmit,
 } from 'utilities/hooks';
-import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -39,8 +37,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -74,23 +71,18 @@ const SharingResultsComponent = ({ pageProps }) => {
     // FORMS
     // ///////////////////
 
-    const { handleSubmit, control, setValue, reset } = useForm();
-    const {
-        handleSubmit: handleSubmitReflections,
-        control: controlReflections,
-        setValue: setValueReflections,
-    } = useForm();
-    const { isDirty } = useFormState({ control });
+    const mainForm = useForm();
+    const reflectionForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
     const disseminationTypeSelect = useWatch({
-        control,
+        control: mainForm.control,
         name: 'Dissemination_Method__c',
     });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
-    // Method: Adds founder to sf and updates founder list in view
     async function submit(formData) {
         // Modal save button state
         setModalIsSaving(true);
@@ -131,7 +123,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                 'initiative-activity/initiative-activity',
                 updateId,
                 data,
-                { Initiative__c: initiative.Id },
+                { Initiative__c: utilities.initiative.get().Id },
                 '_activities'
             );
 
@@ -142,13 +134,16 @@ const SharingResultsComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
 
             // Fold out shit when done if report
-            // setValue: setValueReflections,
+            // setValue: reflectionForm.setValue,
             setTimeout(() => {
                 if (MODE === CONTEXTS.REPORT) {
-                    setValueReflections(`${activityData.Id}-selector`, true);
+                    reflectionForm.setValue(
+                        `${activityData.Id}-selector`,
+                        true
+                    );
                 }
             }, 500);
         } catch (error) {
@@ -158,11 +153,13 @@ const SharingResultsComponent = ({ pageProps }) => {
         }
     }
 
-    // Method: Form error/validation handler
-    function error(error) {
-        console.warn('Form invalid', error);
-        throw error;
-    }
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflections],
+    });
+
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Array of years - Publication year
     const getYears = () => {
@@ -178,61 +175,6 @@ const SharingResultsComponent = ({ pageProps }) => {
         }
         return years;
     };
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Effect: Set value based on modal elements based on updateId
-    useEffect(() => {
-        const {
-            Things_To_Do__c,
-            Dissemination_Method__c,
-            Audience_Tag__c,
-
-            Publication_Type__c,
-            Publication_Year__c,
-            Publication_Title__c,
-            Publication_Publisher__c,
-            Publication_Author__c,
-            Publication_DOI__c,
-        } = utilities.activities.get(updateId);
-
-        setValue('Things_To_Do__c', Things_To_Do__c);
-        setValue('Dissemination_Method__c', Dissemination_Method__c);
-        setValue(
-            'Audience_Tag__c',
-            Audience_Tag__c?.split(';').map(value => ({
-                selectValue: value,
-            }))
-        );
-
-        setValue('Publication_Type__c', Publication_Type__c);
-        setValue('Publication_Year__c', Publication_Year__c);
-        setValue('Publication_Title__c', Publication_Title__c);
-        setValue('Publication_Publisher__c', Publication_Publisher__c);
-        setValue('Publication_Author__c', Publication_Author__c);
-        setValue('Publication_DOI__c', Publication_DOI__c);
-
-        // Set dissemination type
-        setDisseminationType(Dissemination_Method__c);
-    }, [updateId, modalIsOpen]);
-
-    // Watch the change of goal type
-    useEffect(() => {
-        setDisseminationType(disseminationTypeSelect);
-    }, [disseminationTypeSelect]);
-
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(
-                MODE === CONTEXTS.REPORT
-                    ? handleSubmitReflections(submitMultipleReflections, error)
-                    : null
-            );
-        }, 100);
-    }, [initiative]);
 
     // ///////////////////
     // DATA
@@ -253,6 +195,54 @@ const SharingResultsComponent = ({ pageProps }) => {
 
     // Get activities
     const activities = utilities.activities.getTypeDissemination();
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Effect: Set value based on modal elements based on updateId
+    useEffect(() => {
+        const {
+            Things_To_Do__c,
+            Dissemination_Method__c,
+            Audience_Tag__c,
+
+            Publication_Type__c,
+            Publication_Year__c,
+            Publication_Title__c,
+            Publication_Publisher__c,
+            Publication_Author__c,
+            Publication_DOI__c,
+        } = utilities.activities.get(updateId);
+
+        mainForm.setValue('Things_To_Do__c', Things_To_Do__c);
+        mainForm.setValue('Dissemination_Method__c', Dissemination_Method__c);
+        mainForm.setValue(
+            'Audience_Tag__c',
+            Audience_Tag__c?.split(';').map(value => ({
+                selectValue: value,
+            }))
+        );
+
+        mainForm.setValue('Publication_Type__c', Publication_Type__c);
+        mainForm.setValue('Publication_Year__c', Publication_Year__c);
+        mainForm.setValue('Publication_Title__c', Publication_Title__c);
+        mainForm.setValue('Publication_Publisher__c', Publication_Publisher__c);
+        mainForm.setValue('Publication_Author__c', Publication_Author__c);
+        mainForm.setValue('Publication_DOI__c', Publication_DOI__c);
+
+        // Set dissemination type
+        setDisseminationType(Dissemination_Method__c);
+    }, [updateId, modalIsOpen]);
+
+    // Watch the change of goal type
+    useEffect(() => {
+        setDisseminationType(disseminationTypeSelect);
+    }, [disseminationTypeSelect]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -294,7 +284,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                               )
                         : [];
 
-                    const reflection = currentReportDetails.filter(
+                    const reflection = currentReportDetails.find(
                         item => item.Initiative_Activity__c === activity.Id
                     );
 
@@ -314,20 +304,21 @@ const SharingResultsComponent = ({ pageProps }) => {
                             }}
                             reflectAction={setReflecting}
                             controller={
-                                MODE === CONTEXTS.REPORT && controlReflections
+                                MODE === CONTEXTS.REPORT &&
+                                reflectionForm.control
                             }
                             name={activity.Id}
                             defaultValue={{
                                 selected:
-                                    reflection[0] &&
-                                    (reflection[0]?.Description__c !==
+                                    reflection &&
+                                    (reflection?.Description__c !==
                                         CONSTANTS.CUSTOM.NO_REFLECTIONS ??
                                         false),
                                 value:
-                                    reflection[0]?.Description__c ===
+                                    reflection?.Description__c ===
                                     CONSTANTS.CUSTOM.NO_REFLECTIONS
                                         ? ''
-                                        : reflection[0]?.Description__c,
+                                        : reflection?.Description__c,
                             }}
                             journalPublication={
                                 showJournalPublication
@@ -366,7 +357,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                 title={label('WizardModalHeadingSharing')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Text
                         name="Things_To_Do__c"
@@ -378,7 +369,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={200}
-                        controller={control}
+                        controller={mainForm.control}
                         required
                     />
 
@@ -394,7 +385,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         options={valueSet(
                             'initiativeActivity.Dissemination_Method__c'
                         )}
-                        controller={control}
+                        controller={mainForm.control}
                         required
                     />
 
@@ -409,7 +400,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         selectPlaceholder={label('FormCaptureSelectEmpty')}
                         options={valueSet('initiativeActivity.Audience_Tag__c')}
                         listMaxLength={4}
-                        controller={control}
+                        controller={mainForm.control}
                         buttonLabel={label('ButtonAddAudienceTag')}
                         required
                     />
@@ -428,7 +419,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 )}
                                 placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={30}
-                                controller={control}
+                                controller={mainForm.control}
                             />
 
                             <Select
@@ -440,7 +431,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                     'Initiative_Activity__c.Publication_Year__c'
                                 )}
                                 options={getYears()}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                             <Text
                                 name="Publication_Title__c"
@@ -452,7 +443,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 )}
                                 placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={200}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                             <Text
                                 name="Publication_Publisher__c"
@@ -464,7 +455,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 )}
                                 placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={200}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                             <Text
                                 name="Publication_Author__c"
@@ -476,7 +467,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 )}
                                 placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={80}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                             <Text
                                 name="Publication_DOI__c"
@@ -488,7 +479,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 )}
                                 placeholder={label('FormCaptureTextEntryEmpty')}
                                 maxLength={30}
-                                controller={control}
+                                controller={mainForm.control}
                             />
                         </>
                     )}

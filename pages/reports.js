@@ -234,22 +234,21 @@ const ReportComponent = ({ pageProps }) => {
                                 label={label(
                                     'ReportManagerFilterGrantGivingArea'
                                 )}
-                                controller={control}
+                                controller={mainForm.control}
                                 options={valueSet('initiative.Category__c')}
                             />
                             <SearchFilterMultiselect
                                 name="filter.status"
-                                // label={label(
-                                //     'ReportManagerFilterReportStatus'
-                                // )}
-                                label={labelTodo('Report status is')}
-                                controller={control}
+                                label={labelTodo(
+                                    'ReportManagerFilterReportStatus is missing'
+                                )}
+                                controller={mainForm.control}
                                 options={valueSet('initiativeReport.Status__c')}
                             />
                             <SearchFilterMultiselect
                                 name="filter.type"
                                 label={label('ReportManagerFilterReportType')}
-                                controller={control}
+                                controller={mainForm.control}
                                 options={valueSet(
                                     'initiativeReport.Report_Type__c'
                                 )}
@@ -261,7 +260,7 @@ const ReportComponent = ({ pageProps }) => {
                                     label={label(
                                         'ReportManagerFilterFoundation'
                                     )}
-                                    controller={control}
+                                    controller={mainForm.control}
                                     options={
                                         controlledAccountFoundations?.map(
                                             item => ({

@@ -6,11 +6,13 @@ import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useAuth, useLabels, useElseware } from 'utilities/hooks';
 import {
-    useInitiativeDataStore,
-    useWizardNavigationStore,
-} from 'utilities/store';
+    useAuth,
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -31,8 +33,7 @@ const LogbookComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
-    const { setCurrentSubmitHandler, currentItem } = useWizardNavigationStore();
+    const { utilities } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -56,23 +57,23 @@ const LogbookComponent = ({ pageProps }) => {
     // ///////////////////
 
     // Hook: useForm setup
-    const { handleSubmit, control, setValue, reset } = useForm();
+    const mainForm = useForm();
     const attachImage = useWatch({
-        control,
+        control: mainForm.control,
         name: 'AttachImage',
     });
     const attachVideo = useWatch({
-        control,
+        control: mainForm.control,
         name: 'AttachVideo',
     });
     const attachDocument = useWatch({
-        control,
+        control: mainForm.control,
         name: 'AttachDocument',
     });
-    const { isDirty } = useFormState({ control });
+    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
@@ -99,7 +100,7 @@ const LogbookComponent = ({ pageProps }) => {
                 'initiative-update/initiative-update',
                 updateId,
                 data,
-                { Initiative__c: initiative.Id },
+                { Initiative__c: utilities.initiative.get().Id },
                 '_updates'
             );
 
@@ -147,13 +148,32 @@ const LogbookComponent = ({ pageProps }) => {
             setModalIsSaving(false);
 
             // Clear content in form
-            reset();
+            mainForm.reset();
         } catch (error) {
             // Modal save button state
             setModalIsSaving(false);
             console.warn(error);
         }
     }
+
+    useWizardSubmit();
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Get activities
+    const activities = utilities.activities.getTypeIntervention();
+
+    // Logbook entries
+    const logbookEntries = utilities.updates
+        .getTypeLogbookUpdate()
+        .sort((a, b) => new Date(b.CreatedDate) - new Date(a.CreatedDate));
+
+    // Get update content
+    const currentInitiativeUpdateContent = utilities.updateContents.getFromUpdateId(
+        updateId
+    );
 
     // ///////////////////
     // EFFECTS
@@ -174,33 +194,13 @@ const LogbookComponent = ({ pageProps }) => {
             content?.Type__c ? content?.Type__c.toLowerCase() : 'text'
         );
 
-        setValue('Description__c', Description__c);
-        setValue('Initiative_Activity__c', Initiative_Activity__c);
+        mainForm.setValue('Description__c', Description__c);
+        mainForm.setValue('Initiative_Activity__c', Initiative_Activity__c);
     }, [updateId, modalIsOpen]);
 
-    // Add submit handler to wizard navigation store
-    useEffect(() => {
-        setTimeout(() => {
-            setCurrentSubmitHandler(null);
-        }, 100);
-    }, [initiative]);
-
     // ///////////////////
-    // DATA
+    // RENDER
     // ///////////////////
-
-    // Get activities
-    const activities = utilities.activities.getTypeIntervention();
-
-    // Logbook entries
-    const logbookEntries = utilities.updates
-        .getTypeLogbookUpdate()
-        .sort((a, b) => new Date(b.CreatedDate) - new Date(a.CreatedDate));
-
-    // Get update content
-    const currentInitiativeUpdateContent = utilities.updateContents.getFromUpdateId(
-        updateId
-    );
 
     return (
         <>
@@ -224,7 +224,7 @@ const LogbookComponent = ({ pageProps }) => {
                 title={label('ButtonAddLogEntry')}
                 onCancel={() => setModalIsOpen(false)}
                 disabledSave={!isDirty || modalIsSaving || attachLoading}
-                onSave={handleSubmit(submit)}>
+                onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <LongText
                         name="Description__c"
@@ -236,7 +236,7 @@ const LogbookComponent = ({ pageProps }) => {
                         )}
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         required
-                        controller={control}
+                        controller={mainForm.control}
                     />
                     <div className="flex flex-col space-y-16">
                         <div className="flex space-x-16">
@@ -245,7 +245,7 @@ const LogbookComponent = ({ pageProps }) => {
                                 label={label('AttachImage')}
                                 type="image"
                                 accept=".png,.jpg,.jpeg"
-                                controller={control}
+                                controller={mainForm.control}
                                 onClick={() => setUpdateType('picture')}
                                 setAttachLoading={setAttachLoading}
                             />
@@ -254,7 +254,7 @@ const LogbookComponent = ({ pageProps }) => {
                                 label={label('AttachVideo')}
                                 type="video"
                                 accept="video/mp4,video/x-m4v,video/*"
-                                controller={control}
+                                controller={mainForm.control}
                                 onClick={() => setUpdateType('video')}
                                 setAttachLoading={setAttachLoading}
                             />
@@ -263,7 +263,7 @@ const LogbookComponent = ({ pageProps }) => {
                                 label={label('AttachDocument')}
                                 type="document"
                                 accept=".pdf"
-                                controller={control}
+                                controller={mainForm.control}
                                 onClick={() => setUpdateType('document')}
                                 setAttachLoading={setAttachLoading}
                             />
@@ -317,7 +317,7 @@ const LogbookComponent = ({ pageProps }) => {
                             value: activity.Id,
                             label: activity.Things_To_Do__c,
                         }))}
-                        controller={control}
+                        controller={mainForm.control}
                     />
                 </InputWrapper>
             </Modal>
