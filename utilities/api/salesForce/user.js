@@ -3,8 +3,6 @@ import axios from 'axios';
 
 // Utilities
 import { useAuthStore } from 'utilities/store';
-import { queries } from 'utilities/api/salesForce/queries';
-import { query } from 'utilities/api/salesForce/fetchers';
 
 // Retrieve access token from auth store
 const accessToken = () => useAuthStore.getState().accessToken ?? null;
@@ -46,64 +44,4 @@ async function logout(token = accessToken()) {
     }
 }
 
-async function getInfo({ token, url }) {
-    try {
-        // Get user info
-        const userInfo = await getUserInfo(token, url);
-        // Get users linked account info
-        const accountInfo = await getAccountInfo(userInfo.user_id, token, url);
-
-        const user = { ...userInfo, ...accountInfo };
-
-        return user;
-    } catch (error) {
-        console.warn(error);
-        return error;
-    }
-}
-
-async function getUserInfo(token, url) {
-    try {
-        const response = await axios.get(
-            `${url}/services/apexrest/User/getCurrentUserInfo`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        // Convert non-ok HTTP responses into errors:
-        if (response.status !== 200) {
-            throw {
-                statusText: response.statusText,
-                response,
-            };
-        }
-
-        return response.data;
-    } catch (error) {
-        console.warn(error);
-        return error;
-    }
-}
-
-async function getAccountInfo(id, token, url) {
-    try {
-        const response = await query(queries.user.getUser(id), token, url);
-        if (response?.totalSize !== 1) {
-            throw {
-                statusText: response.statusText,
-                response,
-            };
-        }
-
-        return response.records[0];
-    } catch (error) {
-        console.warn(error);
-        return error;
-    }
-}
-
-export { login, logout, getInfo };
+export { login, logout };

@@ -1,20 +1,4 @@
 const queries = {
-    account: {
-        allGrantees() {
-            return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Grantee'`;
-        },
-        allFoundations() {
-            return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Foundation'`;
-        },
-        allOrganisations() {
-            return `SELECT Id, Name FROM Account WHERE RecordType.Name = 'Organization'`;
-        },
-    },
-    user: {
-        getUser(id) {
-            return `SELECT Id, Name, User_Account_Type__c, AccountId FROM User WHERE Id = '${id}'`;
-        },
-    },
     initiative: {
         _query: `SELECT Id, Configuration_Type__c, LastModifiedDate, CreatedById, Name, Situation_Today__c, Approach_Thinking__c, Problem_Effect__c, toLabel(Problem_Effect__c) Translated_Problem_Effect__c, Problem_Resolutions__c, Problem_Causes__c, Ultimate_Outcome__c, Stage__c, toLabel(Stage__c) Translated_Stage__c, Where_Is_Problem__c, toLabel(Where_Is_Problem__c) Translated_Where_Is_Problem__c, Who_Effect__c, Why_Problem_Solving__c, Lead_Grantee__r.Name, Initiator_Foundation__r.Name, Access_Level__c, toLabel(Access_Level__c) Translated_Access_Level__c, Hero_Image_URL__c, Summary__c, Application_Id__c, Grant_Start_Date__c, Grant_End_Date__c, Category__c, toLabel(Category__c) Translated_Category__c, Subcategory__c, toLabel(Subcategory__c) Translated_Subcategory__c, Collaborators__c, Partners__c, UserRecordAccess.HasReadAccess, UserRecordAccess.HasEditAccess, UserRecordAccess.HasDeleteAccess FROM Initiative__c`,
         get(id) {

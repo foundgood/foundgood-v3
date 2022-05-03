@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 
 // Utilities
 import CryptoJS from 'crypto-js';
-import { salesForce } from 'utilities/api';
+import { salesForce, elseware } from 'utilities/api';
 import { useAuthStore } from 'utilities/store';
 import { hasWindow } from 'utilities';
 
@@ -105,8 +105,8 @@ const useAuth = () => {
                     );
 
                     // Get user info from sf api
-                    salesForce.user
-                        .getInfo({ token: access_token, url: instance_url })
+                    elseware
+                        .get({ path: 'user/user', token: access_token })
                         .then(user => {
                             // Update localstorage user
                             setLsUserData({

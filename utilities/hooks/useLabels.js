@@ -117,7 +117,6 @@ const useLabels = () => {
 
     function log() {
         console.log({ labels, texts, objects, pickLists, controlledPickLists });
-        logMetadata();
     }
 
     return {
