@@ -185,7 +185,7 @@ const HomeComponent = () => {
                                 label={label(
                                     'InitiativeManagerFilterFilterGrantGivingArea'
                                 )}
-                                controller={mainForm.control}
+                                controller={control}
                                 options={valueSet('initiative.Category__c')}
                             />
                             <SearchFilterDate
@@ -193,14 +193,14 @@ const HomeComponent = () => {
                                 label={label(
                                     'InitiativeManagerFilterGrantStartDate'
                                 )}
-                                controller={mainForm.control}
+                                controller={control}
                             />
                             <SearchFilterDate
                                 name="filter.endDate"
                                 label={label(
                                     'InitiativeManagerFilterGrantEndDate'
                                 )}
-                                controller={mainForm.control}
+                                controller={control}
                             />
                         </div>
                     </div>

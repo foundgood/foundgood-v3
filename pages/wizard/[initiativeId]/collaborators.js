@@ -203,38 +203,47 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         reflecting={reflecting}
                     />
                 )}
-                {collaborators.map(collaborator => (
-                    <CollaboratorCard
-                        key={collaborator.Id}
-                        headline={_get(collaborator, 'Account__r.Name') || ''}
-                        label={_get(collaborator, 'Type__c') || ''}
-                        body={_get(collaborator, 'Description__c') || ''}
-                        action={() => {
-                            setUpdateId(collaborator.Id);
-                            setModalIsOpen(true);
-                        }}
-                        reflectAction={setReflecting}
-                        controller={
-                            MODE === CONTEXTS.REPORT && reflectionForm.control
-                        }
-                        name={collaborator.Id}
-                        defaultValue={{
-                            selected:
-                                reflection &&
-                                (reflection?.Description__c !==
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                    false),
-                            value:
-                                reflection?.Description__c ===
-                                CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                    ? ''
-                                    : reflection?.Description__c,
-                        }}
-                        inputLabel={label(
-                            'ReportWizardCollaboratorReflectionSubHeading'
-                        )}
-                    />
-                ))}
+                {collaborators.map(collaborator => {
+                    const reflection = currentReportDetails.filter(
+                        item =>
+                            item.Initiative_Collaborator__c === collaborator.Id
+                    );
+                    return (
+                        <CollaboratorCard
+                            key={collaborator.Id}
+                            headline={
+                                _get(collaborator, 'Account__r.Name') || ''
+                            }
+                            label={_get(collaborator, 'Type__c') || ''}
+                            body={_get(collaborator, 'Description__c') || ''}
+                            action={() => {
+                                setUpdateId(collaborator.Id);
+                                setModalIsOpen(true);
+                            }}
+                            reflectAction={setReflecting}
+                            controller={
+                                MODE === CONTEXTS.REPORT &&
+                                reflectionForm.control
+                            }
+                            name={collaborator.Id}
+                            defaultValue={{
+                                selected:
+                                    reflection &&
+                                    (reflection?.Description__c !==
+                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
+                                        false),
+                                value:
+                                    reflection?.Description__c ===
+                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
+                                        ? ''
+                                        : reflection?.Description__c,
+                            }}
+                            inputLabel={label(
+                                'ReportWizardCollaboratorReflectionSubHeading'
+                            )}
+                        />
+                    );
+                })}
                 <Button
                     theme="teal"
                     className="self-start"

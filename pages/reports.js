@@ -234,7 +234,7 @@ const ReportComponent = ({ pageProps }) => {
                                 label={label(
                                     'ReportManagerFilterGrantGivingArea'
                                 )}
-                                controller={mainForm.control}
+                                controller={control}
                                 options={valueSet('initiative.Category__c')}
                             />
                             <SearchFilterMultiselect
@@ -242,13 +242,13 @@ const ReportComponent = ({ pageProps }) => {
                                 label={labelTodo(
                                     'ReportManagerFilterReportStatus is missing'
                                 )}
-                                controller={mainForm.control}
+                                controller={control}
                                 options={valueSet('initiativeReport.Status__c')}
                             />
                             <SearchFilterMultiselect
                                 name="filter.type"
                                 label={label('ReportManagerFilterReportType')}
-                                controller={mainForm.control}
+                                controller={control}
                                 options={valueSet(
                                     'initiativeReport.Report_Type__c'
                                 )}
@@ -260,7 +260,7 @@ const ReportComponent = ({ pageProps }) => {
                                     label={label(
                                         'ReportManagerFilterFoundation'
                                     )}
-                                    controller={mainForm.control}
+                                    controller={control}
                                     options={
                                         controlledAccountFoundations?.map(
                                             item => ({
