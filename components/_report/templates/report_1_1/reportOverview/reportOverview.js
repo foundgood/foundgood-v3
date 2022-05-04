@@ -14,6 +14,7 @@ import SectionWrapper from 'components/sectionWrapper';
 import UpdateButton from 'components/updateButton';
 
 const ReportOverviewComponent = ({ initiative, report, constants }) => {
+    console.log(initiative);
     // Hook: Metadata
     const { label, object, pickList, getValueLabel } = useLabels();
 

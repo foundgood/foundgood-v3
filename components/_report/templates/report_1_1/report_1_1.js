@@ -48,8 +48,8 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
     // STATE
     // ///////////////////
 
-    const [initiative, setInitiative] = useState({});
-    const [report, setReport] = useState({});
+    const [initiative, setInitiative] = useState(null);
+    const [report, setReport] = useState(null);
 
     // ///////////////////
     // EFFECTS

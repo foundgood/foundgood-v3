@@ -36,8 +36,8 @@ const Report_1_0Component = ({ initiativeData = {}, reportData = {} }) => {
     // STATE
     // ///////////////////
 
-    const [initiative, setInitiative] = useState({});
-    const [report, setReport] = useState({});
+    const [initiative, setInitiative] = useState(null);
+    const [report, setReport] = useState(null);
     const [name, setName] = useState();
     const [status, setStatus] = useState();
     const [deadline, setDeadline] = useState();
