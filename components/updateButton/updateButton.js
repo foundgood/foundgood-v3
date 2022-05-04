@@ -43,7 +43,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
         try {
             if (
                 utilities.reports.get(REPORT_ID).Status__c ===
-                CONSTANTS.TYPES.REPORT_NOT_STARTED
+                CONSTANTS.REPORTS.REPORT_NOT_STARTED
             ) {
                 const { data: reportData } = await ewUpdate(
                     'initiative-report/initiative-report',
@@ -78,7 +78,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
             userInitiativeRights.canEdit &&
             (reportPage
                 ? utilities.reports.get(REPORT_ID).Status__c !==
-                  CONSTANTS.TYPES.REPORT_PUBLISHED
+                  CONSTANTS.REPORTS.REPORT_PUBLISHED
                     ? true
                     : false
                 : true);

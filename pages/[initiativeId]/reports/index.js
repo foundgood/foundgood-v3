@@ -55,7 +55,7 @@ const ReportsComponent = ({ pageProps }) => {
                     // Only show reports related to users accountId
                     if (
                         user.User_Account_Type__c ===
-                        CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
+                        CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION
                     ) {
                         return (
                             report.Funder_Report__c == item.Id &&

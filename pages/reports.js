@@ -176,7 +176,7 @@ const ReportComponent = ({ pageProps }) => {
                 // Only show reports with same Id as users AccountId
                 if (
                     user.User_Account_Type__c ===
-                    CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION
+                    CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION
                 ) {
                     return (
                         item.Initiative__c !== null &&
@@ -254,7 +254,7 @@ const ReportComponent = ({ pageProps }) => {
                                 )}
                             />
                             {user?.User_Account_Type__c !==
-                                CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION && (
+                                CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION && (
                                 <SearchFilterMultiselect
                                     name="filter.foundation"
                                     label={label(

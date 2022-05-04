@@ -109,42 +109,35 @@ const WizardStatusComponent = () => {
                 <div className="flex items-center self-end space-x-12">
                     {userInitiativeRights.canEdit &&
                         currentReport.Status__c !==
-                            CONSTANTS.TYPES.REPORT_PUBLISHED && (
+                            CONSTANTS.REPORTS.REPORT_PUBLISHED && (
                             <Button
                                 theme="teal"
-                                variant="primary"
                                 variant={
                                     [
-                                        CONSTANTS.TYPES.REPORT_IN_REVIEW,
-                                        CONSTANTS.TYPES.REPORT_PUBLISHED,
+                                        CONSTANTS.REPORTS.REPORT_IN_REVIEW,
+                                        CONSTANTS.REPORTS.REPORT_PUBLISHED,
                                     ].includes(currentReport.Status__c)
                                         ? 'tertiary'
                                         : 'primary'
                                 }
-                                // SHOW/HIDE btn instead
-                                // disabled={
-                                //     [CONSTANTS.TYPES.REPORT_PUBLISHED].includes(
-                                //         currentReport.Status__c
-                                //     ) || !userInitiativeRights.canEdit
-                                // }
                                 action={reportInProgress}>
                                 {label('ButtonRunWizard')}
                             </Button>
                         )}
                     {userInitiativeRights.canEdit &&
                         currentReport.Status__c !==
-                            CONSTANTS.TYPES.REPORT_PUBLISHED && (
+                            CONSTANTS.REPORTS.REPORT_PUBLISHED && (
                             <Button
                                 theme="teal"
                                 variant={
                                     currentReport.Status__c ===
-                                    CONSTANTS.TYPES.REPORT_NOT_STARTED
+                                    CONSTANTS.REPORTS.REPORT_NOT_STARTED
                                         ? 'tertiary'
                                         : 'primary'
                                 }
                                 disabled={
                                     currentReport.Status__c ===
-                                    CONSTANTS.TYPES.REPORT_IN_REVIEW
+                                    CONSTANTS.REPORTS.REPORT_IN_REVIEW
                                 }
                                 action={() => setShowModal(true)}>
                                 {label('ButtonSubmit')}

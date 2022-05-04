@@ -164,7 +164,7 @@ const HomeComponent = () => {
                             {label('InitiativeManagerHeading')}
                         </h2>
                         {user?.User_Account_Type__c !==
-                            CONSTANTS.TYPES.ACCOUNT_TYPE_FOUNDATION && (
+                            CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION && (
                             <Button theme="teal" action="/wizard/introduction">
                                 {label('InitiativeManagerCreate')}
                             </Button>
@@ -219,14 +219,14 @@ const HomeComponent = () => {
                                         item._funders?.filter(
                                             item =>
                                                 item.Type__c ===
-                                                CONSTANTS.TYPES.LEAD_FUNDER
+                                                CONSTANTS.FUNDERS.LEAD_FUNDER
                                         )[0]?.Account__r?.Name
                                     }
                                     otherFunders={
                                         item._funders?.filter(
                                             item =>
                                                 item.Type__c !==
-                                                CONSTANTS.TYPES.LEAD_FUNDER
+                                                CONSTANTS.FUNDERS.LEAD_FUNDER
                                         ).length
                                     }
                                     reports={item._reports}

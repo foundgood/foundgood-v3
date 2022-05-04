@@ -73,7 +73,8 @@ const KpiCardComponent = ({
                                     action={() =>
                                         actionUpdate(
                                             item,
-                                            CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                                            CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                                                .INDICATOR_PREDEFINED
                                         )
                                     }>
                                     {label('Update')}
@@ -119,7 +120,8 @@ const KpiCardComponent = ({
                                     action={() =>
                                         actionUpdate(
                                             item,
-                                            CONSTANTS.TYPES.INDICATOR_CUSTOM
+                                            CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                                                .INDICATOR_CUSTOM
                                         )
                                     }>
                                     {label('Update')}

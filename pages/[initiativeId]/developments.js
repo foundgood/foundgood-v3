@@ -77,7 +77,8 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                         : item.Current_Status__c;
                                     if (
                                         item.Type__c ===
-                                        CONSTANTS.TYPES.INDICATOR_PREDEFINED
+                                        CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                                            .INDICATOR_PREDEFINED
                                     ) {
                                         let headline;
                                         // Get gender
@@ -141,7 +142,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                 .filter(item => {
                     // "Dissemination" or "Intervention"
                     return item.Activity_Type__c ==
-                        CONSTANTS.TYPES.ACTIVITY_DISSEMINATION
+                        CONSTANTS.ACTIVITIES.ACTIVITY_DISSEMINATION
                         ? true
                         : false;
                 })

@@ -47,7 +47,7 @@ const ActivitiesComponent = ({ pageProps }) => {
             const activities = Object.values(initiative._activities)
                 .filter(item => {
                     return item.Activity_Type__c ===
-                        CONSTANTS.TYPES.ACTIVITY_INTERVENTION
+                        CONSTANTS.ACTIVITIES.ACTIVITY_INTERVENTION
                         ? true
                         : false;
                 })
@@ -76,7 +76,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         relatedGoal.Initiative_Goal__c ==
                                             goal.Id &&
                                         goal.Type__c ==
-                                            CONSTANTS.TYPES.GOAL_PREDEFINED
+                                            CONSTANTS.GOALS.GOAL_PREDEFINED
                                     ) {
                                         return {
                                             description:
@@ -86,7 +86,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         relatedGoal.Initiative_Goal__c ==
                                             goal.Id &&
                                         goal.Type__c ==
-                                            CONSTANTS.TYPES.GOAL_CUSTOM
+                                            CONSTANTS.GOALS.GOAL_CUSTOM
                                     ) {
                                         return { description: goal.Goal__c };
                                     }

@@ -144,13 +144,19 @@ const ProjectComponent = ({ pageProps }) => {
             const collaborators = Object.values(
                 initiative._collaborators
             ).filter(item => {
-                if (CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)) {
+                if (
+                    CONSTANTS.COLLABORATORS.COLLABORATORS.includes(item.Type__c)
+                ) {
                     return item;
                 }
             });
             const applicants = Object.values(initiative._collaborators).filter(
                 item => {
-                    if (!CONSTANTS.TYPES.COLLABORATORS.includes(item.Type__c)) {
+                    if (
+                        !CONSTANTS.COLLABORATORS.COLLABORATORS.includes(
+                            item.Type__c
+                        )
+                    ) {
                         return item;
                     }
                 }
@@ -266,7 +272,7 @@ const ProjectComponent = ({ pageProps }) => {
     // Funder objective
     const funderObjective =
         Object.values(initiative?._goals).find(
-            item => item.Type__c === CONSTANTS.TYPES.GOAL_PREDEFINED
+            item => item.Type__c === CONSTANTS.GOALS.GOAL_PREDEFINED
         ) || {};
 
     return (

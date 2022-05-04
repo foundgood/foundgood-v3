@@ -12,6 +12,9 @@ function error(error) {
     throw error;
 }
 
+// Hook for handling which current submithandler that are set in Wizard Navigation Store
+// The Submithandler is run when the "continue" button is clicked
+// The submit will be context specific
 const useWizardSubmit = (submitOptions = {}) => {
     const { setCurrentSubmitHandler } = useWizardNavigationStore();
     const { initiative } = useInitiativeDataStore();

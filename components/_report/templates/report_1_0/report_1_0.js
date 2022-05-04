@@ -82,22 +82,6 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
             const outcomes = Object.values(initiative._reportDetails)
                 .filter(item => item.Type__c == 'Outcome')
                 .map((item, index) => {
-                    // TODO: item.Problem_Resolutions contains JSON of related goals - Todo find example json....
-                    // console.log('outcome: ', item.Problem_Resolutions);
-
-                    // OLD
-                    // // // Get related goals
-                    // // const goals = Object.values(initiative._goals)
-                    // //     .find(goal => goal.Id == item.Initiative_Goal__c)
-                    // //     ?.map(goal => {
-                    // //         if (item.Type__c == CONSTANTS.TYPES.GOAL_CUSTOM) {
-                    // //             return goal.Goal__c;
-                    // //         } else {
-                    // //             return goal.Funder_Objective__c;
-                    // //         }
-                    // //     });
-                    // // console.log('goals: ', goals);
-
                     return {
                         description: item.Description__c,
                         goals: [], // goals
@@ -110,10 +94,9 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
                 .filter(item => item.URL__c)
                 .map((item, index) => {
                     const fileName = item.URL__c.split('/').pop();
-                    // console.log('fileName: ', fileName);
                     return {
                         filePath: item.URL__c,
-                        fileName: fileName, // 'presentation.pdf',
+                        fileName: fileName,
                     };
                 });
             setFiles(files);

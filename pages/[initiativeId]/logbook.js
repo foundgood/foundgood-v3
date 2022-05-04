@@ -43,7 +43,7 @@ const LogbookComponent = ({ pageProps }) => {
             const logs = Object.values(initiative._updates)
                 .filter(
                     item =>
-                        item.Type__c !== CONSTANTS.TYPES.LOGBOOK_TYPE_METRICS // Ignore metrics updates
+                        item.Type__c !== CONSTANTS.UPDATES.LOGBOOK_TYPE_METRICS // Ignore metrics updates
                 )
                 .map(item => {
                     const updateContent = utilities.updateContents.getFromUpdateId(

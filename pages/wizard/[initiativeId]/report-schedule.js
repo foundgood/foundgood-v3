@@ -81,7 +81,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 Report_Period_End_Date__c: ReportDates.to,
                 Report_Type__c,
                 Due_Date__c,
-                Status__c: CONSTANTS.TYPES.REPORT_NOT_STARTED,
+                Status__c: CONSTANTS.REPORTS.REPORT_NOT_STARTED,
                 Funder_Report__c: funder.Id,
             };
 
