@@ -31,7 +31,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, object, valueSet, getValueLabel } = useLabels();
+    const { label, object, pickList, getValueLabel } = useLabels();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -145,7 +145,9 @@ const ProjectComponent = ({ pageProps }) => {
                 initiative._collaborators
             ).filter(item => {
                 if (
-                    CONSTANTS.COLLABORATORS.COLLABORATORS.includes(item.Type__c)
+                    CONSTANTS.COLLABORATORS.ADDITIONAL_COLLABORATORS.includes(
+                        item.Type__c
+                    )
                 ) {
                     return item;
                 }
@@ -153,7 +155,7 @@ const ProjectComponent = ({ pageProps }) => {
             const applicants = Object.values(initiative._collaborators).filter(
                 item => {
                     if (
-                        !CONSTANTS.COLLABORATORS.COLLABORATORS.includes(
+                        !CONSTANTS.COLLABORATORS.ADDITIONAL_COLLABORATORS.includes(
                             item.Type__c
                         )
                     ) {
@@ -166,7 +168,7 @@ const ProjectComponent = ({ pageProps }) => {
 
             // Merge goal data, to single array
             const sdgNums = initiative?.Problem_Effect__c?.split(';');
-            const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
+            const sdgs = pickList('Initiative__c.Problem_Effect__c'); // get global sdgs
             if (sdgNums?.length > 0) {
                 const developmentGoals = sdgNums.map(num => {
                     return {
@@ -345,7 +347,7 @@ const ProjectComponent = ({ pageProps }) => {
                                         </h4>
                                         <h3 className="t-h5">
                                             {getValueLabel(
-                                                'initiativeGoal.Funder_Objective__c',
+                                                'Initiative_Goal__c.Funder_Objective__c',
                                                 funderObjective.Funder_Objective__c,
                                                 true
                                             )}
@@ -565,7 +567,7 @@ const ProjectComponent = ({ pageProps }) => {
                                     item.Type__c == 'Custom'
                                         ? item.Goal__c
                                         : getValueLabel(
-                                              'initiativeGoal.Funder_Objective__c',
+                                              'Initiative_Goal__c.Funder_Objective__c',
                                               item.Funder_Objective__c,
                                               true
                                           );

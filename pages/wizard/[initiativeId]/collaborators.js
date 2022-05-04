@@ -43,7 +43,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, object, valueSet } = useLabels();
+    const { label, object, pickList } = useLabels();
     const { ewGet, ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -298,8 +298,8 @@ const CollaboratorsComponent = ({ pageProps }) => {
                             'Initiative_Collaborator__c.Type__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
-                        options={valueSet(
-                            'initiativeCollaborator.Type__c'
+                        options={pickList(
+                            'Initiative_Collaborator__c.Type__c'
                         ).filter(item =>
                             CONSTANTS.COLLABORATORS.ADDITIONAL_COLLABORATORS.includes(
                                 item.value

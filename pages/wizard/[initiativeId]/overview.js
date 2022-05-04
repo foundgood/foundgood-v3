@@ -37,8 +37,9 @@ const OverviewComponent = () => {
     // ///////////////////
 
     const { MODE, CONTEXTS } = useContext();
-    const { label, object, valueSet, controlledValueSet } = useLabels();
+    const { label, object, pickList, controlledPickList, log } = useLabels();
     const { ewGet, ewCreate, ewUpdate, ewCreateUpdateWrapper } = useElseware();
+    log();
 
     // ///////////////////
     // FORMS
@@ -197,7 +198,7 @@ const OverviewComponent = () => {
             disabled: utilities.isNovoLeadFunder(),
             required: true,
             // Type options
-            options: valueSet('initiative.Category__c'),
+            options: pickList('Initiative__c.Category__c'),
             subLabel: object.helpText('Initiative__c.Category__c'),
         },
         {
@@ -208,8 +209,8 @@ const OverviewComponent = () => {
             disabled: !CategoryWatch && !initiative?.Category__c,
             required: true,
             // Type options
-            options: controlledValueSet(
-                'initiativeGoal.Funder_Objective__c',
+            options: controlledPickList(
+                'Initiative_Goal__c.Funder_Objective__c',
                 CategoryWatch ? CategoryWatch : initiative?.Category__c
             ),
             subLabel: object.helpText('Initiative_Goal__c.Funder_Objective__c'),
@@ -248,7 +249,7 @@ const OverviewComponent = () => {
             // Type options
             buttonLabel: label('ButtonAddLocation'),
             listMaxLength: 3,
-            options: valueSet('account.Location__c'),
+            options: pickList('Account.Location__c'),
             subLabel: object.helpText('Initiative__c.Where_Is_Problem__c'),
         },
         {
@@ -263,7 +264,7 @@ const OverviewComponent = () => {
             // Type options
             buttonLabel: label('ButtonAddSDG'),
             listMaxLength: 10,
-            options: valueSet('initiative.Problem_Effect__c'),
+            options: pickList('Initiative__c.Problem_Effect__c'),
             subLabel: object.helpText('Initiative__c.Problem_Effect__c'),
         },
         ...(MODE === CONTEXTS.INITIATIVE

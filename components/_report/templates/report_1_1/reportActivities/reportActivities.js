@@ -206,7 +206,7 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                             'InitiativeViewActivityLocation'
                                         ),
                                         text: getValueLabel(
-                                            'initiativeActivity.Initiative_Location__c',
+                                            'Initiative_Activity__c.Initiative_Location__c',
                                             item.location
                                         ),
                                     },

@@ -16,21 +16,11 @@ import {
 import Button from 'components/button';
 
 const BottomNavigationComponent = () => {
-    const router = useRouter();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Local state for showing status
-    const [loading, setLoading] = useState(false);
-
-    // Hook: Context
-    const { INITIATIVE_ID, REPORT_ID, MODE, CONTEXTS } = useContext();
-
-    // Hook: Metadata
-    const { label } = useLabels();
-
-    // Store: Initiaitive Data
     const { utilities } = useInitiativeDataStore();
-
-    // Store: Wizard navigation
     const {
         nextItemUrl,
         onUrlOrContextChange,
@@ -38,13 +28,23 @@ const BottomNavigationComponent = () => {
         currentItem,
     } = useWizardNavigationStore();
 
-    // Effect: Handle path change
-    useEffect(() => {
-        setTimeout(() => {
-            const splitRoute = router.pathname.split('/');
-            onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
-        }, 50);
-    }, [router.asPath]);
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const router = useRouter();
+    const { INITIATIVE_ID, REPORT_ID, MODE, CONTEXTS } = useContext();
+    const { label } = useLabels();
+
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [loading, setLoading] = useState(false);
+
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     async function onHandleContinue() {
         setLoading(true);
@@ -69,6 +69,35 @@ const BottomNavigationComponent = () => {
         }
     }
 
+    function onHandleExit() {
+        // Check for new
+        if (INITIATIVE_ID === 'new') {
+            router.push('/');
+        } else {
+            router.push(
+                MODE === CONTEXTS.REPORT
+                    ? `/${INITIATIVE_ID}/reports/${REPORT_ID}`
+                    : `/${INITIATIVE_ID}/overview`
+            );
+        }
+    }
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Effect: Handle path change
+    useEffect(() => {
+        setTimeout(() => {
+            const splitRoute = router.pathname.split('/');
+            onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
+        }, 50);
+    }, [router.asPath]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     return (
         <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">
             <div className="flex items-center justify-between w-full">
@@ -84,11 +113,7 @@ const BottomNavigationComponent = () => {
                     ])}
                     theme="coral"
                     variant="secondary"
-                    action={
-                        MODE === CONTEXTS.REPORT
-                            ? `/${INITIATIVE_ID}/reports/${REPORT_ID}`
-                            : `/${INITIATIVE_ID}/overview`
-                    }>
+                    action={onHandleExit}>
                     {label('ButtonExit')}
                 </Button>
                 <p

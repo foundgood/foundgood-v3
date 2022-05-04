@@ -43,7 +43,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
-    const { labelTodo, label, object, valueSet } = useLabels();
+    const { labelTodo, label, object, pickList } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
 
     // ///////////////////
@@ -200,7 +200,9 @@ const ReportScheduleComponent = ({ pageProps }) => {
                             'Initiative__c.Report_Type__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
-                        options={valueSet('initiativeReport.Report_Type__c')}
+                        options={pickList(
+                            'Initiative_Report__c.Report_Type__c'
+                        )}
                         controller={mainForm.control}
                         required
                     />

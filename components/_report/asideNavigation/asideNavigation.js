@@ -43,7 +43,7 @@ const AsideNavigationComponent = () => {
                         <p className="mt-8 t-footnote">{initiative.Name}</p>
                         <h2 className="mt-16 t-h5">
                             {`${getValueLabel(
-                                'initiativeReport.Report_Type__c',
+                                'Initiative_Report__c.Report_Type__c',
                                 initiative._reports[REPORT_ID]?.Report_Type__c
                             )} ${label('TitleReport')} ${dayjs(
                                 initiative._reports[REPORT_ID]?.Due_Date__c

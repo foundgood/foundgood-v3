@@ -53,7 +53,7 @@ const ReportGoalsComponent = ({ initiative, report, constants }) => {
                         item.Type__c == constants.TYPES.GOAL_CUSTOM
                             ? item.Goal__c
                             : getValueLabel(
-                                  'initiativeGoal.Funder_Objective__c',
+                                  'Initiative_Goal__c.Funder_Objective__c',
                                   item.Funder_Objective__c,
                                   true
                               );

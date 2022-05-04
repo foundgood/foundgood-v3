@@ -29,7 +29,7 @@ const ReportComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
-    const { label, labelTodo, valueSet } = useLabels();
+    const { label, labelTodo, pickList } = useLabels();
     const { CONSTANTS } = useInitiativeDataStore();
     const { ewGet } = useElseware();
 
@@ -235,7 +235,7 @@ const ReportComponent = ({ pageProps }) => {
                                     'ReportManagerFilterGrantGivingArea'
                                 )}
                                 controller={control}
-                                options={valueSet('initiative.Category__c')}
+                                options={pickList('Initiative__c.Category__c')}
                             />
                             <SearchFilterMultiselect
                                 name="filter.status"
@@ -243,14 +243,16 @@ const ReportComponent = ({ pageProps }) => {
                                     'ReportManagerFilterReportStatus is missing'
                                 )}
                                 controller={control}
-                                options={valueSet('initiativeReport.Status__c')}
+                                options={pickList(
+                                    'Initiative_Report__c.Status__c'
+                                )}
                             />
                             <SearchFilterMultiselect
                                 name="filter.type"
                                 label={label('ReportManagerFilterReportType')}
                                 controller={control}
-                                options={valueSet(
-                                    'initiativeReport.Report_Type__c'
+                                options={pickList(
+                                    'Initiative_Report__c.Report_Type__c'
                                 )}
                             />
                             {user?.User_Account_Type__c !==

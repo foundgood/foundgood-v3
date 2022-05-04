@@ -105,7 +105,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                         relatedGoals: stripUndefined(relatedGoals),
                         activityType: item.Activity_Tag__c?.split(';').map(a =>
                             getValueLabel(
-                                'initiativeActivity.Activity_Tag__c',
+                                'Initiative_Activity__c.Activity_Tag__c',
                                 a,
                                 true
                             )
@@ -155,7 +155,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                                     'InitiativeViewActivityLocation'
                                                 ),
                                                 text: getValueLabel(
-                                                    'initiativeActivity.Initiative_Location__c',
+                                                    'Initiative_Activity__c.Initiative_Location__c',
                                                     item.location
                                                 ),
                                             },

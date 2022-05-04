@@ -43,7 +43,7 @@ const FundersComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, object, valueSet } = useLabels();
+    const { label, object, pickList } = useLabels();
     const { ewGet, ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -228,7 +228,7 @@ const FundersComponent = ({ pageProps }) => {
             required: true,
             // Type options
             subLabel: object.helpText('Initiative_Funder__c.Type__c'),
-            options: valueSet('initiativeFunder.Type__c'),
+            options: pickList('Initiative_Funder__c.Type__c'),
         },
         {
             type: 'SelectList',

@@ -44,7 +44,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { getValueLabel, valueSet, label, object } = useLabels();
+    const { getValueLabel, pickList, label, object } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
@@ -262,7 +262,7 @@ const SharingResultsComponent = ({ pageProps }) => {
 
                     const footnote = `${
                         getValueLabel(
-                            'initiativeActivity.Dissemination_Method__c',
+                            'Initiative_Activity__c.Dissemination_Method__c',
                             _get(activity, 'Dissemination_Method__c')
                         ) || ''
                     } ${
@@ -278,7 +278,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                               .split(';')
                               .map(tag =>
                                   getValueLabel(
-                                      'initiativeActivity.Audience_Tag__c',
+                                      'Initiative_Activity__c.Audience_Tag__c',
                                       tag
                                   )
                               )
@@ -382,8 +382,8 @@ const SharingResultsComponent = ({ pageProps }) => {
                             'Initiative_Activity__c.Dissemination_Method__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
-                        options={valueSet(
-                            'initiativeActivity.Dissemination_Method__c'
+                        options={pickList(
+                            'Initiative_Activity__c.Dissemination_Method__c'
                         )}
                         controller={mainForm.control}
                         required
@@ -398,7 +398,9 @@ const SharingResultsComponent = ({ pageProps }) => {
                             'Initiative_Activity__c.Audience_Tag__c'
                         )}
                         selectPlaceholder={label('FormCaptureSelectEmpty')}
-                        options={valueSet('initiativeActivity.Audience_Tag__c')}
+                        options={pickList(
+                            'Initiative_Activity__c.Audience_Tag__c'
+                        )}
                         listMaxLength={4}
                         controller={mainForm.control}
                         buttonLabel={label('ButtonAddAudienceTag')}

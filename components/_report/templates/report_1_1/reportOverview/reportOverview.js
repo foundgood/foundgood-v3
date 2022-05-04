@@ -15,7 +15,7 @@ import UpdateButton from 'components/updateButton';
 
 const ReportOverviewComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { label, object, valueSet, getValueLabel } = useLabels();
+    const { label, object, pickList, getValueLabel } = useLabels();
 
     const [developmentGoals, setDevelopmentGoals] = useState();
     const [coApplicants, setCoApplicants] = useState([]);
@@ -87,7 +87,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
 
             // Header - Merge goal data, to signel array
             const sdgNums = initiative?.Problem_Effect__c?.split(';');
-            const sdgs = valueSet('initiative.Problem_Effect__c'); // get global sdgs
+            const sdgs = pickList('Initiative__c.Problem_Effect__c'); // get global sdgs
             if (sdgNums?.length > 0) {
                 const developmentGoals = sdgNums.map(num => {
                     return {
@@ -143,7 +143,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                     </div>
                     <h3 className="t-h5">
                         {getValueLabel(
-                            'initiativeGoal.Funder_Objective__c',
+                            'Initiative_Goal__c.Funder_Objective__c',
                             funderObjective.Funder_Objective__c,
                             true
                         )}

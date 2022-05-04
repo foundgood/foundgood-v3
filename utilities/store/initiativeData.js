@@ -381,7 +381,7 @@ const useInitiativeDataStore = create((set, get) => ({
         isNovoLeadFunder() {
             const funders = Object.values(get().initiative?._funders ?? [])
                 .filter(
-                    funder => funder.Type__c === constants.TYPES.LEAD_FUNDER
+                    funder => funder.Type__c === constants.FUNDERS.LEAD_FUNDER
                 )
                 .filter(
                     funder => funder.Account__c === constants.IDS.NNF_ACCOUNT

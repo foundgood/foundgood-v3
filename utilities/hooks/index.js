@@ -1,4 +1,3 @@
-import useMetadata from './useMetadata';
 import useResponsive from './useResponsive';
 import useAuth from './useAuth';
 import useContext from './useContext';
@@ -9,7 +8,6 @@ import useWizardSubmit from './useWizardSubmit';
 
 export {
     useElseware,
-    useMetadata,
     useResponsive,
     useAuth,
     useContext,

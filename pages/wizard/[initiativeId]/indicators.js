@@ -41,9 +41,9 @@ const IndicatorsComponent = ({ pageProps }) => {
     const {
         label,
         object,
-        valueSet,
+        pickList,
         getValueLabel,
-        controlledValueSet,
+        controlledPickList,
     } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
 
@@ -179,7 +179,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                                     // Get gender
                                     const gender = item.Gender__c
                                         ? getValueLabel(
-                                              'initiativeActivitySuccessMetric.Gender__c',
+                                              'Initiative_Activity_Success_Metric__c.Gender__c',
                                               item.Gender__c
                                           )
                                         : '';
@@ -190,7 +190,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                                     // Get KPI
                                     const kpi = item.KPI__c
                                         ? ` ${getValueLabel(
-                                              'initiativeActivitySuccessMetric.KPI__c',
+                                              'Initiative_Activity_Success_Metric__c.KPI__c',
                                               item.KPI__c,
                                               true
                                           )} `
@@ -283,8 +283,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                                     'Initiative_Activity_Success_Metric__c.KPI__c'
                                 )}
                                 placeholder={label('FormCaptureSelectEmpty')}
-                                options={controlledValueSet(
-                                    'initiativeActivitySuccessMetric.KPI__c',
+                                options={controlledPickList(
+                                    'Initiative_Activity_Success_Metric__c.KPI__c',
                                     utilities.initiative.get().Category__c
                                 )}
                                 controller={mainForm.control}
@@ -303,8 +303,8 @@ const IndicatorsComponent = ({ pageProps }) => {
                                 textPlaceholder={object.label(
                                     'Initiative_Activity_Success_Metric__c.Gender_Other__c'
                                 )}
-                                options={valueSet(
-                                    'initiativeActivitySuccessMetric.Gender__c'
+                                options={pickList(
+                                    'Initiative_Activity_Success_Metric__c.Gender__c'
                                 )}
                                 showText
                                 listMaxLength={1}

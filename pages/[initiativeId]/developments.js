@@ -84,7 +84,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                         // Get gender
                                         const gender = item.Gender__c
                                             ? getValueLabel(
-                                                  'initiativeActivitySuccessMetric.Gender__c',
+                                                  'Initiative_Activity_Success_Metric__c.Gender__c',
                                                   item.Gender__c
                                               )
                                             : '';
@@ -95,7 +95,7 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                         // Get KPI
                                         const kpi = item.KPI__c
                                             ? ` ${getValueLabel(
-                                                  'initiativeActivitySuccessMetric.KPI__c',
+                                                  'Initiative_Activity_Success_Metric__c.KPI__c',
                                                   item.KPI__c,
                                                   true
                                               )} `
@@ -190,12 +190,12 @@ const DevelopmentsComponent = ({ pageProps }) => {
                     return {
                         headline: item.Things_To_Do__c,
                         label: getValueLabel(
-                            'initiativeActivity.Dissemination_Method__c',
+                            'Initiative_Activity__c.Dissemination_Method__c',
                             item.Dissemination_Method__c
                         ),
                         tags: item.Audience_Tag__c?.split(';').map(tag =>
                             getValueLabel(
-                                'initiativeActivity.Audience_Tag__c',
+                                'Initiative_Activity__c.Audience_Tag__c',
                                 tag
                             )
                         ),

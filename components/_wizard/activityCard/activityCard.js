@@ -107,7 +107,7 @@ const ActivityCard = ({
                                         key={`t-${index}`}
                                         className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
                                         {getValueLabel(
-                                            'initiativeActivity.Activity_Tag__c',
+                                            'Initiative_Activity__c.Activity_Tag__c',
                                             tag,
                                             true
                                         )}

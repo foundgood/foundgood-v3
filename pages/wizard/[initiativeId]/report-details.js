@@ -43,7 +43,7 @@ const ReportDetailsComponent = () => {
     // ///////////////////
 
     const { REPORT_ID } = useContext();
-    const { label, object, valueSet } = useLabels();
+    const { label, object, pickList } = useLabels();
     const { ewUpdate } = useElseware();
 
     // ///////////////////
@@ -120,7 +120,7 @@ const ReportDetailsComponent = () => {
                     label={object.label('Initiative__c.Report_Type__c')}
                     subLabel={object.helpText('Initiative__c.Report_Type__c')}
                     placeholder={label('FormCaptureSelectEmpty')}
-                    options={valueSet('initiativeReport.Report_Type__c')}
+                    options={pickList('Initiative_Report__c.Report_Type__c')}
                     disabled={utilities.isNovoLeadFunder()}
                     required={!utilities.isNovoLeadFunder()}
                     controller={mainForm.control}

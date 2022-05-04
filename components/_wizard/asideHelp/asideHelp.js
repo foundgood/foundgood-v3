@@ -24,14 +24,19 @@ const AsideHelpComponent = ({ data }) => {
 
     // Effect: Set value based on modal elements based on updateId
     useEffect(() => {
-        let helpGuide = text(currentItem?.item?.labels?.help?.guide)?.split(
-            '\n'
-        );
-        helpGuide = helpGuide === undefined ? [] : helpGuide;
-        setHelpGuide(helpGuide);
+        // Check for string
+        const guide = currentItem?.item?.labels?.help?.guide;
+        const what = currentItem?.item?.labels?.help?.what;
+        let helpGuide = [guide];
+        let helpWhat = [what];
+        if (typeof guide === 'string' && typeof what === 'string') {
+            helpGuide = text(guide)?.split('\n');
+            helpWhat = text(what)?.split('\n');
+            helpWhat = helpWhat === undefined ? [] : helpWhat;
+            helpGuide = helpGuide === undefined ? [] : helpGuide;
+        }
 
-        let helpWhat = text(currentItem?.item?.labels?.help?.what)?.split('\n');
-        helpWhat = helpWhat === undefined ? [] : helpWhat;
+        setHelpGuide(helpGuide);
         setHelpWhat(helpWhat);
     }, [currentItem]);
 

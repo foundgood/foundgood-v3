@@ -43,7 +43,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, object, valueSet, controlledValueSet } = useLabels();
+    const { label, object, pickList, controlledPickList } = useLabels();
     const { ewUpdate, ewCreate } = useElseware();
     const { submitNoReflection, submitMultipleReflections } = useReflections({
         dataSet() {
@@ -348,8 +348,8 @@ const ActivitiesComponent = ({ pageProps }) => {
                             'Initiative_Activity__c.Activity_Tag__c'
                         )}
                         selectPlaceholder={label('FormCaptureSelectEmpty')}
-                        options={controlledValueSet(
-                            'initiativeActivity.Activity_Tag__c',
+                        options={controlledPickList(
+                            'Initiative_Activity__c.Activity_Tag__c',
                             utilities.initiative.get().Category__c
                         )}
                         buttonLabel={label('ButtonAddActivityTag')}
@@ -366,8 +366,8 @@ const ActivitiesComponent = ({ pageProps }) => {
                             'Initiative_Activity__c.Initiative_Location__c'
                         )}
                         listMaxLength={1}
-                        options={valueSet(
-                            'initiativeActivity.Initiative_Location__c'
+                        options={pickList(
+                            'Initiative_Activity__c.Initiative_Location__c'
                         )}
                         showText
                         selectPlaceholder={label('FormCaptureSelectEmpty')}

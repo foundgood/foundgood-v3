@@ -43,7 +43,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, object, valueSet } = useLabels();
+    const { label, object, pickList } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
     const {
         submitNoReflection,
@@ -220,8 +220,8 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                             'Initiative_Report_Detail__c.Who_Is_Evaluating__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
-                        options={valueSet(
-                            'initiativeReportDetail.Who_Is_Evaluating__c'
+                        options={pickList(
+                            'Initiative_Report_Detail__c.Who_Is_Evaluating__c'
                         )}
                         required
                         controller={mainForm.control}

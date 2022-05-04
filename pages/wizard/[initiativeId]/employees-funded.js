@@ -50,7 +50,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, object, valueSet } = useLabels();
+    const { label, object, pickList } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
     const { submitNoReflection, submitReflection } = useReflections({
         dataSet() {
@@ -265,8 +265,8 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                             'Initiative_Employee_Funded__c.Role_Type__c'
                         )}
                         placeholder={label('FormCaptureSelectEmpty')}
-                        options={valueSet(
-                            'initiativeEmployeeFunded.Role_Type__c'
+                        options={pickList(
+                            'Initiative_Employee_Funded__c.Role_Type__c'
                         )}
                         required
                         controller={mainForm.control}
@@ -283,7 +283,9 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         textPlaceholder={object.label(
                             'Initiative_Employee_Funded__c.Gender_Other__c'
                         )}
-                        options={valueSet('initiativeEmployeeFunded.Gender__c')}
+                        options={pickList(
+                            'Initiative_Employee_Funded.Gender__c'
+                        )}
                         showText
                         listMaxLength={1}
                         controller={mainForm.control}

@@ -1,8 +1,7 @@
 // Packages
 import { useRouter } from 'next/router';
 import _get from 'lodash.get';
-
-import { useMetadata } from 'utilities/hooks';
+import _uniqBy from 'lodash.uniqby';
 
 // Data
 import {
@@ -15,15 +14,9 @@ import {
 
 const useLabels = () => {
     const { locale } = useRouter();
-    const {
-        labelTodo,
-        valueSet,
-        controlledValueSet,
-        getValueLabel,
-    } = useMetadata();
 
     // TODO FounderId logic
-    const founderId = null;
+    const founderId = false;
 
     function missing(path, label = '') {
         return (
@@ -48,7 +41,7 @@ const useLabels = () => {
             return label;
         }
         // 3. Missing
-        label = missing(path, '(label)');
+        label = missing(path, `(label [${locale}])`);
         return label;
     }
 
@@ -67,7 +60,7 @@ const useLabels = () => {
             return text;
         }
         // 3. Missing
-        text = `${path} missing`;
+        text = missing(path, `(text [${locale}])`);
         return text;
     }
 
@@ -87,7 +80,7 @@ const useLabels = () => {
                 return label;
             }
             // 3. Missing
-            label = missing(path, '(object label)');
+            label = missing(path, `(object label [${locale}])`);
             return label;
         },
         helpText(path) {
@@ -108,10 +101,104 @@ const useLabels = () => {
                 return label;
             }
             // 3. Missing
-            label = missing(path, '(object help text)');
+            label = missing(path, `(object help text [${locale}])`);
             return label;
         },
     };
+
+    function pickList(path) {
+        let foundationPickList = {};
+        let pickList;
+        // 1. Founder based
+        if (founderId) {
+            foundationPickList = _get(
+                pickLists,
+                `${path}.${locale}.${founderId}`
+            );
+        }
+        // 2. Default
+        pickList = _get(pickLists, `${path}.${locale}`);
+        if (typeof pickList === 'object') {
+            return Object.values({ ...pickList, ...foundationPickList });
+        }
+        // 3. Missing
+        return [
+            {
+                label: `${path}, (pickList [${locale}])`,
+                value: 'missing',
+            },
+        ];
+    }
+
+    function controlledPickList(path, controllerValue) {
+        let foundationPickList = [];
+        let pickList;
+        // 1. Founder based
+        if (founderId) {
+            foundationPickList = _get(
+                controlledPickLists,
+                `${path}.${locale}.${founderId}.${controllerValue}`,
+                []
+            );
+        }
+        // 2. Default
+        pickList = _get(
+            controlledPickLists,
+            `${path}.${locale}.${controllerValue}`
+        );
+        if (Array.isArray(pickList)) {
+            return _uniqBy([...foundationPickList, ...pickList], 'value');
+        }
+        // 3. Missing
+        return [
+            {
+                label: `${path}.${controllerValue}, (controlled pickList [${locale}])`,
+                value: 'missing',
+            },
+        ];
+    }
+
+    function getValueLabel(path, value, controlled = false) {
+        let valuesArray;
+
+        // Controlled picklist (build values array of all controlled values)
+        if (controlled) {
+            let foundationPickList = [];
+            let pickList;
+            // 1. Founder based
+            if (founderId) {
+                foundationPickList = Object.values(
+                    _get(
+                        controlledPickLists,
+                        `${path}.${locale}.${founderId}`,
+                        {}
+                    )
+                ).reduce((acc, values) => [...acc, ...values], []);
+            }
+
+            // 2. Default
+            pickList = Object.values(
+                _get(controlledPickLists, `${path}.${locale}`, {})
+            ).reduce((acc, values) => [...acc, ...values], []);
+
+            valuesArray = _uniqBy(
+                [...foundationPickList, ...pickList],
+                'value'
+            );
+        } else {
+            // PickList value
+            valuesArray = pickList(path);
+        }
+
+        // Return value
+        return valuesArray.find(v => v.value === value)?.label ?? 'N/A';
+    }
+
+    function labelTodo(path) {
+        let label;
+        label = missing(path, `(labelTodo)`);
+        return label;
+    }
 
     function log() {
         console.log({ labels, texts, objects, pickLists, controlledPickLists });
@@ -121,12 +208,11 @@ const useLabels = () => {
         label,
         text,
         object,
-        log,
-
-        labelTodo,
-        valueSet,
-        controlledValueSet,
+        pickList,
+        controlledPickList,
         getValueLabel,
+        labelTodo,
+        log,
     };
 };
 

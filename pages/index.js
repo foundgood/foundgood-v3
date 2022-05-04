@@ -31,7 +31,7 @@ const HomeComponent = () => {
     // HOOKS
     // ///////////////////
 
-    const { label, valueSet } = useLabels();
+    const { label, pickList } = useLabels();
     const { CONSTANTS } = useInitiativeDataStore();
     const { ewGet } = useElseware();
 
@@ -186,7 +186,7 @@ const HomeComponent = () => {
                                     'InitiativeManagerFilterFilterGrantGivingArea'
                                 )}
                                 controller={control}
-                                options={valueSet('initiative.Category__c')}
+                                options={pickList('Initiative__c.Category__c')}
                             />
                             <SearchFilterDate
                                 name="filter.startDate"
