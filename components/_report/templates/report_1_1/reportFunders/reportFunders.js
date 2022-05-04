@@ -127,7 +127,8 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                 // Get list of funders
                 const funders = Object.values(initiative._reportDetails)
                     .filter(item => {
-                        return item.Type__c == constants.TYPES.FUNDER_OVERVIEW
+                        return item.Type__c ==
+                            constants.REPORT_DETAILS.FUNDER_OVERVIEW
                             ? true
                             : false;
                     })

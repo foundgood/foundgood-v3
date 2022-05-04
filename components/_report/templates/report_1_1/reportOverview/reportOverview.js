@@ -80,7 +80,9 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
 
             const coApplicants = Object.values(initiative._collaborators)
                 .filter(item =>
-                    constants.TYPES.APPLICANTS_CREATE.includes(item.Type__c)
+                    constants.COLLABORATORS.APPLICANTS_CREATE.includes(
+                        item.Type__c
+                    )
                 )
                 .map(item => item.Account__r.Name);
             setCoApplicants(coApplicants);
@@ -110,7 +112,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
     // Funder objective
     const funderObjective =
         Object.values(initiative?._goals).find(
-            item => item.Type__c === constants.TYPES.GOAL_PREDEFINED
+            item => item.Type__c === constants.GOALS.GOAL_PREDEFINED
         ) || {};
 
     // Funder

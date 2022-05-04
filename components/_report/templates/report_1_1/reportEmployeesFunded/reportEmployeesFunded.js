@@ -32,7 +32,8 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
             const employeesReflection = Object.values(
                 initiative._reportDetails
             ).filter(item => {
-                return item.Type__c == constants.TYPES.EMPLOYEES_FUNDED_OVERVIEW
+                return item.Type__c ==
+                    constants.REPORT_DETAILS.EMPLOYEES_FUNDED_OVERVIEW
                     ? true
                     : false;
             });
@@ -62,13 +63,19 @@ const ReportEmployeesFundedComponent = ({ initiative, report, constants }) => {
                 group.total = group.total ? group.total + 1 : 1;
 
                 // Calculate how many are male/female/other in each group
-                if (employee.Gender__c == constants.TYPES.GENDER_MALE) {
+                if (
+                    employee.Gender__c == constants.EMPLOYEES_FUNDED.GENDER_MALE
+                ) {
                     group.male = group.male ? group.male + 1 : 1;
                 } else if (
-                    employee.Gender__c == constants.TYPES.GENDER_FEMALE
+                    employee.Gender__c ==
+                    constants.EMPLOYEES_FUNDED.GENDER_FEMALE
                 ) {
                     group.female = group.female ? group.female + 1 : 1;
-                } else if (employee.Gender__c == constants.TYPES.GENDER_OTHER) {
+                } else if (
+                    employee.Gender__c ==
+                    constants.EMPLOYEES_FUNDED.GENDER_OTHER
+                ) {
                     group.other = group.other ? group.other + 1 : 1;
                 }
                 return result;

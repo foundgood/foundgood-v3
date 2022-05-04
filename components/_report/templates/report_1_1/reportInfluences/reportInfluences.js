@@ -27,7 +27,8 @@ const ReportInfluencesComponent = ({ initiative, report, constants }) => {
             // Influence on policy
             const influences = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == constants.TYPES.INFLUENCE_ON_POLICY
+                    return item.Type__c ==
+                        constants.REPORT_DETAILS.INFLUENCE_ON_POLICY
                         ? true
                         : false;
                 })

@@ -31,7 +31,8 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
             // Sharing of results == "Dissimination"
             const results = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == constants.TYPES.ACTIVITY_OVERVIEW
+                    return item.Type__c ==
+                        constants.REPORT_DETAILS.ACTIVITY_OVERVIEW
                         ? true
                         : false;
                 })
@@ -60,7 +61,7 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                 .filter(item => {
                     // "Dissemination" or "Intervention"
                     return item.Activity_Type__c ==
-                        constants.TYPES.ACTIVITY_DISSEMINATION
+                        constants.ACTIVITIES.ACTIVITY_DISSEMINATION
                         ? true
                         : false;
                 })

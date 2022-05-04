@@ -32,7 +32,8 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
             // Sharing of results == "Dissimination"
             const activities = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == constants.TYPES.ACTIVITY_OVERVIEW
+                    return item.Type__c ==
+                        constants.REPORT_DETAILS.ACTIVITY_OVERVIEW
                         ? true
                         : false;
                 })
@@ -84,7 +85,8 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
 
                             if (
                                 item.Type__c ===
-                                constants.TYPES.INDICATOR_PREDEFINED
+                                constants.ACTIVITY_SUCCESS_METRICS
+                                    .INDICATOR_PREDEFINED
                             ) {
                                 let headline;
                                 // Get gender
@@ -114,7 +116,7 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                                     ),
                                 };
                             }
-                            // Custom indicators - constants.TYPES.INDICATOR_CUSTOM
+                            // Custom indicators - constants.ACTIVITY_SUCCESS_METRICS.INDICATOR_CUSTOM
                             else {
                                 return {
                                     type: item.Type__c,
@@ -135,19 +137,22 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                         indicator =>
                             indicator &&
                             indicator.type ==
-                                constants.TYPES.INDICATOR_PREDEFINED
+                                constants.ACTIVITY_SUCCESS_METRICS
+                                    .INDICATOR_PREDEFINED
                     );
                     const customIndicators = indicators.filter(
                         indicator =>
                             indicator &&
-                            indicator.type == constants.TYPES.INDICATOR_CUSTOM
+                            indicator.type ==
+                                constants.ACTIVITY_SUCCESS_METRICS
+                                    .INDICATOR_CUSTOM
                     );
 
                     // Only add activities of type "intervention"
                     // Only add activities - if they have indicators
                     if (
                         activity.Activity_Type__c ==
-                        constants.TYPES.ACTIVITY_INTERVENTION
+                        constants.ACTIVITIES.ACTIVITY_INTERVENTION
                     ) {
                         let accObj = {
                             title,

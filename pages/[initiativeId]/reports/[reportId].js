@@ -15,32 +15,34 @@ import Report_1_0 from 'components/_report/templates/report_1_0';
 import Report_1_1 from 'components/_report/templates/report_1_1';
 
 const ReportComponent = () => {
-    // Hook: Context
-    const { REPORT_ID } = useContext();
+    // ///////////////////
+    // AUTH
+    // ///////////////////
 
-    // Hook: Verify logged in
     const { verifyLoggedIn } = useAuth();
     verifyLoggedIn();
 
-    // Store: InitiativeData
-    const {
-        initiative: initiativeFromSalesForce,
-        utilities,
-        CONSTANTS,
-    } = useInitiativeDataStore();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // State: Report version
+    const { utilities } = useInitiativeDataStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { REPORT_ID } = useContext();
+
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
     const [reportVersion, setReportVersion] = useState(null);
 
-    // Effect: React to new report ids and set version accordingly
-    useEffect(() => {
-        if (utilities.reports.get(REPORT_ID)?.Id) {
-            setReportVersion(
-                utilities.reports.get(REPORT_ID)?.Report_Viewer_Version__c ??
-                    'default'
-            );
-        }
-    }, [REPORT_ID, utilities.reports.get(REPORT_ID)?.Report_Viewer_Version__c]);
+    // ///////////////////
+    // DATA
+    // ///////////////////
 
     // Fetcher stand by for json data if report version number matches
     const { data: initiativeFromJson } = useSWR(
@@ -53,6 +55,24 @@ const ReportComponent = () => {
         }
     );
 
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Effect: React to new report ids and set version accordingly
+    useEffect(() => {
+        if (utilities.reports.get(REPORT_ID)?.Id) {
+            setReportVersion(
+                utilities.reports.get(REPORT_ID)?.Report_Viewer_Version__c ??
+                    'default'
+            );
+        }
+    }, [REPORT_ID, utilities.reports.get(REPORT_ID)?.Report_Viewer_Version__c]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     // Method: Return correct template
     function getReportTemplate() {
         switch (reportVersion) {
@@ -61,9 +81,8 @@ const ReportComponent = () => {
                 return (
                     <Report_1_0
                         {...{
-                            initiative: initiativeFromJson,
-                            report: initiativeFromJson?._reports[REPORT_ID],
-                            CONSTANTS,
+                            initiativeData: initiativeFromJson,
+                            reportData: initiativeFromJson?._reports[REPORT_ID],
                         }}
                     />
                 );
@@ -72,9 +91,8 @@ const ReportComponent = () => {
                 return (
                     <Report_1_1
                         {...{
-                            initiative: initiativeFromJson,
-                            report: initiativeFromJson?._reports[REPORT_ID],
-                            CONSTANTS,
+                            initiativeData: initiativeFromJson,
+                            reportData: initiativeFromJson?._reports[REPORT_ID],
                         }}
                     />
                 );
@@ -83,10 +101,8 @@ const ReportComponent = () => {
                 return (
                     <Report_1_1
                         {...{
-                            initiative: initiativeFromSalesForce,
-                            report:
-                                initiativeFromSalesForce?._reports[REPORT_ID],
-                            CONSTANTS,
+                            initiativeData: utilities.initiative.get(),
+                            reportData: utilities.reports.get(REPORT_ID),
                         }}
                     />
                 );

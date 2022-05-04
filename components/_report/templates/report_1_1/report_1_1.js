@@ -8,13 +8,13 @@ import Link from 'next/link';
 import t from 'prop-types';
 
 // Utilities
-import { useLabels, useContext } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 
 // Report sections
-
 import Preloader from 'components/preloader';
 import Footer from 'components/_layout/footer';
 import ReportHeader from 'components/_report/templates/report_1_1/reportHeader';
@@ -31,63 +31,64 @@ import ReportInfluences from 'components/_report/templates/report_1_1/reportInfl
 import ReportEvaluations from 'components/_report/templates/report_1_1/reportEvaluations';
 import ReportReflection from 'components/_report/templates/report_1_1/reportReflection';
 
-const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
-    // Hook: Metadata
+const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { CONSTANTS: constants } = useInitiativeDataStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label } = useLabels();
 
-    // Hook: Context
-    const { INITIATIVE_ID, REPORT_ID } = useContext();
+    // ///////////////////
+    // STATE
+    // ///////////////////
 
-    const [initiativeData, setInitiativeData] = useState();
-    const [currentReport, setCurrentReport] = useState([]);
+    const [initiative, setInitiative] = useState({});
+    const [report, setReport] = useState({});
 
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Initial Load
     useEffect(() => {
-        // Initial Load
-        if (report?.Id && initiative?.Id) {
-            // console.log('report: ', report);
-            // console.log('initiative: ', initiative);
-
-            setCurrentReport(report);
-            setInitiativeData(initiative);
+        if (initiativeData?.Id && reportData?.Id) {
+            setInitiative(initiativeData);
+            setReport(reportData);
         }
-    }, [initiative]);
+    }, [initiativeData]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
             {/* Preloading - Show loading */}
-            {!initiativeData && <Preloader />}
+            {!initiative && <Preloader />}
 
             {/* Data Loaded - Show report */}
-            {initiativeData && (
+            {initiative && (
                 <div className="animate-fade-in">
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Header */}
-                    <ReportHeader
-                        initiative={initiativeData}
-                        report={currentReport}
-                        constants={CONSTANTS}
-                    />
+                    <ReportHeader {...{ initiative, report, constants }} />
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Overview */}
-                    <ReportOverview
-                        initiative={initiativeData}
-                        report={currentReport}
-                        constants={CONSTANTS}
-                    />
+                    <ReportOverview {...{ initiative, report, constants }} />
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
                     {/* <ReportGoals
-                        initiative={initiativeData}
-                        report={currentReport}
-                        constants={CONSTANTS}
+                        {...{ initiative, report, constants }}
                     /> */}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Report Summary */}
-                    <ReportSummary
-                        initiative={initiativeData}
-                        report={currentReport}
-                        constants={CONSTANTS}
-                    />
+                    <ReportSummary {...{ initiative, report, constants }} />
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Headline: "Key changes" */}
@@ -99,46 +100,34 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Activities */}
-                    {currentReport?.Report_Type__c !== 'Status' && (
+                    {report?.Report_Type__c !== 'Status' && (
                         <ReportActivities
-                            initiative={initiativeData}
-                            report={currentReport}
-                            constants={CONSTANTS}
+                            {...{ initiative, report, constants }}
                         />
                     )}
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Funders */}
-                    <ReportFunders
-                        initiative={initiativeData}
-                        report={currentReport}
-                        constants={CONSTANTS}
-                    />
+                    <ReportFunders {...{ initiative, report, constants }} />
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Applicants */}
-                    {currentReport?.Report_Type__c === 'Status' && (
+                    {report?.Report_Type__c === 'Status' && (
                         <ReportApplicants
-                            initiative={initiativeData}
-                            report={currentReport}
-                            constants={CONSTANTS}
+                            {...{ initiative, report, constants }}
                         />
                     )}
 
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Collaborators */}
                     <ReportCollaborators
-                        initiative={initiativeData}
-                        report={currentReport}
-                        constants={CONSTANTS}
+                        {...{ initiative, report, constants }}
                     />
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Employees funded by the grant */}
-                    {currentReport?.Report_Type__c !== 'Status' && (
+                    {report?.Report_Type__c !== 'Status' && (
                         <ReportEmployeesFunded
-                            initiative={initiativeData}
-                            report={currentReport}
-                            constants={CONSTANTS}
+                            {...{ initiative, report, constants }}
                         />
                     )}
 
@@ -156,7 +145,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     */}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Headline: "Key results" */}
-                    {currentReport?.Report_Type__c !== 'Status' && (
+                    {report?.Report_Type__c !== 'Status' && (
                         <SectionWrapper paddingY={false}>
                             <SectionWrapper paddingY={false}>
                                 <h2 className="t-h3 mt-96">
@@ -181,39 +170,33 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                     )} */}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Sharing of results */}
-                    {currentReport?.Report_Type__c !== 'Status' && (
-                        <ReportResults
-                            initiative={initiativeData}
-                            report={currentReport}
-                            constants={CONSTANTS}
-                        />
+                    {report?.Report_Type__c !== 'Status' && (
+                        <ReportResults {...{ initiative, report, constants }} />
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Influences on policy */}
-                    {currentReport?.Report_Type__c !== 'Status' && (
+                    {report?.Report_Type__c !== 'Status' && (
                         <ReportInfluences
-                            initiative={initiativeData}
-                            report={currentReport}
-                            constants={CONSTANTS}
+                            {...{ initiative, report, constants }}
                         />
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Evaluations */}
-                    {currentReport?.Report_Type__c !== 'Status' && (
+                    {report?.Report_Type__c !== 'Status' && (
                         <ReportEvaluations
-                            initiative={initiativeData}
-                            report={currentReport}
-                            constants={CONSTANTS}
+                            {...{ initiative, report, constants }}
                         />
                     )}
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Reflections */}
-                    {currentReport?.Report_Type__c !== 'Status' &&
-                        currentReport?.Report_Type__c !== 'Annual' && (
+                    {report?.Report_Type__c !== 'Status' &&
+                        report?.Report_Type__c !== 'Annual' && (
                             <ReportReflection
-                                initiative={initiativeData}
-                                report={currentReport}
-                                constants={CONSTANTS}
+                                {...{
+                                    initiative,
+                                    report,
+                                    constants,
+                                }}
                             />
                         )}
 
@@ -249,7 +232,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
                                 {label('ReportViewSubHeadingLogAdditional')}
                             </h3>
                             <p className="mt-32 t-small">
-                                <Link href={`/${INITIATIVE_ID}/logbook`}>
+                                <Link href={`/${initiative.Id}/logbook`}>
                                     <a className="underline">
                                         {label(
                                             'ReportViewSubHeadingLogAdditionalSubHeading'
@@ -270,7 +253,7 @@ const Report_1_1Component = ({ initiative, report, CONSTANTS }) => {
 Report_1_1Component.propTypes = {
     initiative: t.object.isRequired,
     report: t.object.isRequired,
-    CONSTANTS: t.object.isRequired,
+    constants: t.object.isRequired,
 };
 
 Report_1_1Component.defaultProps = {

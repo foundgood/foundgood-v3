@@ -23,7 +23,7 @@ const ReportGoalsComponent = ({ initiative, report, constants }) => {
     useEffect(() => {
         const nnfLeadFunder = Object.values(initiative._funders).filter(
             item =>
-                item.Type__c === constants.TYPES.LEAD_FUNDER &&
+                item.Type__c === constants.ACCOUNT.LEAD_FUNDER &&
                 item.Account__c === constants.IDS.NNF_ACCOUNT
         );
         const isNnfLeadFunder = nnfLeadFunder.length > 0 ? true : false;
@@ -50,7 +50,7 @@ const ReportGoalsComponent = ({ initiative, report, constants }) => {
             {Object.values(initiative._goals).length > 0 &&
                 Object.values(initiative._goals).map((item, index) => {
                     const title =
-                        item.Type__c == constants.TYPES.GOAL_CUSTOM
+                        item.Type__c == constants.GOALS.GOAL_CUSTOM
                             ? item.Goal__c
                             : getValueLabel(
                                   'Initiative_Goal__c.Funder_Objective__c',

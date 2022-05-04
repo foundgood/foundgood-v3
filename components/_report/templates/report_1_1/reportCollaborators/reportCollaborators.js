@@ -30,7 +30,8 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
             // Get all and then split them
             const collaborators = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == constants.TYPES.COLLABORATOR_OVERVIEW
+                    return item.Type__c ==
+                        constants.REPORT_DETAILS.COLLABORATOR_OVERVIEW
                         ? true
                         : false;
                 })
@@ -59,7 +60,9 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
                     return collaborator;
                 })
                 .filter(item =>
-                    constants.TYPES.COLLABORATORS.includes(item.Type__c)
+                    constants.COLLABORATORS.ADDITIONAL_COLLABORATORS.includes(
+                        item.Type__c
+                    )
                 );
             setCollaborators(collaborators);
         } else {

@@ -20,7 +20,7 @@ const ReportHeaderComponent = ({ initiative, report, constants }) => {
     useEffect(() => {
         // Report main applicant
         const applicant = Object.values(initiative?._collaborators).filter(
-            item => item.Type__c === constants.TYPES.MAIN_COLLABORATOR
+            item => item.Type__c === constants.COLLABORATORS.MAIN_COLLABORATOR
         );
         setMainApplicant(applicant[0]?.Account__r?.Name);
     }, [initiative]);
@@ -35,10 +35,6 @@ const ReportHeaderComponent = ({ initiative, report, constants }) => {
                             layout="fill"
                             objectFit="cover"
                         />
-                        // <img
-                        //     className="w-full h-full"
-                        //     src={initiative.Hero_Image_URL__c}
-                        // />
                     )}
                 </div>
                 <div className="mt-16">{mainApplicant}</div>

@@ -2,13 +2,10 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import cc from 'classcat';
 import t from 'prop-types';
-import Link from 'next/link';
-import Image from 'next/image';
 
 // Utilities
-import { useLabels, useContext } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useReportLayoutStore } from 'utilities/store';
 
 // Components
@@ -22,17 +19,25 @@ import DividerLine from 'components/_initiative/dividerLine';
 // Icons
 import { FiFileText } from 'react-icons/fi';
 
-const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
-    // Hook: Context
-    const { INITIATIVE_ID } = useContext();
+const Report_1_0Component = ({ initiativeData = {}, reportData = {} }) => {
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Metadata
-    const { labelTodo, label } = useLabels();
-
-    // Store: ReportLayout
     const { toggleLeftMenu } = useReportLayoutStore();
 
-    // Data maniipulation
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { labelTodo, label } = useLabels();
+
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [initiative, setInitiative] = useState({});
+    const [report, setReport] = useState({});
     const [name, setName] = useState();
     const [status, setStatus] = useState();
     const [deadline, setDeadline] = useState();
@@ -43,13 +48,25 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
     const [outcomes, setOutcomes] = useState();
     const [files, setFiles] = useState();
 
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Hide naviagiton for old reports
     useEffect(() => {
-        // Hide naviagiton for old reports
         toggleLeftMenu(false);
     }, []);
 
+    // Initial Load
     useEffect(() => {
-        // Initial Load
+        if (initiativeData?.Id && reportData?.Id) {
+            setInitiative(initiativeData);
+            setReport(reportData);
+        }
+    }, [initiativeData]);
+
+    // Structure data
+    useEffect(() => {
         if (report?.Id && initiative?.Id) {
             // console.log('report: ', report);
             // console.log('initiative: ', initiative);
@@ -103,6 +120,10 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
         }
     }, [initiative]);
 
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     return (
         <>
             {/* Preloading - Show loading */}
@@ -116,7 +137,7 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
                             <Button
                                 variant="secondary"
                                 className="self-start hidden xl:flex"
-                                action={`/${INITIATIVE_ID}/reports`}>
+                                action={`/${initiative?.Id}/reports`}>
                                 {labelTodo('Back to reports')}
                             </Button>
                         </div>
@@ -234,7 +255,6 @@ const Report_1_0Component = ({ initiative, report, CONSTANTS }) => {
 Report_1_0Component.propTypes = {
     initiative: t.object.isRequired,
     report: t.object.isRequired,
-    CONSTANTS: t.object.isRequired,
 };
 
 Report_1_0Component.defaultProps = {

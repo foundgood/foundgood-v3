@@ -27,7 +27,7 @@ const ReportEvaluationsComponent = ({ initiative, report, constants }) => {
             // Evaluations
             const evaluations = Object.values(initiative._reportDetails)
                 .filter(item => {
-                    return item.Type__c == constants.TYPES.EVALUATION
+                    return item.Type__c == constants.REPORT_DETAILS.EVALUATION
                         ? true
                         : false;
                 })
