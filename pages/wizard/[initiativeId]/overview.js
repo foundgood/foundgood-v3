@@ -30,16 +30,21 @@ const OverviewComponent = () => {
     // STORES
     // ///////////////////
 
-    const { CONSTANTS, initiative, utilities } = useInitiativeDataStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { MODE, CONTEXTS } = useContext();
-    const { label, object, pickList, controlledPickList, log } = useLabels();
+    const {
+        label,
+        object,
+        dataSet,
+        pickList,
+        controlledPickList,
+    } = useLabels();
     const { ewGet, ewCreate, ewUpdate, ewCreateUpdateWrapper } = useElseware();
-    log();
 
     // ///////////////////
     // FORMS
@@ -178,13 +183,16 @@ const OverviewComponent = () => {
             type: 'Text',
             name: 'Name',
             label: object.label('Initiative__c.Name'),
-            defaultValue: initiative?.Name === '___' ? '' : initiative?.Name,
+            defaultValue:
+                utilities.initiative.get().Name === '___'
+                    ? ''
+                    : utilities.initiative.get().Name,
             disabled:
-                initiative?.Name === '___'
+                utilities.initiative.get().Name === '___'
                     ? utilities.isNovoLeadFunder()
                     : true,
             required:
-                initiative?.Name === '___'
+                utilities.initiative.get().Name === '___'
                     ? !utilities.isNovoLeadFunder()
                     : false,
             // Type options
@@ -194,7 +202,9 @@ const OverviewComponent = () => {
             type: 'Select',
             name: 'Category__c',
             label: object.label('Initiative__c.Category__c'),
-            defaultValue: initiative?.Category__c ? initiative.Category__c : '',
+            defaultValue: utilities.initiative.get().Category__c
+                ? utilities.initiative.get().Category__c
+                : '',
             disabled: utilities.isNovoLeadFunder(),
             required: true,
             // Type options
@@ -206,12 +216,14 @@ const OverviewComponent = () => {
             name: 'Funder_Objective__c',
             label: object.label('Initiative_Goal__c.Funder_Objective__c'),
             defaultValue: funderObjective.Funder_Objective__c,
-            disabled: !CategoryWatch && !initiative?.Category__c,
+            disabled: !CategoryWatch && !utilities.initiative.get().Category__c,
             required: true,
             // Type options
             options: controlledPickList(
                 'Initiative_Goal__c.Funder_Objective__c',
-                CategoryWatch ? CategoryWatch : initiative?.Category__c
+                CategoryWatch
+                    ? CategoryWatch
+                    : utilities.initiative.get().Category__c
             ),
             subLabel: object.helpText('Initiative_Goal__c.Funder_Objective__c'),
         },
@@ -219,7 +231,7 @@ const OverviewComponent = () => {
             type: 'LongText',
             name: 'Summary__c',
             label: object.label('Initiative__c.Summary__c'),
-            defaultValue: initiative?.Summary__c,
+            defaultValue: utilities.initiative.get().Summary__c,
             required: true,
             // Type options
             maxLength: 400,
@@ -232,8 +244,8 @@ const OverviewComponent = () => {
                 'Initiative__c.Grant_Start_Date__c'
             )} / ${object.label('Initiative__c.Grant_End_Date__c')}`,
             defaultValue: {
-                from: initiative?.Grant_Start_Date__c,
-                to: initiative?.Grant_End_Date__c,
+                from: utilities.initiative.get().Grant_Start_Date__c,
+                to: utilities.initiative.get().Grant_End_Date__c,
             },
             disabled: utilities.isNovoLeadFunder(),
         },
@@ -241,26 +253,28 @@ const OverviewComponent = () => {
             type: 'SelectList',
             name: 'Where_Is_Problem__c',
             label: object.label('Initiative__c.Where_Is_Problem__c'),
-            defaultValue: initiative?.Where_Is_Problem__c?.split(';').map(
-                value => ({
+            defaultValue: utilities.initiative
+                .get()
+                .Where_Is_Problem__c?.split(';')
+                .map(value => ({
                     selectValue: value,
-                })
-            ),
+                })),
             // Type options
             buttonLabel: label('ButtonAddLocation'),
             listMaxLength: 3,
-            options: pickList('Account.Location__c'),
+            options: dataSet('Countries'),
             subLabel: object.helpText('Initiative__c.Where_Is_Problem__c'),
         },
         {
             type: 'SelectList',
             name: 'Problem_Effect__c',
             label: object.label('Initiative__c.Problem_Effect__c'),
-            defaultValue: initiative?.Problem_Effect__c?.split(';').map(
-                value => ({
+            defaultValue: utilities.initiative
+                .get()
+                .Problem_Effect__c?.split(';')
+                .map(value => ({
                     selectValue: value,
-                })
-            ),
+                })),
             // Type options
             buttonLabel: label('ButtonAddSDG'),
             listMaxLength: 10,
@@ -273,7 +287,8 @@ const OverviewComponent = () => {
                       type: 'Image',
                       name: 'Hero_Image__c',
                       label: object.label('Initiative__c.Hero_Image__c'),
-                      defaultValue: initiative?.Hero_Image_URL__c,
+                      defaultValue: utilities.initiative.get()
+                          .Hero_Image_URL__c,
                       // Type options
                       subLabel: object.helpText('Initiative__c.Hero_Image__c'),
                   },

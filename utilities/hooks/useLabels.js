@@ -10,13 +10,14 @@ import {
     objects,
     pickLists,
     controlledPickLists,
+    staticData,
 } from '_labels/labels';
 
 const useLabels = () => {
     const { locale } = useRouter();
 
-    // TODO FounderId logic
-    const founderId = false;
+    // TODO FunderId logic
+    const funderId = false;
 
     function missing(path, label = '') {
         return (
@@ -28,9 +29,9 @@ const useLabels = () => {
 
     function label(path) {
         let label;
-        // 1. Founder based
-        if (founderId) {
-            label = _get(labels, `${path}.${founderId}.${locale}`);
+        // 1. Funder based
+        if (funderId) {
+            label = _get(labels, `${path}.${funderId}.${locale}`);
             if (typeof label === 'string') {
                 return label;
             }
@@ -47,9 +48,9 @@ const useLabels = () => {
 
     function text(path) {
         let text;
-        // 1. Founder based
-        if (founderId) {
-            text = _get(texts, `${path}.${founderId}.${locale}`);
+        // 1. Funder based
+        if (funderId) {
+            text = _get(texts, `${path}.${funderId}.${locale}`);
             if (typeof text === 'string') {
                 return text;
             }
@@ -67,9 +68,9 @@ const useLabels = () => {
     const object = {
         label(path) {
             let label;
-            // 1. Founder based
-            if (founderId) {
-                label = _get(objects, `${path}.${founderId}.${locale}.label`);
+            // 1. Funder based
+            if (funderId) {
+                label = _get(objects, `${path}.${funderId}.${locale}.label`);
                 if (typeof label === 'string') {
                     return label;
                 }
@@ -85,12 +86,9 @@ const useLabels = () => {
         },
         helpText(path) {
             let label;
-            // 1. Founder based
-            if (founderId) {
-                label = _get(
-                    objects,
-                    `${path}.${founderId}.${locale}.helpText`
-                );
+            // 1. Funder based
+            if (funderId) {
+                label = _get(objects, `${path}.${funderId}.${locale}.helpText`);
                 if (typeof label === 'string') {
                     return label;
                 }
@@ -106,14 +104,18 @@ const useLabels = () => {
         },
     };
 
+    function dataSet(path) {
+        return _get(staticData, `${path}.${locale}`);
+    }
+
     function pickList(path) {
         let foundationPickList = {};
         let pickList;
-        // 1. Founder based
-        if (founderId) {
+        // 1. Funder based
+        if (funderId) {
             foundationPickList = _get(
                 pickLists,
-                `${path}.${locale}.${founderId}`
+                `${path}.${funderId}.${locale}`
             );
         }
         // 2. Default
@@ -133,11 +135,11 @@ const useLabels = () => {
     function controlledPickList(path, controllerValue) {
         let foundationPickList = [];
         let pickList;
-        // 1. Founder based
-        if (founderId) {
+        // 1. Funder based
+        if (funderId) {
             foundationPickList = _get(
                 controlledPickLists,
-                `${path}.${locale}.${founderId}.${controllerValue}`,
+                `${path}.${funderId}.${locale}.${controllerValue}`,
                 []
             );
         }
@@ -165,12 +167,12 @@ const useLabels = () => {
         if (controlled) {
             let foundationPickList = [];
             let pickList;
-            // 1. Founder based
-            if (founderId) {
+            // 1. Funder based
+            if (funderId) {
                 foundationPickList = Object.values(
                     _get(
                         controlledPickLists,
-                        `${path}.${locale}.${founderId}`,
+                        `${path}.${funderId}.${locale}`,
                         {}
                     )
                 ).reduce((acc, values) => [...acc, ...values], []);
@@ -181,6 +183,7 @@ const useLabels = () => {
                 _get(controlledPickLists, `${path}.${locale}`, {})
             ).reduce((acc, values) => [...acc, ...values], []);
 
+            // Combine
             valuesArray = _uniqBy(
                 [...foundationPickList, ...pickList],
                 'value'
@@ -201,7 +204,14 @@ const useLabels = () => {
     }
 
     function log() {
-        console.log({ labels, texts, objects, pickLists, controlledPickLists });
+        console.log({
+            labels,
+            texts,
+            objects,
+            pickLists,
+            controlledPickLists,
+            staticData,
+        });
     }
 
     return {
@@ -211,6 +221,7 @@ const useLabels = () => {
         pickList,
         controlledPickList,
         getValueLabel,
+        dataSet,
         labelTodo,
         log,
     };
