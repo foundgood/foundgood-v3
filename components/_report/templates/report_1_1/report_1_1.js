@@ -81,7 +81,7 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
                     <ReportHeader {...{ utilities, report }} />
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Overview */}
-                    <ReportOverview {...{ utilities, report, constants }} />
+                    <ReportOverview {...{ utilities, report }} />
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
                     {/* <ReportGoals
