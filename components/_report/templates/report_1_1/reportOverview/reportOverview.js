@@ -14,7 +14,7 @@ import SectionWrapper from 'components/sectionWrapper';
 import UpdateButton from 'components/updateButton';
 import GridBox from 'components/gridBox';
 
-const ReportOverviewComponent = ({ utilities, report, constants }) => {
+const ReportOverviewComponent = ({ utilities, report }) => {
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -221,9 +221,8 @@ const ReportOverviewComponent = ({ utilities, report, constants }) => {
 };
 
 ReportOverviewComponent.propTypes = {
-    initiative: t.object.isRequired,
+    utilities: t.object.isRequired,
     report: t.object.isRequired,
-    constants: t.object.isRequired,
 };
 
 ReportOverviewComponent.defaultProps = {};
