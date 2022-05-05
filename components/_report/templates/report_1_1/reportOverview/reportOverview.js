@@ -9,6 +9,9 @@ import dayjs from 'dayjs';
 import { useLabels } from 'utilities/hooks';
 import { asId } from 'utilities';
 
+// Data
+import sdgsColors from 'utilities/data/sdgColors';
+
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 import UpdateButton from 'components/updateButton';
@@ -24,26 +27,6 @@ const ReportOverviewComponent = ({ utilities, report }) => {
     // ///////////////////
     // DATA
     // ///////////////////
-
-    const sdgsColors = [
-        '#E32840',
-        '#DCA545',
-        '#4F9E3E',
-        '#C31D32',
-        '#FC3D2E',
-        '#33BEE0',
-        '#FBC230',
-        '#A01C44',
-        '#FB6A33',
-        '#DB1C68',
-        '#FB9D37',
-        '#BE8A38',
-        '#417D47',
-        '#1D98D7',
-        '#5ABE38',
-        '#0D699B',
-        '#1C4969',
-    ];
 
     const initiative = utilities.initiative.get();
 
@@ -83,13 +66,16 @@ const ReportOverviewComponent = ({ utilities, report }) => {
         report.Funder_Report__r?.Account__r?.Id
     );
 
-    const sdgNums = initiative.Problem_Effect__c?.split(';');
+    const sdgNums = initiative.Problem_Effect__c?.split(';') ?? [];
     const sdgs = pickList('Initiative__c.Problem_Effect__c');
 
-    const developmentGoals = sdgNums.map(num => ({
-        title: sdgs.find(sdg => sdg.value === num)?.label ?? null,
-        amount: num,
-    }));
+    const developmentGoals =
+        sdgNums.length > 0
+            ? sdgNums.map(num => ({
+                  title: sdgs.find(sdg => sdg.value === num)?.label ?? null,
+                  amount: num,
+              }))
+            : [];
 
     // ///////////////////
     // RENDER

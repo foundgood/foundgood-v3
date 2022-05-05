@@ -16,7 +16,7 @@ import { SubLevelItem } from 'components/_wizard/asideNavigation';
 // Icons
 import { FiChevronUp, FiChevronDown } from 'react-icons/fi';
 
-const TopLevelItemComponent = ({ item }) => {
+const TopLevelItemComponent = ({ item, showTopLevel }) => {
     const { title, items } = item;
 
     // Hook: Metadata
@@ -30,15 +30,17 @@ const TopLevelItemComponent = ({ item }) => {
 
     return (
         <li className="mt-32">
-            <span
-                className="flex t-caption-bold md:cursor-pointer"
-                onClick={() => toggleSection(item)}>
-                <i className="mr-16">
-                    {sectionToggled && <FiChevronUp />}
-                    {!sectionToggled && <FiChevronDown />}
-                </i>
-                {label(title)}
-            </span>
+            {showTopLevel && (
+                <span
+                    className="flex t-caption-bold md:cursor-pointer"
+                    onClick={() => toggleSection(item)}>
+                    <i className="mr-16">
+                        {sectionToggled && <FiChevronUp />}
+                        {!sectionToggled && <FiChevronDown />}
+                    </i>
+                    {label(title)}
+                </span>
+            )}
 
             {/* Sub-level items */}
             <AnimateHeight
@@ -47,7 +49,11 @@ const TopLevelItemComponent = ({ item }) => {
                 height={sectionToggled ? 'auto' : 0}>
                 <ul className="block">
                     {items.map((childItem, i) => (
-                        <SubLevelItem key={`nav-${i}`} item={childItem} />
+                        <SubLevelItem
+                            key={`nav-${i}`}
+                            item={childItem}
+                            showTopLevel={showTopLevel}
+                        />
                     ))}
                 </ul>
             </AnimateHeight>
@@ -57,8 +63,11 @@ const TopLevelItemComponent = ({ item }) => {
 
 TopLevelItemComponent.propTypes = {
     item: t.object,
+    hideTopLevel: t.bool,
 };
 
-TopLevelItemComponent.defaultProps = {};
+TopLevelItemComponent.defaultProps = {
+    showTopLevel: true,
+};
 
 export default TopLevelItemComponent;

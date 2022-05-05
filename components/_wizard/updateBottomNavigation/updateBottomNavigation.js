@@ -1,5 +1,5 @@
 // React
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 // Packages
 import { useRouter } from 'next/router';
@@ -13,24 +13,28 @@ import { useWizardNavigationStore } from 'utilities/store';
 import Button from 'components/button';
 
 const UpdateBottomNavigationComponent = () => {
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { handleSubmit } = useWizardNavigationStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const router = useRouter();
-
-    // Local state for showing status
-    const [loading, setLoading] = useState(false);
-
-    // Hook: Metadata
     const { label } = useLabels();
 
-    // Store: Wizard navigation
-    const { handleSubmit, onUrlOrContextChange } = useWizardNavigationStore();
+    // ///////////////////
+    // STATE
+    // ///////////////////
 
-    // Effect: Handle path change
-    useEffect(() => {
-        setTimeout(() => {
-            const splitRoute = router.pathname.split('/');
-            onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
-        }, 50);
-    }, [router.asPath]);
+    const [loading, setLoading] = useState(false);
+
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     async function onHandleSave() {
         setLoading(true);
@@ -46,6 +50,10 @@ const UpdateBottomNavigationComponent = () => {
             setLoading(false);
         }
     }
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <div className="w-full py-4 lg:py-12 transition-slow max-w-[600px] page-mx bg-white flex items-center">

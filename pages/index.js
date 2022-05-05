@@ -28,11 +28,16 @@ const HomeComponent = () => {
     verifyLoggedIn();
 
     // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { CONSTANTS } = useInitiativeDataStore();
+
+    // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { label, pickList } = useLabels();
-    const { CONSTANTS } = useInitiativeDataStore();
     const { ewGet } = useElseware();
 
     // ///////////////////
@@ -165,7 +170,7 @@ const HomeComponent = () => {
                         </h2>
                         {user?.User_Account_Type__c !==
                             CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION && (
-                            <Button theme="teal" action="/wizard/introduction">
+                            <Button theme="teal" action="/create/introduction">
                                 {label('InitiativeManagerCreate')}
                             </Button>
                         )}

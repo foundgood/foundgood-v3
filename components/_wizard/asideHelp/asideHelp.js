@@ -12,17 +12,31 @@ import { useLabels } from 'utilities/hooks';
 // Icons
 import { FiHelpCircle } from 'react-icons/fi';
 
-const AsideHelpComponent = ({ data }) => {
-    // Hook: Metadata
+const AsideHelpComponent = () => {
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { currentItem } = useWizardNavigationStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label, text } = useLabels();
 
-    // Hook: WizardLayoutStore
-    const { currentItem } = useWizardNavigationStore();
+    // ///////////////////
+    // STATE
+    // ///////////////////
 
     const [helpGuide, setHelpGuide] = useState([]);
     const [helpWhat, setHelpWhat] = useState([]);
 
-    // Effect: Set value based on modal elements based on updateId
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Set value based on modal elements based on updateId
     useEffect(() => {
         // Check for string
         const guide = currentItem?.item?.labels?.help?.guide;
@@ -30,8 +44,8 @@ const AsideHelpComponent = ({ data }) => {
         let helpGuide = [guide];
         let helpWhat = [what];
         if (typeof guide === 'string' && typeof what === 'string') {
-            helpGuide = text(guide)?.split('\n');
-            helpWhat = text(what)?.split('\n');
+            helpGuide = text(guide, true)?.split('\n');
+            helpWhat = text(what, true)?.split('\n');
             helpWhat = helpWhat === undefined ? [] : helpWhat;
             helpGuide = helpGuide === undefined ? [] : helpGuide;
         }
@@ -40,6 +54,10 @@ const AsideHelpComponent = ({ data }) => {
         setHelpWhat(helpWhat);
     }, [currentItem]);
 
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     return (
         <div className="flex flex-col">
             <div className="flex items-center space-x-8 text-blue-300">
@@ -47,13 +65,13 @@ const AsideHelpComponent = ({ data }) => {
                 <p className="pt-4">{label('TitleHelp')}</p>
             </div>
             <div className="flex flex-col mt-32 space-y-16">
-                {text(currentItem?.item?.labels?.help?.why) && (
+                {text(currentItem?.item?.labels?.help?.why, true) && (
                     <div>
                         <p className="mb-16 t-h6">
                             {label('InitiativeWizardHeadingWhy')}
                         </p>
                         <p className="t-small">
-                            {text(currentItem?.item?.labels?.help?.why)}
+                            {text(currentItem?.item?.labels?.help?.why, true)}
                         </p>
                     </div>
                 )}

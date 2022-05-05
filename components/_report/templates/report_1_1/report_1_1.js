@@ -252,8 +252,8 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
 };
 
 Report_1_1Component.propTypes = {
-    initiativeData: t.object.isRequired,
-    reportData: t.object.isRequired,
+    initiativeData: t.object,
+    reportData: t.object,
 };
 
 Report_1_1Component.defaultProps = {

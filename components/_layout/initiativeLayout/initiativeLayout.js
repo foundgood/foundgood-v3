@@ -51,7 +51,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                         <Button
                             theme="blue"
                             variant="secondary"
-                            action={`/wizard/${INITIATIVE_ID}/overview`}>
+                            action={`/initiative/${INITIATIVE_ID}/overview`}>
                             {label('ButtonRunWizard')}
                         </Button>
                     )}

@@ -53,7 +53,7 @@ const WizardStatusComponent = () => {
             utilities.updateInitiativeData('_reports', reportData);
 
             // Change location
-            router.push(`/wizard/${INITIATIVE_ID}/introduction/${REPORT_ID}`);
+            router.push(`/report/${INITIATIVE_ID}/introduction/${REPORT_ID}`);
         } catch (error) {
             console.warn(error);
         }
@@ -98,14 +98,6 @@ const WizardStatusComponent = () => {
                         {currentReport.Status__c}
                     </span>
                 </p>
-                {/* TODO: Out for now */}
-                {/* <p className="mb-12 mr-12 lg:mr-24 t-small text-teal-60 md:flex md:mb-0 line-clamp-2">
-                    <span className="mr-4 font-bold">
-                        {labelTodo('6 more sections')}
-                    </span>
-                    <span>{labelTodo('needed before you can submit')}</span>
-                </p>
-                */}
                 <div className="flex items-center self-end space-x-12">
                     {userInitiativeRights.canEdit &&
                         currentReport.Status__c !==

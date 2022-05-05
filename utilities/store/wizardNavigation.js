@@ -1,9 +1,12 @@
 import create from 'zustand';
-import { persist } from 'zustand/middleware';
 
-import { initiativeWizardDictionary } from 'utilities/data/initiativeNavigationItems';
+import { CONTEXTS } from 'utilities/hooks/useContext';
 
-import { reportWizardDictionary } from 'utilities/data/reportNavigationItems';
+import {
+    initiativeStructures,
+    createInitiativeStructures,
+    reportStructures,
+} from 'utilities/data/navigationStructure';
 
 // Helper for getting next url
 function _goToNextSection(sectionIndex, items) {
@@ -31,9 +34,6 @@ const useWizardNavigationStore = create((set, get) => ({
 
         // Set next item url
         get().setNextItemUrl(currentItem);
-
-        // Add to completed
-        get().addToCompleted(baseUrl);
     },
 
     // Handles submit from wizard pages
@@ -42,165 +42,20 @@ const useWizardNavigationStore = create((set, get) => ({
         return currentSubmitHandler ? currentSubmitHandler() : true;
     },
 
-    // Rebuilds initiative wizard items
-    buildInitiativeWizardItems(configurationType = []) {
-        // What types
-        const planning = configurationType.includes('Planning');
-        const detailing = configurationType.includes('Explain');
+    // Rebuilds wizard items
+    buildWizardItems(context, type = 'default') {
+        // Type is Type__c from initiative or report
+        if (context) {
+            const wizards = {
+                [CONTEXTS.CREATE_INITIATIVE]: createInitiativeStructures,
+                [CONTEXTS.INITIATIVE]: initiativeStructures,
+                [CONTEXTS.REPORT]: reportStructures,
+            };
 
-        // Dictionary
-        const d = initiativeWizardDictionary;
-
-        // Items
-        const items = [
-            d.introduction,
-            // TODO Add in when we have more reporting options
-            {
-                ...d.context,
-                items: [
-                    d.overview,
-                    d.funders,
-                    d.applicants,
-                    d.collaborators,
-                    d.employeesFunded,
-                ],
-            },
-            // If detailing is on
-            ...(detailing
-                ? [
-                      {
-                          ...d.background,
-                          items: [
-                              d.problemsToBeSolved,
-                              d.causesOfTheProblem,
-                              d.organisationalFocus,
-                              d.ourVision,
-                              d.reasonsForThisSolve,
-                          ],
-                      },
-                  ]
-                : []),
-            {
-                ...d.activitiesParent,
-                items: [
-                    d.goals,
-                    d.activities,
-                    d.indicators,
-                    // d.progressSoFar, // Not in at the moment
-                    // If planning is on
-                    ...(planning ? [d.targets] : []),
-                ],
-            },
-            {
-                ...d.developments,
-                items: [d.sharingResults],
-            },
-            { ...d.logbook, items: [d.logbookEntry] },
-            { ...d.reports, items: [d.reportSchedule] },
-            d.done,
-        ];
-
-        set(state => {
-            state.items = items;
-        });
-    },
-
-    // Rebuilds report wizard items
-    buildReportWizardItems(configurationType) {
-        // Items
-        let items;
-
-        // Dictionary
-        const d = reportWizardDictionary;
-        switch (configurationType) {
-            case 'Final':
-                items = [
-                    d.introduction,
-                    {
-                        ...d.summary,
-                        items: [d.reportDetails, d.funders, d.overview],
-                    },
-                    {
-                        ...d.keyChanges,
-                        items: [
-                            d.applicants,
-                            d.collaborators,
-                            d.employeesFunded,
-                            d.activities,
-                            d.indicators,
-                            d.progressSoFar,
-                            d.sharingResults,
-                        ],
-                    },
-                    {
-                        ...d.keyResults,
-                        items: [d.influenceOnPolicy, d.evaluations],
-                    },
-                    {
-                        ...d.reflections,
-                        items: [d.endOfGrantReflections, d.reportSummary],
-                    },
-                    d.complete,
-                    d.done,
-                ];
-                break;
-
-            case 'Status':
-                items = [
-                    d.introduction,
-                    {
-                        ...d.summary,
-                        items: [
-                            d.reportDetails,
-                            d.funders,
-                            d.overview,
-                            // d.risksAndChallenges,
-                        ],
-                    },
-                    {
-                        ...d.keyChanges,
-                        items: [d.applicants, d.collaborators],
-                    },
-                    { ...d.reflections, items: [d.reportSummary] },
-                    d.complete,
-                    d.done,
-                ];
-                break;
-
-            default:
-                // Annual
-                items = [
-                    d.introduction,
-                    {
-                        ...d.summary,
-                        items: [d.reportDetails, d.funders, d.overview],
-                    },
-                    {
-                        ...d.keyChanges,
-                        items: [
-                            d.applicants,
-                            d.collaborators,
-                            d.employeesFunded,
-                            d.activities,
-                            d.indicators,
-                            d.progressSoFar,
-                            d.sharingResults,
-                        ],
-                    },
-                    {
-                        ...d.keyResults,
-                        items: [d.influenceOnPolicy, d.evaluations],
-                    },
-
-                    { ...d.reflections, items: [d.reportSummary] },
-                    d.complete,
-                    d.done,
-                ];
-                break;
+            set(state => {
+                state.items = wizards[context]?.[type] ?? [];
+            });
         }
-        set(state => {
-            state.items = items;
-        });
     },
 
     // Sets the current item and parent item if any
@@ -290,19 +145,7 @@ const useWizardNavigationStore = create((set, get) => ({
         }));
     },
 
-    // Adds navigation item to completed
-    addToCompleted(url) {
-        set(state => {
-            if (state.completedItems.includes(url)) {
-                return;
-            } else {
-                state.completedItems = [...state.completedItems, url];
-            }
-        });
-    },
-
     items: [],
-    completedItems: [],
     openSection: null,
     currentItem: null,
     currentSubmitHandler: null,
@@ -311,7 +154,6 @@ const useWizardNavigationStore = create((set, get) => ({
     reset() {
         set(() => ({
             items: [],
-            completedItems: [],
             openSection: null,
             currentItem: null,
             currentSubmitHandler: null,

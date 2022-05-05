@@ -33,13 +33,8 @@ const IntroductionComponent = ({ pageProps }) => {
     // STORES
     // ///////////////////
 
-    const {
-        reset: resetWizardNavigationStore,
-        buildReportWizardItems,
-        buildInitiativeWizardItems,
-    } = useWizardNavigationStore();
-
-    const { utilities, reset: resetInitiativeStore } = useInitiativeDataStore();
+    const { reset: resetWizardNavigationStore } = useWizardNavigationStore();
+    const { reset: resetInitiativeStore, utilities } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -66,7 +61,7 @@ const IntroductionComponent = ({ pageProps }) => {
     // ///////////////////
 
     useWizardSubmit({
-        [CONTEXTS.INITIATIVE]: [
+        [CONTEXTS.CREATE_INITIATIVE]: [
             mainForm,
             async () => {
                 const { data: initiativeData } = await ewCreate(
@@ -91,16 +86,9 @@ const IntroductionComponent = ({ pageProps }) => {
         // Reset navigation store in localstorage
         resetWizardNavigationStore();
 
-        // Aside is not present here, so build stuff
-        if (MODE === CONTEXTS.REPORT) {
-            // Report wizard mode
-            buildReportWizardItems();
-        } else {
-            // New initiative - reset store
+        // Reset if initiative
+        if (MODE === CONTEXTS.CREATE_INITIATIVE) {
             resetInitiativeStore();
-            buildInitiativeWizardItems(
-                utilities.initiative.get().Configuration_Type__c
-            );
         }
     }, [MODE]);
 
@@ -124,6 +112,7 @@ const IntroductionComponent = ({ pageProps }) => {
             <TitlePreamble
                 title={label('ReportWizardWelcomeHeading')}
                 preamble={label('ReportWizardWelcomeSubHeading')}
+                usePreload={false}
             />
             <div className="flex justify-center">
                 <Image src="/images/new-report.png" width="600" height="471" />
@@ -146,6 +135,7 @@ const IntroductionComponent = ({ pageProps }) => {
             <TitlePreamble
                 title={label('InitiativeWizardWelcomeHeading')}
                 preamble={label('InitiativeWizardWelcomeSubHeading')}
+                usePreload={false}
             />
             <div className="flex justify-center my-64">
                 <Image

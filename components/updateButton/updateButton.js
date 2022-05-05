@@ -98,7 +98,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
                     action={
                         mode === 'report'
                             ? reportInProgress
-                            : `/wizard/${INITIATIVE_ID}/${baseUrl}/update`
+                            : `/initiative/${INITIATIVE_ID}/${baseUrl}/update`
                     }>
                     {label('Update')}
                 </Button>

@@ -12,7 +12,11 @@ import {
 import t from 'prop-types';
 import cc from 'classcat';
 
-const TitlePreambleComponent = ({ title = null, preamble = null }) => {
+const TitlePreambleComponent = ({
+    title = null,
+    preamble = null,
+    usePreload = true,
+}) => {
     // Stores
     const { currentItem } = useWizardNavigationStore();
     const { utilities } = useInitiativeDataStore();
@@ -21,7 +25,7 @@ const TitlePreambleComponent = ({ title = null, preamble = null }) => {
     const { label } = useLabels();
 
     // Preload
-    const preload = !utilities.initiative.get().Id;
+    const preload = usePreload && !utilities.initiative.get().Id;
 
     return (
         <>
@@ -38,10 +42,10 @@ const TitlePreambleComponent = ({ title = null, preamble = null }) => {
                         ? title
                         : label(currentItem?.item?.labels?.form?.title)}
                 </h2>
-                {preamble && (
+                {(preamble || currentItem?.item?.labels?.form?.preamble) && (
                     <p className="mt-16 t-preamble">
-                        {title
-                            ? title
+                        {preamble
+                            ? preamble
                             : label(currentItem?.item?.labels?.form?.preamble)}
                     </p>
                 )}

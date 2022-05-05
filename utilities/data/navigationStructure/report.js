@@ -1,9 +1,9 @@
-const reportWizardDictionary = {
+const d = {
     introduction: {
         title: 'Introduction',
         baseUrl: 'introduction',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/introduction/${reportId}`;
+            return `/report/${initiativeId}/introduction/${reportId}`;
         },
         visible: false,
         hideBack: true,
@@ -35,7 +35,7 @@ const reportWizardDictionary = {
         hideExit: true,
         baseUrl: 'complete',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/complete/${reportId}`;
+            return `/report/${initiativeId}/complete/${reportId}`;
         },
     },
     done: {
@@ -61,7 +61,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'report-details',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/report-details/${reportId}`;
+            return `/report/${initiativeId}/report-details/${reportId}`;
         },
     },
     funders: {
@@ -79,7 +79,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'funders',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/funders/${reportId}`;
+            return `/report/${initiativeId}/funders/${reportId}`;
         },
     },
     overview: {
@@ -97,7 +97,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'overview',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/overview/${reportId}`;
+            return `/report/${initiativeId}/overview/${reportId}`;
         },
     },
     reportSummary: {
@@ -115,7 +115,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'report-summary',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/report-summary/${reportId}`;
+            return `/report/${initiativeId}/report-summary/${reportId}`;
         },
     },
     risksAndChallenges: {
@@ -133,7 +133,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'risks-and-challenges',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/risks-and-challenges/${reportId}`;
+            return `/report/${initiativeId}/risks-and-challenges/${reportId}`;
         },
     },
     applicants: {
@@ -151,7 +151,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'applicants',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/applicants/${reportId}`;
+            return `/report/${initiativeId}/applicants/${reportId}`;
         },
     },
     collaborators: {
@@ -169,7 +169,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'collaborators',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/collaborators/${reportId}`;
+            return `/report/${initiativeId}/collaborators/${reportId}`;
         },
     },
     employeesFunded: {
@@ -187,12 +187,11 @@ const reportWizardDictionary = {
         },
         baseUrl: 'employees-funded',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/employees-funded/${reportId}`;
+            return `/report/${initiativeId}/employees-funded/${reportId}`;
         },
     },
     goals: {
         title: 'ReportWizardMenuGoals',
-        titleNNF: 'ReportViewHeadingFunderObjectives', // Show different title to NNF
         labels: {
             form: {
                 title: 'ReportWizardGoalsHeading',
@@ -206,7 +205,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'goals',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/goals/${reportId}`;
+            return `/report/${initiativeId}/goals/${reportId}`;
         },
     },
     activities: {
@@ -224,7 +223,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'activities',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/activities/${reportId}`;
+            return `/report/${initiativeId}/activities/${reportId}`;
         },
     },
     indicators: {
@@ -242,7 +241,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'indicators',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/indicators/${reportId}`;
+            return `/report/${initiativeId}/indicators/${reportId}`;
         },
     },
     progressSoFar: {
@@ -260,7 +259,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'progress-so-far',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/progress-so-far/${reportId}`;
+            return `/report/${initiativeId}/progress-so-far/${reportId}`;
         },
     },
     sharingResults: {
@@ -278,7 +277,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'sharing-results',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/sharing-results/${reportId}`;
+            return `/report/${initiativeId}/sharing-results/${reportId}`;
         },
     },
     outcomes: {},
@@ -298,7 +297,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'influence-on-policy',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/influence-on-policy/${reportId}`;
+            return `/report/${initiativeId}/influence-on-policy/${reportId}`;
         },
     },
     evaluations: {
@@ -316,7 +315,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'evaluations',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/evaluations/${reportId}`;
+            return `/report/${initiativeId}/evaluations/${reportId}`;
         },
     },
     endOfGrantReflections: {
@@ -334,7 +333,7 @@ const reportWizardDictionary = {
         },
         baseUrl: 'end-of-grant-reflections',
         url(initiativeId, reportId) {
-            return `/wizard/${initiativeId}/end-of-grant-reflections/${reportId}`;
+            return `/report/${initiativeId}/end-of-grant-reflections/${reportId}`;
         },
     },
     // postProjectActivities: {
@@ -352,9 +351,136 @@ const reportWizardDictionary = {
     //     },
     //     baseUrl: 'post-project-activities',
     //     url(initiativeId, reportId) {
-    //         return `/wizard/${initiativeId}/post-project-activities/${reportId}`;
+    //         return `/report/${initiativeId}/post-project-activities/${reportId}`;
     //     },
     // },
 };
 
-export { reportWizardDictionary };
+const reportStructures = {
+    Final: [
+        d.introduction,
+        {
+            ...d.summary,
+            items: [d.reportDetails, d.funders, d.overview],
+        },
+        {
+            ...d.keyChanges,
+            items: [
+                d.applicants,
+                d.collaborators,
+                d.employeesFunded,
+                d.activities,
+                d.indicators,
+                d.progressSoFar,
+                d.sharingResults,
+            ],
+        },
+        {
+            ...d.keyResults,
+            items: [d.influenceOnPolicy, d.evaluations],
+        },
+        {
+            ...d.reflections,
+            items: [d.endOfGrantReflections, d.reportSummary],
+        },
+        d.complete,
+        d.done,
+    ],
+    Status: [
+        d.introduction,
+        {
+            ...d.summary,
+            items: [d.reportDetails, d.funders, d.overview],
+        },
+        {
+            ...d.keyChanges,
+            items: [d.applicants, d.collaborators],
+        },
+        { ...d.reflections, items: [d.reportSummary] },
+        d.complete,
+        d.done,
+    ],
+    Annual: [
+        d.introduction,
+        {
+            ...d.summary,
+            items: [d.reportDetails, d.funders, d.overview],
+        },
+        {
+            ...d.keyChanges,
+            items: [
+                d.applicants,
+                d.collaborators,
+                d.employeesFunded,
+                d.activities,
+                d.indicators,
+                d.progressSoFar,
+                d.sharingResults,
+            ],
+        },
+        {
+            ...d.keyResults,
+            items: [d.influenceOnPolicy, d.evaluations],
+        },
+
+        { ...d.reflections, items: [d.reportSummary] },
+        d.complete,
+        d.done,
+    ],
+    Standard: [
+        d.introduction,
+        {
+            ...d.summary,
+            items: [d.reportDetails, d.funders, d.overview],
+        },
+        {
+            ...d.keyChanges,
+            items: [
+                d.applicants,
+                d.collaborators,
+                d.employeesFunded,
+                d.activities,
+                d.indicators,
+                d.progressSoFar,
+                d.sharingResults,
+            ],
+        },
+        {
+            ...d.keyResults,
+            items: [d.influenceOnPolicy, d.evaluations],
+        },
+
+        { ...d.reflections, items: [d.reportSummary] },
+        d.complete,
+        d.done,
+    ],
+    Extended: [
+        d.introduction,
+        {
+            ...d.summary,
+            items: [d.reportDetails, d.funders, d.overview],
+        },
+        {
+            ...d.keyChanges,
+            items: [
+                d.applicants,
+                d.collaborators,
+                d.employeesFunded,
+                d.activities,
+                d.indicators,
+                d.progressSoFar,
+                d.sharingResults,
+            ],
+        },
+        {
+            ...d.keyResults,
+            items: [d.influenceOnPolicy, d.evaluations],
+        },
+
+        { ...d.reflections, items: [d.reportSummary] },
+        d.complete,
+        d.done,
+    ],
+};
+
+export default reportStructures;

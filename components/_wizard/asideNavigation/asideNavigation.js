@@ -1,5 +1,5 @@
 // React
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Packages
 import dayjs from 'dayjs';
@@ -15,32 +15,29 @@ import { useLabels, useContext } from 'utilities/hooks';
 import { TopLevelItem } from 'components/_wizard/asideNavigation';
 
 const AsideNavigationComponent = () => {
-    // Context for wizard pages
-    const { MODE, CONTEXTS, REPORT_ID } = useContext();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Metadata
+    const { utilities } = useInitiativeDataStore();
+    const { items } = useWizardNavigationStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label } = useLabels();
 
-    // Store: wizardNavigation
-    const {
-        buildInitiativeWizardItems,
-        buildReportWizardItems,
-        items,
-    } = useWizardNavigationStore();
+    // ///////////////////
+    // DATA
+    // ///////////////////
 
-    // Store: Initiative data
-    const { initiative } = useInitiativeDataStore();
+    const initiative = utilities.initiative.get();
 
-    // Effect: Update wizard navigation items
-    useEffect(() => {
-        if (MODE === CONTEXTS.REPORT) {
-            buildReportWizardItems(
-                initiative._reports[REPORT_ID]?.Report_Type__c
-            );
-        } else {
-            buildInitiativeWizardItems(initiative.Configuration_Type__c);
-        }
-    }, [MODE, initiative._reports[REPORT_ID]]);
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -73,7 +70,11 @@ const AsideNavigationComponent = () => {
                 {items?.map((item, index) => {
                     if (item.visible) {
                         return (
-                            <TopLevelItem key={`nav-${index}`} item={item} />
+                            <TopLevelItem
+                                key={`nav-${index}`}
+                                item={item}
+                                showTopLevel={!item.showChildrenOnly}
+                            />
                         );
                     }
                 })}

@@ -27,7 +27,7 @@ const useLabels = () => {
         );
     }
 
-    function label(path) {
+    function label(path, hideError) {
         let label;
         // 1. Funder based
         if (funderId) {
@@ -42,11 +42,11 @@ const useLabels = () => {
             return label;
         }
         // 3. Missing
-        label = missing(path, `(label [${locale}])`);
+        label = hideError ? '' : missing(path, `(label [${locale}])`);
         return label;
     }
 
-    function text(path) {
+    function text(path, hideError) {
         let text;
         // 1. Funder based
         if (funderId) {
@@ -61,7 +61,7 @@ const useLabels = () => {
             return text;
         }
         // 3. Missing
-        text = missing(path, `(text [${locale}])`);
+        text = hideError ? '' : missing(path, `(text [${locale}])`);
         return text;
     }
 

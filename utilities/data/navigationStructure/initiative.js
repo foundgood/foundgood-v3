@@ -1,10 +1,4 @@
-const initiativeWizardDictionary = {
-    introduction: {
-        title: 'Introduction',
-        baseUrl: 'introduction',
-        visible: false,
-        hideBack: true,
-    },
+const d = {
     context: {
         title: 'MenuContext',
         visible: true,
@@ -47,7 +41,7 @@ const initiativeWizardDictionary = {
     overview: {
         baseUrl: 'overview',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/overview`;
+            return `/initiative/${initiativeId}/overview`;
         },
         title: 'InitiativeViewOverviewHeading',
         labels: {
@@ -66,7 +60,7 @@ const initiativeWizardDictionary = {
     funders: {
         baseUrl: 'funders',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/funders`;
+            return `/initiative/${initiativeId}/funders`;
         },
         title: 'InitiativeViewFundersGrantsHeading',
         labels: {
@@ -84,7 +78,7 @@ const initiativeWizardDictionary = {
     applicants: {
         baseUrl: 'applicants',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/applicants`;
+            return `/initiative/${initiativeId}/applicants`;
         },
         title: 'InitiativeViewApplicantsHeading',
         labels: {
@@ -102,7 +96,7 @@ const initiativeWizardDictionary = {
     collaborators: {
         baseUrl: 'collaborators',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/collaborators`;
+            return `/initiative/${initiativeId}/collaborators`;
         },
         title: 'InitiativeViewCollaboratorsHeading',
         labels: {
@@ -120,7 +114,7 @@ const initiativeWizardDictionary = {
     employeesFunded: {
         baseUrl: 'employees-funded',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/employees-funded`;
+            return `/initiative/${initiativeId}/employees-funded`;
         },
         title: 'InitiativeViewEmployeesFundedHeading',
         labels: {
@@ -139,7 +133,7 @@ const initiativeWizardDictionary = {
         title: 'InitiativeViewProblemsHeading',
         baseUrl: 'problems-to-be-solved',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/problems-to-be-solved`;
+            return `/initiative/${initiativeId}/problems-to-be-solved`;
         },
         labels: {
             form: {
@@ -157,7 +151,7 @@ const initiativeWizardDictionary = {
         title: 'InitiativeViewCausesHeading',
         baseUrl: 'causes-of-the-problem',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/causes-of-the-problem`;
+            return `/initiative/${initiativeId}/causes-of-the-problem`;
         },
         labels: {
             form: {
@@ -175,7 +169,7 @@ const initiativeWizardDictionary = {
         title: 'InitiativeViewOrgFocusHeading',
         baseUrl: 'organisational-focus',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/organisational-focus`;
+            return `/initiative/${initiativeId}/organisational-focus`;
         },
         labels: {
             form: {
@@ -193,7 +187,7 @@ const initiativeWizardDictionary = {
         title: 'InitiativeViewVisionHeading',
         baseUrl: 'our-vision',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/our-vision`;
+            return `/initiative/${initiativeId}/our-vision`;
         },
         labels: {
             form: {
@@ -211,7 +205,7 @@ const initiativeWizardDictionary = {
         title: 'InitiativeViewReasonsHeading',
         baseUrl: 'reasons-for-this-solve',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/reasons-for-this-solve`;
+            return `/initiative/${initiativeId}/reasons-for-this-solve`;
         },
         labels: {
             form: {
@@ -228,10 +222,9 @@ const initiativeWizardDictionary = {
     goals: {
         baseUrl: 'goals',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/goals`;
+            return `/initiative/${initiativeId}/goals`;
         },
         title: 'InitiativeViewGoalsHeading',
-        titleNNF: 'ReportViewHeadingFunderObjectives', // Show different title to NNF
         labels: {
             form: {
                 title: 'InitiativeWizardGoalsHeading',
@@ -247,7 +240,7 @@ const initiativeWizardDictionary = {
     activities: {
         baseUrl: 'activities',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/activities`;
+            return `/initiative/${initiativeId}/activities`;
         },
         title: 'InitiativeViewActivitiesHeading',
         labels: {
@@ -265,7 +258,7 @@ const initiativeWizardDictionary = {
     indicators: {
         baseUrl: 'indicators',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/indicators`;
+            return `/initiative/${initiativeId}/indicators`;
         },
         title: 'InitiativeViewIndicatorsHeading',
         labels: {
@@ -283,7 +276,7 @@ const initiativeWizardDictionary = {
     sharingResults: {
         baseUrl: 'sharing-results',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/sharing-results`;
+            return `/initiative/${initiativeId}/sharing-results`;
         },
         title: 'InitiativeViewSharingResultsHeading',
         labels: {
@@ -302,7 +295,7 @@ const initiativeWizardDictionary = {
         title: 'InitiativeViewTargetsHeading',
         baseUrl: 'targets',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/targets`;
+            return `/initiative/${initiativeId}/targets`;
         },
         labels: {
             form: {
@@ -320,7 +313,7 @@ const initiativeWizardDictionary = {
         title: 'InitiativeViewProgressHeading',
         baseUrl: 'progress-so-far',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/progress-so-far`;
+            return `/initiative/${initiativeId}/progress-so-far`;
         },
         labels: {
             form: {
@@ -338,7 +331,7 @@ const initiativeWizardDictionary = {
         title: 'InitiativeViewLogEntryHeading',
         baseUrl: 'logbook-entry',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/logbook-entry`;
+            return `/initiative/${initiativeId}/logbook-entry`;
         },
         labels: {
             form: {
@@ -367,9 +360,35 @@ const initiativeWizardDictionary = {
         },
         baseUrl: 'report-schedule',
         url(initiativeId) {
-            return `/wizard/${initiativeId}/report-schedule`;
+            return `/initiative/${initiativeId}/report-schedule`;
         },
     },
 };
 
-export { initiativeWizardDictionary };
+const initiativeStructures = {
+    Reporting: [
+        {
+            ...d.context,
+            items: [
+                d.overview,
+                d.funders,
+                d.applicants,
+                d.collaborators,
+                d.employeesFunded,
+            ],
+        },
+        {
+            ...d.activitiesParent,
+            items: [d.goals, d.activities, d.indicators],
+        },
+        {
+            ...d.developments,
+            items: [d.sharingResults],
+        },
+        { ...d.logbook, items: [d.logbookEntry] },
+        { ...d.reports, items: [d.reportSchedule] },
+        d.done,
+    ],
+};
+
+export default initiativeStructures;

@@ -25,25 +25,45 @@ module.exports = {
     },
     async rewrites() {
         return [
+            // Create Initiative Wizard
             {
-                source: '/wizard/:inititiativeId/:page/update',
+                source: '/create/introduction/:rest*',
+                destination: '/create/new/introduction/:rest*',
+            },
+            {
+                source: '/create/:rest*',
+                destination: '/wizard/:rest*',
+            },
+
+            // Initiative Wizard
+            {
+                source: '/initiative/:inititiativeId/:page',
+                destination:
+                    '/wizard/:inititiativeId/:page?initiativeId=:inititiativeId',
+            },
+
+            // Update Initiative
+            {
+                source: '/initiative/:inititiativeId/:page/update',
                 destination:
                     '/wizard/:inititiativeId/:page?initiativeId=:inititiativeId&update=true',
             },
+
+            // Report Wizard
             {
-                source: '/wizard/:inititiativeId/:page/:reportId',
+                source: '/report/:inititiativeId/:page/:reportId',
                 destination:
                     '/wizard/:inititiativeId/:page?reportId=:reportId&initiativeId=:inititiativeId',
             },
+
+            // Update Report
             {
-                source: '/wizard/:inititiativeId/:page/:reportId/update',
+                source: '/report/:inititiativeId/:page/:reportId/update',
                 destination:
                     '/wizard/:inititiativeId/:page?reportId=:reportId&initiativeId=:inititiativeId&update=true',
             },
-            {
-                source: '/wizard/introduction/:rest*',
-                destination: '/wizard/new/introduction/:rest*',
-            },
+
+            // Normal pages
             {
                 source: '/:inititiativeId/:rest*',
                 destination:

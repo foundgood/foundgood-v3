@@ -42,7 +42,7 @@ const ReportDetailsComponent = () => {
     // HOOKS
     // ///////////////////
 
-    const { REPORT_ID } = useContext();
+    const { CONTEXTS, REPORT_ID } = useContext();
     const { label, object, pickList } = useLabels();
     const { ewUpdate } = useElseware();
 

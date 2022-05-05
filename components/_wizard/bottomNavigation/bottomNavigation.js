@@ -1,5 +1,5 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 // Packages
 import cc from 'classcat';
@@ -23,7 +23,6 @@ const BottomNavigationComponent = () => {
     const { utilities } = useInitiativeDataStore();
     const {
         nextItemUrl,
-        onUrlOrContextChange,
         handleSubmit,
         currentItem,
     } = useWizardNavigationStore();
@@ -65,6 +64,7 @@ const BottomNavigationComponent = () => {
             // Stop loading indicator
             setLoading(false);
         } catch (error) {
+            console.log(error);
             setLoading(false);
         }
     }
@@ -81,18 +81,6 @@ const BottomNavigationComponent = () => {
             );
         }
     }
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Effect: Handle path change
-    useEffect(() => {
-        setTimeout(() => {
-            const splitRoute = router.pathname.split('/');
-            onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
-        }, 50);
-    }, [router.asPath]);
 
     // ///////////////////
     // RENDER

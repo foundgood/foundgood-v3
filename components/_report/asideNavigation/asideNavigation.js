@@ -24,14 +24,12 @@ const AsideNavigationComponent = () => {
     const { initiative, utilities } = useInitiativeDataStore();
 
     // Store: Report navigation
-    const { buildReportNavigationItems, items } = useReportNavigationStore();
+    const { buildReportItems, items } = useReportNavigationStore();
 
     // Effect: Update wizard navigation items
     useEffect(() => {
         if (REPORT_ID && initiative._reports[REPORT_ID]) {
-            buildReportNavigationItems(
-                initiative._reports[REPORT_ID]?.Report_Type__c
-            );
+            buildReportItems(initiative._reports[REPORT_ID]?.Report_Type__c);
         }
     }, [REPORT_ID, initiative]);
 
@@ -84,11 +82,7 @@ const AsideNavigationComponent = () => {
                                                 href={`#${asId(
                                                     label(childItem.title)
                                                 )}`}>
-                                                {/* Title "Goals" needs to be replaced for NNF */}
-                                                {utilities.isNovoLeadFunder() &&
-                                                childItem.titleNNF
-                                                    ? label(childItem.titleNNF)
-                                                    : label(childItem.title)}
+                                                {label(childItem.title)}
                                             </a>
                                         ))}
                                     </Scrollspy>

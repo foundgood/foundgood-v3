@@ -4,9 +4,14 @@ import React, { useEffect } from 'react';
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
+import { useRouter } from 'next/router';
 
 // Utilities
-import { useWizardLayoutStore, useInitiativeDataStore } from 'utilities/store';
+import {
+    useWizardLayoutStore,
+    useInitiativeDataStore,
+    useWizardNavigationStore,
+} from 'utilities/store';
 import { useResponsive, useLabels, useContext } from 'utilities/hooks';
 
 // Components
@@ -20,30 +25,45 @@ import AsideHelp from 'components/_wizard/asideHelp';
 // Icons
 import { FiAlignLeft, FiChevronsLeft } from 'react-icons/fi';
 
-const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
-    // Context for wizard pages
-    const { MODE, CONTEXTS, REPORT_ID, INITIATIVE_ID } = useContext();
+const WizardLayoutComponent = ({ children, layoutSettings }) => {
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Store: wizardLayout
     const {
         rightMenuActive,
         toggleRightMenu,
         leftMenuActive,
         toggleLeftMenu,
     } = useWizardLayoutStore();
+    const {
+        onUrlOrContextChange,
+        buildWizardItems,
+        items,
+    } = useWizardNavigationStore();
+    const { utilities, populateInitiative } = useInitiativeDataStore();
 
-    // Store: Initiaitive Data
-    const { populateInitiative } = useInitiativeDataStore();
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
 
-    // Hook: Metadata
+    const router = useRouter();
+    const { MODE, CONTEXTS, REPORT_ID, INITIATIVE_ID } = useContext();
     const { label } = useLabels();
-
-    // Hook: Get breakpoint
     const bp = useResponsive();
 
-    // Effect: Listen to breakpoint and toggle menu accordingly
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
     const smallBps = ['2xs', 'xs', 'sm', 'md', 'lg'];
     const largeBps = ['xl', '2xl', '3xl'];
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    // Listen to breakpoint and toggle menu accordingly
     useEffect(() => {
         if (smallBps.includes(bp)) {
             toggleLeftMenu(false);
@@ -57,25 +77,66 @@ const WizardLayoutComponent = ({ children, pageProps, layoutSettings }) => {
 
     // Fill report with data
     useEffect(() => {
-        // Report mode - check to populate both report and initiative
-        if (MODE === CONTEXTS.REPORT && REPORT_ID && INITIATIVE_ID) {
-            populateInitiative(INITIATIVE_ID);
-        }
+        switch (MODE) {
+            case CONTEXTS.CREATE_INITIATIVE:
+            case CONTEXTS.INITIATIVE:
+                // Initiative mode - check to populate initiative
+                if (INITIATIVE_ID && INITIATIVE_ID !== 'new') {
+                    populateInitiative(INITIATIVE_ID);
+                }
+                break;
 
-        // Initiative mode - check to populate initiative
-        if (
-            MODE === CONTEXTS.INITIATIVE &&
-            INITIATIVE_ID !== 'new' &&
-            INITIATIVE_ID
-        ) {
-            populateInitiative(INITIATIVE_ID);
+            case CONTEXTS.REPORT:
+                // Report mode - check to populate both report and initiative
+                if (REPORT_ID && INITIATIVE_ID) {
+                    populateInitiative(INITIATIVE_ID);
+                }
+                break;
         }
     }, [MODE, REPORT_ID, INITIATIVE_ID]);
+
+    // Update wizard navigation items
+    useEffect(() => {
+        let type;
+        switch (MODE) {
+            case CONTEXTS.REPORT:
+                type = utilities.reports.get(REPORT_ID).Report_Type__c;
+                break;
+
+            case CONTEXTS.INITIATIVE:
+                // Fallback to default type "Reporting"
+                type =
+                    utilities.initiative.get().Configuration_Type__c ||
+                    'Reporting';
+                break;
+            case CONTEXTS.CREATE_INITIATIVE:
+                // Default type
+                type = 'default';
+                break;
+        }
+
+        buildWizardItems(MODE, type);
+    }, [
+        MODE,
+        utilities.initiative.get().Configuration_Type__c,
+        utilities.reports.get(REPORT_ID).Report_Type__c,
+    ]);
+
+    // Handle path change
+    useEffect(() => {
+        setTimeout(() => {
+            const splitRoute = router.pathname.split('/');
+            onUrlOrContextChange(splitRoute[splitRoute.length - 1]);
+        }, 50);
+    }, [router.asPath, items]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
             {/* Aside wrapper */}
-
             <div
                 style={{ willChange: 'transform' }}
                 className={cc([

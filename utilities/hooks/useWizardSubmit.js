@@ -23,6 +23,7 @@ const useWizardSubmit = (submitOptions = {}) => {
     const defaultSubmitOptions = {
         [CONTEXTS.REPORT]: [null, null],
         [CONTEXTS.INITIATIVE]: [null, null],
+        [CONTEXTS.INITIATIVE_CREATE]: [null, null],
     };
 
     const [mergedOptions] = useState({
@@ -33,10 +34,12 @@ const useWizardSubmit = (submitOptions = {}) => {
     useEffect(() => {
         if (mergedOptions) {
             setTimeout(() => {
-                const [form, submit] = mergedOptions[MODE];
-                setCurrentSubmitHandler(
-                    form ? form.handleSubmit(submit, error) : null
-                );
+                if (mergedOptions[MODE]) {
+                    const [form, submit] = mergedOptions[MODE];
+                    setCurrentSubmitHandler(
+                        form ? form.handleSubmit(submit, error) : null
+                    );
+                }
             }, 100);
         }
     }, [initiative]);

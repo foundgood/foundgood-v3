@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 // Packages
 import t from 'prop-types';
-import cc from 'classcat';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 
@@ -11,6 +10,9 @@ import dayjs from 'dayjs';
 import { useLabels, useAuth, useResponsive } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { isJson } from 'utilities';
+
+// Data
+import sdgsColors from 'utilities/data/sdgColors';
 
 // Components
 import Preloader from 'components/preloader';
@@ -50,26 +52,6 @@ const ProjectComponent = ({ pageProps }) => {
     const [applicants, setApplicants] = useState();
     const [collaborators, setCollaborators] = useState();
     const [employeeGroups, setEmployeeGroups] = useState();
-
-    const sdgsColors = [
-        '#E32840',
-        '#DCA545',
-        '#4F9E3E',
-        '#C31D32',
-        '#FC3D2E',
-        '#33BEE0',
-        '#FBC230',
-        '#A01C44',
-        '#FB6A33',
-        '#DB1C68',
-        '#FB9D37',
-        '#BE8A38',
-        '#417D47',
-        '#1D98D7',
-        '#5ABE38',
-        '#0D699B',
-        '#1C4969',
-    ];
 
     const donutColors = [
         'bg-teal-60',

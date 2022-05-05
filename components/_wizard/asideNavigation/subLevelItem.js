@@ -4,23 +4,16 @@ import React from 'react';
 // Packages
 import cc from 'classcat';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import t from 'prop-types';
 
 // Utilities
-import {
-    useWizardNavigationStore,
-    useInitiativeDataStore,
-} from 'utilities/store';
+import { useWizardNavigationStore } from 'utilities/store';
 import { useLabels, useContext } from 'utilities/hooks';
 
 // Components
 
-// Icons
-import { FiCircle, FiCheckCircle, FiMinusCircle } from 'react-icons/fi';
-
-const SubLevelItemComponent = ({ item }) => {
-    const { baseUrl, title, url, titleNNF } = item;
+const SubLevelItemComponent = ({ item, showTopLevel }) => {
+    const { baseUrl, title, url } = item;
 
     // Hook: Metadata
     const { label } = useLabels();
@@ -31,17 +24,11 @@ const SubLevelItemComponent = ({ item }) => {
     // Hook: Router
     const { asPath, push } = useRouter();
 
-    // Store: Initiative data
-    const { utilities } = useInitiativeDataStore();
-
     // Store: Wizard navigation
-    const { completedItems, handleSubmit } = useWizardNavigationStore();
+    const { handleSubmit } = useWizardNavigationStore();
 
     // Checking current page or not
     const inProgress = asPath === baseUrl || asPath.indexOf(baseUrl) > -1;
-
-    // Checking completed or not
-    const completed = completedItems.includes(baseUrl);
 
     async function onHandleNavigate() {
         try {
@@ -56,7 +43,11 @@ const SubLevelItemComponent = ({ item }) => {
     }
 
     return (
-        <li className="mt-24 ml-32 md:cursor-pointers">
+        <li
+            className={cc([
+                'mt-24 md:cursor-pointers',
+                { ' ml-32': showTopLevel },
+            ])}>
             <button onClick={() => onHandleNavigate()} className="text-left">
                 <span
                     className={cc([
@@ -65,19 +56,7 @@ const SubLevelItemComponent = ({ item }) => {
                             't-caption-bold text-teal-300 transition-default': inProgress,
                         },
                     ])}>
-                    {/* <i className="mr-16">
-                        {inProgress ? (
-                            <FiMinusCircle />
-                        ) : completed ? (
-                            <FiCheckCircle />
-                        ) : (
-                            <FiCircle />
-                        )}
-                    </i> */}
-                    {/* Title "Goals" needs to be replaced for NNF */}
-                    {utilities.isNovoLeadFunder() && titleNNF
-                        ? label(titleNNF)
-                        : label(title)}
+                    {label(title)}
                 </span>
             </button>
         </li>
@@ -86,6 +65,7 @@ const SubLevelItemComponent = ({ item }) => {
 
 SubLevelItemComponent.propTypes = {
     item: t.object,
+    showTopLevel: t.bool,
 };
 
 SubLevelItemComponent.defaultProps = {};
