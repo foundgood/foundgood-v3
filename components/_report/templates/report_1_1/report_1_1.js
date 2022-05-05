@@ -8,7 +8,7 @@ import Link from 'next/link';
 import t from 'prop-types';
 
 // Utilities
-import { useLabels } from 'utilities/hooks';
+import { useLabels, useInitiativeGetters } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -43,6 +43,7 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
     // ///////////////////
 
     const { label } = useLabels();
+    const { utilities } = useInitiativeGetters(initiativeData);
 
     // ///////////////////
     // STATE
@@ -73,14 +74,14 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
             {!initiative && <Preloader />}
 
             {/* Data Loaded - Show report */}
-            {initiative && (
+            {initiative && report && utilities && (
                 <div className="animate-fade-in">
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Header */}
-                    <ReportHeader {...{ initiative, report, constants }} />
+                    <ReportHeader {...{ utilities, report }} />
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Overview */}
-                    <ReportOverview {...{ initiative, report, constants }} />
+                    <ReportOverview {...{ utilities, report, constants }} />
                     {/* ------------------------------------------------------------------------------------------ */}
                     {/* Goals */}
                     {/* <ReportGoals
@@ -251,9 +252,8 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
 };
 
 Report_1_1Component.propTypes = {
-    initiative: t.object.isRequired,
-    report: t.object.isRequired,
-    constants: t.object.isRequired,
+    initiativeData: t.object.isRequired,
+    reportData: t.object.isRequired,
 };
 
 Report_1_1Component.defaultProps = {

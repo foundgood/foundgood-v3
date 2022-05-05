@@ -1,5 +1,5 @@
 // React
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 // Packages
 import t from 'prop-types';
@@ -11,19 +11,23 @@ import { useLabels } from 'utilities/hooks';
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 
-const ReportHeaderComponent = ({ initiative, report, constants }) => {
-    const [mainApplicant, setMainApplicant] = useState();
+const ReportHeaderComponent = ({ utilities, report }) => {
+    /// ///////////////////
+    // HOOKS
+    // ///////////////////
 
-    // Hook: Metadata
     const { label } = useLabels();
 
-    useEffect(() => {
-        // Report main applicant
-        const applicant = Object.values(initiative?._collaborators).filter(
-            item => item.Type__c === constants.COLLABORATORS.MAIN_COLLABORATOR
-        );
-        setMainApplicant(applicant[0]?.Account__r?.Name);
-    }, [initiative]);
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const initiative = utilities.initiative.get();
+    const mainCollaborator = utilities.collaborators.getTypeMain();
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <SectionWrapper>
@@ -37,8 +41,7 @@ const ReportHeaderComponent = ({ initiative, report, constants }) => {
                         />
                     )}
                 </div>
-                <div className="mt-16">{mainApplicant}</div>
-
+                <div className="mt-16">{mainCollaborator.Account__r?.Name}</div>
                 <h1 className="mt-48 t-h1">{initiative.Name}</h1>
                 <div className="mt-16 t-sh2">{`${report.Report_Type__c} ${label(
                     'TitleReport'
@@ -53,9 +56,8 @@ const ReportHeaderComponent = ({ initiative, report, constants }) => {
 };
 
 ReportHeaderComponent.propTypes = {
-    initiative: t.object.isRequired,
+    utilities: t.object.isRequired,
     report: t.object.isRequired,
-    constants: t.object.isRequired,
 };
 
 ReportHeaderComponent.defaultProps = {};

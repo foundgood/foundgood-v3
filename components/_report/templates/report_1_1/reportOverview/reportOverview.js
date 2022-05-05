@@ -1,5 +1,5 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
 import t from 'prop-types';
@@ -12,16 +12,18 @@ import { asId } from 'utilities';
 // Components
 import SectionWrapper from 'components/sectionWrapper';
 import UpdateButton from 'components/updateButton';
+import GridBox from 'components/gridBox';
 
-const ReportOverviewComponent = ({ initiative, report, constants }) => {
-    console.log(initiative);
-    // Hook: Metadata
+const ReportOverviewComponent = ({ utilities, report, constants }) => {
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label, object, pickList, getValueLabel } = useLabels();
 
-    const [developmentGoals, setDevelopmentGoals] = useState();
-    const [coApplicants, setCoApplicants] = useState([]);
-    const [coFunders, setCoFunders] = useState([]);
-    const [reportFunder, setReportFunder] = useState();
+    // ///////////////////
+    // DATA
+    // ///////////////////
 
     const sdgsColors = [
         '#E32840',
@@ -43,86 +45,59 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
         '#1C4969',
     ];
 
-    useEffect(() => {
-        // Make sure we have funders & collaborators
-        // Overview details + Funders numbers
-        if (
-            Object.values(initiative._funders).length > 0 &&
-            Object.values(initiative._collaborators).length > 0
-        ) {
-            // Total Amount
-            const totalAmount = Object.values(initiative._funders).reduce(
-                (total, funder) => {
-                    return total + funder.Amount__c;
-                },
-                0
-            );
+    const initiative = utilities.initiative.get();
 
-            // Report funder details
-            const funderId = report.Funder_Report__r.Application_Id__c;
-            const reportFunder = Object.values(initiative._funders)
-                .filter(item => item.Application_Id__c === funderId)
-                .map(item => ({
-                    name: item.Account__r?.Name,
-                    amount: `${
-                        item.CurrencyIsoCode
-                    } ${item.Amount__c?.toLocaleString('de-DE')}`,
-                    share: `${Math.round(
-                        (item.Amount__c / totalAmount) * 100
-                    )}%`,
-                }))[0];
-            setReportFunder(reportFunder);
+    const funders = utilities.funders.getAll();
 
-            // Co-Funders & Co-Applicants (used in Header)
-            const coFunders = Object.values(initiative._funders)
-                .filter(item => item.Application_Id__c !== funderId)
-                .map(item => item.Account__r.Name);
-            setCoFunders(coFunders);
+    const funderReportApplicationId =
+        report.Funder_Report__r?.Application_Id__c ?? null;
 
-            const coApplicants = Object.values(initiative._collaborators)
-                .filter(item =>
-                    constants.COLLABORATORS.APPLICANTS_CREATE.includes(
-                        item.Type__c
-                    )
-                )
-                .map(item => item.Account__r.Name);
-            setCoApplicants(coApplicants);
+    const coFunders = funders
+        .filter(item => item.Application_Id__c !== funderReportApplicationId)
+        .map(item => item.Account__r.Name);
 
-            // Header - Merge goal data, to signel array
-            const sdgNums = initiative?.Problem_Effect__c?.split(';');
-            const sdgs = pickList('Initiative__c.Problem_Effect__c'); // get global sdgs
-            if (sdgNums?.length > 0) {
-                const developmentGoals = sdgNums.map(num => {
-                    return {
-                        title:
-                            sdgs.find(sdg => sdg.value === parseInt(num, 10))
-                                ?.label ?? null,
-                        amount: num,
-                    };
-                });
-                setDevelopmentGoals(developmentGoals);
-            }
-        } else {
-            setReportFunder(null);
-            setCoFunders([]);
-            setCoApplicants([]);
-            setDevelopmentGoals(null);
+    const coApplicants = utilities.collaborators
+        .getTypeApplicantsCreate()
+        .map(item => item.Account__r.Name);
+
+    const totalAmount = funders.reduce((acc, funder) => {
+        return acc + funder.Amount__c;
+    }, 0);
+
+    const reportFunder = funders.reduce((acc, item) => {
+        if (item.Application_Id__c === funderReportApplicationId) {
+            return {
+                ...acc,
+                name: item.Account__r?.Name,
+                amount: `${
+                    item.CurrencyIsoCode
+                } ${item.Amount__c?.toLocaleString('de-DE')}`,
+                share: `${Math.round((item.Amount__c / totalAmount) * 100)} %`,
+            };
         }
-    }, [initiative]);
+    }, {});
 
-    // Funder objective
-    const funderObjective =
-        Object.values(initiative?._goals).find(
-            item => item.Type__c === constants.GOALS.GOAL_PREDEFINED
-        ) || {};
+    const funderObjective = utilities.goals.getTypePredefined();
 
-    // Funder
-    const funder = Object.values(initiative._funders).find(
-        funder => funder.Account__c === report.Funder_Report__r.Account__r.Id
+    const funder = utilities.funders.getFromAccountId(
+        report.Funder_Report__r?.Account__r?.Id
     );
+
+    const sdgNums = initiative.Problem_Effect__c?.split(';');
+    const sdgs = pickList('Initiative__c.Problem_Effect__c');
+
+    const developmentGoals = sdgNums.map(num => ({
+        title: sdgs.find(sdg => sdg.value === num)?.label ?? null,
+        amount: num,
+    }));
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <SectionWrapper id={asId(label('ReportWizardMenuOverview'))}>
+            {/* Title and summary */}
             <SectionWrapper>
                 <div className="flex justify-between">
                     <h3 className="t-h4">
@@ -132,15 +107,14 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                 </div>
                 <h3 className="mt-24 t-preamble">{initiative.Summary__c}</h3>
             </SectionWrapper>
+
             {/* Information cards */}
             <div className="inline-grid items-start w-full grid-cols-1 md:grid-cols-2 md:gap-24">
-                <div className="p-16 border-4 border-gray-10 rounded-8">
+                <GridBox>
                     <div className="t-sh6 text-blue-60">
                         {label('InitiativeViewGrantGivingArea')}
                     </div>
-                    <h3 className="mt-20 mb-16 t-h5">
-                        {initiative.Category__c}
-                    </h3>
+                    <h3 className="mb-16 t-h5">{initiative.Category__c}</h3>
                     <div className="t-sh6 text-blue-60">
                         {object.label('Initiative_Goal__c.Funder_Objective__c')}
                     </div>
@@ -155,7 +129,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         {label('InitiativeViewSDGSs')}
                     </div>
                     <div className="flex flex-col">
-                        {developmentGoals &&
+                        {developmentGoals.length > 0 ? (
                             developmentGoals.map((problem, index) => (
                                 <h3 key={`g-${index}`} className="mt-8 t-h5">
                                     <span
@@ -168,13 +142,15 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                                     </span>
                                     {problem.title}
                                 </h3>
-                            ))}
-                        {!developmentGoals && (
+                            ))
+                        ) : (
                             <div>{label('ReportEmptySDGs')}</div>
                         )}
                     </div>
-                </div>
-                <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
+                </GridBox>
+
+                <GridBox>
+                    {/* Grant dates */}
                     <div className="t-sh6 text-blue-60">
                         {label('ReportViewGrantStartEndDate')}
                     </div>
@@ -183,52 +159,50 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                         {' - '}
                         {dayjs(funder.Grant_End_Date__c).format('DD.MM.YYYY')}
                     </h3>
+
+                    {/* Location */}
                     <div className="mt-16 t-sh6 text-blue-60">
                         {label('InitiativeViewInitiativeLocation')}
                     </div>
-                    {/* Location */}
-                    {initiative.Translated_Where_Is_Problem__c && (
+                    {initiative.Translated_Where_Is_Problem__c ? (
                         <h3 className="t-h5">
                             {initiative.Translated_Where_Is_Problem__c?.split(
                                 ';'
                             ).join(', ')}
                         </h3>
-                    )}
-                    {/* Empty state - No Location */}
-                    {!initiative.Translated_Where_Is_Problem__c && (
+                    ) : (
                         <div>{label('ReportEmptyLocation')}</div>
                     )}
-                </div>
-                <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
+                </GridBox>
+
+                <GridBox>
+                    {/* List of co-funders */}
                     <div className="t-sh6 text-blue-60">
                         {label('ReportViewCoFunders')}
                     </div>
-
                     <div>
-                        {/* List of co-funders */}
-                        {coFunders?.length > 0 &&
-                            coFunders?.map((item, index) => (
-                                <h3 key={`f-${index}`} className="t-h5">
-                                    {item}
-                                </h3>
-                            ))}
-                        {/* Empty state - NO co-funders */}
-                        {coFunders?.length < 1 && label('ReportEmptyCoFunders')}
+                        {coFunders.length > 0
+                            ? coFunders.map((item, index) => (
+                                  <h3 key={`f-${index}`} className="t-h5">
+                                      {item}
+                                  </h3>
+                              ))
+                            : label('ReportEmptyCoFunders')}
                     </div>
+
+                    {/* List of co-applicants */}
                     <div className="mt-16 t-sh6 text-blue-60">
                         {label('ReportViewCoApplicants')}
                     </div>
-                    {/* List of co-applicants */}
-                    {coApplicants?.length > 0 && (
+                    {coApplicants?.length > 0 ? (
                         <h3 className="t-h5">{coApplicants.join(', ')}</h3>
-                    )}
-                    {/* Empty state - NO co-applicants */}
-                    {coApplicants?.length < 1 && (
+                    ) : (
                         <div>{label('ReportEmptyCoApplicants')}</div>
                     )}
-                </div>
+                </GridBox>
+
                 {reportFunder && (
-                    <div className="p-16 mb-20 border-4 border-gray-10 rounded-8">
+                    <GridBox>
                         <div className="t-sh6 text-blue-60">
                             {label('ReportViewAmountByFunder')}{' '}
                             {reportFunder.name}
@@ -239,7 +213,7 @@ const ReportOverviewComponent = ({ initiative, report, constants }) => {
                             {label('ReportViewShareOfTotalFunding')}
                         </div>
                         <h3 className="t-h5">{reportFunder.share}</h3>
-                    </div>
+                    </GridBox>
                 )}
             </div>
         </SectionWrapper>

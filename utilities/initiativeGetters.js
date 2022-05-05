@@ -103,6 +103,16 @@ function initiativeGetters(getter, constants) {
                     )
                 );
             },
+            // Returns array
+            getTypeApplicantsCreate() {
+                return Object.values(
+                    getter().initiative._collaborators
+                ).filter(item =>
+                    constants.COLLABORATORS.APPLICANTS_CREATE.includes(
+                        item.Type__c
+                    )
+                );
+            },
         },
         employeesFunded: {
             // Returns object
@@ -122,6 +132,14 @@ function initiativeGetters(getter, constants) {
             // Returns array
             getAll() {
                 return Object.values(getter().initiative._funders);
+            },
+            // Returns object
+            getFromAccountId(accountId) {
+                return (
+                    Object.values(getter().initiative._funders).find(
+                        funder => funder.Account__c === accountId
+                    ) || {}
+                );
             },
         },
         goals: {
