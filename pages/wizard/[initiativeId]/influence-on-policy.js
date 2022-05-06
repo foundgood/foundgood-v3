@@ -48,6 +48,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const {
         submitNoReflection,
         submitMultipleReflectionsToSelf,
+        getReflectionDefaultValue,
     } = useReflections({
         dataSet() {
             return utilities.reportDetails.getTypeInfluenceOnPolicy;
@@ -151,40 +152,28 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                             item.Description__c !==
                             CONSTANTS.CUSTOM.NO_REFLECTIONS
                     )
-                    .map(item => {
-                        return (
-                            <ListCard
-                                key={item.Id}
-                                headline={
-                                    _get(item, 'Type_Of_Influence__c') || ''
-                                }
-                                action={() => {
-                                    setUpdateId(item.Id);
-                                    setModalIsOpen(true);
-                                }}
-                                reflectAction={setReflecting}
-                                controller={
-                                    MODE === CONTEXTS.REPORT &&
-                                    reflectionForm.control
-                                }
-                                name={item.Id}
-                                defaultValue={{
-                                    selected:
-                                        item?.Description__c !==
-                                            CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                        false,
-                                    value:
-                                        item?.Description__c ===
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                            ? ''
-                                            : item?.Description__c,
-                                }}
-                                inputLabel={label(
-                                    'ReportWizardInfluencesReflectionSubHeading'
-                                )}
-                            />
-                        );
-                    })}
+                    .map(reflection => (
+                        <ListCard
+                            key={reflection.Id}
+                            headline={
+                                _get(reflection, 'Type_Of_Influence__c') || ''
+                            }
+                            action={() => {
+                                setUpdateId(reflection.Id);
+                                setModalIsOpen(true);
+                            }}
+                            reflectAction={setReflecting}
+                            controller={
+                                MODE === CONTEXTS.REPORT &&
+                                reflectionForm.control
+                            }
+                            name={reflection.Id}
+                            defaultValue={getReflectionDefaultValue(reflection)}
+                            inputLabel={label(
+                                'ReportWizardInfluencesReflectionSubHeading'
+                            )}
+                        />
+                    ))}
                 <Button
                     theme="teal"
                     className="self-start"

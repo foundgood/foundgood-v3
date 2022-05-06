@@ -139,12 +139,25 @@ const useReflections = ({ dataSet, parentKey = null, reflectionKey, type }) => {
         );
     }
 
+    function getReflectionDefaultValue(reflection) {
+        const description = reflection?.Description__c;
+
+        return {
+            selected: description !== CONSTANTS.CUSTOM.NO_REFLECTIONS ?? false,
+            value:
+                description === CONSTANTS.CUSTOM.NO_REFLECTIONS
+                    ? ''
+                    : description,
+        };
+    }
+
     return {
         submitReflection,
         submitMultipleReflections,
         submitMultipleReflectionsToSelf,
         submitNoReflection,
         submitMultipleNoReflections,
+        getReflectionDefaultValue,
     };
 };
 

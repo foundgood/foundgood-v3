@@ -48,6 +48,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     const {
         submitNoReflection,
         submitMultipleReflectionsToSelf,
+        getReflectionDefaultValue,
     } = useReflections({
         dataSet() {
             return utilities.reportDetails.getTypeEvaluation;
@@ -160,40 +161,28 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                             item.Description__c !==
                             CONSTANTS.CUSTOM.NO_REFLECTIONS
                     )
-                    .map(item => {
-                        return (
-                            <EvaluationCard
-                                key={item.Id}
-                                evaluator={
-                                    _get(item, 'Who_Is_Evaluating__c') || ''
-                                }
-                                action={() => {
-                                    setUpdateId(item.Id);
-                                    setModalIsOpen(true);
-                                }}
-                                reflectAction={setReflecting}
-                                controller={
-                                    MODE === CONTEXTS.REPORT &&
-                                    reflectionForm.control
-                                }
-                                name={item.Id}
-                                defaultValue={{
-                                    selected:
-                                        item?.Description__c !==
-                                            CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                        false,
-                                    value:
-                                        item?.Description__c ===
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                            ? ''
-                                            : item?.Description__c,
-                                }}
-                                inputLabel={label(
-                                    'ReportWizardEvaluationsReflectionSubHeading'
-                                )}
-                            />
-                        );
-                    })}
+                    .map(reflection => (
+                        <EvaluationCard
+                            key={reflection.Id}
+                            evaluator={
+                                _get(reflection, 'Who_Is_Evaluating__c') || ''
+                            }
+                            action={() => {
+                                setUpdateId(reflection.Id);
+                                setModalIsOpen(true);
+                            }}
+                            reflectAction={setReflecting}
+                            controller={
+                                MODE === CONTEXTS.REPORT &&
+                                reflectionForm.control
+                            }
+                            name={reflection.Id}
+                            defaultValue={getReflectionDefaultValue(reflection)}
+                            inputLabel={label(
+                                'ReportWizardEvaluationsReflectionSubHeading'
+                            )}
+                        />
+                    ))}
                 <Button
                     theme="teal"
                     className="self-start"

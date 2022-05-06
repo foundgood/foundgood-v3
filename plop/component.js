@@ -14,32 +14,8 @@ const component = {
             message: 'Where should the component be placed?',
             basePath: './',
         },
-        {
-            type: 'checkbox',
-            name: 'detailArray',
-            message: 'Which batteries should be included?',
-            choices: [
-                new inquirer.Separator(''),
-                new inquirer.Separator('- Data fetching -'),
-                { name: 'SWR client side', value: 'swr' },
-                {
-                    name: 'getStaticProps',
-                    value: 'getStaticProps',
-                },
-                { name: 'getStaticPaths', value: 'getStaticPaths' },
-                new inquirer.Separator(''),
-                new inquirer.Separator('- Misc -'),
-                { name: 'Dynamic import', value: 'dynamicImport' },
-            ],
-        },
     ],
     actions(data) {
-        // Reformat details
-        data.details = data.detailArray.reduce(
-            (acc, detail) => ({ ...acc, [detail]: true }),
-            {}
-        );
-
         const actions = [
             {
                 type: 'add',

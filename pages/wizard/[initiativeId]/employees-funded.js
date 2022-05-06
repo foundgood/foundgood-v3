@@ -52,7 +52,11 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label, object, pickList } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
-    const { submitNoReflection, submitReflection } = useReflections({
+    const {
+        submitNoReflection,
+        submitReflection,
+        getReflectionDefaultValue,
+    } = useReflections({
         dataSet() {
             return utilities.collaborators.getTypeAdditional;
         },
@@ -196,10 +200,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     <Reflection
                         name="Employees_Funded_Overview"
                         defaultValue={
-                            currentReflection?.Description__c ===
-                            CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                ? ''
-                                : currentReflection?.Description__c
+                            getReflectionDefaultValue(currentReflection).value
                         }
                         label={label(
                             'ReportWizardEmployeesReflectionSubHeading'

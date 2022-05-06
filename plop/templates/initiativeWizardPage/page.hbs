@@ -5,105 +5,241 @@ import React, { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 
 // Utilities
-import { useAuth, useMetadata, useSalesForce } from 'utilities/hooks';
 import {
-useWizardNavigationStore,
-useInitiativeDataStore,
-} from 'utilities/store';
+    useAuth,
+    useContext,
+    useElseware,
+    useLabels,
+    useReflections,
+    useWizardSubmit,
+} from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
-import TitlePreamble from 'components/_wizard/titlePreamble';
-import {
-InputWrapper,
-Select,
-Text,
-LongText,
-SelectList,
-} from 'components/_inputs';
-{{#if modal}}
 import Button from 'components/button';
 import Modal from 'components/modal';
-{{/if}}
+import NoReflections from 'components/_wizard/noReflections';
+import TitlePreamble from 'components/_wizard/titlePreamble';
+import { InputWrapper, FormFields } from 'components/_inputs';
 
 const {{pascalCase name}}Component = () => {
-// Hook: Verify logged in
-const { verifyLoggedIn } = useAuth();
-verifyLoggedIn();
+    // ///////////////////
+    // AUTH
+    // ///////////////////
 
-// Hook: Metadata
-const { labelTodo, label, valueSet } = useMetadata();
+    const { verifyLoggedIn } = useAuth();
+    verifyLoggedIn();
 
-// Hook: useForm setup
-const { handleSubmit, control } = useForm();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-// Hook: Salesforce setup
-const { sfCreate, sfUpdate, sfQuery, queries } = useSalesForce();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
-// Store: Wizard navigation
-const { addSubmitHandler } = useWizardNavigationStore();
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
 
-// Store: Initiative data
-const { initiative, updateInitiative } = useInitiativeDataStore();
+    const { MODE, CONTEXTS, REPORT_ID } = useContext();
+    const { label, object, pickList } = useLabels();
+    const { ewCreateUpdateWrapper } = useElseware();
+    const {
+        submitMultipleNoReflections,
+        submitMultipleReflections,
+        getReflectionDefaultValue,
+    } = useReflections({
+        dataSet() {
+            return utilities.xxx.getAll;
+        },
+        parentKey: 'Initiative_Xxx__c',
+        type: CONSTANTS.REPORT_DETAILS.XXX,
+    });
 
-// Method: Submit page content
-async function submit(data) {
-const {
-myTextField
-} = data;
+    // ///////////////////
+    // STATE
+    // ///////////////////
 
-await sfUpdate({
-object: 'Initiative__c',
-id: initiative.id,
-data: {
-TextField__c: myTextField
-},
-});
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [modalIsSaving, setModalIsSaving] = useState(false);
+    const [reflecting, setReflecting] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
+    const [xxx, setXxx] = useState(null);
 
-updateInitiative({
-myTextField,
-});
+    // ///////////////////
+    // FORMS
+    // ///////////////////
 
-{{#if modal}}
-setModalIsOpen(false);
-{{/if}}
-}
+    const mainForm = useForm();
+    const { isDirty } = useFormState({ control: mainForm.control });
+    const reflectionForm = useForm();
 
-{{#if modal}}
-// Local state to handle modal
-const [modalIsOpen, setModalIsOpen] = useState(false);
-{{else}}
-// Add submit handler to wizard navigation store
-useEffect(() => {
-setTimeout(() => {
-addSubmitHandler(handleSubmit(submit));
-}, 10);
-}, []);
-{{/if}}
+    // ///////////////////
+    // SUBMIT
+    // ///////////////////
 
-return (
-<>
-    <TitlePreamble title={labelTodo('{{sentenceCase name}}')} preamble={labelTodo('Preamble text' )} />
-    {{#if modal}}
-    <InputWrapper>
-        <Button theme="teal" className="self-start" action={()=> setModalIsOpen(true)}>
-            {labelTodo('Add ...')}
-        </Button>
-    </InputWrapper>
-    <Modal isOpen={modalIsOpen} title={labelTodo('Add new ...')} onCancel={()=> setModalIsOpen(false)}
-        onSave={mainForm.handleSubmit(submit)}>
-        <InputWrapper>
-            <Text name="myTextField" defaultValue={initiative?.myTextField} label={labelTodo('myTextField')}
-                placeholder={labelTodo('myTextField placeholder')} maxLength={80} controller={mainForm.control} />
-        </InputWrapper>
-    </Modal>
-    {{else}}
-    <InputWrapper>
-        <Text name="myTextField" defaultValue={initiative?.myTextField} label={labelTodo('myTextField')}
-            placeholder={labelTodo('myTextField placeholder')} maxLength={80} controller={mainForm.control} />
-    </InputWrapper>
-    {{/if}}
-</>
-);
+    async function submit(formData) {
+        // Modal save button state
+        setModalIsSaving(true);
+        try {
+            const { Name } = formData;
+
+            // Data for sf
+            const data = {
+                Name
+            };
+
+            // Update / Save
+            const xxxData = await ewCreateUpdateWrapper(
+                'initiative-xxx/initiative-xxx',
+                updateId,
+                data,
+                { Initiative__c: utilities.initiative.get().Id },
+                '_xxxs'
+            );
+
+            // Close modal
+            setModalIsOpen(false);
+
+            // Modal save button state
+            setModalIsSaving(false);
+
+            // Clear content in form
+            mainForm.reset();
+
+            // Fold out shit when done if report
+            setTimeout(() => {
+                if (MODE === CONTEXTS.REPORT) {
+                    reflectionForm.setValue(`${xxxData.Id}-selector`, true);
+                }
+            }, 500);
+        } catch (error) {
+            // Modal save button state
+            setModalIsSaving(false);
+            console.warn(error);
+        }
+    }
+
+    useWizardSubmit({
+        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflections],
+    });
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Current report details
+    const currentReportDetails = utilities.reportDetails.getFromReportId(
+        REPORT_ID
+    );
+
+    // Get xxx
+    const xxx = utilities.xxx.getAll();
+
+    // Check if there is relevant report details yet
+    const reportDetailsItems = currentReportDetails.filter(item =>
+        xxx.map(item => item.Id).includes(item.Initiative_Xxx__c)
+    );
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    useEffect(() => {
+        const {
+            Name
+        } = utilities.xxx.get(updateId);
+
+        mainForm.setValue('Name', Name);
+    }, [updateId, modalIsOpen]);
+
+    // ///////////////////
+    // FIELDS
+    // ///////////////////
+
+    const fields = [
+        {
+            type: 'Text',
+            name: 'Name',
+            label: object.label('Initiative_Xxx__c.Name'),
+            required: true,
+            // Type options
+            subLabel: object.helpText('Initiative_Xxx__c.Name'),
+        },
+    ];
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
+    return (
+        <>
+            <TitlePreamble />
+            <InputWrapper>
+                {MODE === CONTEXTS.REPORT && xxx.length > 0 && (
+                    <NoReflections
+                        {...{
+                            onClick: submitMultipleNoReflections,
+                            reflectionItems: reportDetailsItems.map(
+                                item => item.Description__c
+                            ),
+                            reflecting,
+                        }}
+                    />
+                )}
+                {xxx.map(xx => {
+                    const reflection = currentReportDetails.find(
+                        item => item.Initiative_Xxx__c === xx.Id
+                    );
+                    return (
+                        <xxxCard
+                            key={xx.Id}
+                            headline={_get(xx, 'Name') || ''}
+                            action={() => {
+                                setUpdateId(xx.Id);
+                                setXxx(xx);
+                                setModalIsOpen(true);
+                            }}
+                            reflectAction={setReflecting}
+                            controller={
+                                MODE === CONTEXTS.REPORT &&
+                                reflectionForm.control
+                            }
+                            name={xx.Id}
+                            defaultValue={getReflectionDefaultValue(reflection)}
+                            inputLabel={label(
+                                'ReportWizardXxxReflectionSubHeading'
+                            )}
+                        />
+                    );
+                })}
+
+                <Button
+                    theme="teal"
+                    className="self-start"
+                    action={() => {
+                        setUpdateId(null);
+                        setModalIsOpen(true);
+                    }}>
+                    {label('ButtonAddXxx')}
+                </Button>
+            </InputWrapper>
+            <Modal
+                isOpen={modalIsOpen}
+                title={label('WizardModalHeadingXxxs')}
+                onCancel={() => setModalIsOpen(false)}
+                disabledSave={!isDirty || modalIsSaving}
+                onSave={mainForm.handleSubmit(submit)}>
+                <InputWrapper>
+                    <FormFields
+                        {...{
+                            fields,
+                            form: mainForm,
+                        }}
+                    />
+                </InputWrapper>
+            </Modal>
+        </>
+    );
 };
 
 {{pascalCase name}}Component.propTypes = {};

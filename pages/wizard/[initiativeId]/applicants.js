@@ -48,6 +48,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     const {
         submitMultipleNoReflections,
         submitMultipleReflections,
+        getReflectionDefaultValue,
     } = useReflections({
         dataSet() {
             return utilities.collaborators.getTypeApplicantsAll;
@@ -233,18 +234,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                                 reflectionForm.control
                             }
                             name={collaborator.Id}
-                            defaultValue={{
-                                selected:
-                                    reflection &&
-                                    (reflection?.Description__c !==
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                        false),
-                                value:
-                                    reflection?.Description__c ===
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                        ? ''
-                                        : reflection?.Description__c,
-                            }}
+                            defaultValue={getReflectionDefaultValue(reflection)}
                             inputLabel={label(
                                 'ReportWizardCoApplicantReflectionSubHeading'
                             )}

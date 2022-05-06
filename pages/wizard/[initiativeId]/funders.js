@@ -48,6 +48,7 @@ const FundersComponent = ({ pageProps }) => {
     const {
         submitMultipleNoReflections,
         submitMultipleReflections,
+        getReflectionDefaultValue,
     } = useReflections({
         dataSet() {
             return utilities.funders.getAll;
@@ -75,7 +76,7 @@ const FundersComponent = ({ pageProps }) => {
     const reflectionForm = useForm();
 
     // ///////////////////
-    // METHODS
+    // SUBMIT
     // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
@@ -157,16 +158,13 @@ const FundersComponent = ({ pageProps }) => {
         REPORT_ID
     );
 
-    // Check if there is relevant report details yet
-    const reportDetailsItems = currentReportDetails.filter(item =>
-        utilities.funders
-            .getAll()
-            .map(item => item.Id)
-            .includes(item.Initiative_Funder__c)
-    );
-
     // Get funders
     const funders = utilities.funders.getAll();
+
+    // Check if there is relevant report details yet
+    const reportDetailsItems = currentReportDetails.filter(item =>
+        funders.map(item => item.Id).includes(item.Initiative_Funder__c)
+    );
 
     // ///////////////////
     // EFFECTS
@@ -280,28 +278,51 @@ const FundersComponent = ({ pageProps }) => {
             <InputWrapper>
                 {MODE === CONTEXTS.REPORT && funders.length > 0 && (
                     <NoReflections
-                        onClick={submitMultipleNoReflections}
-                        reflectionItems={reportDetailsItems.map(
-                            item => item.Description__c
-                        )}
-                        reflecting={reflecting}
+                        {...{
+                            onClick: submitMultipleNoReflections,
+                            reflectionItems: reportDetailsItems.map(
+                                item => item.Description__c
+                            ),
+                            reflecting,
+                        }}
                     />
                 )}
-                <RenderFunderCard
-                    {...{
-                        MODE,
-                        CONTEXTS,
-                        CONSTANTS,
-                        currentReportDetails,
-                        funders,
-                        setUpdateId,
-                        setFunder,
-                        setModalIsOpen,
-                        setReflecting,
-                        reflectionForm,
-                        label,
-                    }}
-                />
+                {funders.map(funder => {
+                    const reflection = currentReportDetails.find(
+                        item => item.Initiative_Funder__c === funder.Id
+                    );
+                    return (
+                        <FunderCard
+                            key={funder.Id}
+                            headline={_get(funder, 'Account__r.Name') || ''}
+                            label={_get(funder, 'Type__c') || ''}
+                            subHeadline={`${
+                                _get(funder, 'CurrencyIsoCode') || ''
+                            } ${_get(funder, 'Amount__c') || ''}`}
+                            footnote={`${
+                                _get(funder, 'Grant_Start_Date__c') || ''
+                            } - ${_get(funder, 'Grant_End_Date__c') || ''} • ${
+                                _get(funder, 'Application_Id__c') || ''
+                            }`}
+                            action={() => {
+                                setUpdateId(funder.Id);
+                                setFunder(funder);
+                                setModalIsOpen(true);
+                            }}
+                            reflectAction={setReflecting}
+                            controller={
+                                MODE === CONTEXTS.REPORT &&
+                                reflectionForm.control
+                            }
+                            name={funder.Id}
+                            defaultValue={getReflectionDefaultValue(reflection)}
+                            inputLabel={label(
+                                'ReportWizardFunderReflectionSubHeading'
+                            )}
+                        />
+                    );
+                })}
+
                 <Button
                     theme="teal"
                     className="self-start"
@@ -330,65 +351,6 @@ const FundersComponent = ({ pageProps }) => {
         </>
     );
 };
-
-// ///////////////////
-// ///////////////////
-// LOCAL COMPONENTS
-// ///////////////////
-
-const RenderFunderCard = ({
-    MODE,
-    CONTEXTS,
-    CONSTANTS,
-    currentReportDetails,
-    funders,
-    setUpdateId,
-    setFunder,
-    setModalIsOpen,
-    setReflecting,
-    reflectionForm,
-    label,
-}) =>
-    funders.map(funder => {
-        const reflection = currentReportDetails.find(
-            item => item.Initiative_Funder__c === funder.Id
-        );
-
-        return (
-            <FunderCard
-                key={funder.Id}
-                headline={_get(funder, 'Account__r.Name') || ''}
-                label={_get(funder, 'Type__c') || ''}
-                subHeadline={`${_get(funder, 'CurrencyIsoCode') || ''} ${
-                    _get(funder, 'Amount__c') || ''
-                }`}
-                footnote={`${_get(funder, 'Grant_Start_Date__c') || ''} - ${
-                    _get(funder, 'Grant_End_Date__c') || ''
-                } • ${_get(funder, 'Application_Id__c') || ''}`}
-                action={() => {
-                    setUpdateId(funder.Id);
-                    setFunder(funder);
-                    setModalIsOpen(true);
-                }}
-                reflectAction={setReflecting}
-                controller={MODE === CONTEXTS.REPORT && reflectionForm.control}
-                name={funder.Id}
-                defaultValue={{
-                    selected:
-                        reflection &&
-                        (reflection?.Description__c !==
-                            CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                            false),
-                    value:
-                        reflection?.Description__c ===
-                        CONSTANTS.CUSTOM.NO_REFLECTIONS
-                            ? ''
-                            : reflection?.Description__c,
-                }}
-                inputLabel={label('ReportWizardFunderReflectionSubHeading')}
-            />
-        );
-    });
 
 FundersComponent.propTypes = {};
 

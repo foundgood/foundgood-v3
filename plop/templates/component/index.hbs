@@ -1,7 +1,2 @@
-{{#if details.dynamicImport}}
-import dynamic from 'next/dynamic';
-const {{pascalCase name}} = dynamic(() => import('./{{camelCase name}}.js'), { ssr: false });
-{{else}}
 import {{pascalCase name}} from './{{camelCase name}}.js';
-{{/if}}
 export default {{pascalCase name}};

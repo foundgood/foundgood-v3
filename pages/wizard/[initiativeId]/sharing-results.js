@@ -49,6 +49,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     const {
         submitMultipleNoReflections,
         submitMultipleReflections,
+        getReflectionDefaultValue,
     } = useReflections({
         dataSet() {
             return utilities.activities.getTypeDissemination;
@@ -308,18 +309,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                                 reflectionForm.control
                             }
                             name={activity.Id}
-                            defaultValue={{
-                                selected:
-                                    reflection &&
-                                    (reflection?.Description__c !==
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                        false),
-                                value:
-                                    reflection?.Description__c ===
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                        ? ''
-                                        : reflection?.Description__c,
-                            }}
+                            defaultValue={getReflectionDefaultValue(reflection)}
                             journalPublication={
                                 showJournalPublication
                                     ? {

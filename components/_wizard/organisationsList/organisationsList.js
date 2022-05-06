@@ -1,9 +1,9 @@
 // React
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
 // Packages
-import cc from "classcat";
-import t from "prop-types";
+import cc from 'classcat';
+import t from 'prop-types';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -13,7 +13,7 @@ import { useInitiativeDataStore } from 'utilities/stores';
 
 // Components
 
-const {{pascalCase name}}Component = ({ prop }) => {
+const OrganisationsListComponent = ({ prop }) => {
     // ///////////////////
     // STORES
     // ///////////////////
@@ -37,25 +37,23 @@ const {{pascalCase name}}Component = ({ prop }) => {
     // METHODS
     // ///////////////////
 
-    function {{pascalCase name}}Method() {}
+    function OrganisationsListMethod() {}
 
     // ///////////////////
     // EFFECTS
     // ///////////////////
 
-    useEffect(() => {}, [])
+    useEffect(() => {}, []);
 
     // ///////////////////
     // RENDER
     // ///////////////////
 
-    return (
-        <div className="">{{sentenceCase name}}</div>
-    );
+    return <div className="">Organisations list</div>;
 };
 
-{{pascalCase name}}Component.propTypes = {};
+OrganisationsListComponent.propTypes = {};
 
-{{pascalCase name}}Component.defaultProps = {};
+OrganisationsListComponent.defaultProps = {};
 
-export default {{pascalCase name}}Component;
+export default OrganisationsListComponent;

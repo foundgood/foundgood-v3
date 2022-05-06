@@ -45,7 +45,11 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label, object, pickList, controlledPickList } = useLabels();
     const { ewUpdate, ewCreate } = useElseware();
-    const { submitNoReflection, submitMultipleReflections } = useReflections({
+    const {
+        submitNoReflection,
+        submitMultipleReflections,
+        getReflectionDefaultValue,
+    } = useReflections({
         dataSet() {
             return utilities.activities.getAll;
         },
@@ -279,18 +283,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 reflectionForm.control
                             }
                             name={activity.Id}
-                            defaultValue={{
-                                selected:
-                                    reflection &&
-                                    (reflection?.Description__c !==
-                                        CONSTANTS.CUSTOM.NO_REFLECTIONS ??
-                                        false),
-                                value:
-                                    reflection?.Description__c ===
-                                    CONSTANTS.CUSTOM.NO_REFLECTIONS
-                                        ? ''
-                                        : reflection?.Description__c,
-                            }}
+                            defaultValue={getReflectionDefaultValue(reflection)}
                             inputLabel={label(
                                 'ReportWizardActivitiesReflectionSubHeading'
                             )}
