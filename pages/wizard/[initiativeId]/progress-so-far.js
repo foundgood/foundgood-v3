@@ -8,6 +8,7 @@ import _get from 'lodash.get';
 // Utilities
 import {
     useAuth,
+    useContext,
     useElseware,
     useLabels,
     useWizardSubmit,
@@ -37,6 +38,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
+    const { CONTEXTS } = useContext();
     const { label } = useLabels();
     const { ewUpdate } = useElseware();
 

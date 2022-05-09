@@ -36,7 +36,7 @@ const RisksAndChallengesComponent = () => {
     // HOOKS
     // ///////////////////
 
-    const { REPORT_ID } = useContext();
+    const { CONTEXTS, REPORT_ID } = useContext();
     const { label } = useLabels();
     const { ewUpdate } = useElseware();
 
