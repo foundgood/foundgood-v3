@@ -16,7 +16,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import PreLoader from 'components/preloader';
 import { InputWrapper, Select, LongText, Attach } from 'components/_inputs';
 import LogbookCard from 'components/_wizard/logbookCard';
@@ -219,11 +219,11 @@ const LogbookComponent = ({ pageProps }) => {
                     items={logbookEntries}
                 />
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('ButtonAddLogEntry')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving || attachLoading}
+                isSaving={!isDirty || modalIsSaving || attachLoading}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <LongText
@@ -320,7 +320,7 @@ const LogbookComponent = ({ pageProps }) => {
                         controller={mainForm.control}
                     />
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

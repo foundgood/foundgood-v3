@@ -10,7 +10,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 
 const WizardStatusComponent = () => {
     // ///////////////////
@@ -137,7 +137,7 @@ const WizardStatusComponent = () => {
                         )}
                 </div>
             </div>
-            <Modal
+            <WizardModal
                 isOpen={showModal}
                 title={label('ModalReportCompleteHeader')}
                 onCancel={() => setShowModal(false)}
@@ -146,7 +146,7 @@ const WizardStatusComponent = () => {
                     completeReport();
                 }}>
                 <p className="t-preamble">{label('ModalReportCompleteBody')}</p>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

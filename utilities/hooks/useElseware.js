@@ -18,14 +18,14 @@ const useElseware = () => {
     // Params is optional object that will be converted to URL Params - e.g. id
     // Returns normal swr object ({ data, error, isValidating, mutate })
     function ewGet(path, params) {
-        return useSWR(
-            loggedIn ? path : null,
-            swrPath => elseware.get({ path: swrPath, params }),
-            {
-                revalidateOnFocus: false,
-                onSuccess: updateUserTimeout,
-            }
-        );
+        const urlParams = new URLSearchParams(params).toString();
+        const pathWithParams = `${path}${
+            urlParams.length > 0 ? `?${urlParams}` : ''
+        }`;
+        return useSWR(loggedIn ? { path, params } : null, elseware.get, {
+            revalidateOnFocus: false,
+            onSuccess: updateUserTimeout,
+        });
     }
 
     // Method for creating any object with elseware API

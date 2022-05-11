@@ -19,7 +19,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import {
     InputWrapper,
     Select,
@@ -189,6 +189,15 @@ const EmployeesFundedComponent = ({ pageProps }) => {
         <>
             <TitlePreamble />
             <InputWrapper>
+                <Button
+                    theme="teal"
+                    className="self-start"
+                    action={() => {
+                        setUpdateId(null);
+                        setModalIsOpen(true);
+                    }}>
+                    {label('ButtonAddEmployee')}
+                </Button>
                 {MODE === CONTEXTS.REPORT && employeesFunded.length > 0 && (
                     <NoReflections
                         onClick={submitNoReflection}
@@ -227,21 +236,12 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         }}
                     />
                 ))}
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddEmployee')}
-                </Button>
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingEmployees')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Text
@@ -285,7 +285,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                             'Initiative_Employee_Funded__c.Gender_Other__c'
                         )}
                         options={pickList(
-                            'Initiative_Employee_Funded.Gender__c'
+                            'Initiative_Employee_Funded__c.Gender__c'
                         )}
                         showText
                         listMaxLength={1}
@@ -305,7 +305,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                         controller={mainForm.control}
                     />
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

@@ -11,7 +11,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 
 const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
     // Hook: Metadata
@@ -98,7 +98,7 @@ const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
 
             {/* Show updates - also when in the process of updating */}
             {updates && states.updates()}
-            <Modal
+            <WizardModal
                 isOpen={showModal}
                 title={label('NothingToReportModalHeader')}
                 onCancel={() => setShowModal(false)}
@@ -110,7 +110,7 @@ const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
                 <p className="t-preamble">
                     {label('NothingToReportModalBody')}
                 </p>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

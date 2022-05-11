@@ -19,7 +19,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import Button from 'components/button';
 import FunderCard from 'components/_wizard/founderCard';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import NoReflections from 'components/_wizard/noReflections';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, FormFields } from 'components/_inputs';
@@ -276,6 +276,15 @@ const FundersComponent = ({ pageProps }) => {
         <>
             <TitlePreamble />
             <InputWrapper>
+                <Button
+                    theme="teal"
+                    className="self-start"
+                    action={() => {
+                        setUpdateId(null);
+                        setModalIsOpen(true);
+                    }}>
+                    {label('ButtonAddFunder')}
+                </Button>
                 {MODE === CONTEXTS.REPORT && funders.length > 0 && (
                     <NoReflections
                         {...{
@@ -322,22 +331,12 @@ const FundersComponent = ({ pageProps }) => {
                         />
                     );
                 })}
-
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddFunder')}
-                </Button>
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingFunders')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <FormFields
@@ -347,7 +346,7 @@ const FundersComponent = ({ pageProps }) => {
                         }}
                     />
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

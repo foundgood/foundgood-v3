@@ -6,11 +6,6 @@ const component = {
             name: 'name',
             message: 'What is the name of the new page?',
         },
-        {
-            type: 'confirm',
-            name: 'modal',
-            message: 'Should the page include logic for a modal window? [WIP]',
-        },
     ],
     actions(data) {
         const actions = [

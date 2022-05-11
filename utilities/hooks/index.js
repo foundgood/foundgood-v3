@@ -5,6 +5,7 @@ import useInitiativeGetters from './useInitiativeGetters';
 import useLabels from './useLabels';
 import useReflections from './useReflections';
 import useResponsive from './useResponsive';
+import useUser from './useUser';
 import useWizardSubmit from './useWizardSubmit';
 
 export {
@@ -15,5 +16,6 @@ export {
     useLabels,
     useReflections,
     useResponsive,
+    useUser,
     useWizardSubmit,
 };

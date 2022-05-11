@@ -20,7 +20,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import { InputWrapper, Select, SelectList, Text } from 'components/_inputs';
 import ResultCard from 'components/_wizard/resultCard';
 import NoReflections from 'components/_wizard/noReflections';
@@ -249,6 +249,15 @@ const SharingResultsComponent = ({ pageProps }) => {
         <>
             <TitlePreamble />
             <InputWrapper>
+                <Button
+                    theme="teal"
+                    className="self-start"
+                    action={() => {
+                        setUpdateId(null);
+                        setModalIsOpen(true);
+                    }}>
+                    {label('ButtonAddResult')}
+                </Button>
                 {MODE === CONTEXTS.REPORT && activities.length > 0 && (
                     <NoReflections
                         onClick={submitMultipleNoReflections}
@@ -332,21 +341,12 @@ const SharingResultsComponent = ({ pageProps }) => {
                         />
                     );
                 })}
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddResult')}
-                </Button>
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingSharing')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Text
@@ -476,7 +476,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                         </>
                     )}
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

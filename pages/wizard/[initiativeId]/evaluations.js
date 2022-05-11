@@ -19,7 +19,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import { InputWrapper, Select } from 'components/_inputs';
 import EvaluationCard from 'components/_wizard/evaluationCard';
 import NoReflections from 'components/_wizard/noReflections';
@@ -146,6 +146,15 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
         <>
             <TitlePreamble />
             <InputWrapper>
+                <Button
+                    theme="teal"
+                    className="self-start"
+                    action={() => {
+                        setUpdateId(null);
+                        setModalIsOpen(true);
+                    }}>
+                    {label('ButtonAddEvaluation')}
+                </Button>
                 {MODE === CONTEXTS.REPORT && (
                     <NoReflections
                         onClick={submitNoReflection}
@@ -183,21 +192,12 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                             )}
                         />
                     ))}
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddEvaluation')}
-                </Button>
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingEvaluation')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
@@ -216,7 +216,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         controller={mainForm.control}
                     />
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

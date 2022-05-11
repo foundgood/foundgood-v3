@@ -16,7 +16,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import {
     InputWrapper,
     Select,
@@ -186,11 +186,11 @@ const ReportScheduleComponent = ({ pageProps }) => {
                     <p className="t-h5">{label('WizardEmptyStatesReports')}</p>
                 )}
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingReports')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
@@ -223,7 +223,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                         controller={mainForm.control}
                     />
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

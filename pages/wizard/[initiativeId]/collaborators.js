@@ -19,7 +19,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import { InputWrapper, Select, DateRange, LongText } from 'components/_inputs';
 import CollaboratorCard from 'components/_wizard/collaboratorCard';
 import NoReflections from 'components/_wizard/noReflections';
@@ -195,6 +195,15 @@ const CollaboratorsComponent = ({ pageProps }) => {
         <>
             <TitlePreamble />
             <InputWrapper>
+                <Button
+                    theme="teal"
+                    className="self-start"
+                    action={() => {
+                        setUpdateId(null);
+                        setModalIsOpen(true);
+                    }}>
+                    {label('ButtonAddCollaborator')}
+                </Button>
                 {MODE === CONTEXTS.REPORT && collaborators.length > 0 && (
                     <NoReflections
                         onClick={submitMultipleNoReflections}
@@ -234,21 +243,12 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         />
                     );
                 })}
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddCollaborator')}
-                </Button>
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingCollaborators')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
@@ -320,7 +320,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                         controller={mainForm.control}
                     />
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

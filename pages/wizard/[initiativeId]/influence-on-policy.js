@@ -19,7 +19,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import { InputWrapper, Text } from 'components/_inputs';
 import ListCard from 'components/_wizard/listCard';
 import NoReflections from 'components/_wizard/noReflections';
@@ -137,6 +137,15 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
         <>
             <TitlePreamble />
             <InputWrapper>
+                <Button
+                    theme="teal"
+                    className="self-start"
+                    action={() => {
+                        setUpdateId(null);
+                        setModalIsOpen(true);
+                    }}>
+                    {label('ButtonAddInfluence')}
+                </Button>
                 {MODE === CONTEXTS.REPORT && (
                     <NoReflections
                         onClick={submitNoReflection}
@@ -174,21 +183,12 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                             )}
                         />
                     ))}
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddInfluence')}
-                </Button>
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingInfluence')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty}
+                isSaving={!isDirty}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Text
@@ -205,7 +205,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                         required
                     />
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

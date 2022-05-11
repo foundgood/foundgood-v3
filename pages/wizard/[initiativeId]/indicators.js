@@ -16,7 +16,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import { InputWrapper, Select, SelectList, Text } from 'components/_inputs';
 import KpiCard from 'components/_wizard/kpiCard';
 
@@ -251,11 +251,11 @@ const IndicatorsComponent = ({ pageProps }) => {
                     </p>
                 )}
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingIndicators')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     {/* Custom indicator */}
@@ -313,7 +313,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                         </>
                     )}
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

@@ -8,8 +8,8 @@ import { useAuthStore } from 'utilities/store';
 const accessToken = () => useAuthStore.getState().accessToken ?? null;
 
 async function get({ path, params = {}, token = accessToken() }) {
+    const urlParams = new URLSearchParams(params).toString();
     try {
-        const urlParams = new URLSearchParams(params).toString();
         const { status, statusText, data } = await axios.get(
             `${process.env.NEXT_PUBLIC_ELSEWARE_URL}/api/${path}${
                 urlParams.length > 0 ? `?${urlParams}` : ''

@@ -19,7 +19,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import { InputWrapper, Select, DateRange, LongText } from 'components/_inputs';
 import CollaboratorCard from 'components/_wizard/collaboratorCard';
 import NoReflections from 'components/_wizard/noReflections';
@@ -202,6 +202,15 @@ const ApplicantsComponent = ({ pageProps }) => {
         <>
             <TitlePreamble />
             <InputWrapper>
+                <Button
+                    theme="teal"
+                    className="self-start"
+                    action={() => {
+                        setUpdateId(null);
+                        setModalIsOpen(true);
+                    }}>
+                    {label('ButtonAddApplicant')}
+                </Button>
                 {MODE === CONTEXTS.REPORT && applicants.length > 0 && (
                     <NoReflections
                         onClick={submitMultipleNoReflections}
@@ -241,22 +250,12 @@ const ApplicantsComponent = ({ pageProps }) => {
                         />
                     );
                 })}
-
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddApplicant')}
-                </Button>
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingApplicants')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select
@@ -328,7 +327,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                         />
                     )}
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };

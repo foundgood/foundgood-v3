@@ -73,6 +73,10 @@ function initiativeGetters(getter, constants) {
             get(id) {
                 return getter().initiative._collaborators[id] || {};
             },
+            // Returns array
+            getAll() {
+                return Object.values(getter().initiative._collaborators);
+            },
             // Returns object
             getTypeMain() {
                 return (

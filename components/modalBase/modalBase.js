@@ -8,23 +8,11 @@ import t from 'prop-types';
 import { Transition } from '@headlessui/react';
 
 // Utilities
-import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
 
-const ModalComponent = ({
-    isOpen,
-    children,
-    onCancel,
-    onSave,
-    disabledSave,
-    title,
-    saveText,
-}) => {
-    // Hook: Metadata
-    const { label } = useLabels();
-
+const ModalBaseComponent = ({ isOpen, children }) => {
     // Local state and effect for handling delay in content animation
     const [showContent, setShowContent] = useState(false);
     useEffect(() => {
@@ -56,32 +44,7 @@ const ModalComponent = ({
                 leaveTo="opacity-0"
                 className="absolute inset-0 flex items-end justify-center sm:items-center">
                 <div className="flex flex-col w-full max-w-[664px] p-18 lg:p-[30px] bg-white rounded-t-16 sm:rounded-16 sm:mx-16">
-                    {/* Modal content */}
-                    <div className="flex flex-col overflow-y-auto scrolling-touch max-h-[90vh] sm:max-h-[80vh] pb-32 p-2 overflow-x-hidden">
-                        {title && (
-                            <h3 className="mb-32 text-teal-100 t-h3">
-                                {title}
-                            </h3>
-                        )}
-                        {children}
-                    </div>
-
-                    {/* Modal actions */}
-
-                    <div className="flex justify-end mt-32 space-x-16">
-                        <Button
-                            variant="tertiary"
-                            theme="coral"
-                            action={onCancel}>
-                            {label('ButtonCancel')}
-                        </Button>
-                        <Button
-                            theme="coral"
-                            action={onSave}
-                            disabled={disabledSave}>
-                            {saveText || label('ButtonSave')}
-                        </Button>
-                    </div>
+                    {children}
                 </div>
             </Transition>
             <style global jsx>{`
@@ -94,17 +57,12 @@ const ModalComponent = ({
     );
 };
 
-ModalComponent.propTypes = {
+ModalBaseComponent.propTypes = {
     isOpen: t.bool,
-    title: t.string,
-    close: t.func,
-    save: t.func,
-    saveText: t.string,
 };
 
-ModalComponent.defaultProps = {
+ModalBaseComponent.defaultProps = {
     isOpen: false,
-    saveText: '',
 };
 
-export default ModalComponent;
+export default ModalBaseComponent;

@@ -32,7 +32,7 @@ const d = {
     organisationsInvolved: {
         baseUrl: 'organisations-involved',
         url(initiativeId) {
-            return `/initiative/${initiativeId}/organisations-involved`;
+            return `/create/${initiativeId}/organisations-involved`;
         },
         title: 'InitiativeViewOrganisationsInvolvedHeading',
         labels: {
@@ -50,7 +50,7 @@ const d = {
     shareWithContacts: {
         baseUrl: 'share-with-contacts',
         url(initiativeId) {
-            return `/initiative/${initiativeId}/share-with-contacts`;
+            return `/create/${initiativeId}/share-with-contacts`;
         },
         title: 'InitiativeViewShareWithContactsHeading',
         labels: {

@@ -12,6 +12,7 @@ import {
     useElseware,
     useLabels,
     useWizardSubmit,
+    useUser,
 } from 'utilities/hooks';
 import {
     useWizardNavigationStore,
@@ -34,7 +35,11 @@ const IntroductionComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { reset: resetWizardNavigationStore } = useWizardNavigationStore();
-    const { reset: resetInitiativeStore, utilities } = useInitiativeDataStore();
+    const {
+        reset: resetInitiativeStore,
+        utilities,
+        CONSTANTS,
+    } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -43,6 +48,7 @@ const IntroductionComponent = ({ pageProps }) => {
     const { MODE, CONTEXTS } = useContext();
     const { label, text } = useLabels();
     const { ewCreate } = useElseware();
+    const { getUserAccountId, getUserAccountType } = useUser();
 
     // ///////////////////
     // STATE
@@ -64,6 +70,7 @@ const IntroductionComponent = ({ pageProps }) => {
         [CONTEXTS.CREATE_INITIATIVE]: [
             mainForm,
             async () => {
+                // Create Initiative
                 const { data: initiativeData } = await ewCreate(
                     'initiative/initiative',
                     {
@@ -74,6 +81,42 @@ const IntroductionComponent = ({ pageProps }) => {
 
                 // Update store
                 utilities.updateInitiative(initiativeData);
+
+                // Add Funder or Collaborator
+                // TODO: DONT DO IF SUPERUSER
+                if (getUserAccountType() === CONSTANTS.ACCOUNT.FOUNDATION) {
+                    // Create funder
+                    const { data: funderData } = await ewCreate(
+                        'initiative-funder/initiative-funder',
+                        {
+                            Account__c: getUserAccountId(),
+                            Initiative__c: initiativeData.Id,
+                        }
+                    );
+
+                    // Update store
+                    utilities.updateInitiativeDataRelations(
+                        '_funders',
+                        funderData
+                    );
+                }
+
+                if (getUserAccountType() === CONSTANTS.ACCOUNT.GRANTEE) {
+                    // Create collaborator
+                    const { data: collaboratorData } = await ewCreate(
+                        'initiative-collaborator/initiative-collaborator',
+                        {
+                            Account__c: getUserAccountId(),
+                            Initiative__c: initiativeData.Id,
+                        }
+                    );
+
+                    // Update store
+                    utilities.updateInitiativeDataRelations(
+                        '_collaborators',
+                        collaboratorData
+                    );
+                }
             },
         ],
     });

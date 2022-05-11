@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 // Packages
-import { useForm } from 'react-hook-form';
+import { useForm, useFormState } from 'react-hook-form';
 
 // Utilities
 import {
@@ -17,7 +17,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
-import Modal from 'components/modal';
+import WizardModal from 'components/wizardModal';
 import NoReflections from 'components/_wizard/noReflections';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, FormFields } from 'components/_inputs';
@@ -223,11 +223,11 @@ const {{pascalCase name}}Component = () => {
                     {label('ButtonAddXxx')}
                 </Button>
             </InputWrapper>
-            <Modal
+            <WizardModal
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingXxxs')}
                 onCancel={() => setModalIsOpen(false)}
-                disabledSave={!isDirty || modalIsSaving}
+                isSaving={!isDirty || modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <FormFields
@@ -237,7 +237,7 @@ const {{pascalCase name}}Component = () => {
                         }}
                     />
                 </InputWrapper>
-            </Modal>
+            </WizardModal>
         </>
     );
 };
