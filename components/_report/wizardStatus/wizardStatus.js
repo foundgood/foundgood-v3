@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useLabels, useContext, useAuth, useElseware } from 'utilities/hooks';
+import { useLabels, useContext, useUser, useElseware } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -25,7 +25,7 @@ const WizardStatusComponent = () => {
 
     const router = useRouter();
     const { label } = useLabels();
-    const { userInitiativeRights } = useAuth();
+    const { getUserInitiativeRights } = useUser();
     const { INITIATIVE_ID, REPORT_ID } = useContext();
     const { ewUpdate } = useElseware();
 
@@ -99,7 +99,7 @@ const WizardStatusComponent = () => {
                     </span>
                 </p>
                 <div className="flex items-center self-end space-x-12">
-                    {userInitiativeRights.canEdit &&
+                    {getUserInitiativeRights().canEdit &&
                         currentReport.Status__c !==
                             CONSTANTS.REPORTS.REPORT_PUBLISHED && (
                             <Button
@@ -116,7 +116,7 @@ const WizardStatusComponent = () => {
                                 {label('ButtonRunWizard')}
                             </Button>
                         )}
-                    {userInitiativeRights.canEdit &&
+                    {getUserInitiativeRights().canEdit &&
                         currentReport.Status__c !==
                             CONSTANTS.REPORTS.REPORT_PUBLISHED && (
                             <Button

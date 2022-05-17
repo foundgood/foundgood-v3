@@ -2,30 +2,33 @@
 import useSWR from 'swr';
 
 // Utilities
-import { useAuth } from 'utilities/hooks';
 import { elseware } from 'utilities/api';
-import { useInitiativeDataStore } from 'utilities/store';
+import { useInitiativeDataStore, useAuthStore } from 'utilities/store';
 
 const useElseware = () => {
-    // Hook: Auth
-    const { loggedIn, updateUserTimeout } = useAuth();
-
-    // Store: Initiative data
+    // ///////////////////
+    // STORES
+    // ///////////////////
+    const { loggedIn, updateUserTimeout } = useAuthStore();
     const { utilities } = useInitiativeDataStore();
+
+    // ///////////////////
+    // METHODS
+    // ///////////////////
 
     // Method for consuming GET with elseware API
     // Path is the elseware path - e.g. initiative-activity/initiative-activity
     // Params is optional object that will be converted to URL Params - e.g. id
     // Returns normal swr object ({ data, error, isValidating, mutate })
-    function ewGet(path, params) {
-        const urlParams = new URLSearchParams(params).toString();
-        const pathWithParams = `${path}${
-            urlParams.length > 0 ? `?${urlParams}` : ''
-        }`;
-        return useSWR(loggedIn ? { path, params } : null, elseware.get, {
-            revalidateOnFocus: false,
-            onSuccess: updateUserTimeout,
-        });
+    function ewGet(path, params, condition = true) {
+        return useSWR(
+            loggedIn && condition ? { path, params } : null,
+            elseware.get,
+            {
+                revalidateOnFocus: false,
+                onSuccess: updateUserTimeout,
+            }
+        );
     }
 
     // Method for creating any object with elseware API

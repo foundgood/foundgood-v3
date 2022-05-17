@@ -1,21 +1,29 @@
 // React
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 // Packages
 import useTimeout from '@rooks/use-timeout';
 
 // Utilities
 import { useAuthStore } from 'utilities/store';
-import { useAuth } from 'utilities/hooks';
+import { useUser } from 'utilities/hooks';
 
 // Components
 
-const LoginTimeoutComponent = ({ data }) => {
-    const { userSessionTimeout } = useAuthStore();
-    const { logout } = useAuth();
+const LoginTimeoutComponent = () => {
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
+    const { userSessionTimeout } = useAuthStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { userLogout } = useUser();
     const { start, clear } = useTimeout(
-        logout,
+        userLogout,
         process.env.NEXT_PUBLIC_SESSION_TIMEOUT_MS
     );
 

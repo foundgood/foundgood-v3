@@ -7,7 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useReportLayoutStore } from 'utilities/store';
-import { useResponsive, useLabels, useContext, useAuth } from 'utilities/hooks';
+import { useResponsive, useLabels, useContext, useUser } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -20,34 +20,36 @@ import Button from 'components/button';
 import { FiAlignLeft, FiChevronsLeft } from 'react-icons/fi';
 
 const ReportLayoutComponent = ({ children, pageProps }) => {
-    // Store: ReportLayout
+    // ///////////////////
+    // STORES
+    // ///////////////////
     const { leftMenuActive, toggleLeftMenu } = useReportLayoutStore();
     const { populateInitiative } = useInitiativeDataStore();
 
-    // Hook: Metadata
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label } = useLabels();
-
-    // Hook: Context
     const { INITIATIVE_ID } = useContext();
-
-    // Hook: Auth
-    const { getUserInitiativeRights } = useAuth();
-
-    // Hook: Get breakpoint
     const bp = useResponsive();
+    useUser();
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const smallBps = ['2xs', 'xs', 'sm', 'md', 'lg'];
+    const largeBps = ['xl', '2xl', '3xl'];
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     useEffect(() => {
         populateInitiative(INITIATIVE_ID);
-
-        // Get user rights for current initiative
-        if (INITIATIVE_ID) {
-            getUserInitiativeRights(INITIATIVE_ID);
-        }
     }, [INITIATIVE_ID]);
 
-    // Effect: Listen to breakpoint and toggle menu accordingly
-    const smallBps = ['2xs', 'xs', 'sm', 'md', 'lg'];
-    const largeBps = ['xl', '2xl', '3xl'];
     useEffect(() => {
         if (smallBps.includes(bp)) {
             toggleLeftMenu(false);
@@ -56,6 +58,10 @@ const ReportLayoutComponent = ({ children, pageProps }) => {
             toggleLeftMenu(true);
         }
     }, [bp]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>

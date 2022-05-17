@@ -5,10 +5,11 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useLabels, useAuth } from 'utilities/hooks';
+import { useLabels, useUser } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Preloader from 'components/preloader';
 import UpdateButton from 'components/updateButton';
 import Footer from 'components/_layout/footer';
@@ -17,23 +18,31 @@ import SectionWrapper from 'components/sectionWrapper';
 import SectionEmpty from 'components/sectionEmpty';
 
 const ReportsComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
-    const { user, verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Fetch initiative data
     const { initiative, CONSTANTS } = useInitiativeDataStore();
-    const [reportGroups, setReportGroups] = useState();
 
-    // Hook: Metadata
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { getUserAccountId, getUserAccountType } = useUser();
     const { label } = useLabels();
 
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [reportGroups, setReportGroups] = useState();
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
     useEffect(() => {
-        if (
-            user?.user_id &&
-            initiative?.Id &&
-            Object.keys(initiative?._funders).length > 0
-        ) {
+        if (initiative?.Id && Object.keys(initiative?._funders).length > 0) {
             filterReports();
         }
         // Set empty state
@@ -43,7 +52,7 @@ const ReportsComponent = ({ pageProps }) => {
         ) {
             setReportGroups([]);
         }
-    }, [user, initiative]);
+    }, [initiative]);
 
     const filterReports = async () => {
         // Group reports by funder
@@ -54,12 +63,12 @@ const ReportsComponent = ({ pageProps }) => {
                     // If account type is 'Foundation'
                     // Only show reports related to users accountId
                     if (
-                        user.User_Account_Type__c ===
+                        getUserAccountType() ===
                         CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION
                     ) {
                         return (
                             report.Funder_Report__c == item.Id &&
-                            user.AccountId ==
+                            getUserAccountId() ==
                                 report.Funder_Report__r.Account__r.Id
                         );
                     }
@@ -179,4 +188,4 @@ ReportsComponent.defaultProps = {
 
 ReportsComponent.layout = 'initiative';
 
-export default ReportsComponent;
+export default WithAuth(ReportsComponent);

@@ -8,7 +8,6 @@ import dayjs from 'dayjs';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -18,6 +17,7 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
@@ -26,13 +26,6 @@ import ResultCard from 'components/_wizard/resultCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const SharingResultsComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -487,4 +480,4 @@ SharingResultsComponent.defaultProps = {};
 
 SharingResultsComponent.layout = 'wizard';
 
-export default SharingResultsComponent;
+export default WithAuth(SharingResultsComponent);

@@ -35,6 +35,11 @@ const AsideNavigationComponent = () => {
 
     const initiative = utilities.initiative.get();
 
+    const contextBasedLabels = {
+        [CONTEXTS.CREATE_INITIATIVE]: 'CreateInitiativeWizardAsideTitle',
+        [CONTEXTS.INITIATIVE]: 'InitiativeWizardAsideTitle',
+    };
+
     // ///////////////////
     // RENDER
     // ///////////////////
@@ -61,7 +66,7 @@ const AsideNavigationComponent = () => {
                     </>
                 ) : (
                     <h2 className="mt-8 t-h5">
-                        {label('CreateNewInitiative')}
+                        {label(contextBasedLabels[MODE])}
                     </h2>
                 )}
             </header>

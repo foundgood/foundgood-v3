@@ -5,11 +5,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import cc from 'classcat';
 import t from 'prop-types';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useLabels, useAuth } from 'utilities/hooks';
+import { useLabels, useUser } from 'utilities/hooks';
 
 // Components
 
@@ -22,7 +21,7 @@ const HeaderComponent = ({ showUserControls }) => {
     const { label } = useLabels();
 
     // Hook: Auth
-    const { user, logout } = useAuth();
+    const { getUserName, userLogout } = useUser();
 
     // Hook: Router
     const router = useRouter();
@@ -100,10 +99,10 @@ const HeaderComponent = ({ showUserControls }) => {
                             className="flex lg:block lg:cursor-pointer hover:text-blue-100 hover:border-blue-100"
                             onClick={() => setUserNavActive(!userNavActive)}>
                             <FiUser className="w-24 h-24 mx-auto stroke-current" />
-                            {user && (
+                            {getUserName() && (
                                 <div className="flex mt-4 lg:items-center">
                                     <span className="hidden select-none lg:inline">
-                                        {user.name}
+                                        {getUserName()}
                                     </span>
                                     <FiChevronDown className="w-18 h-18" />
                                 </div>
@@ -147,7 +146,7 @@ const HeaderComponent = ({ showUserControls }) => {
                 </span>
                 <button
                     onClick={() => {
-                        logout();
+                        userLogout();
                     }}
                     className="flex items-center text-blue-300 t-h6 transition-default hover:text-blue-200">
                     {label('LogOut')}

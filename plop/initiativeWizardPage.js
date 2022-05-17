@@ -11,7 +11,7 @@ const component = {
         const actions = [
             {
                 type: 'add',
-                path: './pages/wizard/initiative/{{dashCase name}}.js',
+                path: './pages/wizard/[initiativeId]/{{dashCase name}}.js',
                 templateFile: './plop/templates/initiativeWizardPage/page.hbs',
             },
         ];

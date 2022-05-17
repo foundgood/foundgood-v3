@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -15,6 +14,7 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import {
     InputWrapper,
@@ -25,13 +25,6 @@ import {
 } from 'components/_inputs';
 
 const ReportDetailsComponent = () => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -160,4 +153,4 @@ ReportDetailsComponent.defaultProps = {};
 
 ReportDetailsComponent.layout = 'wizard';
 
-export default ReportDetailsComponent;
+export default WithAuth(ReportDetailsComponent);

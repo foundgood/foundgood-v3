@@ -7,7 +7,7 @@ import t from 'prop-types';
 
 // Utilities
 import { useInitiativeDataStore } from 'utilities/store';
-import { useContext, useAuth, useLabels } from 'utilities/hooks';
+import { useContext, useUser, useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
@@ -15,26 +15,31 @@ import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
 
 const InitiativeLayoutComponent = ({ children, pageProps }) => {
-    // Store: Initiative data store
-    const { populateInitiative, initiative } = useInitiativeDataStore();
+    // ///////////////////
+    // STORES
+    // ///////////////////
 
-    // Hook: Metadata
+    const { populateInitiative, utilities } = useInitiativeDataStore();
+
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label } = useLabels();
-
-    // Hook: Context
     const { INITIATIVE_ID } = useContext();
+    const { getUserInitiativeRights } = useUser();
 
-    // Hook: Auth
-    const { getUserInitiativeRights, userInitiativeRights } = useAuth();
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     useEffect(() => {
         populateInitiative(INITIATIVE_ID);
-
-        // Get user rights for current initiative
-        if (INITIATIVE_ID) {
-            getUserInitiativeRights(INITIATIVE_ID);
-        }
     }, [INITIATIVE_ID]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -44,10 +49,10 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                 {/* Iniative title */}
                 <div className="flex items-center justify-between py-16 bg-blue-20 page-px">
                     <p className="font-medium text-blue-100 t-sh5 md:flex line-clamp-3">
-                        {initiative.Name}
+                        {utilities.initiative.get().Name}
                     </p>
 
-                    {userInitiativeRights.canEdit && (
+                    {getUserInitiativeRights().canEdit && (
                         <Button
                             theme="blue"
                             variant="secondary"

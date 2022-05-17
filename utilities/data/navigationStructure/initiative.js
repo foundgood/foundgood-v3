@@ -29,6 +29,16 @@ const d = {
         visible: true,
         items: [],
     },
+    complete: {
+        title: 'Complete',
+        visible: false,
+        hideBack: true,
+        hideExit: true,
+        baseUrl: 'complete',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/complete`;
+        },
+    },
     done: {
         title: 'Done',
         visible: false,
@@ -387,6 +397,7 @@ const initiativeStructures = {
         },
         { ...d.logbook, items: [d.logbookEntry] },
         { ...d.reports, items: [d.reportSchedule] },
+        d.complete,
         d.done,
     ],
 };

@@ -7,7 +7,6 @@ import _get from 'lodash.get';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -17,6 +16,7 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
@@ -32,13 +32,6 @@ import ProjectMemberCard from 'components/_wizard/projectMemberCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const EmployeesFundedComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -316,4 +309,4 @@ EmployeesFundedComponent.defaultProps = {};
 
 EmployeesFundedComponent.layout = 'wizard';
 
-export default EmployeesFundedComponent;
+export default WithAuth(EmployeesFundedComponent);

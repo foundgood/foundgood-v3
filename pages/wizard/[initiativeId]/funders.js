@@ -7,7 +7,6 @@ import _get from 'lodash.get';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -17,6 +16,7 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Button from 'components/button';
 import FunderCard from 'components/_wizard/founderCard';
 import WizardModal from 'components/wizardModal';
@@ -25,13 +25,6 @@ import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, FormFields } from 'components/_inputs';
 
 const FundersComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -357,4 +350,4 @@ FundersComponent.defaultProps = {};
 
 FundersComponent.layout = 'wizard';
 
-export default FundersComponent;
+export default WithAuth(FundersComponent);

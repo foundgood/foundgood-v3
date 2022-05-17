@@ -36,7 +36,7 @@ const SelectComponent = ({
     }, [defaultValue]);
 
     return (
-        <label className="flex flex-col">
+        <label className="flex flex-col flex-grow">
             {label && <span className="input-label">{label}</span>}
             {subLabel && (
                 <span className="mt-8 input-sublabel">{subLabel}</span>

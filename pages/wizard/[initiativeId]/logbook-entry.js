@@ -6,15 +6,11 @@ import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useElseware,
-    useLabels,
-    useWizardSubmit,
-} from 'utilities/hooks';
+import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import WizardModal from 'components/wizardModal';
 import PreLoader from 'components/preloader';
@@ -22,13 +18,6 @@ import { InputWrapper, Select, LongText, Attach } from 'components/_inputs';
 import LogbookCard from 'components/_wizard/logbookCard';
 
 const LogbookComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -331,4 +320,4 @@ LogbookComponent.defaultProps = {};
 
 LogbookComponent.layout = 'wizard';
 
-export default LogbookComponent;
+export default WithAuth(LogbookComponent);

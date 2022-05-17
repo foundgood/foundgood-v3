@@ -7,10 +7,11 @@ import t from 'prop-types';
 import { useForm, useWatch } from 'react-hook-form';
 
 // Utilities
-import { useLabels, useAuth, useElseware } from 'utilities/hooks';
+import { useLabels, useElseware, useUser } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Preloader from 'components/preloader';
 import SectionWrapper from 'components/sectionWrapper';
 import Footer from 'components/_layout/footer';
@@ -19,16 +20,10 @@ import { SearchFilterMultiselect } from 'components/_inputs';
 
 const ReportComponent = ({ pageProps }) => {
     // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { user, verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
-    // ///////////////////
     // HOOKS
     // ///////////////////
 
+    const { getUserAccountId, getUserAccountType } = useUser();
     const { label, labelTodo, pickList } = useLabels();
     const { CONSTANTS } = useInitiativeDataStore();
     const { ewGet } = useElseware();
@@ -175,13 +170,14 @@ const ReportComponent = ({ pageProps }) => {
                 // If User type is Foundation
                 // Only show reports with same Id as users AccountId
                 if (
-                    user.User_Account_Type__c ===
+                    getUserAccountType() ===
                     CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION
                 ) {
                     return (
                         item.Initiative__c !== null &&
                         item.Report_Type__c !== null &&
-                        item.Funder_Report__r?.Account__r?.Id === user.AccountId
+                        item.Funder_Report__r?.Account__r?.Id ===
+                            getUserAccountId()
                     );
                 } else {
                     return (
@@ -194,7 +190,7 @@ const ReportComponent = ({ pageProps }) => {
             setInitial(reports);
             setFiltered(reports);
         }
-    }, [reportsData, user]);
+    }, [reportsData]);
 
     useEffect(() => {
         onFilter(getValues());
@@ -255,7 +251,7 @@ const ReportComponent = ({ pageProps }) => {
                                     'Initiative_Report__c.Report_Type__c'
                                 )}
                             />
-                            {user?.User_Account_Type__c !==
+                            {getUserAccountType() !==
                                 CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION && (
                                 <SearchFilterMultiselect
                                     name="filter.foundation"
@@ -321,4 +317,4 @@ ReportComponent.defaultProps = {
     pageProps: {},
 };
 
-export default ReportComponent;
+export default WithAuth(ReportComponent);

@@ -65,6 +65,16 @@ const d = {
             },
         },
     },
+    complete: {
+        title: 'Complete',
+        visible: false,
+        hideBack: true,
+        hideExit: true,
+        baseUrl: 'complete',
+        url(initiativeId) {
+            return `/create/${initiativeId}/complete`;
+        },
+    },
     done: {
         title: 'Done',
         visible: false,
@@ -86,6 +96,7 @@ const createInitiativeStructures = {
                 d.shareWithContacts,
             ],
         },
+        d.complete,
         d.done,
     ],
 };

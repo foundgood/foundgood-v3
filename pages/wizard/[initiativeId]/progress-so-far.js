@@ -7,7 +7,6 @@ import _get from 'lodash.get';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -16,18 +15,12 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper } from 'components/_inputs';
 import ProgressCard from 'components/_wizard/progressCard';
 
 const ProgressSoFarComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -153,4 +146,4 @@ ProgressSoFarComponent.defaultProps = {};
 
 ProgressSoFarComponent.layout = 'wizard';
 
-export default ProgressSoFarComponent;
+export default WithAuth(ProgressSoFarComponent);

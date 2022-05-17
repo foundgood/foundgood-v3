@@ -21,7 +21,7 @@ const AsideNavigationComponent = () => {
     const { getValueLabel, label } = useLabels();
 
     // Store: Initiative data
-    const { initiative, utilities } = useInitiativeDataStore();
+    const { initiative } = useInitiativeDataStore();
 
     // Store: Report navigation
     const { buildReportItems, items } = useReportNavigationStore();

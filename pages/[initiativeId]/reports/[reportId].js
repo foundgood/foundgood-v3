@@ -6,22 +6,16 @@ import t from 'prop-types';
 import useSWR from 'swr';
 
 // Utilities
-import { useAuth, useContext } from 'utilities/hooks';
+import { useContext } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { simpleJson } from 'utilities/api';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Report_1_0 from 'components/_report/templates/report_1_0';
 import Report_1_1 from 'components/_report/templates/report_1_1';
 
 const ReportComponent = () => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -122,4 +116,4 @@ ReportComponent.defaultProps = {
 
 ReportComponent.layout = 'report';
 
-export default ReportComponent;
+export default WithAuth(ReportComponent);

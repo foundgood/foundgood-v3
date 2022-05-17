@@ -78,6 +78,10 @@ function initiativeGetters(getter, constants) {
                 return Object.values(getter().initiative._collaborators);
             },
             // Returns object
+            getAllAsDictionary() {
+                return getter().initiative._collaborators;
+            },
+            // Returns object
             getTypeMain() {
                 return (
                     Object.values(getter().initiative._collaborators).find(
@@ -136,6 +140,10 @@ function initiativeGetters(getter, constants) {
             // Returns array
             getAll() {
                 return Object.values(getter().initiative._funders);
+            },
+            // Returns object
+            getAllAsDictionary() {
+                return getter().initiative._funders;
             },
             // Returns object
             getFromAccountId(accountId) {

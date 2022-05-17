@@ -6,10 +6,11 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useLabels, useAuth } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Button from 'components/button';
 import Preloader from 'components/preloader';
 import SectionEmpty from 'components/sectionEmpty';
@@ -22,10 +23,6 @@ import FileCard from 'components/_logbook/fileCard';
 import SectionWrapper from 'components/sectionWrapper';
 
 const LogbookComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // Fetch initiative data
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
@@ -169,4 +166,4 @@ LogbookComponent.defaultProps = {
 
 LogbookComponent.layout = 'initiative';
 
-export default LogbookComponent;
+export default WithAuth(LogbookComponent);

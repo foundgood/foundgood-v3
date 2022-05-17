@@ -6,15 +6,11 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useElseware,
-    useLabels,
-    useWizardSubmit,
-} from 'utilities/hooks';
+import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import WizardModal from 'components/wizardModal';
 import {
@@ -26,13 +22,6 @@ import {
 import ReportCard from 'components/_wizard/reportCard';
 
 const ReportScheduleComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -234,4 +223,4 @@ ReportScheduleComponent.defaultProps = {};
 
 ReportScheduleComponent.layout = 'wizard';
 
-export default ReportScheduleComponent;
+export default WithAuth(ReportScheduleComponent);

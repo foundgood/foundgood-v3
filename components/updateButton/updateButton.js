@@ -6,7 +6,7 @@ import t from 'prop-types';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useLabels, useContext, useAuth, useElseware } from 'utilities/hooks';
+import { useLabels, useContext, useUser, useElseware } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -26,7 +26,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
     const router = useRouter();
     const { INITIATIVE_ID, REPORT_ID } = useContext();
     const { label } = useLabels();
-    const { userInitiativeRights } = useAuth();
+    const { getUserInitiativeRights } = useUser();
     const { ewUpdate } = useElseware();
 
     // ///////////////////
@@ -75,7 +75,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
         // If "report" page, then the status cannot be published
         const reportPage = mode === 'report' ? true : false;
         const canUpdate =
-            userInitiativeRights.canEdit &&
+            getUserInitiativeRights().canEdit &&
             (reportPage
                 ? utilities.reports.get(REPORT_ID).Status__c !==
                   CONSTANTS.REPORTS.REPORT_PUBLISHED
@@ -84,7 +84,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
                 : true);
 
         setCanUpdate(canUpdate);
-    }, [userInitiativeRights]);
+    }, [getUserInitiativeRights()]);
 
     // ///////////////////
     // RENDER

@@ -6,11 +6,12 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useLabels, useAuth } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { stripUndefined } from 'utilities';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Preloader from 'components/preloader';
 import Footer from 'components/_layout/footer';
 import UpdateButton from 'components/updateButton';
@@ -21,10 +22,6 @@ import ReportSharingCard from 'components/_initiative/reportSharingCard';
 import DividerLine from 'components/_initiative/dividerLine';
 
 const DevelopmentsComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // Fetch initiative data
     const { initiative, CONSTANTS } = useInitiativeDataStore();
     const [activities, setActivities] = useState();
@@ -305,4 +302,4 @@ DevelopmentsComponent.defaultProps = {
 
 DevelopmentsComponent.layout = 'initiative';
 
-export default DevelopmentsComponent;
+export default WithAuth(DevelopmentsComponent);

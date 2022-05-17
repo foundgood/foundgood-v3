@@ -7,7 +7,6 @@ import _get from 'lodash.get';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -17,6 +16,7 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
@@ -25,13 +25,6 @@ import ActivityCard from 'components/_wizard/activityCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const ActivitiesComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -43,7 +36,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, object, pickList, controlledPickList } = useLabels();
+    const { label, object, dataSet, controlledPickList } = useLabels();
     const { ewUpdate, ewCreate } = useElseware();
     const {
         submitNoReflection,
@@ -359,9 +352,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                             'Initiative_Activity__c.Initiative_Location__c'
                         )}
                         listMaxLength={1}
-                        options={pickList(
-                            'Initiative_Activity__c.Initiative_Location__c'
-                        )}
+                        options={dataSet('Countries')}
                         showText
                         selectPlaceholder={label('FormCaptureSelectEmpty')}
                         selectLabel={label('FormCaptureCountry')}
@@ -396,4 +387,4 @@ ActivitiesComponent.defaultProps = {};
 
 ActivitiesComponent.layout = 'wizard';
 
-export default ActivitiesComponent;
+export default WithAuth(ActivitiesComponent);

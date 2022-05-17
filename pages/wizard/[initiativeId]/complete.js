@@ -5,23 +5,18 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Utilities
-import { useAuth, useLabels, useWizardSubmit } from 'utilities/hooks';
+import { useLabels, useWizardSubmit, useContext } from 'utilities/hooks';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 
 const CompleteComponent = ({ pageProps }) => {
     // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
-    // ///////////////////
     // HOOKS
     // ///////////////////
 
+    const { MODE, CONTEXTS } = useContext();
     const { label, text } = useLabels();
 
     // ///////////////////
@@ -37,21 +32,46 @@ const CompleteComponent = ({ pageProps }) => {
     useWizardSubmit();
 
     // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const contextBasedLabels = {
+        [CONTEXTS.INITIATIVE]: {
+            title: 'InitiativeWizardCompleteHeading',
+            preamble: 'InitiativeWizardCompleteSubHeading',
+            body: 'InitiativeWizardCompleteText',
+        },
+        [CONTEXTS.CREATE_INITIATIVE]: {
+            title: 'CreateInitiativeWizardCompleteHeading',
+            preamble: 'CreateInitiativeWizardCompleteSubHeading',
+            body: 'CreateInitiativeCompleteText',
+        },
+        [CONTEXTS.REPORT]: {
+            title: 'ReportWizardCompleteHeading',
+            preamble: 'ReportWizardCompleteSubHeading',
+            body: 'ReportWizardCompleteText',
+        },
+    };
+
+    // ///////////////////
     // EFFECTS
     // ///////////////////
 
     useEffect(() => {
         let bodyTexts;
-        bodyTexts = text('InitiativeWizardCompleteText')?.split('\n');
-        bodyTexts = bodyTexts === undefined ? [] : bodyTexts;
+        const txt = text(contextBasedLabels[MODE]?.body, true);
+        if (txt) {
+            bodyTexts = txt.split('\n');
+            bodyTexts = bodyTexts === undefined ? [] : bodyTexts;
+        }
         setBodyTexts(bodyTexts);
     }, []);
 
     return (
         <>
             <TitlePreamble
-                title={label('ReportWizardCompleteHeading')}
-                preamble={label('ReportWizardCompleteSubHeading')}
+                title={label(contextBasedLabels[MODE]?.title)}
+                preamble={label(contextBasedLabels[MODE]?.preamble)}
             />
             <div className="flex justify-center">
                 <Image src="/images/new-report.png" width="600" height="366" />
@@ -78,4 +98,4 @@ CompleteComponent.defaultProps = {};
 
 CompleteComponent.layout = 'wizardBlank';
 
-export default CompleteComponent;
+export default WithAuth(CompleteComponent);

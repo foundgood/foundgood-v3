@@ -1,4 +1,3 @@
-import useAuth from './useAuth';
 import useContext from './useContext';
 import useElseware from './useElseware';
 import useInitiativeGetters from './useInitiativeGetters';
@@ -9,7 +8,6 @@ import useUser from './useUser';
 import useWizardSubmit from './useWizardSubmit';
 
 export {
-    useAuth,
     useContext,
     useElseware,
     useInitiativeGetters,

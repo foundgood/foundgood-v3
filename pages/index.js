@@ -8,10 +8,11 @@ import { useForm, useWatch } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useElseware, useLabels, useAuth } from 'utilities/hooks';
+import { useElseware, useLabels, useUser } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Preloader from 'components/preloader';
 import Button from 'components/button';
 import SectionWrapper from 'components/sectionWrapper';
@@ -20,13 +21,6 @@ import InitiativeRow from 'components/_initiative/initiativeRow';
 import { SearchFilterMultiselect, SearchFilterDate } from 'components/_inputs';
 
 const HomeComponent = () => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { user, verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -37,6 +31,7 @@ const HomeComponent = () => {
     // HOOKS
     // ///////////////////
 
+    const { getUserAccountType, user } = useUser();
     const { label, pickList } = useLabels();
     const { ewGet } = useElseware();
 
@@ -168,7 +163,7 @@ const HomeComponent = () => {
                         <h2 className="t-h2">
                             {label('InitiativeManagerHeading')}
                         </h2>
-                        {user?.User_Account_Type__c !==
+                        {getUserAccountType() !==
                             CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION && (
                             <Button theme="teal" action="/create/introduction">
                                 {label('InitiativeManagerCreate')}
@@ -259,4 +254,4 @@ HomeComponent.defaultProps = {
     pageProps: {},
 };
 
-export default HomeComponent;
+export default WithAuth(HomeComponent);

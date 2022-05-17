@@ -6,15 +6,11 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useAuth,
-    useElseware,
-    useLabels,
-    useWizardSubmit,
-} from 'utilities/hooks';
+import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
@@ -22,13 +18,6 @@ import { InputWrapper, LongText } from 'components/_inputs';
 import GoalCard from 'components/_wizard/goalCard';
 
 const GoalsComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -167,4 +156,4 @@ GoalsComponent.defaultProps = {};
 
 GoalsComponent.layout = 'wizard';
 
-export default GoalsComponent;
+export default WithAuth(GoalsComponent);

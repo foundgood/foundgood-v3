@@ -5,15 +5,11 @@ import React, { useEffect, useState } from 'react';
 import { useForm, useFormState, useWatch } from 'react-hook-form';
 
 // Utilities
-import {
-    useAuth,
-    useElseware,
-    useLabels,
-    useWizardSubmit,
-} from 'utilities/hooks';
+import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
 import NoReflections from 'components/_wizard/noReflections';
@@ -22,13 +18,6 @@ import { InputWrapper, FormFields } from 'components/_inputs';
 import OrganisationsList from 'components/_wizard/organisationsList';
 
 const OrganisationsInvolvedComponent = () => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -340,4 +329,4 @@ OrganisationsInvolvedComponent.defaultProps = {};
 
 OrganisationsInvolvedComponent.layout = 'wizard';
 
-export default OrganisationsInvolvedComponent;
+export default WithAuth(OrganisationsInvolvedComponent);

@@ -7,7 +7,6 @@ import { useForm } from 'react-hook-form';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -20,16 +19,10 @@ import {
 } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 
 const IntroductionComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -210,4 +203,4 @@ IntroductionComponent.defaultProps = {};
 
 IntroductionComponent.layout = 'wizardBlank';
 
-export default IntroductionComponent;
+export default WithAuth(IntroductionComponent);

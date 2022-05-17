@@ -5,11 +5,12 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useLabels, useAuth } from 'utilities/hooks';
+import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { isJson, stripUndefined } from 'utilities';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Preloader from 'components/preloader';
 import Footer from 'components/_layout/footer';
 import UpdateButton from 'components/updateButton';
@@ -19,10 +20,6 @@ import ReportDetailCard from 'components/_initiative/reportDetailCard';
 // import ChartCard from 'components/_initiative/chartCard';
 
 const ActivitiesComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // Fetch initiative data
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
@@ -30,8 +27,6 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { label, getValueLabel, log } = useLabels();
 
     const [activities, setActivities] = useState();
-
-    log();
 
     useEffect(() => {
         // Make sure data it loaded
@@ -251,4 +246,4 @@ ActivitiesComponent.defaultProps = {
 
 ActivitiesComponent.layout = 'initiative';
 
-export default ActivitiesComponent;
+export default WithAuth(ActivitiesComponent);

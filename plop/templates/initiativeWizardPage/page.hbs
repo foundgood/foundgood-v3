@@ -6,7 +6,6 @@ import { useForm, useFormState } from 'react-hook-form';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -16,6 +15,7 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth'
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
 import NoReflections from 'components/_wizard/noReflections';
@@ -23,13 +23,6 @@ import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, FormFields } from 'components/_inputs';
 
 const {{pascalCase name}}Component = () => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -63,7 +56,7 @@ const {{pascalCase name}}Component = () => {
     const [modalIsSaving, setModalIsSaving] = useState(false);
     const [reflecting, setReflecting] = useState(false);
     const [updateId, setUpdateId] = useState(null);
-    const [xxx, setXxx] = useState(null);
+    const [xyz, setXyz] = useState(null);
 
     // ///////////////////
     // FORMS
@@ -196,7 +189,7 @@ const {{pascalCase name}}Component = () => {
                             headline={_get(xx, 'Name') || ''}
                             action={() => {
                                 setUpdateId(xx.Id);
-                                setXxx(xx);
+                                setXyz(xx);
                                 setModalIsOpen(true);
                             }}
                             reflectAction={setReflecting}
@@ -248,4 +241,4 @@ const {{pascalCase name}}Component = () => {
 
 {{pascalCase name}}Component.layout = 'wizard';
 
-export default {{pascalCase name}}Component;
+export default WithAuth({{pascalCase name}}Component);

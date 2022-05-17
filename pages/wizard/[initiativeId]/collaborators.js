@@ -7,7 +7,6 @@ import _get from 'lodash.get';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -17,6 +16,7 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
@@ -25,13 +25,6 @@ import CollaboratorCard from 'components/_wizard/collaboratorCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const CollaboratorsComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -331,4 +324,4 @@ CollaboratorsComponent.defaultProps = {};
 
 CollaboratorsComponent.layout = 'wizard';
 
-export default CollaboratorsComponent;
+export default WithAuth(CollaboratorsComponent);

@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -15,17 +14,11 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, FormFields } from 'components/_inputs';
 
-const nameAndCategoryComponent = () => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
+const NameAndCategoryComponent = () => {
     // ///////////////////
     // STORES
     // ///////////////////
@@ -133,10 +126,10 @@ const nameAndCategoryComponent = () => {
     );
 };
 
-nameAndCategoryComponent.propTypes = {};
+NameAndCategoryComponent.propTypes = {};
 
-nameAndCategoryComponent.defaultProps = {};
+NameAndCategoryComponent.defaultProps = {};
 
-nameAndCategoryComponent.layout = 'wizard';
+NameAndCategoryComponent.layout = 'wizard';
 
-export default nameAndCategoryComponent;
+export default WithAuth(NameAndCategoryComponent);

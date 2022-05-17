@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -15,17 +14,11 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, Reflection } from 'components/_inputs';
 
 const RisksAndChallengesComponent = () => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -110,4 +103,4 @@ RisksAndChallengesComponent.defaultProps = {};
 
 RisksAndChallengesComponent.layout = 'wizard';
 
-export default RisksAndChallengesComponent;
+export default WithAuth(RisksAndChallengesComponent);

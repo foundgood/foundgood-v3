@@ -7,7 +7,7 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useLabels, useAuth, useResponsive } from 'utilities/hooks';
+import { useLabels, useResponsive } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { isJson } from 'utilities';
 
@@ -15,6 +15,7 @@ import { isJson } from 'utilities';
 import sdgsColors from 'utilities/data/sdgColors';
 
 // Components
+import WithAuth from 'components/withAuth';
 import Preloader from 'components/preloader';
 import Footer from 'components/_layout/footer';
 import UpdateButton from 'components/updateButton';
@@ -25,10 +26,6 @@ import DividerLine from 'components/_initiative/dividerLine';
 import TextCard from 'components/_initiative/textCard';
 
 const ProjectComponent = ({ pageProps }) => {
-    // Hook: Verify logged in
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // Fetch initiative data
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
@@ -894,12 +891,6 @@ const ProjectComponent = ({ pageProps }) => {
     );
 };
 
-// export async function getStaticProps(context) {
-//     return {
-//         props: {}, // will be passed to the page component as props
-//     };
-// }
-
 ProjectComponent.propTypes = {
     pageProps: t.object,
 };
@@ -910,4 +901,4 @@ ProjectComponent.defaultProps = {
 
 ProjectComponent.layout = 'initiative';
 
-export default ProjectComponent;
+export default WithAuth(ProjectComponent);

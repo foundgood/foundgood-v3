@@ -7,7 +7,6 @@ import _get from 'lodash.get';
 
 // Utilities
 import {
-    useAuth,
     useContext,
     useElseware,
     useLabels,
@@ -17,6 +16,7 @@ import {
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import WithAuth from 'components/withAuth';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
@@ -25,13 +25,6 @@ import EvaluationCard from 'components/_wizard/evaluationCard';
 import NoReflections from 'components/_wizard/noReflections';
 
 const InfluenceOnPolicyComponent = ({ pageProps }) => {
-    // ///////////////////
-    // AUTH
-    // ///////////////////
-
-    const { verifyLoggedIn } = useAuth();
-    verifyLoggedIn();
-
     // ///////////////////
     // STORES
     // ///////////////////
@@ -227,4 +220,4 @@ InfluenceOnPolicyComponent.defaultProps = {};
 
 InfluenceOnPolicyComponent.layout = 'wizard';
 
-export default InfluenceOnPolicyComponent;
+export default WithAuth(InfluenceOnPolicyComponent);
