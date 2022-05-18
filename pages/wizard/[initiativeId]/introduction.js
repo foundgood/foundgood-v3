@@ -88,10 +88,7 @@ const IntroductionComponent = ({ pageProps }) => {
                     );
 
                     // Update store
-                    utilities.updateInitiativeDataRelations(
-                        '_funders',
-                        funderData
-                    );
+                    utilities.updateInitiativeData('_funders', funderData);
                 }
 
                 if (getUserAccountType() === CONSTANTS.ACCOUNT.GRANTEE) {
@@ -105,7 +102,7 @@ const IntroductionComponent = ({ pageProps }) => {
                     );
 
                     // Update store
-                    utilities.updateInitiativeDataRelations(
+                    utilities.updateInitiativeData(
                         '_collaborators',
                         collaboratorData
                     );

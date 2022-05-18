@@ -81,14 +81,7 @@ const NameAndCategoryComponent = () => {
                 utilities.initiative.get().Name === '___'
                     ? ''
                     : utilities.initiative.get().Name,
-            disabled:
-                utilities.initiative.get().Name === '___'
-                    ? utilities.isNovoLeadFunder()
-                    : true,
-            required:
-                utilities.initiative.get().Name === '___'
-                    ? !utilities.isNovoLeadFunder()
-                    : false,
+            required: true,
             // Type options
             maxLength: 80,
         },

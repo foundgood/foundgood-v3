@@ -14,7 +14,11 @@ import Button from 'components/button';
 // Icons
 import { FiImage } from 'react-icons/fi';
 
-const OrganisationsListComponent = ({ collaborators, funders, action }) => {
+const OrganisationsListComponent = ({
+    collaborators = [],
+    funders = [],
+    action,
+}) => {
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -58,7 +62,7 @@ const OrganisationsListComponent = ({ collaborators, funders, action }) => {
 };
 
 const List = ({
-    organisations,
+    organisations = [],
     organisationType,
     action,
     noOrganisationsLabel,
@@ -79,7 +83,7 @@ const List = ({
             {organisations.length > 0 ? (
                 organisations.map(organisation => (
                     <div
-                        key={organisation.Id}
+                        key={organisation?.Id}
                         className="flex items-center p-16 space-x-16 bg-white border-4 border-teal-20 rounded-8">
                         <div className="flex items-center justify-center flex-shrink-0 w-64 h-64 text-teal-100 border-2 rounded-4 border-teal-20">
                             <FiImage size="36" className="stroke-current" />

@@ -12,7 +12,6 @@ import { useInitiativeDataStore } from 'utilities/store';
 import WithAuth from 'components/withAuth';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
-import NoReflections from 'components/_wizard/noReflections';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, FormFields } from 'components/_inputs';
 import OrganisationsList from 'components/_wizard/organisationsList';
@@ -22,13 +21,13 @@ const OrganisationsInvolvedComponent = () => {
     // STORES
     // ///////////////////
 
-    const { utilities, CONSTANTS } = useInitiativeDataStore();
+    const { utilities } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
     // ///////////////////
 
-    const { label, object, pickList } = useLabels();
+    const { label, pickList } = useLabels();
     const { ewGet, ewDelete, ewCreate } = useElseware();
 
     // ///////////////////
