@@ -24,6 +24,7 @@ import SectionEmpty from 'components/sectionEmpty';
 import NumberCard from 'components/_initiative/numberCard';
 import DividerLine from 'components/_initiative/dividerLine';
 import TextCard from 'components/_initiative/textCard';
+import OrganisationsInvolved from 'components/_initiative/organisationsInvolved';
 
 const ProjectComponent = ({ pageProps }) => {
     // Fetch initiative data
@@ -262,7 +263,7 @@ const ProjectComponent = ({ pageProps }) => {
 
             {/* Data Loaded - Show initiative */}
             {initiativeData && (
-                <div className="animate-fade-in">
+                <div className="space-y-32 animate-fade-in">
                     <SectionWrapper>
                         <h1 className="t-h1">{label('MenuContext')}</h1>
                     </SectionWrapper>
@@ -406,132 +407,144 @@ const ProjectComponent = ({ pageProps }) => {
                             </div>
                         </div>
                     </SectionWrapper>
+                    {/* Organisations Involved */}
+                    <OrganisationsInvolved />
                     {/* Funding */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
-                        <div className="flex justify-between">
-                            <h2 className="t-h3">
-                                {label('InitiativeViewFundersGrantsHeading')}
-                            </h2>
-                            <UpdateButton mode="initiative" baseUrl="funders" />
-                        </div>
-                        {donutData && (
-                            <div className="flex flex-col items-center p-16 md:flex-row">
-                                <div className="w-full p-32 md:w-1/2">
-                                    {/* Donut chart */}
-                                    <div className="pie" style={pieChartStyle}>
-                                        <div className="absolute w-full -mt-16 text-center top-1/2">
-                                            <p className="t-sh7 text-blue-60">
-                                                {label(
-                                                    'InitiativeViewTotalFunded'
-                                                )}
-                                            </p>
-                                            <p className="t-h6">
-                                                {currency}{' '}
-                                                {totalAmount?.toLocaleString(
-                                                    'de-DE'
-                                                )}
-                                            </p>
+                    {totalAmount > 0 && (
+                        <SectionWrapper className="bg-white rounded-8">
+                            <div className="flex justify-between">
+                                <h2 className="t-h3">
+                                    {label(
+                                        'InitiativeViewFundersGrantsHeading'
+                                    )}
+                                </h2>
+                                <UpdateButton
+                                    mode="initiative"
+                                    baseUrl="funders"
+                                />
+                            </div>
+                            {donutData && (
+                                <div className="flex flex-col items-center p-16 md:flex-row">
+                                    <div className="w-full p-32 md:w-1/2">
+                                        {/* Donut chart */}
+                                        <div
+                                            className="pie"
+                                            style={pieChartStyle}>
+                                            <div className="absolute w-full -mt-16 text-center top-1/2">
+                                                <p className="t-sh7 text-blue-60">
+                                                    {label(
+                                                        'InitiativeViewTotalFunded'
+                                                    )}
+                                                </p>
+                                                <p className="t-h6">
+                                                    {currency}{' '}
+                                                    {totalAmount?.toLocaleString(
+                                                        'de-DE'
+                                                    )}
+                                                </p>
+                                            </div>
                                         </div>
+                                    </div>
+                                    <div className="md:w-1/2">
+                                        {/* Headline */}
+                                        <div className="t-caption-bold">
+                                            {label(
+                                                'InitiativeViewFundingOverview'
+                                            )}
+                                        </div>
+                                        {/* List of funders */}
+                                        {donutData?.map((item, index) => (
+                                            <div
+                                                key={`d-${index}`}
+                                                className="flex mt-8 t-caption">
+                                                <span
+                                                    className={`w-16 h-16 mr-8 rounded-2 ${item.color}`}></span>
+                                                {`${item.name} - ${
+                                                    item.currency
+                                                } ${item.amount?.toLocaleString(
+                                                    'de-DE'
+                                                )}`}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                                <div className="md:w-1/2">
-                                    {/* Headline */}
-                                    <div className="t-caption-bold">
-                                        {label('InitiativeViewFundingOverview')}
-                                    </div>
-                                    {/* List of funders */}
-                                    {donutData?.map((item, index) => (
-                                        <div
-                                            key={`d-${index}`}
-                                            className="flex mt-8 t-caption">
-                                            <span
-                                                className={`w-16 h-16 mr-8 rounded-2 ${item.color}`}></span>
-                                            {`${item.name} - ${
-                                                item.currency
-                                            } ${item.amount?.toLocaleString(
-                                                'de-DE'
-                                            )}`}
+                            )}
+                            <div className="mt-32 overflow-x-scroll md:overflow-hidden">
+                                {/* BUG: min-width breaks the margins on mobile! min-w-[680px] */}
+                                <div className="mt-32 min-w-[768px]">
+                                    {/* Table header */}
+                                    <div className="flex pb-8">
+                                        <div className="w-full t-footnote-bold">
+                                            {label(
+                                                'InitiativeViewFunderTableColumnHeadersFunder'
+                                            )}
                                         </div>
-                                    ))}
+                                        <div className="w-full t-footnote-bold">
+                                            {label(
+                                                'InitiativeViewFunderTableColumnHeadersType'
+                                            )}
+                                        </div>
+                                        <div className="w-full t-footnote-bold">
+                                            {label(
+                                                'InitiativeViewFunderTableColumnHeadersAmount'
+                                            )}
+                                        </div>
+                                        <div className="w-full t-footnote-bold">
+                                            {label(
+                                                'InitiativeViewFunderTableColumnHeadersApplicationId'
+                                            )}
+                                        </div>
+                                        <div className="w-full t-footnote-bold">
+                                            {label(
+                                                'InitiativeViewFunderTableColumnHeadersGrantPeriod'
+                                            )}
+                                        </div>
+                                    </div>
+                                    {/* Table Rows */}
+                                    {Object.values(initiativeData._funders).map(
+                                        (item, index) => (
+                                            <div
+                                                key={`f-${index}`}
+                                                className="flex pt-16 pb-16 border-t-2 border-amber-10">
+                                                <div className="w-full t-h6">
+                                                    {item.Account__r.Name}
+                                                </div>
+                                                <div className="w-full">
+                                                    <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
+                                                        {item.Type__c}
+                                                    </span>
+                                                </div>
+                                                <div className="w-full t-caption">
+                                                    {item.CurrencyIsoCode}{' '}
+                                                    {item.Amount__c?.toLocaleString(
+                                                        'de-DE'
+                                                    )}
+                                                </div>
+                                                <div className="w-full t-caption">
+                                                    {item.Application_Id__c}
+                                                </div>
+                                                <div className="w-full t-caption">
+                                                    {dayjs(
+                                                        item.Grant_Start_Date__c
+                                                    ).format('DD.MM.YYYY')}
+                                                    {' - '}
+                                                    {dayjs(
+                                                        item.Grant_End_Date__c
+                                                    ).format('DD.MM.YYYY')}
+                                                </div>
+                                            </div>
+                                        )
+                                    )}
                                 </div>
                             </div>
-                        )}
-                        <div className="mt-32 overflow-x-scroll md:overflow-hidden">
-                            {/* BUG: min-width breaks the margins on mobile! min-w-[680px] */}
-                            <div className="mt-32 min-w-[768px]">
-                                {/* Table header */}
-                                <div className="flex pb-8">
-                                    <div className="w-full t-footnote-bold">
-                                        {label(
-                                            'InitiativeViewFunderTableColumnHeadersFunder'
-                                        )}
-                                    </div>
-                                    <div className="w-full t-footnote-bold">
-                                        {label(
-                                            'InitiativeViewFunderTableColumnHeadersType'
-                                        )}
-                                    </div>
-                                    <div className="w-full t-footnote-bold">
-                                        {label(
-                                            'InitiativeViewFunderTableColumnHeadersAmount'
-                                        )}
-                                    </div>
-                                    <div className="w-full t-footnote-bold">
-                                        {label(
-                                            'InitiativeViewFunderTableColumnHeadersApplicationId'
-                                        )}
-                                    </div>
-                                    <div className="w-full t-footnote-bold">
-                                        {label(
-                                            'InitiativeViewFunderTableColumnHeadersGrantPeriod'
-                                        )}
-                                    </div>
-                                </div>
-                                {/* Table Rows */}
-                                {Object.values(initiativeData._funders).map(
-                                    (item, index) => (
-                                        <div
-                                            key={`f-${index}`}
-                                            className="flex pt-16 pb-16 border-t-2 border-amber-10">
-                                            <div className="w-full t-h6">
-                                                {item.Account__r.Name}
-                                            </div>
-                                            <div className="w-full">
-                                                <span className="w-full p-8 t-h6 bg-blue-20 rounded-8">
-                                                    {item.Type__c}
-                                                </span>
-                                            </div>
-                                            <div className="w-full t-caption">
-                                                {item.CurrencyIsoCode}{' '}
-                                                {item.Amount__c?.toLocaleString(
-                                                    'de-DE'
-                                                )}
-                                            </div>
-                                            <div className="w-full t-caption">
-                                                {item.Application_Id__c}
-                                            </div>
-                                            <div className="w-full t-caption">
-                                                {dayjs(
-                                                    item.Grant_Start_Date__c
-                                                ).format('DD.MM.YYYY')}
-                                                {' - '}
-                                                {dayjs(
-                                                    item.Grant_End_Date__c
-                                                ).format('DD.MM.YYYY')}
-                                            </div>
-                                        </div>
-                                    )
-                                )}
-                            </div>
-                        </div>
 
-                        {/* Empty state - No funders */}
-                        {Object.values(initiativeData._funders).length < 1 && (
-                            <SectionEmpty type="initiative" />
-                        )}
-                    </SectionWrapper>
+                            {/* Empty state - No funders */}
+                            {Object.values(initiativeData._funders).length <
+                                1 && <SectionEmpty type="initiative" />}
+                        </SectionWrapper>
+                    )}
                     {/* Goals */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewGoalsHeading')}
@@ -567,7 +580,7 @@ const ProjectComponent = ({ pageProps }) => {
                         )}
                     </SectionWrapper>
                     {/* Applicants */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewApplicantsHeading')}
@@ -619,7 +632,7 @@ const ProjectComponent = ({ pageProps }) => {
                     </SectionWrapper>
 
                     {/* Collaborators */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewCollaboratorsHeading')}
@@ -665,7 +678,7 @@ const ProjectComponent = ({ pageProps }) => {
                     </SectionWrapper>
 
                     {/* Employees funded */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewEmployeesFundedHeading')}
@@ -765,7 +778,7 @@ const ProjectComponent = ({ pageProps }) => {
                     </SectionWrapper>
 
                     {/* Problem Causes */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewCausesHeading')}
@@ -801,7 +814,7 @@ const ProjectComponent = ({ pageProps }) => {
                     </SectionWrapper>
 
                     {/* Our vision */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewVisionHeading')}
@@ -822,7 +835,7 @@ const ProjectComponent = ({ pageProps }) => {
                     </SectionWrapper>
 
                     {/* Organisational focus */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewOrgFocusHeading')}
@@ -843,7 +856,7 @@ const ProjectComponent = ({ pageProps }) => {
                     </SectionWrapper>
 
                     {/* The problem to be solved */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewProblemsHeading')}
@@ -864,7 +877,7 @@ const ProjectComponent = ({ pageProps }) => {
                     </SectionWrapper>
 
                     {/* Reason for approach */}
-                    <SectionWrapper className="mt-32 bg-white rounded-8">
+                    <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
                             <h2 className="t-h3">
                                 {label('InitiativeViewReasonsHeading')}

@@ -30,6 +30,14 @@ module.exports = {
                 source: '/create/introduction/:rest*',
                 destination: '/create/new/introduction/:rest*',
             },
+
+            // Update Create Initiative
+            {
+                source: '/create/:inititiativeId/:page/update',
+                destination:
+                    '/create/:inititiativeId/:page?initiativeId=:inititiativeId&update=true',
+            },
+
             {
                 source: '/create/:rest*',
                 destination: '/wizard/:rest*',

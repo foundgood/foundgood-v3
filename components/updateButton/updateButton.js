@@ -59,7 +59,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
 
             // Change location
             router.push(
-                `/wizard/${INITIATIVE_ID}/${baseUrl}/${REPORT_ID}/update`
+                `/report/${INITIATIVE_ID}/${baseUrl}/${REPORT_ID}/update`
             );
         } catch (error) {
             console.warn(error);
@@ -98,7 +98,7 @@ const UpdateButtonComponent = ({ mode, baseUrl, variant = 'secondary' }) => {
                     action={
                         mode === 'report'
                             ? reportInProgress
-                            : `/initiative/${INITIATIVE_ID}/${baseUrl}/update`
+                            : `/${mode}/${INITIATIVE_ID}/${baseUrl}/update`
                     }>
                     {label('Update')}
                 </Button>
