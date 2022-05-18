@@ -8,7 +8,11 @@ import { useRouter } from 'next/router';
 // Utilities
 import { elseware } from 'utilities/api';
 import { useAuthStore } from 'utilities/store';
+import { useLabels } from 'utilities/hooks';
 import { hasWindow } from 'utilities';
+
+// Images
+import FGLogo from 'assets/images/fg-logo-mark.svg';
 
 const LoginCallbackComponent = () => {
     // ///////////////////
@@ -21,6 +25,7 @@ const LoginCallbackComponent = () => {
     // HOOKS
     // ///////////////////
 
+    const { label } = useLabels();
     const router = useRouter();
     const useLsUserData = createLocalStorageStateHook('fg_lsUserData', null);
     const [, setLsUserData] = useLsUserData();
@@ -85,7 +90,17 @@ const LoginCallbackComponent = () => {
             }
         }
     }, []);
-    return null;
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
+    return (
+        <div className="flex flex-col items-center justify-center w-full h-screen space-y-24 bg-amber-10">
+            <FGLogo className="fill-current animate-preloader-colors" />
+            <p className="t-h6">{label('LoginCallBackFetchingUser')}</p>
+        </div>
+    );
 };
 
 export default LoginCallbackComponent;

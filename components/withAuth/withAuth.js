@@ -101,9 +101,7 @@ const WithAuthComponent = Component => {
         return hasWindow() ? (
             lsUserData ? (
                 <Component {...props} />
-            ) : (
-                <p>Waiting for user authentication</p>
-            )
+            ) : null
         ) : (
             <Component {...props} />
         );

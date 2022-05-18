@@ -21,7 +21,7 @@ const HeaderComponent = ({ showUserControls }) => {
     const { label } = useLabels();
 
     // Hook: Auth
-    const { getUserName, userLogout } = useUser();
+    const { getUserLoggedIn, getUserName, userLogout } = useUser();
 
     // Hook: Router
     const router = useRouter();
@@ -51,7 +51,7 @@ const HeaderComponent = ({ showUserControls }) => {
         }
     }
 
-    return (
+    return getUserLoggedIn() ? (
         <>
             <div
                 className={cc([
@@ -153,7 +153,7 @@ const HeaderComponent = ({ showUserControls }) => {
                 </button>
             </div>
         </>
-    );
+    ) : null;
 };
 
 HeaderComponent.propTypes = {
