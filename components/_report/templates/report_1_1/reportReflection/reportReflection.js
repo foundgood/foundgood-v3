@@ -1,12 +1,12 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
 import t from 'prop-types';
 
 // Utilities
+import { asId, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
-import { asId } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -14,12 +14,15 @@ import SectionEmpty from 'components/sectionEmpty';
 import UpdateButton from 'components/updateButton';
 import TextCard from 'components/_initiative/textCard';
 
-const ReportSummaryComponent = ({ initiative, report, constants }) => {
-    // Hook: Metadata
+const ReportSummaryComponent = ({ report }) => {
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
     const { label, object } = useLabels();
 
-    // useEffect(() => {
-    // }, []);
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <SectionWrapper id={asId(label('ReportWizardMenuEndReflections'))}>
@@ -29,21 +32,27 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                         {label('ReportViewHeadingEndReflections')}
                     </h3>
                     <UpdateButton
-                        mode="report"
-                        baseUrl="end-of-grant-reflections"
+                        {...{
+                            context: 'report',
+                            baseUrl: 'end-of-grant-reflections',
+                            rules: getPermissionRules(
+                                'report',
+                                'endOfGrantReflections',
+                                'update'
+                            ),
+                        }}
                     />
                 </div>
             </SectionWrapper>
+
             {/* Project purpose */}
-            {report.Project_Purpose__c && (
+            {report.Project_Purpose__c ? (
                 <TextCard
                     hasBackground={true}
                     headline={object.label('Initiative__c.Project_Purpose__c')}
                     body={report.Project_Purpose__c}
                 />
-            )}
-            {/* Empty state - Project purpose */}
-            {!report.Project_Purpose__c && (
+            ) : (
                 <SectionEmpty
                     type="report"
                     headline={object.label('Initiative__c.Project_Purpose__c')}
@@ -51,7 +60,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             )}
 
             {/* Progress goals */}
-            {report.Progress_Towards_Grant_Area_Themes__c && (
+            {report.Progress_Towards_Grant_Area_Themes__c ? (
                 <TextCard
                     className="mt-32"
                     hasBackground={true}
@@ -60,9 +69,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     )}
                     body={report.Progress_Towards_Grant_Area_Themes__c}
                 />
-            )}
-            {/* Empty state - Progress goals */}
-            {!report.Project_Purpose__c && (
+            ) : (
                 <SectionEmpty
                     type="report"
                     headline={object.label(
@@ -72,7 +79,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
             )}
 
             {/* Important results */}
-            {report.Important_Results__c && (
+            {report.Important_Results__c ? (
                 <TextCard
                     className="mt-32"
                     hasBackground={true}
@@ -81,9 +88,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     )}
                     body={report.Important_Results__c}
                 />
-            )}
-            {/* Empty state - Important results */}
-            {!report.Important_Results__c && (
+            ) : (
                 <SectionEmpty
                     type="report"
                     headline={object.label(
@@ -96,9 +101,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
 };
 
 ReportSummaryComponent.propTypes = {
-    initiative: t.object.isRequired,
     report: t.object.isRequired,
-    constants: t.object.isRequired,
 };
 
 ReportSummaryComponent.defaultProps = {};

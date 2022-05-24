@@ -11,6 +11,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import WizardModal from 'components/wizardModal';
 import {
@@ -223,4 +224,6 @@ ReportScheduleComponent.defaultProps = {};
 
 ReportScheduleComponent.layout = 'wizard';
 
-export default WithAuth(ReportScheduleComponent);
+ReportScheduleComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(ReportScheduleComponent));

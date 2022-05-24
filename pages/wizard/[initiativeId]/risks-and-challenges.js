@@ -15,6 +15,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, Reflection } from 'components/_inputs';
 
@@ -103,4 +104,6 @@ RisksAndChallengesComponent.defaultProps = {};
 
 RisksAndChallengesComponent.layout = 'wizard';
 
-export default WithAuth(RisksAndChallengesComponent);
+RisksAndChallengesComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(RisksAndChallengesComponent));

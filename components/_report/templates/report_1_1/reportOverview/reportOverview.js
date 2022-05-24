@@ -6,8 +6,8 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
+import { asId, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
-import { asId } from 'utilities';
 
 // Data
 import sdgsColors from 'utilities/data/sdgColors';
@@ -89,7 +89,17 @@ const ReportOverviewComponent = ({ utilities, report }) => {
                     <h3 className="t-h4">
                         {label('ReportViewHeadingOverview')}
                     </h3>
-                    <UpdateButton mode="report" baseUrl="overview" />
+                    <UpdateButton
+                        {...{
+                            context: 'report',
+                            baseUrl: 'overview',
+                            rules: getPermissionRules(
+                                'report',
+                                'overview',
+                                'update'
+                            ),
+                        }}
+                    />
                 </div>
                 <h3 className="mt-24 t-preamble">{initiative.Summary__c}</h3>
             </SectionWrapper>

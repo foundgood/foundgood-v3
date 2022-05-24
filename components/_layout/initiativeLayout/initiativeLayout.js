@@ -7,10 +7,11 @@ import t from 'prop-types';
 
 // Utilities
 import { useInitiativeDataStore } from 'utilities/store';
-import { useContext, useUser, useLabels } from 'utilities/hooks';
+import { useContext, useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
+import Permission from 'components/permission';
 import MobileNavigation from 'components/_initiative/mobileNavigation';
 import TabNavigation from 'components/_initiative/tabNavigation';
 
@@ -27,7 +28,6 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
 
     const { label } = useLabels();
     const { INITIATIVE_ID } = useContext();
-    const { getUserInitiativeRights } = useUser();
 
     // ///////////////////
     // EFFECTS
@@ -51,15 +51,21 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                     <p className="font-medium text-blue-100 t-sh5 md:flex line-clamp-3">
                         {utilities.initiative.get().Name}
                     </p>
-
-                    {getUserInitiativeRights().canEdit && (
+                    <Permission
+                        {...{
+                            rules: [
+                                'grantee.admin',
+                                'grantee.collaborator',
+                                'super',
+                            ],
+                        }}>
                         <Button
                             theme="blue"
                             variant="secondary"
                             action={`/initiative/${INITIATIVE_ID}/overview`}>
                             {label('ButtonRunWizard')}
                         </Button>
-                    )}
+                    </Permission>
                 </div>
 
                 {/* Initiative navigation */}

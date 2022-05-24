@@ -63,6 +63,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/report-details/${reportId}`;
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     funders: {
         title: 'ReportWizardMenuFunders',
@@ -80,6 +85,11 @@ const d = {
         baseUrl: 'funders',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/funders/${reportId}`;
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     overview: {
@@ -99,6 +109,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/overview/${reportId}`;
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     reportSummary: {
         title: 'ReportWizardMenuSummary',
@@ -116,6 +131,11 @@ const d = {
         baseUrl: 'report-summary',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/report-summary/${reportId}`;
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     risksAndChallenges: {
@@ -135,6 +155,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/risks-and-challenges/${reportId}`;
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     applicants: {
         title: 'ReportWizardMenuApplicants',
@@ -152,6 +177,11 @@ const d = {
         baseUrl: 'applicants',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/applicants/${reportId}`;
+        },
+        permissions: {
+            add: ['super'],
+            update: ['super'],
+            delete: ['super'],
         },
     },
     collaborators: {
@@ -171,6 +201,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/collaborators/${reportId}`;
         },
+        permissions: {
+            add: ['super'],
+            update: ['super'],
+            delete: ['super'],
+        },
     },
     employeesFunded: {
         title: 'ReportWizardMenuEmployees',
@@ -188,6 +223,11 @@ const d = {
         baseUrl: 'employees-funded',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/employees-funded/${reportId}`;
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     goals: {
@@ -207,6 +247,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/goals/${reportId}`;
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     activities: {
         title: 'ReportWizardMenuActivities',
@@ -224,6 +269,11 @@ const d = {
         baseUrl: 'activities',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/activities/${reportId}`;
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     indicators: {
@@ -243,6 +293,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/indicators/${reportId}`;
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     progressSoFar: {
         title: 'ReportWizardMenuProgress',
@@ -261,6 +316,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/progress-so-far/${reportId}`;
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     sharingResults: {
         title: 'ReportWizardMenuSharing',
@@ -278,6 +338,11 @@ const d = {
         baseUrl: 'sharing-results',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/sharing-results/${reportId}`;
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     outcomes: {},
@@ -299,6 +364,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/influence-on-policy/${reportId}`;
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     evaluations: {
         title: 'ReportWizardMenuEvaluations',
@@ -317,6 +387,11 @@ const d = {
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/evaluations/${reportId}`;
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     endOfGrantReflections: {
         title: 'ReportWizardMenuEndReflections',
@@ -334,6 +409,11 @@ const d = {
         baseUrl: 'end-of-grant-reflections',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/end-of-grant-reflections/${reportId}`;
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     // postProjectActivities: {
@@ -482,5 +562,5 @@ const reportStructures = {
         d.done,
     ],
 };
-
+export { d };
 export default reportStructures;

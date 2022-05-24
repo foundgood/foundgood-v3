@@ -17,6 +17,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import Button from 'components/button';
 import FunderCard from 'components/_wizard/founderCard';
 import WizardModal from 'components/wizardModal';
@@ -350,4 +351,6 @@ FundersComponent.defaultProps = {};
 
 FundersComponent.layout = 'wizard';
 
-export default WithAuth(FundersComponent);
+FundersComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(FundersComponent));

@@ -15,6 +15,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, Reflection } from 'components/_inputs';
 
@@ -129,4 +130,6 @@ EndOfGrantReflectionsComponent.defaultProps = {};
 
 EndOfGrantReflectionsComponent.layout = 'wizard';
 
-export default WithAuth(EndOfGrantReflectionsComponent);
+EndOfGrantReflectionsComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(EndOfGrantReflectionsComponent));

@@ -8,11 +8,13 @@ import { useForm, useWatch } from 'react-hook-form';
 import dayjs from 'dayjs';
 
 // Utilities
-import { useElseware, useLabels, useUser } from 'utilities/hooks';
+import { getPermissionRules } from 'utilities';
+import { useElseware, useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import Permission from 'components/permission';
 import Preloader from 'components/preloader';
 import Button from 'components/button';
 import SectionWrapper from 'components/sectionWrapper';
@@ -30,8 +32,6 @@ const HomeComponent = () => {
     // ///////////////////
     // HOOKS
     // ///////////////////
-
-    const { getUserAccountType, user } = useUser();
     const { label, pickList } = useLabels();
     const { ewGet } = useElseware();
 
@@ -163,12 +163,18 @@ const HomeComponent = () => {
                         <h2 className="t-h2">
                             {label('InitiativeManagerHeading')}
                         </h2>
-                        {getUserAccountType() !==
-                            CONSTANTS.ACCOUNT.ACCOUNT_TYPE_FOUNDATION && (
+                        <Permission
+                            {...{
+                                rules: getPermissionRules(
+                                    'create',
+                                    'introduction',
+                                    'add'
+                                ),
+                            }}>
                             <Button theme="teal" action="/create/introduction">
                                 {label('InitiativeManagerCreate')}
                             </Button>
-                        )}
+                        </Permission>
                     </div>
                     <div className="flex flex-col">
                         <input

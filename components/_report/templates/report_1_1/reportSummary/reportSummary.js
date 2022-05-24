@@ -1,12 +1,12 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
 import t from 'prop-types';
 
 // Utilities
+import { asId, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
-import { asId } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -14,12 +14,16 @@ import SectionEmpty from 'components/sectionEmpty';
 import UpdateButton from 'components/updateButton';
 import TextCard from 'components/_initiative/textCard';
 
-const ReportSummaryComponent = ({ initiative, report, constants }) => {
-    // Hook: Metadata
+const ReportSummaryComponent = ({ report }) => {
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label, object } = useLabels();
 
-    // useEffect(() => {
-    // }, []);
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <SectionWrapper id={asId(label('ReportWizardMenuSummary'))}>
@@ -28,11 +32,23 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     <h3 className="t-h4">
                         {label('ReportViewHeadingSummary')}
                     </h3>
-                    <UpdateButton mode="report" baseUrl="report-summary" />
+                    <UpdateButton mode="report" baseUrl="" />
+                    <UpdateButton
+                        {...{
+                            context: 'report',
+                            baseUrl: 'report-summary',
+                            rules: getPermissionRules(
+                                'report',
+                                'reportSummary',
+                                'update'
+                            ),
+                        }}
+                    />
                 </div>
             </SectionWrapper>
-            {/* Overall perfomance */}
-            {report.Summary_Of_Activities__c && (
+
+            {/* Overall performance */}
+            {report.Summary_Of_Activities__c ? (
                 <TextCard
                     hasBackground={true}
                     headline={object.label(
@@ -40,9 +56,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     )}
                     body={report.Summary_Of_Activities__c}
                 />
-            )}
-            {/* Empty state - No Overall perfomance */}
-            {!report.Summary_Of_Activities__c && (
+            ) : (
                 <SectionEmpty
                     type="report"
                     headline={object.label(
@@ -51,7 +65,8 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                 />
             )}
 
-            {report.Summary_Of_Challenges_And_Learnings__c && (
+            {/* No Challenges and learnings */}
+            {report.Summary_Of_Challenges_And_Learnings__c ? (
                 <TextCard
                     hasBackground={true}
                     className="mt-32"
@@ -60,9 +75,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
                     )}
                     body={report.Summary_Of_Challenges_And_Learnings__c}
                 />
-            )}
-            {/* Empty state - No Overall perfomance */}
-            {!report.Summary_Of_Challenges_And_Learnings__c && (
+            ) : (
                 <SectionEmpty
                     type="report"
                     headline={object.label(
@@ -75,9 +88,7 @@ const ReportSummaryComponent = ({ initiative, report, constants }) => {
 };
 
 ReportSummaryComponent.propTypes = {
-    initiative: t.object.isRequired,
     report: t.object.isRequired,
-    constants: t.object.isRequired,
 };
 
 ReportSummaryComponent.defaultProps = {};

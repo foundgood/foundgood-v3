@@ -7,6 +7,7 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 
 // Utilities
+import { getPermissionRules } from 'utilities';
 import { useLabels, useResponsive } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 import { isJson } from 'utilities';
@@ -274,8 +275,14 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewOverviewHeading')}
                             </h2>
                             <UpdateButton
-                                mode="initiative"
-                                baseUrl="overview"
+                                {...{
+                                    baseUrl: 'overview',
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'overview',
+                                        'update'
+                                    ),
+                                }}
                             />
                         </div>
 
@@ -419,8 +426,14 @@ const ProjectComponent = ({ pageProps }) => {
                                     )}
                                 </h2>
                                 <UpdateButton
-                                    mode="initiative"
-                                    baseUrl="funders"
+                                    {...{
+                                        rules: getPermissionRules(
+                                            'initiative',
+                                            'funders',
+                                            'update'
+                                        ),
+                                        baseUrl: 'funders',
+                                    }}
                                 />
                             </div>
                             {donutData && (
@@ -549,7 +562,16 @@ const ProjectComponent = ({ pageProps }) => {
                             <h2 className="t-h3">
                                 {label('InitiativeViewGoalsHeading')}
                             </h2>
-                            <UpdateButton mode="initiative" baseUrl="goals" />
+                            <UpdateButton
+                                {...{
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'goals',
+                                        'update'
+                                    ),
+                                    baseUrl: 'goals',
+                                }}
+                            />
                         </div>
                         {/* List goals */}
                         {Object.values(initiativeData._goals).map(
@@ -586,8 +608,14 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewApplicantsHeading')}
                             </h2>
                             <UpdateButton
-                                mode="initiative"
-                                baseUrl="applicants"
+                                {...{
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'applicants',
+                                        'update'
+                                    ),
+                                    baseUrl: 'applicants',
+                                }}
                             />
                         </div>
                         {applicants &&
@@ -638,8 +666,14 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewCollaboratorsHeading')}
                             </h2>
                             <UpdateButton
-                                mode="initiative"
-                                baseUrl="collaborators"
+                                {...{
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'collaborators',
+                                        'update'
+                                    ),
+                                    baseUrl: 'collaborators',
+                                }}
                             />
                         </div>
                         {collaborators &&
@@ -684,8 +718,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewEmployeesFundedHeading')}
                             </h2>
                             <UpdateButton
-                                mode="initiative"
-                                baseUrl="employees-funded"
+                                {...{ baseUrl: 'employees-funded' }}
                             />
                         </div>
                         {Object.values(initiativeData._employeesFunded).length >
@@ -784,8 +817,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewCausesHeading')}
                             </h2>
                             {/* <UpdateButton
-                                mode="initiative"
-                                baseUrl=""
+                                {...{baseUrl: ""}}
                             /> */}
                         </div>
                         {initiativeData.Problem_Causes__c && (
@@ -820,8 +852,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewVisionHeading')}
                             </h2>
                             {/* <UpdateButton
-                                mode="initiative"
-                                baseUrl=""
+                                {...{baseUrl: ""}}
                             /> */}
                         </div>
                         {initiativeData.Ultimate_Outcome__c && (
@@ -841,8 +872,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewOrgFocusHeading')}
                             </h2>
                             {/* <UpdateButton
-                                mode="initiative"
-                                baseUrl=""
+                                {...{baseUrl: ""}}
                             /> */}
                         </div>
                         {initiativeData.Why_Problem_Solving__c && (
@@ -862,8 +892,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewProblemsHeading')}
                             </h2>
                             {/* <UpdateButton
-                                mode="initiative"
-                                baseUrl=""
+                                {...{baseUrl: ""}}
                             /> */}
                         </div>
                         {initiativeData.Situation_Today__c && (
@@ -883,8 +912,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewReasonsHeading')}
                             </h2>
                             {/* <UpdateButton
-                                mode="initiative"
-                                baseUrl=""
+                                {...{baseUrl: ""}}
                             /> */}
                         </div>
                         {initiativeData.Approach_Thinking__c && (

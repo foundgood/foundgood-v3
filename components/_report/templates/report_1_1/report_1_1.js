@@ -76,64 +76,36 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
             {/* Data Loaded - Show report */}
             {initiative && report && utilities && (
                 <div className="animate-fade-in">
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Header */}
                     <ReportHeader {...{ utilities, report }} />
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Overview */}
                     <ReportOverview {...{ utilities, report }} />
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Goals */}
                     {/* <ReportGoals
                         {...{ initiative, report, constants }}
                     /> */}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Report Summary */}
                     <ReportSummary {...{ initiative, report, constants }} />
-
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Headline: "Key changes" */}
                     <SectionWrapper paddingY={false}>
                         <h2 className="t-h3 mt-96">
                             {label('ReportViewHeadingKeyChanges')}
                         </h2>
                     </SectionWrapper>
-
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Activities */}
                     {report?.Report_Type__c !== 'Status' && (
                         <ReportActivities
                             {...{ initiative, report, constants }}
                         />
                     )}
-
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Funders */}
                     <ReportFunders {...{ initiative, report, constants }} />
-
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Applicants */}
                     {report?.Report_Type__c === 'Status' && (
                         <ReportApplicants
                             {...{ initiative, report, constants }}
                         />
                     )}
-
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Collaborators */}
                     <ReportCollaborators
                         {...{ initiative, report, constants }}
                     />
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Employees funded by the grant */}
                     {report?.Report_Type__c !== 'Status' && (
                         <ReportEmployeesFunded
                             {...{ initiative, report, constants }}
                         />
                     )}
-
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Logbook entries - TBD */}
                     {/*
                     <SectionWrapper>
                         <SectionWrapper>
@@ -144,8 +116,6 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
                         entries...
                     </SectionWrapper>
                     */}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Headline: "Key results" */}
                     {report?.Report_Type__c !== 'Status' && (
                         <SectionWrapper paddingY={false}>
                             <SectionWrapper paddingY={false}>
@@ -155,8 +125,6 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
                             </SectionWrapper>
                         </SectionWrapper>
                     )}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Outcomes TBD */}
                     {/* {outcomes && (
                         <SectionWrapper>
                             <SectionWrapper>
@@ -169,27 +137,19 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
                             ))}
                         </SectionWrapper>
                     )} */}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Sharing of results */}
                     {report?.Report_Type__c !== 'Status' && (
                         <ReportResults {...{ initiative, report, constants }} />
                     )}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Influences on policy */}
                     {report?.Report_Type__c !== 'Status' && (
                         <ReportInfluences
                             {...{ initiative, report, constants }}
                         />
                     )}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Evaluations */}
                     {report?.Report_Type__c !== 'Status' && (
                         <ReportEvaluations
                             {...{ initiative, report, constants }}
                         />
                     )}
-                    {/* ------------------------------------------------------------------------------------------ */}
-                    {/* Reflections */}
                     {report?.Report_Type__c !== 'Status' &&
                         report?.Report_Type__c !== 'Annual' && (
                             <ReportReflection
@@ -201,8 +161,6 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
                             />
                         )}
 
-                    {/* Todo - Implement + wrap in component */}
-                    {/* Post project activities */}
                     {/* {report.Post_Project_Activities__c && (
                         <SectionWrapper>
                             <TextCard
@@ -226,7 +184,7 @@ const Report_1_1Component = ({ initiativeData = {}, reportData = {} }) => {
                             />
                         </SectionWrapper>
                     )} */}
-                    {/* Additional Info */}
+
                     <SectionWrapper>
                         <SectionWrapper>
                             <h3 className="mt-32 t-h4">

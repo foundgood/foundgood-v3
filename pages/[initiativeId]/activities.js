@@ -5,9 +5,9 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
+import { isJson, stripUndefined, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
-import { isJson, stripUndefined } from 'utilities';
 
 // Components
 import WithAuth from 'components/withAuth';
@@ -24,8 +24,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     const { initiative, utilities, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, getValueLabel, log } = useLabels();
-
+    const { label, getValueLabel } = useLabels();
     const [activities, setActivities] = useState();
 
     useEffect(() => {
@@ -133,8 +132,14 @@ const ActivitiesComponent = ({ pageProps }) => {
                                 {label('InitiativeViewActivitiesHeading')}
                             </h2>
                             <UpdateButton
-                                mode="initiative"
-                                baseUrl="activities"
+                                {...{
+                                    baseUrl: 'activities',
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'activities',
+                                        'update'
+                                    ),
+                                }}
                             />
                         </div>
 

@@ -78,7 +78,7 @@ const WizardLayoutComponent = ({ children, layoutSettings }) => {
     // Fill report with data
     useEffect(() => {
         switch (MODE) {
-            case CONTEXTS.CREATE_INITIATIVE:
+            case CONTEXTS.CREATE:
             case CONTEXTS.INITIATIVE:
                 // Initiative mode - check to populate initiative
                 if (INITIATIVE_ID && INITIATIVE_ID !== 'new') {
@@ -109,7 +109,7 @@ const WizardLayoutComponent = ({ children, layoutSettings }) => {
                     utilities.initiative.get().Configuration_Type__c ||
                     'Reporting';
                 break;
-            case CONTEXTS.CREATE_INITIATIVE:
+            case CONTEXTS.CREATE:
                 // Default type
                 type = 'default';
                 break;

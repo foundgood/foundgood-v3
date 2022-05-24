@@ -36,7 +36,7 @@ const AsideNavigationComponent = () => {
     const initiative = utilities.initiative.get();
 
     const contextBasedLabels = {
-        [CONTEXTS.CREATE_INITIATIVE]: 'CreateInitiativeWizardAsideTitle',
+        [CONTEXTS.CREATE]: 'CreateInitiativeWizardAsideTitle',
         [CONTEXTS.INITIATIVE]: 'InitiativeWizardAsideTitle',
     };
 

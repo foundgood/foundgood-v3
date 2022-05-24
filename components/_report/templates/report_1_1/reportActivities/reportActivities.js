@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
+import { asId, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
-import { asId, stripUndefined } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -19,7 +19,7 @@ import DividerLine from 'components/_initiative/dividerLine';
 
 const ReportActivitiesComponent = ({ initiative, report, constants }) => {
     // Hook: Metadata
-    const { labelTodo, label, getValueLabel } = useLabels();
+    const { label, getValueLabel } = useLabels();
 
     const [activities, setActivities] = useState([]);
 
@@ -183,7 +183,17 @@ const ReportActivitiesComponent = ({ initiative, report, constants }) => {
                     <h3 className="t-h4">
                         {label('ReportViewSubHeadingActivitiesOverall')}
                     </h3>
-                    <UpdateButton mode="report" baseUrl="activities" />
+                    <UpdateButton
+                        {...{
+                            context: 'report',
+                            baseUrl: 'activities',
+                            rules: getPermissionRules(
+                                'report',
+                                'activities',
+                                'update'
+                            ),
+                        }}
+                    />
                 </div>
             </SectionWrapper>
 

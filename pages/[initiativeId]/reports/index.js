@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
+import { getPermissionRules } from 'utilities';
 import { useLabels, useUser } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
@@ -88,11 +89,6 @@ const ReportsComponent = ({ pageProps }) => {
         setReportGroups(reports);
     };
 
-    // Is NNF only founder
-    const isOnlyNNF =
-        reportGroups?.length === 1 &&
-        reportGroups[0]?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT;
-
     return (
         <>
             {/* Preloading - Show loading */}
@@ -106,13 +102,17 @@ const ReportsComponent = ({ pageProps }) => {
                             <h1 className="t-h1">
                                 {label('InitiativeViewReportsScheduleHeading')}
                             </h1>
-                            {reportGroups?.length < 1 && !isOnlyNNF && (
-                                <UpdateButton
-                                    mode="initiative"
-                                    baseUrl="report-schedule"
-                                    variant="primary"
-                                />
-                            )}
+                            <UpdateButton
+                                {...{
+                                    baseUrl: 'report-schedule',
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'reportSchedule',
+                                        'update'
+                                    ),
+                                    variant: 'primary',
+                                }}
+                            />
                         </div>
                     </SectionWrapper>
                     {reportGroups?.length > 0 &&
@@ -124,13 +124,16 @@ const ReportsComponent = ({ pageProps }) => {
                                     <h2 className="t-h3">
                                         {item.Account__r.Name}
                                     </h2>
-                                    {item.Account__c !==
-                                        CONSTANTS.IDS.NNF_ACCOUNT && (
-                                        <UpdateButton
-                                            mode="initiative"
-                                            baseUrl="report-schedule"
-                                        />
-                                    )}
+                                    <UpdateButton
+                                        {...{
+                                            baseUrl: 'report-schedule',
+                                            rules: getPermissionRules(
+                                                'initiative',
+                                                'reportSchedule',
+                                                'update'
+                                            ),
+                                        }}
+                                    />
                                 </div>
 
                                 <div className="flex flex-wrap">

@@ -5,11 +5,12 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useLabels, useContext, useUser, useElseware } from 'utilities/hooks';
+import { useLabels, useContext, useElseware } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
+import Permission from 'components/permission';
 import WizardModal from 'components/wizardModal';
 
 const WizardStatusComponent = () => {
@@ -25,7 +26,6 @@ const WizardStatusComponent = () => {
 
     const router = useRouter();
     const { label } = useLabels();
-    const { getUserInitiativeRights } = useUser();
     const { INITIATIVE_ID, REPORT_ID } = useContext();
     const { ewUpdate } = useElseware();
 
@@ -99,42 +99,47 @@ const WizardStatusComponent = () => {
                     </span>
                 </p>
                 <div className="flex items-center self-end space-x-12">
-                    {getUserInitiativeRights().canEdit &&
-                        currentReport.Status__c !==
-                            CONSTANTS.REPORTS.REPORT_PUBLISHED && (
-                            <Button
-                                theme="teal"
-                                variant={
-                                    [
-                                        CONSTANTS.REPORTS.REPORT_IN_REVIEW,
-                                        CONSTANTS.REPORTS.REPORT_PUBLISHED,
-                                    ].includes(currentReport.Status__c)
-                                        ? 'tertiary'
-                                        : 'primary'
-                                }
-                                action={reportInProgress}>
-                                {label('ButtonRunWizard')}
-                            </Button>
-                        )}
-                    {getUserInitiativeRights().canEdit &&
-                        currentReport.Status__c !==
-                            CONSTANTS.REPORTS.REPORT_PUBLISHED && (
-                            <Button
-                                theme="teal"
-                                variant={
-                                    currentReport.Status__c ===
-                                    CONSTANTS.REPORTS.REPORT_NOT_STARTED
-                                        ? 'tertiary'
-                                        : 'primary'
-                                }
-                                disabled={
-                                    currentReport.Status__c ===
-                                    CONSTANTS.REPORTS.REPORT_IN_REVIEW
-                                }
-                                action={() => setShowModal(true)}>
-                                {label('ButtonSubmit')}
-                            </Button>
-                        )}
+                    <Permission
+                        {...{
+                            rules: [
+                                'grantee.admin',
+                                'grantee.collaborator',
+                                'super',
+                            ],
+                            additionalRules: [
+                                currentReport.Status__c !==
+                                    CONSTANTS.REPORTS.REPORT_PUBLISHED,
+                            ],
+                        }}>
+                        <Button
+                            theme="teal"
+                            variant={
+                                [
+                                    CONSTANTS.REPORTS.REPORT_IN_REVIEW,
+                                    CONSTANTS.REPORTS.REPORT_PUBLISHED,
+                                ].includes(currentReport.Status__c)
+                                    ? 'tertiary'
+                                    : 'primary'
+                            }
+                            action={reportInProgress}>
+                            {label('ButtonRunWizard')}
+                        </Button>
+                        <Button
+                            theme="teal"
+                            variant={
+                                currentReport.Status__c ===
+                                CONSTANTS.REPORTS.REPORT_NOT_STARTED
+                                    ? 'tertiary'
+                                    : 'primary'
+                            }
+                            disabled={
+                                currentReport.Status__c ===
+                                CONSTANTS.REPORTS.REPORT_IN_REVIEW
+                            }
+                            action={() => setShowModal(true)}>
+                            {label('ButtonSubmit')}
+                        </Button>
+                    </Permission>
                 </div>
             </div>
             <WizardModal

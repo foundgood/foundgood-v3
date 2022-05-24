@@ -1,6 +1,6 @@
 import create from 'zustand';
 
-import { reportStructures } from 'utilities/data/navigationStructure';
+import { reportStructures } from 'utilities/configuration';
 
 const useReportNavigationStore = create((set, get) => ({
     // Rebuilds report items

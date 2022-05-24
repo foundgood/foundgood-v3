@@ -10,6 +10,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import InviteContacts from 'components/_wizard/inviteContacts';
 
@@ -38,7 +39,7 @@ const ShareWithContactsComponent = () => {
     // ///////////////////
 
     useWizardSubmit({
-        [CONTEXTS.CREATE_INITIATIVE]: [
+        [CONTEXTS.CREATE]: [
             mainForm,
             async formData => {
                 try {
@@ -110,4 +111,6 @@ ShareWithContactsComponent.defaultProps = {};
 
 ShareWithContactsComponent.layout = 'wizard';
 
-export default WithAuth(ShareWithContactsComponent);
+ShareWithContactsComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(ShareWithContactsComponent));

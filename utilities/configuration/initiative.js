@@ -65,6 +65,29 @@ const d = {
                 guide: 'InitiativeWizardOverviewHelpGuide',
             },
         },
+        permissions: {
+            add: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
+            update: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
+            delete: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
+        },
     },
 
     funders: {
@@ -84,6 +107,29 @@ const d = {
                 guide: 'InitiativeWizardFundersHelpGuide',
             },
         },
+        permissions: {
+            add: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
+            update: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
+            delete: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
+        },
     },
     applicants: {
         baseUrl: 'applicants',
@@ -101,6 +147,16 @@ const d = {
                 what: 'InitiativeWizardApplicantsHelpWhat',
                 guide: 'InitiativeWizardApplicantsHelpGuide',
             },
+        },
+        permissions: {
+            add: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+            ],
+            update: ['super'],
+            delete: ['super'],
         },
     },
     collaborators: {
@@ -120,6 +176,16 @@ const d = {
                 guide: 'InitiativeWizardCollaboratorsHelpGuide',
             },
         },
+        permissions: {
+            add: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+            ],
+            update: ['super'],
+            delete: ['super'],
+        },
     },
     employeesFunded: {
         baseUrl: 'employees-funded',
@@ -137,6 +203,11 @@ const d = {
                 what: 'InitiativeWizardEmployeesHelpWhat',
                 guide: 'InitiativeWizardEmployeesHelpGuide',
             },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     problemsToBeSolved: {
@@ -246,6 +317,11 @@ const d = {
                 guide: 'InitiativeWizardGoalsHelpGuide',
             },
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     activities: {
         baseUrl: 'activities',
@@ -263,6 +339,11 @@ const d = {
                 what: 'InitiativeWizardActivitiesHelpWhat',
                 guide: 'InitiativeWizardActivitiesHelpGuide',
             },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     indicators: {
@@ -282,6 +363,11 @@ const d = {
                 guide: 'InitiativeWizardIndicatorsHelpGuide',
             },
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     sharingResults: {
         baseUrl: 'sharing-results',
@@ -299,6 +385,11 @@ const d = {
                 what: 'InitiativeWizardSharingHelpWhat',
                 guide: 'InitiativeWizardSharingHelpGuide',
             },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
     targets: {
@@ -354,6 +445,11 @@ const d = {
                 guide: 'InitiativeWizardLogEntryHelpGuide',
             },
         },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
     },
     reportSchedule: {
         title: 'InitiativeViewReportsScheduleHeading',
@@ -371,6 +467,11 @@ const d = {
         baseUrl: 'report-schedule',
         url(initiativeId) {
             return `/initiative/${initiativeId}/report-schedule`;
+        },
+        permissions: {
+            add: ['funder.admin', 'funder.collaborator', 'super'],
+            update: ['funder.admin', 'funder.collaborator', 'super'],
+            delete: ['super'],
         },
     },
 };
@@ -403,3 +504,4 @@ const initiativeStructures = {
 };
 
 export default initiativeStructures;
+export { d };

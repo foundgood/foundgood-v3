@@ -15,8 +15,8 @@ const useUser = () => {
     const {
         user,
         loggedIn,
-        userInitiativeRights,
-        setUserInitiativeRights,
+        userInitiativeTeamMember,
+        setUserInitiativeTeamMember,
     } = useAuthStore();
 
     const { utilities } = useInitiativeDataStore();
@@ -48,11 +48,6 @@ const useUser = () => {
         return user?.User_Account_Type__c;
     }
 
-    // Get rights of user for current initiative
-    function getUserInitiativeRights() {
-        return userInitiativeRights;
-    }
-
     // Get if the user is logged in
     function getUserLoggedIn() {
         return loggedIn;
@@ -61,6 +56,13 @@ const useUser = () => {
     // Get user name
     function getUserName() {
         return user?.name ?? null;
+    }
+
+    // Get user initiative team role
+    function getUserInitiativeTeamRole() {
+        return userInitiativeTeamMember
+            ? userInitiativeTeamMember.Team_Member_Role__c
+            : 'not-set';
     }
 
     // Log out
@@ -81,8 +83,8 @@ const useUser = () => {
     // DATA
     // ///////////////////
 
-    const { data: userInitiativeRightsData } = ewGet(
-        'user/user-initiative-rights',
+    const { data: userInitiativeTeamMemberData } = ewGet(
+        'initiative-team-member/get-member',
         {
             id: utilities.initiative.get().Id,
         },
@@ -94,20 +96,16 @@ const useUser = () => {
     // ///////////////////
 
     useEffect(() => {
-        setUserInitiativeRights({
-            canView: userInitiativeRightsData?.bHasCreateRelatedRecordsAccess,
-            canEdit: userInitiativeRightsData?.bHasCreateTeamMemberAccess,
-            other: {
-                ...userInitiativeRightsData,
-            },
-        });
-    }, [userInitiativeRightsData]);
+        if (userInitiativeTeamMemberData) {
+            setUserInitiativeTeamMember(userInitiativeTeamMemberData);
+        }
+    }, [userInitiativeTeamMemberData]);
 
     return {
         getUserId,
         getUserAccountId,
         getUserAccountType,
-        getUserInitiativeRights,
+        getUserInitiativeTeamRole,
         getUserLoggedIn,
         getUserName,
         userLogout,

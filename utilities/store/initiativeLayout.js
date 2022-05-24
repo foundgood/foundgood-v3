@@ -1,9 +1,5 @@
 import create from 'zustand';
 
-function labelTodo(label) {
-    return label;
-}
-
 const useInitiativeLayoutStore = create(set => ({
     // Mobile menu toggle
     mobileMenuActive: false,

@@ -9,6 +9,7 @@ import { useLabels, useWizardSubmit, useContext } from 'utilities/hooks';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 
 const CompleteComponent = ({ pageProps }) => {
@@ -41,7 +42,7 @@ const CompleteComponent = ({ pageProps }) => {
             preamble: 'InitiativeWizardCompleteSubHeading',
             body: 'InitiativeWizardCompleteText',
         },
-        [CONTEXTS.CREATE_INITIATIVE]: {
+        [CONTEXTS.CREATE]: {
             title: 'CreateInitiativeWizardCompleteHeading',
             preamble: 'CreateInitiativeWizardCompleteSubHeading',
             body: 'CreateInitiativeCompleteText',
@@ -98,4 +99,6 @@ CompleteComponent.defaultProps = {};
 
 CompleteComponent.layout = 'wizardBlank';
 
-export default WithAuth(CompleteComponent);
+CompleteComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(CompleteComponent));

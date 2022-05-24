@@ -6,6 +6,7 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
+import { getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
@@ -94,9 +95,14 @@ const LogbookComponent = ({ pageProps }) => {
                                 {label('MenuLogbook')}
                             </h1>
                             <UpdateButton
-                                mode="initiative"
-                                baseUrl="logbook-entry"
-                                variant="primary"
+                                {...{
+                                    baseUrl: 'logbook-entry',
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'logbookEntry',
+                                        'update'
+                                    ),
+                                }}
                             />
                         </div>
                     </SectionWrapper>

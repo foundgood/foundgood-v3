@@ -1,12 +1,11 @@
 import create from 'zustand';
 
-import { CONTEXTS } from 'utilities/hooks/useContext';
-
 import {
+    CONTEXTS,
     initiativeStructures,
-    createInitiativeStructures,
+    createStructures,
     reportStructures,
-} from 'utilities/data/navigationStructure';
+} from 'utilities/configuration';
 
 // Helper for getting next url
 function _goToNextSection(sectionIndex, items) {
@@ -47,7 +46,7 @@ const useWizardNavigationStore = create((set, get) => ({
         // Type is Type__c from initiative or report
         if (context) {
             const wizards = {
-                [CONTEXTS.CREATE_INITIATIVE]: createInitiativeStructures,
+                [CONTEXTS.CREATE]: createStructures,
                 [CONTEXTS.INITIATIVE]: initiativeStructures,
                 [CONTEXTS.REPORT]: reportStructures,
             };

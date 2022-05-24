@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
+import { asId, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
-import { asId } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -59,7 +59,17 @@ const ReportInfluencesComponent = ({ initiative, report, constants }) => {
                     <h3 className="t-h4">
                         {label('ReportViewSubHeadingInfluencesOverall')}
                     </h3>
-                    <UpdateButton mode="report" baseUrl="influence-on-policy" />
+                    <UpdateButton
+                        {...{
+                            context: 'report',
+                            baseUrl: 'influence-on-policy',
+                            rules: getPermissionRules(
+                                'report',
+                                'influenceOnPolicy',
+                                'update'
+                            ),
+                        }}
+                    />
                 </div>
             </SectionWrapper>
 

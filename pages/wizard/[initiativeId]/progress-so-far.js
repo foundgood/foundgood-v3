@@ -16,6 +16,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper } from 'components/_inputs';
 import ProgressCard from 'components/_wizard/progressCard';
@@ -146,4 +147,6 @@ ProgressSoFarComponent.defaultProps = {};
 
 ProgressSoFarComponent.layout = 'wizard';
 
-export default WithAuth(ProgressSoFarComponent);
+ProgressSoFarComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(ProgressSoFarComponent));

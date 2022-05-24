@@ -20,6 +20,7 @@ import {
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 
 const IntroductionComponent = ({ pageProps }) => {
@@ -60,7 +61,7 @@ const IntroductionComponent = ({ pageProps }) => {
     // ///////////////////
 
     useWizardSubmit({
-        [CONTEXTS.CREATE_INITIATIVE]: [
+        [CONTEXTS.CREATE]: [
             mainForm,
             async () => {
                 // Create Initiative
@@ -120,7 +121,7 @@ const IntroductionComponent = ({ pageProps }) => {
         resetWizardNavigationStore();
 
         // Reset if initiative
-        if (MODE === CONTEXTS.CREATE_INITIATIVE) {
+        if (MODE === CONTEXTS.CREATE) {
             resetInitiativeStore();
         }
     }, [MODE]);
@@ -200,4 +201,6 @@ IntroductionComponent.defaultProps = {};
 
 IntroductionComponent.layout = 'wizardBlank';
 
-export default WithAuth(IntroductionComponent);
+IntroductionComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(IntroductionComponent));

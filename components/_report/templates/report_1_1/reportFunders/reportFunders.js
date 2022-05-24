@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
+import { asId, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
-import { asId } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -168,7 +168,17 @@ const ReportFundersComponent = ({ initiative, report, constants }) => {
                     <h3 className="t-h4">
                         {label('ReportViewSubHeadingFundersOverall')}
                     </h3>
-                    <UpdateButton mode="report" baseUrl="funders" />
+                    <UpdateButton
+                        {...{
+                            context: 'report',
+                            baseUrl: 'funders',
+                            rules: getPermissionRules(
+                                'report',
+                                'funders',
+                                'update'
+                            ),
+                        }}
+                    />
                 </div>
             </SectionWrapper>
             {/* Donut chart */}

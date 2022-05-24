@@ -22,6 +22,12 @@ const authStore = createVanilla((set, get) => ({
             userInitiativeRights,
         })),
 
+    userInitiativeTeamMember: null,
+    setUserInitiativeTeamMember: userInitiativeTeamMember =>
+        set(() => ({
+            userInitiativeTeamMember,
+        })),
+
     user: null,
     setUser: user =>
         set(() => ({

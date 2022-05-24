@@ -6,8 +6,8 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
+import { asId, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
-import { asId } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -77,7 +77,17 @@ const ReportCollaboratorsComponent = ({ initiative, report, constants }) => {
                     <h3 className="t-h4">
                         {label('ReportViewSubHeadingCollaborationsOverall')}
                     </h3>
-                    <UpdateButton mode="report" baseUrl="collaborators" />
+                    <UpdateButton
+                        {...{
+                            context: 'report',
+                            baseUrl: 'collaborators',
+                            rules: getPermissionRules(
+                                'report',
+                                'collaborators',
+                                'update'
+                            ),
+                        }}
+                    />
                 </div>
             </SectionWrapper>
 

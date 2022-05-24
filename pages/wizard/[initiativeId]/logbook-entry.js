@@ -11,6 +11,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import WizardModal from 'components/wizardModal';
 import PreLoader from 'components/preloader';
@@ -320,4 +321,6 @@ LogbookComponent.defaultProps = {};
 
 LogbookComponent.layout = 'wizard';
 
-export default WithAuth(LogbookComponent);
+LogbookComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(LogbookComponent));

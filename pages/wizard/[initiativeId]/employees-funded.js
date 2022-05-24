@@ -17,6 +17,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
@@ -309,4 +310,6 @@ EmployeesFundedComponent.defaultProps = {};
 
 EmployeesFundedComponent.layout = 'wizard';
 
-export default WithAuth(EmployeesFundedComponent);
+EmployeesFundedComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(EmployeesFundedComponent));

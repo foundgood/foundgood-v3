@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import t from 'prop-types';
 
 // Utilities
+import { asId, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
-import { asId } from 'utilities';
 
 // Components
 import SectionWrapper from 'components/sectionWrapper';
@@ -128,7 +128,17 @@ const ReportResultsComponent = ({ initiative, report, constants }) => {
                     <h3 className="t-h4">
                         {label('ReportViewSubHeadingSharingOverall')}
                     </h3>
-                    <UpdateButton mode="report" baseUrl="sharing-results" />
+                    <UpdateButton
+                        {...{
+                            context: 'report',
+                            baseUrl: 'sharing-results',
+                            rules: getPermissionRules(
+                                'report',
+                                'sharingResults',
+                                'update'
+                            ),
+                        }}
+                    />
                 </div>
             </SectionWrapper>
 

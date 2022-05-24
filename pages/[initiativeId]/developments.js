@@ -6,9 +6,9 @@ import t from 'prop-types';
 import dayjs from 'dayjs';
 
 // Utilities
+import { stripUndefined, getPermissionRules } from 'utilities';
 import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
-import { stripUndefined } from 'utilities';
 
 // Components
 import WithAuth from 'components/withAuth';
@@ -226,8 +226,14 @@ const DevelopmentsComponent = ({ pageProps }) => {
                                 {label('InitiativeViewIndicatorsHeading')}
                             </h2>
                             <UpdateButton
-                                mode="initiative"
-                                baseUrl="indicators"
+                                {...{
+                                    baseUrl: 'indicators',
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'indicators',
+                                        'update'
+                                    ),
+                                }}
                             />
                         </div>
                         {/* Loop - by activity */}

@@ -15,6 +15,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, Reflection } from 'components/_inputs';
 
@@ -120,4 +121,6 @@ ReportSummaryComponent.defaultProps = {};
 
 ReportSummaryComponent.layout = 'wizard';
 
-export default WithAuth(ReportSummaryComponent);
+ReportSummaryComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(ReportSummaryComponent));

@@ -4,6 +4,11 @@ const d = {
         baseUrl: 'introduction',
         visible: false,
         hideBack: true,
+        permissions: {
+            add: ['super'],
+            update: ['super'],
+            delete: ['super'],
+        },
     },
     context: {
         title: '',
@@ -28,6 +33,11 @@ const d = {
                 guide: 'InitiativeWizardNameAndCategoryHelpGuide',
             },
         },
+        permissions: {
+            add: ['super'],
+            update: ['super'],
+            delete: ['super'],
+        },
     },
     organisationsInvolved: {
         baseUrl: 'organisations-involved',
@@ -45,6 +55,11 @@ const d = {
                 what: 'InitiativeWizardOrganisationsInvolvedHelpWhat',
                 guide: 'InitiativeWizardOrganisationsInvolvedHelpGuide',
             },
+        },
+        permissions: {
+            add: ['super'],
+            update: ['super'],
+            delete: ['super'],
         },
     },
     shareWithContacts: {
@@ -64,6 +79,11 @@ const d = {
                 guide: 'InitiativeWizardShareWithContactsHelpGuide',
             },
         },
+        permissions: {
+            add: ['super'],
+            update: ['super'],
+            delete: ['super'],
+        },
     },
     complete: {
         title: 'Complete',
@@ -73,6 +93,11 @@ const d = {
         baseUrl: 'complete',
         url(initiativeId) {
             return `/create/${initiativeId}/complete`;
+        },
+        permissions: {
+            add: ['super'],
+            update: ['super'],
+            delete: ['super'],
         },
     },
     done: {
@@ -85,7 +110,7 @@ const d = {
     },
 };
 
-const createInitiativeStructures = {
+const createStructures = {
     default: [
         d.introduction,
         {
@@ -100,5 +125,5 @@ const createInitiativeStructures = {
         d.done,
     ],
 };
-
-export default createInitiativeStructures;
+export { d };
+export default createStructures;

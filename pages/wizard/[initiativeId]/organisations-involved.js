@@ -10,6 +10,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
+import WithPermission from 'components/withPermission';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
 import TitlePreamble from 'components/_wizard/titlePreamble';
@@ -328,4 +329,6 @@ OrganisationsInvolvedComponent.defaultProps = {};
 
 OrganisationsInvolvedComponent.layout = 'wizard';
 
-export default WithAuth(OrganisationsInvolvedComponent);
+OrganisationsInvolvedComponent.permissions = 'context';
+
+export default WithAuth(WithPermission(OrganisationsInvolvedComponent));

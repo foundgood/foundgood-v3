@@ -63,28 +63,42 @@ const OrganisationsInvolvedComponent = () => {
     );
 };
 
-const List = ({ organisations }) => (
-    <div className="flex flex-col space-y-16">
-        {organisations.length > 0 ? (
-            organisations.map(organisation => (
-                <div
-                    key={organisation.Id}
-                    className="flex items-center p-16 space-x-16 bg-white border-4 border-amber-10 rounded-8">
-                    <div className="flex items-center justify-center flex-shrink-0 w-64 h-64 text-teal-100 border-2 rounded-4 border-amber-10">
-                        <FiImage size="36" className="stroke-current" />
+const List = ({ organisations }) => {
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { label } = useLabels();
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
+    return (
+        <div className="flex flex-col space-y-16">
+            {organisations.length > 0 ? (
+                organisations.map(organisation => (
+                    <div
+                        key={organisation.Id}
+                        className="flex items-center p-16 space-x-16 bg-white border-4 border-amber-10 rounded-8">
+                        <div className="flex items-center justify-center flex-shrink-0 w-64 h-64 text-teal-100 border-2 rounded-4 border-amber-10">
+                            <FiImage size="36" className="stroke-current" />
+                        </div>
+                        <div className="t-sh4 whitespace-nowrap">
+                            {organisation?.Account__r?.Name}
+                        </div>
                     </div>
-                    <div className="t-sh4 whitespace-nowrap">
-                        {organisation?.Account__r?.Name}
-                    </div>
-                </div>
-            ))
-        ) : (
-            <p className="flex items-center justify-center p-16 t-sh5 bg-teal-20 rounded-8">
-                {label('InitiativeViewOrganisationsInvolvedNoOrganisations')}
-            </p>
-        )}
-    </div>
-);
+                ))
+            ) : (
+                <p className="flex items-center justify-center p-16 t-sh5 bg-teal-20 rounded-8">
+                    {label(
+                        'InitiativeViewOrganisationsInvolvedNoOrganisations'
+                    )}
+                </p>
+            )}
+        </div>
+    );
+};
 
 OrganisationsInvolvedComponent.propTypes = {};
 
