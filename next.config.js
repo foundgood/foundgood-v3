@@ -17,6 +17,7 @@ module.exports = {
         domains: [
             'foundgood-initiative-update-content-media.s3.amazonaws.com',
             'foundgood-initiative-update-content-media.s3.eu-west-1.amazonaws.com',
+            'images.unsplash.com',
         ],
     },
     target: 'serverless',

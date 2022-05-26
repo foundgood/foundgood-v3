@@ -62,7 +62,7 @@ const PermissionComponent = ({ children, rules, additionalRules }) => {
                 })
             );
         }
-    }, [rules]);
+    }, [rules, getUserAccountType(), getUserInitiativeTeamRole()]);
 
     useEffect(() => {
         setAllowAdditional(additionalRules.every(rule => rule));

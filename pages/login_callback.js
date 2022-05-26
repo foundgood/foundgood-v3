@@ -6,7 +6,7 @@ import { createLocalStorageStateHook } from 'use-local-storage-state';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { elseware } from 'utilities/api';
+import { elseware, checkUser } from 'utilities/api';
 import { useAuthStore } from 'utilities/store';
 import { useLabels } from 'utilities/hooks';
 import { hasWindow } from 'utilities';
@@ -65,6 +65,7 @@ const LoginCallbackComponent = () => {
                 // Get user info from sf api
                 elseware
                     .get({ path: 'user/user', token: access_token })
+                    .then(user => checkUser(user))
                     .then(user => {
                         // Update localstorage user
                         setLsUserData({
