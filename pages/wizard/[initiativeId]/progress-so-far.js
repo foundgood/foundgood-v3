@@ -98,7 +98,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 {activities.length > 0 ? (
@@ -137,7 +137,7 @@ const ProgressSoFarComponent = ({ pageProps }) => {
                     <p className="t-h5">{label('WizardEmptyStatesProgress')}</p>
                 )}
             </InputWrapper>
-        </>
+        </WithPermission>
     );
 };
 
@@ -147,6 +147,4 @@ ProgressSoFarComponent.defaultProps = {};
 
 ProgressSoFarComponent.layout = 'wizard';
 
-ProgressSoFarComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(ProgressSoFarComponent));
+export default WithAuth(ProgressSoFarComponent);

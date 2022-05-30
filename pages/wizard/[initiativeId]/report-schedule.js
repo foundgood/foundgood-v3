@@ -134,7 +134,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 {funders.length > 0 ? (
@@ -214,7 +214,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                     />
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -224,6 +224,4 @@ ReportScheduleComponent.defaultProps = {};
 
 ReportScheduleComponent.layout = 'wizard';
 
-ReportScheduleComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(ReportScheduleComponent));
+export default WithAuth(ReportScheduleComponent);

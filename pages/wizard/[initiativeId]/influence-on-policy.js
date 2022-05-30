@@ -128,7 +128,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -200,7 +200,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                     />
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -210,6 +210,4 @@ InfluenceOnPolicyComponent.defaultProps = {};
 
 InfluenceOnPolicyComponent.layout = 'wizard';
 
-InfluenceOnPolicyComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(InfluenceOnPolicyComponent));
+export default WithAuth(InfluenceOnPolicyComponent);

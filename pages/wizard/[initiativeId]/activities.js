@@ -231,7 +231,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -378,7 +378,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                     )}
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -388,6 +388,4 @@ ActivitiesComponent.defaultProps = {};
 
 ActivitiesComponent.layout = 'wizard';
 
-ActivitiesComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(ActivitiesComponent));
+export default WithAuth(ActivitiesComponent);

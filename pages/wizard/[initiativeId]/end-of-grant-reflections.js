@@ -87,7 +87,7 @@ const EndOfGrantReflectionsComponent = () => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Reflection
@@ -120,7 +120,7 @@ const EndOfGrantReflectionsComponent = () => {
                     controller={mainForm.control}
                 />
             </InputWrapper>
-        </>
+        </WithPermission>
     );
 };
 
@@ -130,6 +130,4 @@ EndOfGrantReflectionsComponent.defaultProps = {};
 
 EndOfGrantReflectionsComponent.layout = 'wizard';
 
-EndOfGrantReflectionsComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(EndOfGrantReflectionsComponent));
+export default WithAuth(EndOfGrantReflectionsComponent);

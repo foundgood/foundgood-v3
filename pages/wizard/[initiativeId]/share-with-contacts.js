@@ -92,7 +92,7 @@ const ShareWithContactsComponent = () => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InviteContacts
                 {...{
@@ -101,7 +101,7 @@ const ShareWithContactsComponent = () => {
                     form: mainForm,
                 }}
             />
-        </>
+        </WithPermission>
     );
 };
 
@@ -111,6 +111,4 @@ ShareWithContactsComponent.defaultProps = {};
 
 ShareWithContactsComponent.layout = 'wizard';
 
-ShareWithContactsComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(ShareWithContactsComponent));
+export default WithAuth(ShareWithContactsComponent);

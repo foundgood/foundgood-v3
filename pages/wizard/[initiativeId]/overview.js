@@ -295,7 +295,7 @@ const OverviewComponent = () => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <FormFields
@@ -305,7 +305,7 @@ const OverviewComponent = () => {
                     }}
                 />
             </InputWrapper>
-        </>
+        </WithPermission>
     );
 };
 
@@ -315,6 +315,4 @@ OverviewComponent.defaultProps = {};
 
 OverviewComponent.layout = 'wizard';
 
-OverviewComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(OverviewComponent));
+export default WithAuth(OverviewComponent);

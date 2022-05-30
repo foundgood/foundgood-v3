@@ -85,7 +85,7 @@ const ReportSummaryComponent = () => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Reflection
@@ -111,7 +111,7 @@ const ReportSummaryComponent = () => {
                     controller={mainForm.control}
                 />
             </InputWrapper>
-        </>
+        </WithPermission>
     );
 };
 
@@ -121,6 +121,4 @@ ReportSummaryComponent.defaultProps = {};
 
 ReportSummaryComponent.layout = 'wizard';
 
-ReportSummaryComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(ReportSummaryComponent));
+export default WithAuth(ReportSummaryComponent);

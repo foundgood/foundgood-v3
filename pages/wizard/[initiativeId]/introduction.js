@@ -77,7 +77,6 @@ const IntroductionComponent = ({ pageProps }) => {
                 utilities.updateInitiative(initiativeData);
 
                 // Add Funder or Collaborator
-                // TODO: DONT DO IF SUPERUSER
                 if (getUserAccountType() === CONSTANTS.ACCOUNT.FOUNDATION) {
                     // Create funder
                     const { data: funderData } = await ewCreate(
@@ -141,57 +140,69 @@ const IntroductionComponent = ({ pageProps }) => {
     // RENDER
     // ///////////////////
 
-    return MODE === CONTEXTS.REPORT ? (
-        <>
-            <TitlePreamble
-                title={label('ReportWizardWelcomeHeading')}
-                preamble={label('ReportWizardWelcomeSubHeading')}
-                usePreload={false}
-            />
-            <div className="flex justify-center">
-                <Image src="/images/new-report.png" width="600" height="471" />
-            </div>
-            {/* Show bullet list? */}
-            {bodyTexts?.length > 1 && (
-                <ul className="pl-16 list-disc list-outside">
-                    {bodyTexts.map((item, index) => (
-                        <li key={index} className="mt-8 t-body">
-                            {item}
-                        </li>
-                    ))}
-                </ul>
-            )}
-            {/* Single paragraph */}
-            {bodyTexts?.length == 1 && <p className="t-body">{bodyTexts[0]}</p>}
-        </>
-    ) : (
-        <>
-            <TitlePreamble
-                title={label('InitiativeWizardWelcomeHeading')}
-                preamble={label('InitiativeWizardWelcomeSubHeading')}
-                usePreload={false}
-            />
-            <div className="flex justify-center my-64">
-                <Image
-                    src="/images/new-initiative.png"
-                    width="700"
-                    height="374"
-                />
-            </div>
+    return (
+        <WithPermission context>
+            {MODE === CONTEXTS.REPORT ? (
+                <>
+                    <TitlePreamble
+                        title={label('ReportWizardWelcomeHeading')}
+                        preamble={label('ReportWizardWelcomeSubHeading')}
+                        usePreload={false}
+                    />
+                    <div className="flex justify-center">
+                        <Image
+                            src="/images/new-report.png"
+                            width="600"
+                            height="471"
+                        />
+                    </div>
+                    {/* Show bullet list? */}
+                    {bodyTexts?.length > 1 && (
+                        <ul className="pl-16 list-disc list-outside">
+                            {bodyTexts.map((item, index) => (
+                                <li key={index} className="mt-8 t-body">
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {/* Single paragraph */}
+                    {bodyTexts?.length == 1 && (
+                        <p className="t-body">{bodyTexts[0]}</p>
+                    )}
+                </>
+            ) : (
+                <>
+                    <TitlePreamble
+                        title={label('InitiativeWizardWelcomeHeading')}
+                        preamble={label('InitiativeWizardWelcomeSubHeading')}
+                        usePreload={false}
+                    />
+                    <div className="flex justify-center my-64">
+                        <Image
+                            src="/images/new-initiative.png"
+                            width="700"
+                            height="374"
+                        />
+                    </div>
 
-            {/* Show bullet list? */}
-            {bodyTexts?.length > 1 && (
-                <ul className="pl-16 list-disc list-outside">
-                    {bodyTexts?.map((item, index) => (
-                        <li key={index} className="mt-8 t-body">
-                            {item}
-                        </li>
-                    ))}
-                </ul>
+                    {/* Show bullet list? */}
+                    {bodyTexts?.length > 1 && (
+                        <ul className="pl-16 list-disc list-outside">
+                            {bodyTexts?.map((item, index) => (
+                                <li key={index} className="mt-8 t-body">
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    {/* Single paragraph */}
+                    {bodyTexts?.length == 1 && (
+                        <p className="t-body">{bodyTexts[0]}</p>
+                    )}
+                </>
             )}
-            {/* Single paragraph */}
-            {bodyTexts?.length == 1 && <p className="t-body">{bodyTexts[0]}</p>}
-        </>
+        </WithPermission>
     );
 };
 
@@ -201,6 +212,4 @@ IntroductionComponent.defaultProps = {};
 
 IntroductionComponent.layout = 'wizardBlank';
 
-IntroductionComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(IntroductionComponent));
+export default WithAuth(IntroductionComponent);

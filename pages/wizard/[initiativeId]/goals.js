@@ -106,7 +106,7 @@ const GoalsComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -147,7 +147,7 @@ const GoalsComponent = ({ pageProps }) => {
                     />
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -157,6 +157,4 @@ GoalsComponent.defaultProps = {};
 
 GoalsComponent.layout = 'wizard';
 
-GoalsComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(GoalsComponent));
+export default WithAuth(GoalsComponent);

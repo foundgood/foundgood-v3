@@ -193,7 +193,7 @@ const ApplicantsComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -322,7 +322,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                     )}
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -332,6 +332,4 @@ ApplicantsComponent.defaultProps = {};
 
 ApplicantsComponent.layout = 'wizard';
 
-ApplicantsComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(ApplicantsComponent));
+export default WithAuth(ApplicantsComponent);

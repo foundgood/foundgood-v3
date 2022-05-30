@@ -106,7 +106,7 @@ const NameAndCategoryComponent = () => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <FormFields
@@ -116,7 +116,7 @@ const NameAndCategoryComponent = () => {
                     }}
                 />
             </InputWrapper>
-        </>
+        </WithPermission>
     );
 };
 
@@ -126,6 +126,4 @@ NameAndCategoryComponent.defaultProps = {};
 
 NameAndCategoryComponent.layout = 'wizard';
 
-NameAndCategoryComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(NameAndCategoryComponent));
+export default WithAuth(NameAndCategoryComponent);

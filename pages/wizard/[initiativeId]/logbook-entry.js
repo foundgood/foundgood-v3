@@ -193,7 +193,7 @@ const LogbookComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <LogbookCard
@@ -311,7 +311,7 @@ const LogbookComponent = ({ pageProps }) => {
                     />
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -321,6 +321,4 @@ LogbookComponent.defaultProps = {};
 
 LogbookComponent.layout = 'wizard';
 
-LogbookComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(LogbookComponent));
+export default WithAuth(LogbookComponent);

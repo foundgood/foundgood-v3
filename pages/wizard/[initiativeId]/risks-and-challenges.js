@@ -81,7 +81,7 @@ const RisksAndChallengesComponent = () => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Reflection
@@ -94,7 +94,7 @@ const RisksAndChallengesComponent = () => {
                     controller={mainForm.control}
                 />
             </InputWrapper>
-        </>
+        </WithPermission>
     );
 };
 
@@ -104,6 +104,4 @@ RisksAndChallengesComponent.defaultProps = {};
 
 RisksAndChallengesComponent.layout = 'wizard';
 
-RisksAndChallengesComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(RisksAndChallengesComponent));
+export default WithAuth(RisksAndChallengesComponent);

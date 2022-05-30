@@ -263,7 +263,7 @@ const OrganisationsInvolvedComponent = () => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -319,7 +319,7 @@ const OrganisationsInvolvedComponent = () => {
                     />
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -329,6 +329,4 @@ OrganisationsInvolvedComponent.defaultProps = {};
 
 OrganisationsInvolvedComponent.layout = 'wizard';
 
-OrganisationsInvolvedComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(OrganisationsInvolvedComponent));
+export default WithAuth(OrganisationsInvolvedComponent);

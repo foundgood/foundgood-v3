@@ -186,7 +186,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -315,7 +315,7 @@ const CollaboratorsComponent = ({ pageProps }) => {
                     />
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -325,6 +325,4 @@ CollaboratorsComponent.defaultProps = {};
 
 CollaboratorsComponent.layout = 'wizard';
 
-CollaboratorsComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(CollaboratorsComponent));
+export default WithAuth(CollaboratorsComponent);

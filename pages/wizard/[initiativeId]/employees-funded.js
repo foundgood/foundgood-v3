@@ -180,7 +180,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -300,7 +300,7 @@ const EmployeesFundedComponent = ({ pageProps }) => {
                     />
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -310,6 +310,4 @@ EmployeesFundedComponent.defaultProps = {};
 
 EmployeesFundedComponent.layout = 'wizard';
 
-EmployeesFundedComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(EmployeesFundedComponent));
+export default WithAuth(EmployeesFundedComponent);

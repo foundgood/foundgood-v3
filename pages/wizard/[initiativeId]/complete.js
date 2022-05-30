@@ -69,7 +69,7 @@ const CompleteComponent = ({ pageProps }) => {
     }, []);
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble
                 title={label(contextBasedLabels[MODE]?.title)}
                 preamble={label(contextBasedLabels[MODE]?.preamble)}
@@ -89,7 +89,7 @@ const CompleteComponent = ({ pageProps }) => {
             )}
             {/* Single paragraph */}
             {bodyTexts?.length == 1 && <p className="t-body">{bodyTexts[0]}</p>}
-        </>
+        </WithPermission>
     );
 };
 
@@ -99,6 +99,4 @@ CompleteComponent.defaultProps = {};
 
 CompleteComponent.layout = 'wizardBlank';
 
-CompleteComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(CompleteComponent));
+export default WithAuth(CompleteComponent);

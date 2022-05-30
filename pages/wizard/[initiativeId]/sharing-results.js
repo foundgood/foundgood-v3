@@ -240,7 +240,7 @@ const SharingResultsComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -471,7 +471,7 @@ const SharingResultsComponent = ({ pageProps }) => {
                     )}
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -481,6 +481,4 @@ SharingResultsComponent.defaultProps = {};
 
 SharingResultsComponent.layout = 'wizard';
 
-SharingResultsComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(SharingResultsComponent));
+export default WithAuth(SharingResultsComponent);

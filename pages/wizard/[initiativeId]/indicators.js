@@ -154,7 +154,7 @@ const IndicatorsComponent = ({ pageProps }) => {
     }, [updateId, modalIsOpen]);
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 {activities.length > 0 ? (
@@ -304,7 +304,7 @@ const IndicatorsComponent = ({ pageProps }) => {
                     )}
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -314,6 +314,4 @@ IndicatorsComponent.defaultProps = {};
 
 IndicatorsComponent.layout = 'wizard';
 
-IndicatorsComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(IndicatorsComponent));
+export default WithAuth(IndicatorsComponent);

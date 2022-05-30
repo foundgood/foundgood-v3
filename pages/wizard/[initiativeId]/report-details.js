@@ -95,7 +95,7 @@ const ReportDetailsComponent = () => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Text
@@ -144,7 +144,7 @@ const ReportDetailsComponent = () => {
                     required={!utilities.isNovoLeadFunder()}
                 />
             </InputWrapper>
-        </>
+        </WithPermission>
     );
 };
 
@@ -154,6 +154,4 @@ ReportDetailsComponent.defaultProps = {};
 
 ReportDetailsComponent.layout = 'wizard';
 
-ReportDetailsComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(ReportDetailsComponent));
+export default WithAuth(ReportDetailsComponent);

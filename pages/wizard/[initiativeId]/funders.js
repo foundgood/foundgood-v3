@@ -267,7 +267,7 @@ const FundersComponent = ({ pageProps }) => {
     // ///////////////////
 
     return (
-        <>
+        <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
                 <Button
@@ -341,7 +341,7 @@ const FundersComponent = ({ pageProps }) => {
                     />
                 </InputWrapper>
             </WizardModal>
-        </>
+        </WithPermission>
     );
 };
 
@@ -351,6 +351,4 @@ FundersComponent.defaultProps = {};
 
 FundersComponent.layout = 'wizard';
 
-FundersComponent.permissions = 'context';
-
-export default WithAuth(WithPermission(FundersComponent));
+export default WithAuth(FundersComponent);
