@@ -26,6 +26,7 @@ import NumberCard from 'components/_initiative/numberCard';
 import DividerLine from 'components/_initiative/dividerLine';
 import TextCard from 'components/_initiative/textCard';
 import OrganisationsInvolved from 'components/_initiative/organisationsInvolved';
+import Contacts from 'components/_initiative/contacts';
 
 const ProjectComponent = ({ pageProps }) => {
     // Fetch initiative data
@@ -416,6 +417,8 @@ const ProjectComponent = ({ pageProps }) => {
                     </SectionWrapper>
                     {/* Organisations Involved */}
                     <OrganisationsInvolved />
+                    {/* Contacts */}
+                    <Contacts />
                     {/* Funding */}
                     {totalAmount > 0 && (
                         <SectionWrapper className="bg-white rounded-8">

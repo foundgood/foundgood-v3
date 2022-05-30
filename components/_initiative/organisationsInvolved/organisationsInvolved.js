@@ -6,6 +6,7 @@ import { useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
+import { getPermissionRules } from 'utilities';
 import UpdateButton from 'components/updateButton';
 import SectionWrapper from 'components/sectionWrapper';
 
@@ -45,7 +46,17 @@ const OrganisationsInvolvedComponent = () => {
                 <h2 className="t-h3">
                     {label('InitiativeViewOrganisationsInvolvedHeading')}
                 </h2>
-                <UpdateButton mode="create" baseUrl="organisations-involved" />
+                <UpdateButton
+                    {...{
+                        context: 'create',
+                        rules: getPermissionRules(
+                            'create',
+                            'organisationsInvolved',
+                            'update'
+                        ),
+                        baseUrl: 'organisations-involved',
+                    }}
+                />
             </div>
 
             {/* Collaborators List */}

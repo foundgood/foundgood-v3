@@ -86,7 +86,8 @@ const useUser = () => {
     const { data: userInitiativeTeamMemberData } = ewGet(
         'initiative-team-member/get-member',
         {
-            id: utilities.initiative.get().Id,
+            initiative: utilities.initiative.get().Id,
+            id: getUserId(),
         },
         !!utilities.initiative.get().Id
     );
@@ -97,7 +98,7 @@ const useUser = () => {
 
     useEffect(() => {
         if (userInitiativeTeamMemberData) {
-            setUserInitiativeTeamMember(userInitiativeTeamMemberData);
+            setUserInitiativeTeamMember(userInitiativeTeamMemberData.data);
         }
     }, [userInitiativeTeamMemberData]);
 

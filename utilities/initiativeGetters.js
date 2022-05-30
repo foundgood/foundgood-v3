@@ -238,6 +238,12 @@ function initiativeGetters(getter, constants) {
                 );
             },
         },
+        teamMembers: {
+            // Returns array
+            getAll() {
+                return Object.values(getter().initiative._teamMembers);
+            },
+        },
         updateContents: {
             // Returns object
             getFromUpdateId(initiativeUpdateId) {

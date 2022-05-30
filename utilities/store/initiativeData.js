@@ -26,6 +26,7 @@ const defaultInitiative = {
     _reportDetailGoals: {},
     _reportDetails: {},
     _reports: {},
+    _teamMembers: {},
     _updateContents: {},
     _updates: {},
 };

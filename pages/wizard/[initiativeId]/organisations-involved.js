@@ -22,7 +22,7 @@ const OrganisationsInvolvedComponent = () => {
     // STORES
     // ///////////////////
 
-    const { utilities } = useInitiativeDataStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
@@ -74,7 +74,10 @@ const OrganisationsInvolvedComponent = () => {
                 // Create funder
                 const { data: funderData } = await ewCreate(
                     'initiative-funder/initiative-funder',
-                    data
+                    {
+                        ...data,
+                        Type__c: CONSTANTS.FUNDERS.LEAD_FUNDER,
+                    }
                 );
 
                 // Update store
@@ -83,9 +86,14 @@ const OrganisationsInvolvedComponent = () => {
 
             if (organisationType === 'Initiative_Collaborator__c') {
                 // Create collaborator
-                const { data: collaboratorData } = await ewCreate(
+                const {
+                    data: collaboratorData,
+                } = await ewCreate(
                     'initiative-collaborator/initiative-collaborator',
-                    data
+                    {
+                        ...data,
+                        Type__c: CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR,
+                    }
                 );
 
                 // Update store

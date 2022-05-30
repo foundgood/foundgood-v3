@@ -24,7 +24,7 @@ const useWizardSubmit = (submitOptions = {}) => {
     const defaultSubmitOptions = {
         [CONTEXTS.REPORT]: [null, null, null],
         [CONTEXTS.INITIATIVE]: [null, null, null],
-        [CONTEXTS.INITIATIVE_CREATE]: [null, null, null],
+        [CONTEXTS.CREATE]: [null, null, null],
     };
 
     const [mergedOptions] = useState({
@@ -37,6 +37,7 @@ const useWizardSubmit = (submitOptions = {}) => {
             setTimeout(() => {
                 if (mergedOptions[MODE]) {
                     const [form, submit, errorHandler] = mergedOptions[MODE];
+
                     setCurrentSubmitHandler(
                         form
                             ? form.handleSubmit(

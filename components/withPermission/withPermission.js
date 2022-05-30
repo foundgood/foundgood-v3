@@ -26,7 +26,6 @@ const WithPermissionComponent = ({ children, context }) => {
     // ///////////////////
 
     const [rules, setRules] = useState([]);
-    const [allowRender, setAllowRender] = useState(false);
 
     // ///////////////////
     // DATA
@@ -91,9 +90,6 @@ const WithPermissionComponent = ({ children, context }) => {
                 }
             });
 
-            // Set allow
-            setAllowRender(allow);
-
             // Redirect if false
             if (!allow) {
                 router.push('/');
@@ -105,7 +101,7 @@ const WithPermissionComponent = ({ children, context }) => {
     // RENDER
     // ///////////////////
 
-    return allowRender ? <>{children}</> : null;
+    return <>{children}</>;
 };
 
 WithPermissionComponent.propTypes = {
