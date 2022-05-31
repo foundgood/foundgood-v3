@@ -12,6 +12,7 @@ import {
     useLabels,
     useReflections,
     useWizardSubmit,
+    usePermissions,
 } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
@@ -50,6 +51,7 @@ const FundersComponent = ({ pageProps }) => {
         parentKey: 'Initiative_Funder__c',
         type: CONSTANTS.REPORT_DETAILS.FUNDER_OVERVIEW,
     });
+    const { valuePermissions, enableAction } = usePermissions();
 
     // ///////////////////
     // STATE
@@ -59,7 +61,6 @@ const FundersComponent = ({ pageProps }) => {
     const [modalIsSaving, setModalIsSaving] = useState(false);
     const [reflecting, setReflecting] = useState(false);
     const [updateId, setUpdateId] = useState(null);
-    const [funder, setFunder] = useState(null);
 
     // ///////////////////
     // FORMS
@@ -197,9 +198,6 @@ const FundersComponent = ({ pageProps }) => {
             type: 'Select',
             name: 'Account__c',
             label: object.label('Initiative_Funder__c.Account__c'),
-            disabled:
-                utilities.isNovoLeadFunder() &&
-                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             required: true,
             // Type options
             subLabel: object.helpText('Initiative_Funder__c.Account__c'),
@@ -214,21 +212,18 @@ const FundersComponent = ({ pageProps }) => {
             type: 'Select',
             name: 'Type__c',
             label: object.label('Initiative_Funder__c.Type__c'),
-            disabled:
-                utilities.isNovoLeadFunder() &&
-                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             required: true,
             // Type options
             subLabel: object.helpText('Initiative_Funder__c.Type__c'),
-            options: pickList('Initiative_Funder__c.Type__c'),
+            options: valuePermissions(
+                { 'Lead funder': ['super'] },
+                pickList('Initiative_Funder__c.Type__c')
+            ),
         },
         {
             type: 'SelectList',
             name: 'Contribution',
             label: object.label('Initiative_Funder__c.Amount__c'),
-            disabled:
-                utilities.isNovoLeadFunder() &&
-                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             // Type options
             showText: true,
             listMaxLength: 1,
@@ -245,17 +240,11 @@ const FundersComponent = ({ pageProps }) => {
             label: `${object.label(
                 'Initiative_Funder__c.Grant_Start_Date__c'
             )} / ${object.label('Initiative_Funder__c.Grant_End_Date__c')}`,
-            disabled:
-                utilities.isNovoLeadFunder() &&
-                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
         },
         {
             type: 'Text',
             name: 'Application_Id__c',
             label: object.label('Initiative_Funder__c.Application_Id__c'),
-            disabled:
-                utilities.isNovoLeadFunder() &&
-                funder?.Account__c === CONSTANTS.IDS.NNF_ACCOUNT,
             // Type options
             maxLength: 15,
             subLabel: object.helpText('Initiative_Funder__c.Application_Id__c'),
@@ -307,11 +296,13 @@ const FundersComponent = ({ pageProps }) => {
                             } - ${_get(funder, 'Grant_End_Date__c') || ''} • ${
                                 _get(funder, 'Application_Id__c') || ''
                             }`}
-                            action={() => {
-                                setUpdateId(funder.Id);
-                                setFunder(funder);
-                                setModalIsOpen(true);
-                            }}
+                            action={enableAction(
+                                ['super', { account: funder.Account__c }],
+                                () => {
+                                    setUpdateId(funder.Id);
+                                    setModalIsOpen(true);
+                                }
+                            )}
                             reflectAction={setReflecting}
                             controller={
                                 MODE === CONTEXTS.REPORT &&

@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import t from 'prop-types';
 
 // Utilities
-import { useUser } from 'utilities/hooks';
+import { usePermissions } from 'utilities/hooks';
 
 // Components
 
@@ -14,7 +14,7 @@ const PermissionComponent = ({ children, rules, additionalRules }) => {
     // HOOKS
     // ///////////////////
 
-    const { getUserAccountType, getUserInitiativeTeamRole } = useUser();
+    const { grantPermission, permissionUserUpdated } = usePermissions();
 
     // ///////////////////
     // STATE
@@ -24,45 +24,14 @@ const PermissionComponent = ({ children, rules, additionalRules }) => {
     const [allowAdditional, setAllowAdditional] = useState(false);
 
     // ///////////////////
-    // DATA
-    // ///////////////////
-
-    // Match values from SalesForce (Enums)
-    const ACCOUNTS = {
-        funder: 'Funder',
-        grantee: 'Grantee',
-        organisation: 'Organisation',
-        super: 'Super',
-    };
-
-    // Match values from SalesForce (Enums)
-    const ROLES = {
-        admin: 'Admin',
-        collaborator: 'Collaborator',
-        member: 'Member',
-    };
-
-    // ///////////////////
     // EFFECTS
     // ///////////////////
 
     useEffect(() => {
         if (rules.length > 0) {
-            setAllowRender(
-                rules.every(rule => {
-                    const [account, role] = rule.split('.');
-                    if (account && role) {
-                        return (
-                            getUserAccountType() === ACCOUNTS[account] &&
-                            getUserInitiativeTeamRole() === ROLES[role]
-                        );
-                    } else if (account) {
-                        return getUserAccountType() === ACCOUNTS[account];
-                    }
-                })
-            );
+            setAllowRender(grantPermission(rules));
         }
-    }, [rules, getUserAccountType(), getUserInitiativeTeamRole()]);
+    }, [rules, permissionUserUpdated]);
 
     useEffect(() => {
         setAllowAdditional(additionalRules.every(rule => rule));

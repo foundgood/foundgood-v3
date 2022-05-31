@@ -22,14 +22,14 @@ const OrganisationsInvolvedComponent = () => {
     // STORES
     // ///////////////////
 
-    const { utilities, CONSTANTS } = useInitiativeDataStore();
+    const { utilities } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { label, pickList } = useLabels();
-    const { ewGet, ewDelete, ewCreate } = useElseware();
+    const { ewGet, ewDelete, ewCreateUpdateWrapper } = useElseware();
 
     // ///////////////////
     // STATE
@@ -41,6 +41,7 @@ const OrganisationsInvolvedComponent = () => {
     const [organisation, setOrganisation] = useState(null);
     const [organisationType, setOrganisationType] = useState(null);
     const [organisationValues, setOrganisationValues] = useState([]);
+    const [typeValues, setTypeValues] = useState([]);
 
     // ///////////////////
     // FORMS
@@ -61,45 +62,34 @@ const OrganisationsInvolvedComponent = () => {
         // Modal save button state
         setModalIsSaving(true);
         try {
-            const { Account__c } = formData;
+            const { Account__c, Type__c } = formData;
 
             // Data for sf
             const data = {
                 Account__c,
-                Initiative__c: utilities.initiative.get().Id,
+                Type__c,
             };
 
             // Add Funder or Collaborator
             if (organisationType === 'Initiative_Funder__c') {
-                // Create funder
-                const { data: funderData } = await ewCreate(
+                // Create/update funder
+                await ewCreateUpdateWrapper(
                     'initiative-funder/initiative-funder',
-                    {
-                        ...data,
-                        Type__c: CONSTANTS.FUNDERS.LEAD_FUNDER,
-                    }
+                    updateId,
+                    data,
+                    { Initiative__c: utilities.initiative.get().Id },
+                    '_funders'
                 );
-
-                // Update store
-                utilities.updateInitiativeData('_funders', funderData);
             }
 
             if (organisationType === 'Initiative_Collaborator__c') {
-                // Create collaborator
-                const {
-                    data: collaboratorData,
-                } = await ewCreate(
+                // Create/update collaborator
+                await ewCreateUpdateWrapper(
                     'initiative-collaborator/initiative-collaborator',
-                    {
-                        ...data,
-                        Type__c: CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR,
-                    }
-                );
-
-                // Update store
-                utilities.updateInitiativeData(
-                    '_collaborators',
-                    collaboratorData
+                    updateId,
+                    data,
+                    { Initiative__c: utilities.initiative.get().Id },
+                    '_collaborators'
                 );
             }
 
@@ -204,15 +194,19 @@ const OrganisationsInvolvedComponent = () => {
     }, [organisationTypeSelect]);
 
     useEffect(() => {
+        mainForm.setValue('Role', organisationType);
         if (organisationType === 'Initiative_Funder__c') {
-            const { Account__c } = utilities.funders.get(updateId);
+            const { Account__c, Type__c } = utilities.funders.get(updateId);
             mainForm.setValue('Account__c', Account__c);
+            mainForm.setValue('Type__c', Type__c);
         }
         if (organisationType === 'Initiative_Collaborator__c') {
-            const { Account__c } = utilities.collaborators.get(updateId);
+            const { Account__c, Type__c } = utilities.collaborators.get(
+                updateId
+            );
             mainForm.setValue('Account__c', Account__c);
+            mainForm.setValue('Type__c', Type__c);
         }
-        mainForm.setValue('Role', organisationType);
     }, [updateId, modalIsOpen]);
 
     useEffect(() => {
@@ -243,6 +237,17 @@ const OrganisationsInvolvedComponent = () => {
         );
     }, [organisationType]);
 
+    useEffect(() => {
+        let values = [];
+        if (organisationType === 'Initiative_Funder__c') {
+            values = pickList('Initiative_Funder__c.Type__c');
+        }
+        if (organisationType === 'Initiative_Collaborator__c') {
+            values = values = pickList('Initiative_Collaborator__c.Type__c');
+        }
+        setTypeValues(values);
+    }, [organisationType]);
+
     // ///////////////////
     // FIELDS
     // ///////////////////
@@ -255,6 +260,14 @@ const OrganisationsInvolvedComponent = () => {
             required: true,
             // Type options
             options: pickList('Custom.WizardModalOrganisationsInvolvedRole'),
+        },
+        {
+            type: 'Select',
+            name: 'Type__c',
+            label: label('WizardModalOrganisationsInvolvedOrganisationType'),
+            required: true,
+            // Type options
+            options: typeValues,
         },
         {
             type: 'Select',
@@ -289,7 +302,6 @@ const OrganisationsInvolvedComponent = () => {
                         collaborators,
                         action(organisation, organisationType) {
                             setUpdateId(organisation.Id);
-                            setOrganisation(organisation);
                             setOrganisationType(organisationType);
                             setModalIsOpen(true);
                         },

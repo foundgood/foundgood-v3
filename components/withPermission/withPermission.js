@@ -8,7 +8,7 @@ import t from 'prop-types';
 
 // Utilities
 import { getPermissionRules } from 'utilities';
-import { useUser, useContext } from 'utilities/hooks';
+import { useContext, usePermissions } from 'utilities/hooks';
 
 // Components
 
@@ -18,7 +18,7 @@ const WithPermissionComponent = ({ children, context }) => {
     // ///////////////////
 
     const router = useRouter();
-    const { getUserAccountType, getUserInitiativeTeamRole } = useUser();
+    const { grantPermission, permissionUserUpdated } = usePermissions();
     const { MODE, UPDATE, PATH } = useContext();
 
     // ///////////////////
@@ -26,25 +26,6 @@ const WithPermissionComponent = ({ children, context }) => {
     // ///////////////////
 
     const [rules, setRules] = useState([]);
-
-    // ///////////////////
-    // DATA
-    // ///////////////////
-
-    // Match values from SalesForce (Enums)
-    const ACCOUNTS = {
-        funder: 'Funder',
-        grantee: 'Grantee',
-        organisation: 'Organisation',
-        super: 'Super',
-    };
-
-    // Match values from SalesForce (Enums)
-    const ROLES = {
-        admin: 'Admin',
-        collaborator: 'Collaborator',
-        member: 'Member',
-    };
 
     // ///////////////////
     // EFFECTS
@@ -71,31 +52,16 @@ const WithPermissionComponent = ({ children, context }) => {
 
     useEffect(() => {
         // Only do something, if all data is present
-        if (
-            rules &&
-            rules.length > 0 &&
-            getUserAccountType() &&
-            getUserInitiativeTeamRole()
-        ) {
+        if (rules && rules.length > 0) {
             // Figure out allow based on permissions rule
-            const allow = rules.every(rule => {
-                const [account, role] = rule.split('.');
-                if (account && role) {
-                    return (
-                        getUserAccountType() === ACCOUNTS[account] &&
-                        getUserInitiativeTeamRole() === ROLES[role]
-                    );
-                } else if (account) {
-                    return getUserAccountType() === ACCOUNTS[account];
-                }
-            });
+            const allow = grantPermission(rules);
 
             // Redirect if false
             if (!allow) {
                 router.push('/');
             }
         }
-    }, [rules, getUserAccountType(), getUserInitiativeTeamRole()]);
+    }, [rules, permissionUserUpdated]);
 
     // ///////////////////
     // RENDER

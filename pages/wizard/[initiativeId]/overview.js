@@ -10,6 +10,7 @@ import {
     useElseware,
     useLabels,
     useWizardSubmit,
+    usePermissions,
 } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
@@ -38,7 +39,8 @@ const OverviewComponent = () => {
         pickList,
         controlledPickList,
     } = useLabels();
-    const { ewGet, ewCreate, ewUpdate, ewCreateUpdateWrapper } = useElseware();
+    const { ewUpdate, ewCreateUpdateWrapper } = useElseware();
+    const { enableInputField, requireInputField } = usePermissions();
 
     // ///////////////////
     // FORMS
@@ -61,7 +63,6 @@ const OverviewComponent = () => {
                 Name,
                 Summary__c,
                 Where_Is_Problem__c,
-                Account__c,
                 Category__c,
                 GrantDate,
                 Problem_Effect__c,
@@ -91,23 +92,6 @@ const OverviewComponent = () => {
             // Update initiative
             utilities.updateInitiative(initiativeData);
 
-            // Only create collaborator if main collaborator have not been set
-            if (!mainCollaborator?.Account__c || false) {
-                const { data: collaboratorData } = await ewCreate(
-                    'initiative-collaborator/initiative-collaborator',
-                    {
-                        Type__c: CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR,
-                        Initiative__c: initiativeData.Id,
-                        Account__c,
-                    }
-                );
-
-                utilities.updateInitiativeData(
-                    '_collaborators',
-                    collaboratorData
-                );
-            }
-
             // Create / update funder objective based on Category
             await ewCreateUpdateWrapper(
                 'initiative-goal/initiative-goal',
@@ -135,14 +119,6 @@ const OverviewComponent = () => {
     // DATA
     // ///////////////////
 
-    // Get data for form
-    const { data: accountGrantees } = ewGet('account/account', {
-        type: 'grantee',
-    });
-
-    // Main collaborator
-    const mainCollaborator = utilities.collaborators.getTypeMain();
-
     // Funder objective (predefined goal)
     const funderObjective = utilities.goals.getTypePredefined();
 
@@ -152,43 +128,12 @@ const OverviewComponent = () => {
 
     const fields = [
         {
-            type: 'Select',
-            name: 'Account__c',
-            label: object.label('Initiative__c.Lead_Grantee__c'),
-            defaultValue: accountGrantees
-                ? Object.values(accountGrantees.data).find(
-                      ag => ag.Id === mainCollaborator?.Account__c
-                  )?.Id
-                : null,
-            disabled: mainCollaborator?.Id
-                ? true
-                : utilities.isNovoLeadFunder(),
-            required: mainCollaborator?.Id ? false : true,
-            // Type options
-            subLabel: object.helpText('Initiative__c.Lead_Grantee__c'),
-            options: accountGrantees
-                ? Object.values(accountGrantees.data).map(item => ({
-                      label: item.Name,
-                      value: item.Id,
-                  }))
-                : [],
-        },
-        {
             type: 'Text',
             name: 'Name',
             label: object.label('Initiative__c.Name'),
-            defaultValue:
-                utilities.initiative.get().Name === '___'
-                    ? ''
-                    : utilities.initiative.get().Name,
-            disabled:
-                utilities.initiative.get().Name === '___'
-                    ? utilities.isNovoLeadFunder()
-                    : true,
-            required:
-                utilities.initiative.get().Name === '___'
-                    ? !utilities.isNovoLeadFunder()
-                    : false,
+            defaultValue: utilities.initiative.get().Name,
+            disabled: enableInputField(['super']),
+            required: requireInputField(['super']),
             // Type options
             maxLength: 80,
         },
@@ -196,11 +141,9 @@ const OverviewComponent = () => {
             type: 'Select',
             name: 'Category__c',
             label: object.label('Initiative__c.Category__c'),
-            defaultValue: utilities.initiative.get().Category__c
-                ? utilities.initiative.get().Category__c
-                : '',
-            disabled: utilities.isNovoLeadFunder(),
-            required: true,
+            defaultValue: utilities.initiative.get().Category__c,
+            disabled: enableInputField(['super']),
+            required: requireInputField(['super']),
             // Type options
             options: pickList('Initiative__c.Category__c'),
             subLabel: object.helpText('Initiative__c.Category__c'),

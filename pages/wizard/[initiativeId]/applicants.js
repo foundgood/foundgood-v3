@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import { useForm, useFormState, useWatch } from 'react-hook-form';
+import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
@@ -12,6 +12,7 @@ import {
     useLabels,
     useReflections,
     useWizardSubmit,
+    usePermissions,
 } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
@@ -21,7 +22,7 @@ import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/wizardModal';
-import { InputWrapper, Select, DateRange, LongText } from 'components/_inputs';
+import { InputWrapper, Select, LongText } from 'components/_inputs';
 import CollaboratorCard from 'components/_wizard/collaboratorCard';
 import NoReflections from 'components/_wizard/noReflections';
 
@@ -50,6 +51,7 @@ const ApplicantsComponent = ({ pageProps }) => {
         parentKey: 'Initiative_Collaborator__c',
         type: CONSTANTS.REPORT_DETAILS.COLLABORATOR_OVERVIEW,
     });
+    const { valuePermissions, enableAction } = usePermissions();
 
     // ///////////////////
     // STATE
@@ -59,7 +61,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     const [modalIsSaving, setModalIsSaving] = useState(false);
     const [reflecting, setReflecting] = useState(false);
     const [updateId, setUpdateId] = useState(null);
-    const [applicantType, setApplicantType] = useState(null);
 
     // ///////////////////
     // FORMS
@@ -68,10 +69,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     const mainForm = useForm();
     const reflectionForm = useForm();
     const { isDirty } = useFormState({ control: mainForm.control });
-    const applicantTypeSelect = useWatch({
-        control: mainForm.control,
-        name: 'Type__c',
-    });
 
     // ///////////////////
     // SUBMIT
@@ -178,15 +175,7 @@ const ApplicantsComponent = ({ pageProps }) => {
             to: End_Date__c,
         });
         mainForm.setValue('Description__c', Description__c);
-
-        // Set goal type
-        setApplicantType(Type__c);
     }, [updateId, modalIsOpen]);
-
-    // Watch the change of goal type
-    useEffect(() => {
-        setApplicantType(applicantTypeSelect);
-    }, [applicantTypeSelect]);
 
     // ///////////////////
     // RENDER
@@ -227,10 +216,13 @@ const ApplicantsComponent = ({ pageProps }) => {
                             }
                             label={_get(collaborator, 'Type__c') || ''}
                             body={_get(collaborator, 'Description__c') || ''}
-                            action={() => {
-                                setUpdateId(collaborator.Id);
-                                setModalIsOpen(true);
-                            }}
+                            action={enableAction(
+                                ['super', { account: collaborator.Account__c }],
+                                () => {
+                                    setUpdateId(collaborator.Id);
+                                    setModalIsOpen(true);
+                                }
+                            )}
                             reflectAction={setReflecting}
                             controller={
                                 MODE === CONTEXTS.REPORT &&
@@ -286,12 +278,14 @@ const ApplicantsComponent = ({ pageProps }) => {
                                 'Initiative_Collaborator__c.Type__c'
                             )}
                             placeholder={label('FormCaptureSelectEmpty')}
-                            options={pickList(
-                                'Initiative_Collaborator__c.Type__c'
-                            ).filter(item =>
-                                CONSTANTS.COLLABORATORS.APPLICANTS_CREATE.includes(
-                                    item.value
-                                )
+                            options={valuePermissions(
+                                {
+                                    'Main applicant': ['super'],
+                                    'Additional collaborator': [
+                                        'fake-one-to-hide',
+                                    ],
+                                },
+                                pickList('Initiative_Collaborator__c.Type__c')
                             )}
                             required
                             controller={mainForm.control}
@@ -308,18 +302,6 @@ const ApplicantsComponent = ({ pageProps }) => {
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         controller={mainForm.control}
                     />
-                    {applicantType ===
-                        CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR && (
-                        <DateRange
-                            name="Dates"
-                            label={`${object.label(
-                                'Initiative_Collaborator__c.Start_Date__c'
-                            )} / ${object.label(
-                                'Initiative_Collaborator__c.End_Date__c'
-                            )}`}
-                            controller={mainForm.control}
-                        />
-                    )}
                 </InputWrapper>
             </WizardModal>
         </WithPermission>
@@ -331,5 +313,7 @@ ApplicantsComponent.propTypes = {};
 ApplicantsComponent.defaultProps = {};
 
 ApplicantsComponent.layout = 'wizard';
+
+ApplicantsComponent.permissions = 'context';
 
 export default WithAuth(ApplicantsComponent);

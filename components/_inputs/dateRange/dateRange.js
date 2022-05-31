@@ -133,7 +133,7 @@ const DateRangeComponent = ({
                                 container: cc([
                                     'input-defaults-date transition-default',
                                     {
-                                        'pointer-events-none opacity-50': !from,
+                                        'pointer-events-none': !from,
                                         'input-defaults-date-error':
                                             error?.type === 'isDateTo',
                                     },

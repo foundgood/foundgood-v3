@@ -6,7 +6,12 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
+import {
+    useElseware,
+    useLabels,
+    useWizardSubmit,
+    usePermissions,
+} from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -35,6 +40,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
 
     const { labelTodo, label, object, pickList } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
+    const { enableAction } = usePermissions();
 
     // ///////////////////
     // STATE
@@ -152,23 +158,21 @@ const ReportScheduleComponent = ({ pageProps }) => {
                                     headline: labelTodo(item.Report_Type__c),
                                     dueDate: labelTodo(item.Due_Date__c),
                                 }))}
-                                disableCreate={
-                                    funder.Account__c ===
-                                    CONSTANTS.IDS.NNF_ACCOUNT
-                                }
-                                disableUpdate={
-                                    funder.Account__c ===
-                                    CONSTANTS.IDS.NNF_ACCOUNT
-                                }
-                                actionCreate={() => {
-                                    setModalIsOpen(true);
-                                    setFunder(funder);
-                                }}
-                                actionUpdate={item => {
-                                    setModalIsOpen(true);
-                                    setUpdateId(item.id);
-                                    setFunder(funder);
-                                }}
+                                actionCreate={enableAction(
+                                    ['super', { account: funder.Account__c }],
+                                    () => {
+                                        setModalIsOpen(true);
+                                        setFunder(funder);
+                                    }
+                                )}
+                                actionUpdate={enableAction(
+                                    ['super', { account: funder.Account__c }],
+                                    item => {
+                                        setModalIsOpen(true);
+                                        setUpdateId(item.id);
+                                        setFunder(funder);
+                                    }
+                                )}
                             />
                         );
                     })

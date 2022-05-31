@@ -99,12 +99,14 @@ const CardComponent = ({
             </div>
 
             <div className="flex justify-end mt-32 space-x-12">
-                <Button
-                    theme="teal"
-                    variant={reflectionMode ? 'tertiary' : 'secondary'}
-                    action={action}>
-                    {label('ButtonEditDetails')}
-                </Button>
+                {action ? (
+                    <Button
+                        theme="teal"
+                        variant={reflectionMode ? 'tertiary' : 'secondary'}
+                        action={action}>
+                        {label('ButtonEditDetails')}
+                    </Button>
+                ) : null}
                 {reflectionMode && (
                     <Button
                         theme="teal"

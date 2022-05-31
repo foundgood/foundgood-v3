@@ -49,6 +49,7 @@ const constants = {
     },
     COLLABORATORS: {
         MAIN_COLLABORATOR: 'Main applicant',
+        CO_APPLICANT: 'Co applicant',
         ADDITIONAL_COLLABORATORS: ['Additional collaborator'],
         APPLICANTS_ALL: ['Co applicant', 'Main applicant'],
         APPLICANTS_CREATE: ['Co applicant'],

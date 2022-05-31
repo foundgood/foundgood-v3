@@ -90,7 +90,7 @@ const UpdateButtonComponent = ({ context, baseUrl, variant, rules }) => {
 };
 
 UpdateButtonComponent.propTypes = {
-    context: t.oneOf(['initiative', 'report']).isRequired,
+    context: t.oneOf(['initiative', 'report', 'create']).isRequired,
     baseUrl: t.string.isRequired,
     // Button variant (primary, secondary...)
     variant: t.string,

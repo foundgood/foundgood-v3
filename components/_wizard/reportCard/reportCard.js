@@ -3,7 +3,6 @@ import React from 'react';
 
 // Packages
 import t from 'prop-types';
-import { useForm, useFormState } from 'react-hook-form';
 
 // Utilities
 import { useLabels } from 'utilities/hooks';
@@ -19,8 +18,6 @@ const ReportCardComponent = ({
     items,
     actionCreate,
     actionUpdate,
-    disableCreate,
-    disableUpdate,
 }) => {
     // Hook: Metadata
     const { label } = useLabels();
@@ -35,7 +32,7 @@ const ReportCardComponent = ({
                         </h4>
                     </div>
                 )}
-                {!disableCreate && (
+                {actionCreate && (
                     <Button
                         theme="teal"
                         variant="primary"
@@ -60,7 +57,7 @@ const ReportCardComponent = ({
                                 {item.dueDate}
                             </div>
                             <div className="self-end mt-16">
-                                {!disableUpdate && (
+                                {actionUpdate && (
                                     <Button
                                         theme="teal"
                                         variant="quaternary"
@@ -88,11 +85,8 @@ ReportCardComponent.propTypes = {
             dueDate: t.string,
         })
     ),
-    disableCreate: t.bool,
 };
 
-ReportCardComponent.defaultProps = {
-    disableCreate: false,
-};
+ReportCardComponent.defaultProps = {};
 
 export default ReportCardComponent;

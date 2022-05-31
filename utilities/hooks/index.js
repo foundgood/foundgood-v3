@@ -6,6 +6,7 @@ import useReflections from './useReflections';
 import useResponsive from './useResponsive';
 import useUser from './useUser';
 import useWizardSubmit from './useWizardSubmit';
+import usePermissions from './usePermissions';
 
 export {
     useContext,
@@ -16,4 +17,5 @@ export {
     useResponsive,
     useUser,
     useWizardSubmit,
+    usePermissions,
 };
