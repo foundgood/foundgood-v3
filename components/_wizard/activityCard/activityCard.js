@@ -65,7 +65,6 @@ const ActivityCardComponent = ({
 
 const ActivityCard = ({
     headline,
-    tags,
     locations,
     goals,
     action,
@@ -75,7 +74,7 @@ const ActivityCard = ({
     reflectionMode,
 }) => {
     // Hook: Metadata
-    const { label, object, getValueLabel } = useLabels();
+    const { label, object } = useLabels();
 
     return (
         <div
@@ -94,28 +93,6 @@ const ActivityCard = ({
                     )}
                     {description && <p className="t-small">{description}</p>}
 
-                    {tags && tags.length > 0 && (
-                        <>
-                            <div className="mt-8 t-caption-bold">
-                                {object.label(
-                                    'Initiative_Activity__c.Activity_Tag__c'
-                                )}
-                            </div>
-                            <div className="flex flex-col items-start">
-                                {tags.map((tag, index) => (
-                                    <p
-                                        key={`t-${index}`}
-                                        className="px-8 pt-3 pb-1 mt-8 t-sh7 bg-teal-20 rounded-4">
-                                        {getValueLabel(
-                                            'Initiative_Activity__c.Activity_Tag__c',
-                                            tag,
-                                            true
-                                        )}
-                                    </p>
-                                ))}
-                            </div>
-                        </>
-                    )}
                     {locations && (
                         <>
                             <div className="mt-16 t-caption-bold">

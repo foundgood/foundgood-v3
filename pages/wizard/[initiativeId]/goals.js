@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 // Packages
 import { useForm, useFormState } from 'react-hook-form';
-import _get from 'lodash.get';
 
 // Utilities
 import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
@@ -121,8 +120,7 @@ const GoalsComponent = ({ pageProps }) => {
                 {utilities.goals.getTypeCustom().map(goal => (
                     <GoalCard
                         key={goal.Id}
-                        headline={_get(goal, 'Goal__c') || ''}
-                        footnote={_get(goal, 'Type__c') || ''}
+                        headline={goal?.Goal__c ?? ''}
                         action={() => {
                             setUpdateId(goal.Id);
                             setModalIsOpen(true);

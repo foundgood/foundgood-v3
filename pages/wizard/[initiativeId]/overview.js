@@ -2,7 +2,7 @@
 import React from 'react';
 
 // Packages
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 // Utilities
 import {
@@ -25,21 +25,15 @@ const OverviewComponent = () => {
     // STORES
     // ///////////////////
 
-    const { utilities, CONSTANTS } = useInitiativeDataStore();
+    const { utilities } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { MODE, CONTEXTS } = useContext();
-    const {
-        label,
-        object,
-        dataSet,
-        pickList,
-        controlledPickList,
-    } = useLabels();
-    const { ewUpdate, ewCreateUpdateWrapper } = useElseware();
+    const { label, object, dataSet, pickList } = useLabels();
+    const { ewUpdate } = useElseware();
     const { enableInputField, requireInputField } = usePermissions();
 
     // ///////////////////
@@ -48,10 +42,6 @@ const OverviewComponent = () => {
 
     // Hook: useForm setup
     const mainForm = useForm();
-    const CategoryWatch = useWatch({
-        control: mainForm.control,
-        name: 'Category__c',
-    });
 
     // ///////////////////
     // SUBMIT
@@ -67,7 +57,6 @@ const OverviewComponent = () => {
                 GrantDate,
                 Problem_Effect__c,
                 Hero_Image__c,
-                Funder_Objective__c,
             } = formData;
 
             const { data: initiativeData } = await ewUpdate(
@@ -91,20 +80,6 @@ const OverviewComponent = () => {
 
             // Update initiative
             utilities.updateInitiative(initiativeData);
-
-            // Create / update funder objective based on Category
-            await ewCreateUpdateWrapper(
-                'initiative-goal/initiative-goal',
-                funderObjective?.Id,
-                {
-                    Goal__c: Funder_Objective__c,
-                    Type__c: CONSTANTS.GOALS.GOAL_PREDEFINED,
-                    Funder_Objective__c,
-                    KPI_Category__c: Category__c,
-                },
-                { Initiative__c: initiativeData.Id },
-                '_goals'
-            );
         } catch (error) {
             console.warn(error);
         }
@@ -118,9 +93,6 @@ const OverviewComponent = () => {
     // ///////////////////
     // DATA
     // ///////////////////
-
-    // Funder objective (predefined goal)
-    const funderObjective = utilities.goals.getTypePredefined();
 
     // ///////////////////
     // FIELDS
@@ -147,22 +119,6 @@ const OverviewComponent = () => {
             // Type options
             options: pickList('Initiative__c.Category__c'),
             subLabel: object.helpText('Initiative__c.Category__c'),
-        },
-        {
-            type: 'Select',
-            name: 'Funder_Objective__c',
-            label: object.label('Initiative_Goal__c.Funder_Objective__c'),
-            defaultValue: funderObjective.Funder_Objective__c,
-            disabled: !CategoryWatch && !utilities.initiative.get().Category__c,
-            required: true,
-            // Type options
-            options: controlledPickList(
-                'Initiative_Goal__c.Funder_Objective__c',
-                CategoryWatch
-                    ? CategoryWatch
-                    : utilities.initiative.get().Category__c
-            ),
-            subLabel: object.helpText('Initiative_Goal__c.Funder_Objective__c'),
         },
         {
             type: 'LongText',

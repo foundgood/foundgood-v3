@@ -253,7 +253,29 @@ const SelectListComponent = ({
                                 </div>
 
                                 {/* Delete item */}
-                                {list.length > 1 && (
+                                {value?.length === 1 && (
+                                    <Button
+                                        variant="tertiary"
+                                        theme="teal"
+                                        icon={FiX}
+                                        className="self-end"
+                                        iconPosition="center"
+                                        action={event => {
+                                            // Update current list
+                                            setList([
+                                                {
+                                                    selectValue: '',
+                                                    textValue: '',
+                                                    id: nanoid(),
+                                                },
+                                            ]);
+
+                                            // Update form
+                                            onChange([]);
+                                        }}
+                                    />
+                                )}
+                                {value?.length > 1 && (
                                     <Button
                                         variant="tertiary"
                                         theme="teal"
@@ -278,15 +300,17 @@ const SelectListComponent = ({
                         );
                     })}
                 </div>
-                {listMaxLength > 1 && options.length > 1 && (
-                    <Button
-                        variant="quaternary"
-                        className="self-start mt-16"
-                        disabled={list.length >= listMaxLength}
-                        action={addToList}>
-                        {buttonLabel}
-                    </Button>
-                )}
+                {listMaxLength > 1 &&
+                    options.length > 1 &&
+                    list.length < options.length && (
+                        <Button
+                            variant="quaternary"
+                            className="self-start mt-16"
+                            disabled={list.length >= listMaxLength}
+                            action={addToList}>
+                            {buttonLabel}
+                        </Button>
+                    )}
             </div>
         </label>
     );

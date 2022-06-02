@@ -62,6 +62,29 @@ const d = {
             delete: ['super'],
         },
     },
+    funderTagging: {
+        baseUrl: 'funder-tagging',
+        url(initiativeId) {
+            return `/create/${initiativeId}/funder-tagging`;
+        },
+        title: 'InitiativeViewFunderTaggingHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardFunderTaggingHeading',
+                preamble: 'InitiativeWizardFunderTaggingSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardFunderTaggingHelpWhy',
+                what: 'InitiativeWizardFunderTaggingHelpWhat',
+                guide: 'InitiativeWizardFunderTaggingHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['super'],
+            update: ['super'],
+            delete: ['super'],
+        },
+    },
     shareWithContacts: {
         baseUrl: 'share-with-contacts',
         url(initiativeId) {
@@ -118,6 +141,7 @@ const createStructures = {
             items: [
                 d.nameAndCategory,
                 d.organisationsInvolved,
+                d.funderTagging,
                 d.shareWithContacts,
             ],
         },

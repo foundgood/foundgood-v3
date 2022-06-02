@@ -24,6 +24,7 @@ import WizardModal from 'components/wizardModal';
 import { InputWrapper, SelectList, Text, LongText } from 'components/_inputs';
 import ActivityCard from 'components/_wizard/activityCard';
 import NoReflections from 'components/_wizard/noReflections';
+import { BaseCard } from 'components/_cards';
 
 const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
@@ -37,7 +38,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
-    const { label, object, dataSet, controlledPickList } = useLabels();
+    const { label, object, dataSet } = useLabels();
     const { ewUpdate, ewCreate } = useElseware();
     const {
         submitNoReflection,
@@ -79,7 +80,6 @@ const ActivitiesComponent = ({ pageProps }) => {
             const {
                 Things_To_Do__c,
                 Things_To_Do_Description__c,
-                Activities,
                 Location,
                 Goals,
             } = formData;
@@ -91,9 +91,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                 Things_To_Do_Description__c,
                 Initiative_Location__c: Location[0]?.selectValue,
                 Additional_Location_Information__c: Location[0]?.textValue,
-                Activity_Tag__c: Activities.map(item => item.selectValue).join(
-                    ';'
-                ),
                 KPI_Category__c: utilities.initiative.get().Category__c,
                 _activityGoals: Goals.map(item => item.selectValue),
             };
@@ -194,7 +191,6 @@ const ActivitiesComponent = ({ pageProps }) => {
             Id,
             Things_To_Do__c,
             Things_To_Do_Description__c,
-            Activity_Tag__c,
             Initiative_Location__c,
             Additional_Location_Information__c,
         } = utilities.activities.get(updateId);
@@ -210,13 +206,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                 textValue: Additional_Location_Information__c,
             },
         ]);
-
-        mainForm.setValue(
-            'Activities',
-            Activity_Tag__c?.split(';').map(value => ({
-                selectValue: value,
-            }))
-        );
 
         mainForm.setValue(
             'Goals',
@@ -257,8 +246,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                     const description =
                         _get(activity, 'Things_To_Do_Description__c') || '';
 
-                    const tagsString = activity?.Activity_Tag__c ?? null;
-                    const tags = tagsString ? tagsString.split(';') : [];
                     const goals = utilities.activityGoals
                         .getFromActivityId()
                         .map(
@@ -270,27 +257,29 @@ const ActivitiesComponent = ({ pageProps }) => {
                     );
 
                     return (
-                        <ActivityCard
-                            key={activity.Id}
-                            headline={headline}
-                            description={description}
-                            tags={tags}
-                            goals={goals}
-                            action={() => {
-                                setUpdateId(activity.Id);
-                                setModalIsOpen(true);
-                            }}
-                            reflectAction={setReflecting}
-                            controller={
-                                MODE === CONTEXTS.REPORT &&
-                                reflectionForm.control
-                            }
-                            name={activity.Id}
-                            defaultValue={getReflectionDefaultValue(reflection)}
-                            inputLabel={label(
-                                'ReportWizardActivitiesReflectionSubHeading'
-                            )}
-                        />
+                        <BaseCard>
+                            <p>Activity content</p>
+                        </BaseCard>
+                        // <ActivityCard
+                        //     key={activity.Id}
+                        //     headline={headline}
+                        //     description={description}
+                        //     goals={goals}
+                        //     action={() => {
+                        //         setUpdateId(activity.Id);
+                        //         setModalIsOpen(true);
+                        //     }}
+                        //     reflectAction={setReflecting}
+                        //     controller={
+                        //         MODE === CONTEXTS.REPORT &&
+                        //         reflectionForm.control
+                        //     }
+                        //     name={activity.Id}
+                        //     defaultValue={getReflectionDefaultValue(reflection)}
+                        //     inputLabel={label(
+                        //         'ReportWizardActivitiesReflectionSubHeading'
+                        //     )}
+                        // />
                     );
                 })}
             </InputWrapper>
@@ -325,24 +314,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                         placeholder={label('FormCaptureTextEntryEmpty')}
                         maxLength={400}
                         controller={mainForm.control}
-                    />
-                    <SelectList
-                        name="Activities"
-                        label={object.label(
-                            'Initiative_Activity__c.Activity_Tag__c'
-                        )}
-                        subLabel={object.helpText(
-                            'Initiative_Activity__c.Activity_Tag__c'
-                        )}
-                        selectPlaceholder={label('FormCaptureSelectEmpty')}
-                        options={controlledPickList(
-                            'Initiative_Activity__c.Activity_Tag__c',
-                            utilities.initiative.get().Category__c
-                        )}
-                        buttonLabel={label('ButtonAddActivityTag')}
-                        listMaxLength={utilities.isNovoLeadFunder() ? 1 : 4}
-                        controller={mainForm.control}
-                        required={utilities.isNovoLeadFunder()}
                     />
                     <SelectList
                         name="Location"

@@ -183,6 +183,7 @@ const d = {
                 'funder.collaborator',
                 'grantee.admin',
                 'grantee.collaborator',
+                'super',
             ],
             update: ['super'],
             delete: ['super'],

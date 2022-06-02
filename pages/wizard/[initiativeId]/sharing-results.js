@@ -85,7 +85,6 @@ const SharingResultsComponent = ({ pageProps }) => {
             const {
                 Things_To_Do__c,
                 Dissemination_Method__c,
-                Audience_Tag__c,
 
                 Publication_Type__c,
                 Publication_Year__c,
@@ -101,9 +100,6 @@ const SharingResultsComponent = ({ pageProps }) => {
 
                 Things_To_Do__c,
                 Dissemination_Method__c,
-                Audience_Tag__c: Audience_Tag__c.map(
-                    item => item.selectValue
-                ).join(';'),
 
                 Publication_Type__c,
                 Publication_Year__c,
@@ -200,7 +196,6 @@ const SharingResultsComponent = ({ pageProps }) => {
         const {
             Things_To_Do__c,
             Dissemination_Method__c,
-            Audience_Tag__c,
 
             Publication_Type__c,
             Publication_Year__c,
@@ -212,12 +207,6 @@ const SharingResultsComponent = ({ pageProps }) => {
 
         mainForm.setValue('Things_To_Do__c', Things_To_Do__c);
         mainForm.setValue('Dissemination_Method__c', Dissemination_Method__c);
-        mainForm.setValue(
-            'Audience_Tag__c',
-            Audience_Tag__c?.split(';').map(value => ({
-                selectValue: value,
-            }))
-        );
 
         mainForm.setValue('Publication_Type__c', Publication_Type__c);
         mainForm.setValue('Publication_Year__c', Publication_Year__c);
@@ -276,18 +265,6 @@ const SharingResultsComponent = ({ pageProps }) => {
                             : ''
                     } ${_get(activity, 'KPI_Category__c') || ''}`;
 
-                    const tagsString = activity?.Audience_Tag__c ?? null;
-                    const tags = tagsString
-                        ? tagsString
-                              .split(';')
-                              .map(tag =>
-                                  getValueLabel(
-                                      'Initiative_Activity__c.Audience_Tag__c',
-                                      tag
-                                  )
-                              )
-                        : [];
-
                     const reflection = currentReportDetails.find(
                         item => item.Initiative_Activity__c === activity.Id
                     );
@@ -301,7 +278,6 @@ const SharingResultsComponent = ({ pageProps }) => {
                             key={activity.Id}
                             headline={headline}
                             footnote={footnote}
-                            tags={tags}
                             action={() => {
                                 setUpdateId(activity.Id);
                                 setModalIsOpen(true);
@@ -370,24 +346,6 @@ const SharingResultsComponent = ({ pageProps }) => {
                             'Initiative_Activity__c.Dissemination_Method__c'
                         )}
                         controller={mainForm.control}
-                        required
-                    />
-
-                    <SelectList
-                        name="Audience_Tag__c"
-                        label={object.label(
-                            'Initiative_Activity__c.Audience_Tag__c'
-                        )}
-                        subLabel={object.helpText(
-                            'Initiative_Activity__c.Audience_Tag__c'
-                        )}
-                        selectPlaceholder={label('FormCaptureSelectEmpty')}
-                        options={pickList(
-                            'Initiative_Activity__c.Audience_Tag__c'
-                        )}
-                        listMaxLength={4}
-                        controller={mainForm.control}
-                        buttonLabel={label('ButtonAddAudienceTag')}
                         required
                     />
 

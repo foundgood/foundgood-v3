@@ -7,8 +7,8 @@ import t from 'prop-types';
 // Components
 import Card from 'components/_wizard/card';
 
-const GoalCardComponent = ({ headline, footnote, action }) => {
-    return <Card headline={headline} footnote={footnote} action={action} />;
+const GoalCardComponent = ({ headline, action }) => {
+    return <Card headline={headline} action={action} />;
 };
 
 GoalCardComponent.propTypes = {
