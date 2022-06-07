@@ -47,7 +47,7 @@ const NameAndCategoryComponent = () => {
 
     async function submit(formData) {
         try {
-            const { Name, Category__c } = formData;
+            const { Name, Category__c, GrantDate } = formData;
 
             const { data: initiativeData } = await ewUpdate(
                 'initiative/initiative',
@@ -55,6 +55,8 @@ const NameAndCategoryComponent = () => {
                 {
                     Name,
                     Category__c,
+                    Grant_Start_Date__c: GrantDate.from,
+                    Grant_End_Date__c: GrantDate.to,
                 }
             );
 
@@ -98,6 +100,17 @@ const NameAndCategoryComponent = () => {
             // Type options
             options: pickList('Initiative__c.Category__c'),
             subLabel: object.helpText('Initiative__c.Category__c'),
+        },
+        {
+            type: 'DateRange',
+            name: 'GrantDate',
+            label: `${object.label(
+                'Initiative__c.Grant_Start_Date__c'
+            )} / ${object.label('Initiative__c.Grant_End_Date__c')}`,
+            defaultValue: {
+                from: utilities.initiative.get().Grant_Start_Date__c,
+                to: utilities.initiative.get().Grant_End_Date__c,
+            },
         },
     ];
 
