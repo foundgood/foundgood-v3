@@ -21,7 +21,7 @@ import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
-import WizardModal from 'components/wizardModal';
+import WizardModal from 'components/_modals/wizardModal';
 import { InputWrapper, Select, LongText } from 'components/_inputs';
 import CollaboratorCard from 'components/_wizard/collaboratorCard';
 import NoReflections from 'components/_wizard/noReflections';

@@ -11,7 +11,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
-import WizardModal from 'components/wizardModal';
+import WizardModal from 'components/_modals/wizardModal';
 
 const NoReflectionsComponent = ({ onClick, reflecting, reflectionItems }) => {
     // Hook: Metadata

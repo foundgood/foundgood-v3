@@ -12,7 +12,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import Button from 'components/button';
-import WizardModal from 'components/wizardModal';
+import WizardModal from 'components/_modals/wizardModal';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, FormFields } from 'components/_inputs';
 import OrganisationsList from 'components/_wizard/organisationsList';
@@ -317,18 +317,6 @@ const OrganisationsInvolvedComponent = () => {
                     },
                     onSave: mainForm.handleSubmit(submit),
                     title: label('WizardModalHeadingOrganisationsInvolved'),
-                    deleteProps: {
-                        title: label(
-                            'DeleteModalHeadingOrganisationsInvolvedFunder'
-                        ),
-                        text: label(
-                            'DeleteModalTextOrganisationsInvolvedFunder'
-                        ),
-                        async onDelete() {
-                            await deleteOrganisation();
-                        },
-                        show: updateId,
-                    },
                 }}>
                 <InputWrapper>
                     <FormFields

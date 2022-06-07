@@ -20,6 +20,7 @@ const ButtonComponent = ({
     variant,
     className,
     theme,
+    title,
 }) => {
     // Action
     const event = typeof action === 'string' ? 'url' : 'method';
@@ -124,12 +125,15 @@ const ButtonComponent = ({
         <>
             {event === 'url' ? (
                 action === 'fake' ? (
-                    <div className={cc(['cursor-pointer', elementClassNames])}>
+                    <div
+                        title={title}
+                        className={cc(['cursor-pointer', elementClassNames])}>
                         {content}
                     </div>
                 ) : (
                     <Link href={action}>
                         <a
+                            title={title}
                             href={action}
                             className={elementClassNames}
                             target={blank ? '_blank' : '_self'}
@@ -140,11 +144,12 @@ const ButtonComponent = ({
                 )
             ) : (
                 <button
+                    title={title}
                     disabled={disabled}
                     onClick={event => {
                         event.stopPropagation();
                         event.preventDefault();
-                        action();
+                        action(event);
                     }}
                     className={elementClassNames}>
                     {content}

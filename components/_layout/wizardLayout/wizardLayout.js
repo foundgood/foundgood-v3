@@ -71,7 +71,7 @@ const WizardLayoutComponent = ({ children, layoutSettings }) => {
         }
         if (largeBps.includes(bp)) {
             toggleLeftMenu(true);
-            toggleRightMenu(true);
+            toggleRightMenu(false);
         }
     }, [bp]);
 

@@ -18,7 +18,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import WizardModal from 'components/wizardModal';
+import WizardModal from 'components/_modals/wizardModal';
 import {
     InputWrapper,
     Select,
@@ -38,7 +38,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
-    const { labelTodo, label, object, pickList } = useLabels();
+    const { label, object, pickList, getValueLabel } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
     const { enableAction } = usePermissions();
 
@@ -155,8 +155,11 @@ const ReportScheduleComponent = ({ pageProps }) => {
                                 headline={_get(funder, 'Account__r.Name') || ''}
                                 items={reportItems.map(item => ({
                                     id: item.Id,
-                                    headline: labelTodo(item.Report_Type__c),
-                                    dueDate: labelTodo(item.Due_Date__c),
+                                    headline: getValueLabel(
+                                        'Initiative_Report__c.Report_Type__c',
+                                        item.Report_Type__c
+                                    ),
+                                    dueDate: item.Due_Date__c,
                                 }))}
                                 actionCreate={enableAction(
                                     ['super', { account: funder.Account__c }],

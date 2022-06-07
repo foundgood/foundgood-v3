@@ -5,13 +5,18 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 
 // Utilities
-import { useLabels, useContext, useElseware } from 'utilities/hooks';
+import {
+    useLabels,
+    useContext,
+    useElseware,
+    useModalState,
+} from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import Button from 'components/button';
 import Permission from 'components/permission';
-import WizardModal from 'components/wizardModal';
+import ConfirmModal from 'components/_modals/confirmModal';
 
 const WizardStatusComponent = () => {
     // ///////////////////
@@ -28,6 +33,13 @@ const WizardStatusComponent = () => {
     const { label } = useLabels();
     const { INITIATIVE_ID, REPORT_ID } = useContext();
     const { ewUpdate } = useElseware();
+    const {
+        modalState,
+        modalOpen,
+        modalClose,
+        modalSaving,
+        modalNotSaving,
+    } = useModalState();
 
     // ///////////////////
     // STATE
@@ -60,6 +72,8 @@ const WizardStatusComponent = () => {
     }
 
     async function completeReport() {
+        // Modal save button state
+        modalSaving();
         try {
             const { data: reportData } = await ewUpdate(
                 'initiative-report/initiative-report',
@@ -73,8 +87,13 @@ const WizardStatusComponent = () => {
             utilities.updateInitiativeData('_reports', reportData);
 
             // Close modal
-            setShowModal(false);
+            modalClose();
+
+            // Modal save button state
+            modalNotSaving();
         } catch (error) {
+            // Modal save button state
+            modalNotSaving();
             console.warn(error);
         }
     }
@@ -136,22 +155,26 @@ const WizardStatusComponent = () => {
                                 currentReport.Status__c ===
                                 CONSTANTS.REPORTS.REPORT_IN_REVIEW
                             }
-                            action={() => setShowModal(true)}>
+                            action={modalOpen}>
                             {label('ButtonSubmit')}
                         </Button>
                     </Permission>
                 </div>
             </div>
-            <WizardModal
-                isOpen={showModal}
-                title={label('ModalReportCompleteHeader')}
-                onCancel={() => setShowModal(false)}
-                saveText={label('ButtonSubmit')}
-                onSave={() => {
-                    completeReport();
+            <ConfirmModal
+                {...{
+                    onCancel() {
+                        modalClose();
+                    },
+                    async onSave() {
+                        await completeReport();
+                    },
+                    saveText: label('ButtonSubmit'),
+                    title: label('ModalReportCompleteHeader'),
+                    ...modalState,
                 }}>
                 <p className="t-preamble">{label('ModalReportCompleteBody')}</p>
-            </WizardModal>
+            </ConfirmModal>
         </>
     );
 };

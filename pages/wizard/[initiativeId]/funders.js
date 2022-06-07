@@ -21,7 +21,7 @@ import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import Button from 'components/button';
 import FunderCard from 'components/_wizard/founderCard';
-import WizardModal from 'components/wizardModal';
+import WizardModal from 'components/_modals/wizardModal';
 import NoReflections from 'components/_wizard/noReflections';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import { InputWrapper, FormFields } from 'components/_inputs';

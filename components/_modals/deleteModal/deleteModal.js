@@ -1,26 +1,24 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
-import { Transition } from '@headlessui/react';
 
 // Utilities
 import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
-import ModalBase from 'components/modalBase';
+import BaseModal from 'components/_modals/baseModal';
 
 const DeleteModalComponent = ({
-    children,
-    isDeleting,
     isOpen,
+    isSaving,
     onCancel,
     onDelete,
-    title,
     text,
+    title,
 }) => {
     // ///////////////////
     // HOOKS
@@ -33,7 +31,7 @@ const DeleteModalComponent = ({
     // ///////////////////
 
     return (
-        <ModalBase {...{ isOpen }}>
+        <BaseModal {...{ isOpen }}>
             {/* Modal content */}
             <div className="flex flex-col overflow-y-auto scrolling-touch max-h-[90vh] sm:max-h-[80vh] pb-32 p-2 overflow-x-hidden">
                 {title && <h3 className="mb-24 text-teal-100 t-h3">{title}</h3>}
@@ -43,21 +41,31 @@ const DeleteModalComponent = ({
             </div>
 
             {/* Modal actions */}
-            <div className="flex justify-end mt-32 space-x-16">
+            <div className="flex items-center justify-end mt-32 space-x-16">
+                <p
+                    className={cc([
+                        'hidden t-footnote text-coral-60 md:flex transition-default mr-auto',
+                        {
+                            'opacity-0': !isSaving,
+                            'opacity-100': isSaving,
+                        },
+                    ])}>
+                    {label('MessageSaved')}
+                </p>
                 <Button variant="tertiary" theme="coral" action={onCancel}>
                     {label('ButtonCancel')}
                 </Button>
-                <Button theme="coral" action={onDelete} disabled={isDeleting}>
+                <Button theme="coral" action={onDelete} disabled={isSaving}>
                     {label('ButtonYesDelete')}
                 </Button>
             </div>
-        </ModalBase>
+        </BaseModal>
     );
 };
 
 DeleteModalComponent.propTypes = {
-    isDeleting: t.bool,
     isOpen: t.bool,
+    isSaving: t.bool,
     onCancel: t.func.isRequired,
     onDelete: t.func.isRequired,
     text: t.string,
@@ -66,7 +74,7 @@ DeleteModalComponent.propTypes = {
 
 DeleteModalComponent.defaultProps = {
     isOpen: false,
-    isDeleting: false,
+    isSaving: false,
 };
 
 export default DeleteModalComponent;

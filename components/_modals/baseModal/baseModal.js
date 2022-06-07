@@ -3,16 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 // Packages
-import cc from 'classcat';
 import t from 'prop-types';
 import { Transition } from '@headlessui/react';
 
 // Utilities
 
 // Components
-import Button from 'components/button';
 
-const ModalBaseComponent = ({ isOpen, children }) => {
+const BaseModalComponent = ({ isOpen, children }) => {
     // Local state and effect for handling delay in content animation
     const [showContent, setShowContent] = useState(false);
     useEffect(() => {
@@ -57,12 +55,12 @@ const ModalBaseComponent = ({ isOpen, children }) => {
     );
 };
 
-ModalBaseComponent.propTypes = {
+BaseModalComponent.propTypes = {
     isOpen: t.bool,
 };
 
-ModalBaseComponent.defaultProps = {
+BaseModalComponent.defaultProps = {
     isOpen: false,
 };
 
-export default ModalBaseComponent;
+export default BaseModalComponent;

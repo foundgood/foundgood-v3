@@ -6,16 +6,23 @@ import cc from 'classcat';
 import t from 'prop-types';
 import { Controller } from 'react-hook-form';
 
+// Utilities
+import { useLabels } from 'utilities/hooks';
+
 const ReflectionComponent = ({
     name,
     label,
     subLabel,
     defaultValue,
+    placeholder,
     maxLength,
     controller,
     required,
     ...rest
 }) => {
+    // Hook: Metadata
+    const { label: metadataLabel } = useLabels();
+
     // Local state for handling char count
     const [value, setValue] = useState(defaultValue || '');
 
@@ -50,6 +57,10 @@ const ReflectionComponent = ({
                             setValue(event.target.value);
                             onChange(event);
                         }}
+                        placeholder={
+                            placeholder ||
+                            metadataLabel('FormCaptureTextEntryEmpty')
+                        }
                         className={cc([
                             'input-defaults !bg-white w-full',
                             '!h-[144px] resize-none',

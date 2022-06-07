@@ -2,15 +2,14 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
 import {
-    useContext,
     useElseware,
     useLabels,
-    useReflections,
+    useModalState,
     useWizardSubmit,
 } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
@@ -19,12 +18,12 @@ import { useInitiativeDataStore } from 'utilities/store';
 import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
+import EmptyState from 'components/_wizard/emptyState';
+import ReportUpdatesInPage from 'components/_wizard/reportUpdatesInPage';
 import Button from 'components/button';
-import WizardModal from 'components/wizardModal';
+import WizardModal from 'components/_modals/wizardModal';
 import { InputWrapper, SelectList, Text, LongText } from 'components/_inputs';
-import ActivityCard from 'components/_wizard/activityCard';
-import NoReflections from 'components/_wizard/noReflections';
-import { BaseCard } from 'components/_cards';
+import { BaseCard, ActivityCardContent } from 'components/_cards';
 
 const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
@@ -37,28 +36,20 @@ const ActivitiesComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
-    const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label, object, dataSet } = useLabels();
     const { ewUpdate, ewCreate } = useElseware();
     const {
-        submitNoReflection,
-        submitMultipleReflections,
-        getReflectionDefaultValue,
-    } = useReflections({
-        dataSet() {
-            return utilities.activities.getAll;
-        },
-        parentKey: 'Initiative_Activity__c',
-        type: CONSTANTS.REPORT_DETAILS.ACTIVITY_OVERVIEW,
-    });
+        modalState,
+        modalOpen,
+        modalClose,
+        modalSaving,
+        modalNotSaving,
+    } = useModalState();
 
     // ///////////////////
     // STATE
     // ///////////////////
 
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-    const [reflecting, setReflecting] = useState(false);
     const [updateId, setUpdateId] = useState(null);
 
     // ///////////////////
@@ -66,8 +57,6 @@ const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
 
     const mainForm = useForm();
-    const reflectionForm = useForm();
-    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
     // SUBMIT
@@ -75,7 +64,7 @@ const ActivitiesComponent = ({ pageProps }) => {
 
     async function submit(formData) {
         // Modal save button state
-        setModalIsSaving(true);
+        modalSaving();
         try {
             const {
                 Things_To_Do__c,
@@ -129,54 +118,28 @@ const ActivitiesComponent = ({ pageProps }) => {
             );
 
             // Close modal
-            setModalIsOpen(false);
+            modalClose();
 
             // Modal save button state
-            setModalIsSaving(false);
+            modalNotSaving();
 
             // Clear content in form
             mainForm.reset();
-
-            // Fold out shit when done if report
-            // setValue: reflectionForm.setValue,
-            setTimeout(() => {
-                if (MODE === CONTEXTS.REPORT) {
-                    reflectionForm.setValue(
-                        `${activityData.Id}-selector`,
-                        true
-                    );
-                }
-            }, 500);
         } catch (error) {
             // Modal save button state
-            setModalIsSaving(false);
+            modalNotSaving();
             console.warn(error);
         }
     }
 
-    useWizardSubmit({
-        [CONTEXTS.REPORT]: [reflectionForm, submitMultipleReflections],
-    });
+    useWizardSubmit();
 
     // ///////////////////
     // DATA
     // ///////////////////
 
-    // Current report details
-    const currentReportDetails = utilities.reportDetails.getFromReportId(
-        REPORT_ID
-    );
-
     // Custom goals
     const customGoals = utilities.goals.getTypeCustom();
-
-    // Check if there is relevant report details yet
-    const reportDetailsItems = currentReportDetails.filter(item =>
-        utilities.activities
-            .getTypeIntervention()
-            .map(item => item.Id)
-            .includes(item.Initiative_Activity__c)
-    );
 
     // Get activities
     const activities = utilities.activities.getTypeIntervention();
@@ -213,82 +176,81 @@ const ActivitiesComponent = ({ pageProps }) => {
                 selectValue: activityGoal.Initiative_Goal__c,
             }))
         );
-    }, [updateId, modalIsOpen]);
+    }, [updateId, modalState]);
 
     // ///////////////////
     // RENDER
     // ///////////////////
 
+    const UpdateButton = () => (
+        <Button
+            theme="teal"
+            className="self-start"
+            action={() => {
+                setUpdateId(null);
+                modalOpen();
+            }}>
+            {label('ButtonAddActivity')}
+        </Button>
+    );
+
     return (
         <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddActivity')}
-                </Button>
-                {MODE === CONTEXTS.REPORT && activities.length > 0 && (
-                    <NoReflections
-                        onClick={submitNoReflection}
-                        reflectionItems={reportDetailsItems.map(
-                            item => item.Description__c
-                        )}
-                        reflecting={reflecting}
-                    />
+                <ReportUpdatesInPage
+                    {...{
+                        items: activities,
+                        itemRelationKey: 'Initiative_Activity__c',
+                    }}
+                />
+                {activities.length > 0 ? (
+                    <>
+                        <UpdateButton />
+                        {activities.map(item => (
+                            <BaseCard
+                                key={item.Id}
+                                {...{
+                                    actionEdit: () => {
+                                        setUpdateId(item.Id);
+                                        modalOpen();
+                                    },
+                                    item,
+                                    itemRelationKey: 'Initiative_Activity__c',
+                                    reflectionType:
+                                        CONSTANTS.REPORT_DETAILS
+                                            .ACTIVITY_OVERVIEW,
+                                    reportUpdateModalTitle: label(
+                                        'ReportUpdateModalActivityHeading'
+                                    ),
+                                    title: item?.Things_To_Do__c,
+                                    type: label('CardActivityType'),
+                                }}>
+                                <ActivityCardContent {...{ item }} />
+                            </BaseCard>
+                        ))}
+                    </>
+                ) : (
+                    <EmptyState
+                        {...{
+                            text: label('InitiativeWizardActivitiesEmptyState'),
+                        }}>
+                        <UpdateButton />
+                    </EmptyState>
                 )}
-                {activities.map(activity => {
-                    const headline = _get(activity, 'Things_To_Do__c') || '';
-                    const description =
-                        _get(activity, 'Things_To_Do_Description__c') || '';
-
-                    const goals = utilities.activityGoals
-                        .getFromActivityId()
-                        .map(
-                            activityGoal =>
-                                activityGoal?.Initiative_Goal__r?.Goal__c
-                        );
-                    const reflection = currentReportDetails.find(
-                        item => item.Initiative_Activity__c === activity.Id
-                    );
-
-                    return (
-                        <BaseCard>
-                            <p>Activity content</p>
-                        </BaseCard>
-                        // <ActivityCard
-                        //     key={activity.Id}
-                        //     headline={headline}
-                        //     description={description}
-                        //     goals={goals}
-                        //     action={() => {
-                        //         setUpdateId(activity.Id);
-                        //         setModalIsOpen(true);
-                        //     }}
-                        //     reflectAction={setReflecting}
-                        //     controller={
-                        //         MODE === CONTEXTS.REPORT &&
-                        //         reflectionForm.control
-                        //     }
-                        //     name={activity.Id}
-                        //     defaultValue={getReflectionDefaultValue(reflection)}
-                        //     inputLabel={label(
-                        //         'ReportWizardActivitiesReflectionSubHeading'
-                        //     )}
-                        // />
-                    );
-                })}
             </InputWrapper>
             <WizardModal
-                isOpen={modalIsOpen}
-                title={label('WizardModalHeadingActivities')}
-                onCancel={() => setModalIsOpen(false)}
-                isSaving={!isDirty || modalIsSaving}
-                onSave={mainForm.handleSubmit(submit)}>
+                {...{
+                    form: mainForm,
+                    onCancel() {
+                        modalClose();
+                    },
+                    onSave() {
+                        mainForm.handleSubmit(submit)();
+                    },
+                    title: label('WizardModalHeadingActivities'),
+                    ...modalState,
+                }}>
                 <InputWrapper>
                     <Text
                         name="Things_To_Do__c"

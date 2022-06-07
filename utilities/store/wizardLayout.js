@@ -2,14 +2,14 @@ import create from 'zustand';
 
 const useWizardLayoutStore = create(set => ({
     // Right menu
-    rightMenuActive: true,
+    rightMenuActive: false,
     toggleRightMenu: toggle =>
         set(() => ({
             rightMenuActive: toggle,
         })),
 
     // Left menu
-    leftMenuActive: true,
+    leftMenuActive: false,
     toggleLeftMenu: toggle =>
         set(() => ({
             leftMenuActive: toggle,
