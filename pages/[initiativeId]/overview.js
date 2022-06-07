@@ -721,7 +721,14 @@ const ProjectComponent = ({ pageProps }) => {
                                 {label('InitiativeViewEmployeesFundedHeading')}
                             </h2>
                             <UpdateButton
-                                {...{ baseUrl: 'employees-funded' }}
+                                {...{
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'employees-funded',
+                                        'update'
+                                    ),
+                                    baseUrl: 'employees-funded',
+                                }}
                             />
                         </div>
                         {Object.values(initiativeData._employeesFunded).length >
