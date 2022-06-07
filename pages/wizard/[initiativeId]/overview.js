@@ -140,7 +140,7 @@ const OverviewComponent = () => {
                 from: utilities.initiative.get().Grant_Start_Date__c,
                 to: utilities.initiative.get().Grant_End_Date__c,
             },
-            disabled: utilities.isNovoLeadFunder(),
+            disabled: enableInputField(['super']),
         },
         {
             type: 'SelectList',
