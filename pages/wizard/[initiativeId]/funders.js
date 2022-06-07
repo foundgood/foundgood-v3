@@ -321,7 +321,7 @@ const FundersComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingFunders')}
                 onCancel={() => setModalIsOpen(false)}
-                isSaving={!isDirty || modalIsSaving}
+                isSaving={modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <FormFields

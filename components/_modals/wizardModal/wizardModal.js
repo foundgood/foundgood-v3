@@ -34,7 +34,7 @@ const WizardModalComponent = ({
 
     const { isDirty } = form
         ? useFormState({ control: form.control })
-        : { isDirty: false };
+        : { isDirty: true };
 
     // ///////////////////
     // RENDER
@@ -60,11 +60,7 @@ const WizardModalComponent = ({
                     ])}>
                     {label('MessageSaved')}
                 </p>
-                <Button
-                    variant="tertiary"
-                    theme="coral"
-                    action={onCancel}
-                    disabled={isSaving}>
+                <Button variant="tertiary" theme="coral" action={onCancel}>
                     {label('ButtonCancel')}
                 </Button>
                 <Button

@@ -164,6 +164,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                                 actionCreate={enableAction(
                                     ['super', { account: funder.Account__c }],
                                     () => {
+                                        setUpdateId(null);
                                         setModalIsOpen(true);
                                         setFunder(funder);
                                     }
@@ -187,7 +188,7 @@ const ReportScheduleComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingReports')}
                 onCancel={() => setModalIsOpen(false)}
-                isSaving={!isDirty || modalIsSaving}
+                isSaving={modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select

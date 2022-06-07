@@ -132,7 +132,7 @@ const GoalsComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingGoals')}
                 onCancel={() => setModalIsOpen(false)}
-                isSaving={!isDirty || modalIsSaving}
+                isSaving={modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <LongText

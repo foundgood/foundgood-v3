@@ -191,7 +191,7 @@ const InfluenceOnPolicyComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingEvaluation')}
                 onCancel={() => setModalIsOpen(false)}
-                isSaving={!isDirty || modalIsSaving}
+                isSaving={modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select

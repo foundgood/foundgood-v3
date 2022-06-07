@@ -241,7 +241,7 @@ const ApplicantsComponent = ({ pageProps }) => {
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingApplicants')}
                 onCancel={() => setModalIsOpen(false)}
-                isSaving={!isDirty || modalIsSaving}
+                isSaving={modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <Select

@@ -220,7 +220,7 @@ const {{pascalCase name}}Component = () => {
                 isOpen={modalIsOpen}
                 title={label('WizardModalHeadingXxxs')}
                 onCancel={() => setModalIsOpen(false)}
-                isSaving={!isDirty || modalIsSaving}
+                isSaving={modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
                     <FormFields
