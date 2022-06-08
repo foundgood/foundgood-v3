@@ -238,6 +238,20 @@ function initiativeGetters(getter, constants) {
                 );
             },
         },
+        tags: {
+            // Returns object
+            get(id) {
+                return getter().initiative._tags[id] || {};
+            },
+            // Returns array
+            getTypeFromFunderId(type, funderId) {
+                return Object.values(getter().initiative._tags).filter(
+                    item =>
+                        item.Tag__r?.Account__c === funderId &&
+                        item.Tag_Type__c === constants.TAGS[type]
+                );
+            },
+        },
         teamMembers: {
             // Returns array
             getAll() {

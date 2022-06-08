@@ -56,7 +56,7 @@ const DeleteModalComponent = ({
                     {label('ButtonCancel')}
                 </Button>
                 <Button theme="coral" action={onDelete} disabled={isSaving}>
-                    {label('ButtonYesDelete')}
+                    {label('ButtonDelete')}
                 </Button>
             </div>
         </BaseModal>

@@ -139,9 +139,11 @@ const ReportUpdateComponent = ({
                     </Button>
                 </div>
             ) : (
-                <Button variant="secondary" theme="teal" action={modalOpen}>
-                    {label('BaseCardButtonUpdateReport')}
-                </Button>
+                <div className="flex justify-end space-x-8">
+                    <Button variant="secondary" theme="teal" action={modalOpen}>
+                        {label('BaseCardButtonUpdateReport')}
+                    </Button>
+                </div>
             )}
 
             <ReportUpdateModal

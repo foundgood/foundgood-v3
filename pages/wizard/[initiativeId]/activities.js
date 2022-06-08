@@ -23,7 +23,7 @@ import ReportUpdatesInPage from 'components/_wizard/reportUpdatesInPage';
 import Button from 'components/button';
 import WizardModal from 'components/_modals/wizardModal';
 import { InputWrapper, SelectList, Text, LongText } from 'components/_inputs';
-import { BaseCard, ActivityCardContent } from 'components/_cards';
+import { BaseCard, ReportUpdate, ActivityCardContent } from 'components/_cards';
 
 const ActivitiesComponent = ({ pageProps }) => {
     // ///////////////////
@@ -211,23 +211,40 @@ const ActivitiesComponent = ({ pageProps }) => {
                             <BaseCard
                                 key={item.Id}
                                 {...{
-                                    actionEdit: () => {
-                                        setUpdateId(item.Id);
-                                        modalOpen();
-                                    },
-                                    item,
-                                    itemRelationKey: 'Initiative_Activity__c',
-                                    reflectionType:
-                                        CONSTANTS.REPORT_DETAILS
-                                            .ACTIVITY_OVERVIEW,
-                                    reportUpdateModalTitle: label(
-                                        'ReportUpdateModalActivityHeading'
-                                    ),
                                     title: item?.Things_To_Do__c,
                                     type: label('CardActivityType'),
-                                }}>
-                                <ActivityCardContent {...{ item }} />
-                            </BaseCard>
+                                    methods: {
+                                        edit: {
+                                            action: () => {
+                                                setUpdateId(item.Id);
+                                                modalOpen();
+                                            },
+                                        },
+                                    },
+                                    components: {
+                                        cardContent: (
+                                            <ActivityCardContent
+                                                {...{ item }}
+                                            />
+                                        ),
+                                        reportUpdate: (
+                                            <ReportUpdate
+                                                {...{
+                                                    item,
+                                                    itemRelationKey:
+                                                        'Initiative_Activity__c',
+                                                    reflectionType:
+                                                        CONSTANTS.REPORT_DETAILS
+                                                            .ACTIVITY_OVERVIEW,
+                                                    title: label(
+                                                        'ReportUpdateModalActivityHeading'
+                                                    ),
+                                                }}
+                                            />
+                                        ),
+                                    },
+                                }}
+                            />
                         ))}
                     </>
                 ) : (

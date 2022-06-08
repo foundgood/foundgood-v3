@@ -84,6 +84,17 @@ const constants = {
         REPORT_IN_REVIEW: 'In review',
         REPORT_PUBLISHED: 'Published',
     },
+    TAGS: {
+        COLLECTION: 'Collection',
+        GOAL: 'Goal',
+        ACTIVITY: 'Activity',
+        GENERAL_ACTIVITY: 'General Activity',
+        DISSEMINATION_ACTIVITY: 'Dissemination Activity',
+        EMPLOYEE_FUNDED: 'Employee Funded',
+        SUCCESS_METRIC: 'Success Metric',
+        SUCCESS_METRIC_PEOPLE: 'Success Metric People',
+        SUCCESS_METRIC_CUSTOM: 'Success Metric Custom',
+    },
     UPDATE_CONTENTS: {},
     UPDATES: {
         LOGBOOK_TYPE_METRICS: 'Success Metric Update',

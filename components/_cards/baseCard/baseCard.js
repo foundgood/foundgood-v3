@@ -13,22 +13,11 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import Button from 'components/button';
 import DeleteModal from 'components/_modals/deleteModal';
-import ReportUpdate from './reportUpdate';
 
 // Icons
 import { FiTrash2, FiEdit2, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
-const BaseCardComponent = ({
-    actionDelete,
-    actionEdit,
-    children,
-    item,
-    itemRelationKey,
-    reflectionType,
-    reportUpdateModalTitle,
-    title,
-    type,
-}) => {
+const BaseCardComponent = ({ title, type, components, methods }) => {
     // ///////////////////
     // STORES
     // ///////////////////
@@ -59,16 +48,12 @@ const BaseCardComponent = ({
     // METHODS
     // ///////////////////
 
-    function expandContent() {
-        setExpandedContent(!expandedContent);
-    }
-
     async function deleteHandler() {
         // Modal save button state
         modalSaving();
 
         // Do the delete
-        await actionDelete();
+        await methods?.delete.action();
 
         // Close modal
         modalClose();
@@ -88,7 +73,7 @@ const BaseCardComponent = ({
                     'p-16 max-w-[600px] border-4 border-teal-20 rounded-8 text-teal-100 transition-default',
                 ])}>
                 {/* Content wrapper */}
-                <div className="flex flex-col">
+                <div className="flex flex-col space-y-16">
                     {/* Top row wrapper */}
                     <div className="flex justify-between">
                         {/* Card type */}
@@ -96,9 +81,9 @@ const BaseCardComponent = ({
                             {type}
                         </div>
                         {/* Card controls */}
-                        <div className="flex h-40 space-x-8">
+                        <div className="flex h-40 space-x-4">
                             {/* Delete */}
-                            {actionDelete && (
+                            {methods?.delete && (
                                 <Button
                                     title={label('ButtonDelete')}
                                     variant="tertiary"
@@ -111,7 +96,7 @@ const BaseCardComponent = ({
                                 />
                             )}
                             {/* Edit */}
-                            {actionEdit && (
+                            {methods?.edit && (
                                 <Button
                                     title={label('ButtonEdit')}
                                     variant="tertiary"
@@ -120,11 +105,11 @@ const BaseCardComponent = ({
                                     iconPosition="center"
                                     iconType="stroke"
                                     className="!px-8"
-                                    action={actionEdit}
+                                    action={methods?.edit.action}
                                 />
                             )}
                             {/* Expand */}
-                            {children && (
+                            {components?.cardContent && (
                                 <Button
                                     title={label('ButtonExpandCollapse')}
                                     variant="tertiary"
@@ -137,48 +122,39 @@ const BaseCardComponent = ({
                                     iconPosition="center"
                                     iconType="stroke"
                                     className="!px-8"
-                                    action={expandContent}
+                                    action={() =>
+                                        setExpandedContent(!expandedContent)
+                                    }
                                 />
                             )}
                         </div>
                     </div>
 
                     {/* Title wrapper */}
-                    <div className="flex mt-8 text-teal-100 md:-mt-16 t-h5 md:mr-144">
+                    <div className="flex text-teal-100 !-mt-16 t-h5 md:mr-144">
                         {title}
                     </div>
 
                     {/* Card type content wrapper */}
-                    <AnimateHeight
-                        duration={300}
-                        animateOpacity={true}
-                        height={expandedContent ? 'auto' : 0}>
-                        <div className="flex flex-col mt-16 space-y-16">
-                            {children}
-                        </div>
-                    </AnimateHeight>
+                    {components?.cardContent && (
+                        <AnimateHeight
+                            duration={300}
+                            animateOpacity={true}
+                            height={expandedContent ? 'auto' : 0}>
+                            {components?.cardContent}
+                        </AnimateHeight>
+                    )}
 
                     {/* Card child items wrapper */}
-                    {/* TODO CHILD ITEMS LIKE SUCCESS METRICS */}
+                    {components?.childCollection}
 
                     {/* Card provide report update wrapper */}
-                    {MODE === CONTEXTS.REPORT && (
-                        <div className="flex justify-end mt-16 space-x-8">
-                            <ReportUpdate
-                                {...{
-                                    item,
-                                    itemRelationKey,
-                                    reflectionType,
-                                    title: reportUpdateModalTitle,
-                                }}
-                            />
-                        </div>
-                    )}
+                    {MODE === CONTEXTS.REPORT && components?.reportUpdate}
                 </div>
             </div>
 
             {/* Delete */}
-            {actionDelete && (
+            {methods?.delete && (
                 <DeleteModal
                     {...{
                         onCancel() {
@@ -198,29 +174,37 @@ const BaseCardComponent = ({
 };
 
 BaseCardComponent.propTypes = {
-    actionDelete: t.func,
-    actionEdit: t.func,
-    deleteModalText: t.string,
-    deleteModalTitle: t.string,
-    item: t.object.isRequired,
-    itemRelationKey: t.string.isRequired,
-    reflectionType: t.string.isRequired,
-    reportUpdateModalTitle: t.string,
-    title: t.string,
-    type: t.string,
+    title: t.string.isRequired,
+    type: t.string.isRequired,
+    components: t.shape({
+        cardContent: t.element,
+        childCollection: t.element,
+        reportUpdate: t.element,
+    }),
+    methods: t.shape({
+        delete: t.shape({
+            title: t.string.isRequired,
+            text: t.string,
+            action: t.func.isRequired,
+        }),
+        edit: t.shape({
+            action: t.func.isRequired,
+        }),
+    }),
 };
 
 BaseCardComponent.defaultProps = {
-    actionDelete: null,
-    actioneEdit: null,
-    deleteModalText: '',
-    deleteModalTitle: '',
-    item: null,
-    itemRelationKey: '',
-    reflectionType: '',
-    reportUpdateModalTitle: '',
     title: '',
     type: '',
+    components: {
+        cardContent: null,
+        childCollection: null,
+        reportUpdate: null,
+    },
+    methods: {
+        delete: null,
+        edit: null,
+    },
 };
 
 export default BaseCardComponent;

@@ -1,26 +1,18 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
-import { useForm } from 'react-hook-form';
 
 // Utilities
-import {
-    useElseware,
-    useLabels,
-    useWizardSubmit,
-    useContext,
-} from 'utilities/hooks';
+import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import { InputWrapper, FormFields } from 'components/_inputs';
-
-// Icons
-import { FiImage } from 'react-icons/fi';
+import { InputWrapper } from 'components/_inputs';
+import { BaseCard, ChildCollection } from 'components/_cards';
 
 const FunderTaggingComponent = () => {
     // ///////////////////
@@ -33,60 +25,64 @@ const FunderTaggingComponent = () => {
     // HOOKS
     // ///////////////////
 
-    const { CONTEXTS } = useContext();
-    const { label } = useLabels();
-    const { ewUpdate } = useElseware();
+    const { label, object } = useLabels();
+    const { ewCreate, ewGet, ewDelete } = useElseware();
 
     // ///////////////////
     // STATE
     // ///////////////////
 
     // ///////////////////
-    // FORMS
-    // ///////////////////
-
-    const mainForm = useForm();
-
-    // ///////////////////
     // SUBMIT
     // ///////////////////
 
-    useWizardSubmit({
-        [CONTEXTS.CREATE]: [
-            mainForm,
-            formData => {
-                try {
-                    console.log(formData);
-                    const { Account__c, Type__c } = formData;
-
-                    // Data for sf
-                    const data = {
-                        Account__c,
-                        Type__c,
-                    };
-
-                    // TODO // FIND OUT WHERE/HOW TO POST // Update initiative
-                    // const { data: initiativeData } = await ewUpdate(
-                    //     'initiative/initiative',
-                    //     utilities.initiative.get().Id,
-                    //     data
-                    // );
-
-                    // // Update initiative
-                    // utilities.updateInitiative(initiativeData);
-
-                    // Clear content in form
-                    mainForm.reset();
-                } catch (error) {
-                    console.warn(error);
-                }
-            },
-        ],
-    });
+    useWizardSubmit();
 
     // ///////////////////
     // METHODS
     // ///////////////////
+
+    function tagSelectAsyncOptions(id) {
+        // Get data for form
+        const { data: funderTags } = ewGet('tags/funder-tags', {
+            id,
+        });
+
+        return Object.values(funderTags?.data ?? {}).map(list => ({
+            label: list.Name,
+            value: list.Id,
+        }));
+    }
+
+    async function addTaggingCollection(formData) {
+        const { Tag__c } = formData;
+
+        // Data for sf
+        const data = {
+            Tag__c,
+            Initiative__c: utilities.initiative.get().Id,
+        };
+
+        // Create initiative tag list collections
+        const { data: initiativeTagData } = await ewCreate(
+            'initiative-tag/initiative-tag',
+            data
+        );
+
+        // Update data in initiative
+        utilities.updateInitiativeData('_tags', initiativeTagData);
+    }
+
+    async function deleteTaggingCollection(id) {
+        // Delete tag collection
+        await ewDelete('initiative-tag/initiative-tag', id);
+
+        // Update store
+        utilities.removeInitiativeDataRelations(
+            '_tags',
+            item => item.Id === id
+        );
+    }
 
     // ///////////////////
     // DATA
@@ -96,8 +92,23 @@ const FunderTaggingComponent = () => {
     const funders = utilities.funders.getAll();
 
     // ///////////////////
-    // EFFECTS
+    // FIELDS
     // ///////////////////
+
+    function taggingCollectionFields(item) {
+        return [
+            {
+                type: 'Select',
+                name: 'Tag__c',
+                label: object.label('Initiative_Tag__c.Tag__c'),
+                // Type options
+                subLabel: object.helpText('Initiative_Tag__c.Tag__c'),
+                asyncOptions() {
+                    return tagSelectAsyncOptions(item.Account__c);
+                },
+            },
+        ];
+    }
 
     // ///////////////////
     // RENDER
@@ -107,78 +118,54 @@ const FunderTaggingComponent = () => {
         <WithPermission context>
             <TitlePreamble />
             <InputWrapper>
-                <div className="flex flex-col p-24 space-y-16 bg-teal-10 rounded-8">
-                    <h5 className="t-h5">
-                        {label('FunderTaggingFundingPartnersHeading')}
-                    </h5>
-                    {funders.map(funder => (
-                        <FunderTags
-                            key={funder.Id}
-                            {...{ funder, form: mainForm }}
-                        />
-                    ))}
-                </div>
+                {funders.map(item => (
+                    <BaseCard
+                        key={item.Id}
+                        {...{
+                            title: item?.Account__r?.Name,
+                            type: label('CardFunderType'),
+                            components: {
+                                childCollection: (
+                                    <ChildCollection
+                                        {...{
+                                            title: label(
+                                                'CardFunderTaggingCollectionsHeading'
+                                            ),
+                                            methods: {
+                                                add: {
+                                                    title:
+                                                        'WizardModalHeadingFunderTagging',
+                                                    action: addTaggingCollection,
+                                                },
+                                                delete: {
+                                                    title:
+                                                        'WizardModalHeadingFunderTaggingDelete',
+                                                    text:
+                                                        'WizardModalTextFunderTaggingDelete',
+                                                    action: deleteTaggingCollection,
+                                                },
+                                            },
+                                            collection: {
+                                                title(x) {
+                                                    return x?.Tag__r?.Name;
+                                                },
+                                                items: utilities.tags.getTypeFromFunderId(
+                                                    'COLLECTION',
+                                                    item.Account__c
+                                                ),
+                                                fields: taggingCollectionFields(
+                                                    item
+                                                ),
+                                            },
+                                        }}
+                                    />
+                                ),
+                            },
+                        }}
+                    />
+                ))}
             </InputWrapper>
         </WithPermission>
-    );
-};
-
-const FunderTags = ({ funder, form }) => {
-    // ///////////////////
-    // HOOKS
-    // ///////////////////
-
-    const { label } = useLabels();
-    const { ewGet } = useElseware();
-
-    // ///////////////////
-    // DATA
-    // ///////////////////
-
-    // Get data for form
-    const { data: funderTags } = ewGet('tags/funder-tags', {
-        id: funder.Account__c,
-    });
-
-    // ///////////////////
-    // FIELDS
-    // ///////////////////
-
-    const fields = [
-        {
-            type: 'SelectList',
-            name: `${funder.Account__c}-tags`,
-            label: label('FunderTaggingListHeading'),
-            // Type options
-            options: Object.values(funderTags?.data ?? {}).map(list => ({
-                label: list.Name,
-                value: list.Name,
-            })),
-            listMaxLength: 5,
-        },
-    ];
-
-    // ///////////////////
-    // RENDER
-    // ///////////////////
-
-    return (
-        <div className="flex flex-col p-16 space-y-16 bg-white border-4 border-teal-20 rounded-8">
-            <div className="flex items-center space-x-16">
-                <div className="flex items-center justify-center flex-shrink-0 w-64 h-64 text-teal-100 border-2 rounded-4 border-teal-20">
-                    <FiImage size="36" className="stroke-current" />
-                </div>
-                <div className="t-sh4 whitespace-nowrap">
-                    {funder?.Account__r?.Name}
-                </div>
-            </div>
-            <FormFields
-                {...{
-                    fields,
-                    form,
-                }}
-            />
-        </div>
     );
 };
 

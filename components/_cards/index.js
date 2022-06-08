@@ -1,4 +1,6 @@
 import BaseCard from './baseCard';
+import ChildCollection from './childCollection';
+import ReportUpdate from './reportUpdate';
 import ActivityCardContent from './activityCardContent';
 
-export { BaseCard, ActivityCardContent };
+export { BaseCard, ChildCollection, ReportUpdate, ActivityCardContent };

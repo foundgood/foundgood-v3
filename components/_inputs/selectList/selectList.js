@@ -14,38 +14,94 @@ import { useLabels } from 'utilities/hooks';
 import Button from 'components/button';
 
 // Icons
-import { FiX, FiChevronDown } from 'react-icons/fi';
+import { FiX, FiChevronDown, FiPlus } from 'react-icons/fi';
 
 const SelectListComponent = ({
     controller,
     defaultValue,
+    disabled,
     label,
     listMaxLength,
     maxLength,
     name,
     options,
-    selectPlaceholder,
-    textPlaceholder,
+    required,
     selectLabel,
+    selectPlaceholder,
+    setValue,
     showText,
     subLabel,
     textLabel,
-    required,
-    disabled,
-    buttonLabel,
-    setValue,
+    textPlaceholder,
 }) => {
-    // Hook: Metadata
-    const { label: metadataLabel } = useLabels();
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
 
-    // Local state
+    const { label: metadataLabel } = useLabels();
+    const {
+        field: { onChange, value },
+        fieldState: { error },
+    } = useController({
+        name,
+        control: controller,
+        defaultValue: defaultValue.filter(item => item.selectValue.length > 0),
+        rules: { required },
+    });
+
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
     const [list, setList] = useState([
         { selectValue: '', textValue: '', id: nanoid() },
     ]);
 
+    // ///////////////////
+    // METHODS
+    // ///////////////////
+
+    function onSelectChange(event, item) {
+        // Get next list
+        const nextList = [
+            ...list.map(listItem =>
+                listItem.id === item.id
+                    ? { ...listItem, selectValue: event.target.value }
+                    : listItem
+            ),
+        ];
+
+        // Update current list
+        setList(nextList);
+
+        // Update form
+        onChange(nextList.filter(item => item.selectValue.length > 0));
+    }
+
+    function onTextChange(event, item) {
+        // Get next list
+        const nextList = [
+            ...list.map(listItem =>
+                listItem.id === item.id
+                    ? { ...listItem, textValue: event.target.value }
+                    : listItem
+            ),
+        ];
+
+        // Update current list
+        setList(nextList);
+
+        // Update form
+        onChange(nextList);
+    }
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
     // Set value from beginning
     useEffect(() => {
-        if (defaultValue) {
+        if (defaultValue.selectValue) {
             setList(
                 defaultValue.map(item => ({
                     selectValue: item.selectValue,
@@ -64,46 +120,7 @@ const SelectListComponent = ({
         }
     }, [defaultValue]);
 
-    // Method: Handles add to list
-    function addToList() {
-        setList([...list, { selectValue: '', textValue: '', id: nanoid() }]);
-    }
-
-    // Method: Returns list without item based on id
-    function getListWithoutItem(id) {
-        return [...list.filter(item => item.id !== id)];
-    }
-
-    // Method: Returns list with new select value based on id
-    function getListWithNewSelectValue(id, selectValue) {
-        return [
-            ...list.map(item =>
-                item.id === id ? { ...item, selectValue } : item
-            ),
-        ];
-    }
-
-    // Method: Returns list with new text value based on id
-    function getListWithNewTextValue(id, textValue) {
-        return [
-            ...list.map(item =>
-                item.id === id ? { ...item, textValue } : item
-            ),
-        ];
-    }
-
-    // Controller from useForm
-    const {
-        field: { onChange, value },
-        fieldState: { error },
-    } = useController({
-        name,
-        control: controller,
-        defaultValue: defaultValue.filter(item => item.selectValue.length > 0),
-        rules: { required },
-    });
-
-    // Update state when using setValue
+    // Update local state when using setValue
     useEffect(() => {
         if (value && value.length > 0) {
             setList(
@@ -115,6 +132,10 @@ const SelectListComponent = ({
             );
         }
     }, []);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <label className="flex flex-col" htmlFor={name}>
@@ -163,23 +184,7 @@ const SelectListComponent = ({
                                             disabled={disabled}
                                             defaultValue={item.selectValue}
                                             onChange={event => {
-                                                // Get next list
-                                                const nextList = getListWithNewSelectValue(
-                                                    item.id,
-                                                    event.target.value
-                                                );
-
-                                                // Update current list
-                                                setList(nextList);
-
-                                                // Update form
-                                                onChange(
-                                                    nextList.filter(
-                                                        item =>
-                                                            item.selectValue
-                                                                .length > 0
-                                                    )
-                                                );
+                                                onSelectChange(event, item);
                                             }}>
                                             <option
                                                 default
@@ -200,6 +205,14 @@ const SelectListComponent = ({
                                                     <option
                                                         key={`${option.value}-${index}`}
                                                         value={option.value}
+                                                        disabled={list
+                                                            .map(
+                                                                l =>
+                                                                    l.selectValue
+                                                            )
+                                                            .includes(
+                                                                option.value
+                                                            )}
                                                         className="font-normal text-black">
                                                         {option.label}
                                                     </option>
@@ -224,17 +237,7 @@ const SelectListComponent = ({
                                                 )
                                             }
                                             onChange={event => {
-                                                // Get next list
-                                                const nextList = getListWithNewTextValue(
-                                                    item.id,
-                                                    event.target.value
-                                                );
-
-                                                // Update current list
-                                                setList(nextList);
-
-                                                // Update form
-                                                onChange(nextList);
+                                                onTextChange(event, item);
                                             }}
                                             style={{
                                                 width: showText
@@ -252,67 +255,118 @@ const SelectListComponent = ({
                                     )}
                                 </div>
 
-                                {/* Delete item */}
-                                {value?.length === 1 && (
-                                    <Button
-                                        variant="tertiary"
-                                        theme="teal"
-                                        icon={FiX}
-                                        className="self-end"
-                                        iconPosition="center"
-                                        action={event => {
-                                            // Update current list
-                                            setList([
-                                                {
-                                                    selectValue: '',
-                                                    textValue: '',
-                                                    id: nanoid(),
-                                                },
-                                            ]);
-
-                                            // Update form
-                                            onChange([]);
-                                        }}
-                                    />
-                                )}
-                                {value?.length > 1 && (
-                                    <Button
-                                        variant="tertiary"
-                                        theme="teal"
-                                        icon={FiX}
-                                        className="self-end"
-                                        iconPosition="center"
-                                        action={event => {
-                                            // Get next list                                                     // Get next list
-                                            const nextList = getListWithoutItem(
-                                                item.id
-                                            );
-
-                                            // Update current list
-                                            setList(nextList);
-
-                                            // Update form
-                                            onChange(nextList);
-                                        }}
-                                    />
-                                )}
+                                <DeleteButton
+                                    {...{
+                                        item,
+                                        list,
+                                        onChange,
+                                        setList,
+                                        value,
+                                    }}
+                                />
                             </div>
                         );
                     })}
                 </div>
-                {listMaxLength > 1 &&
-                    options.length > 1 &&
-                    list.length < options.length && (
-                        <Button
-                            variant="quaternary"
-                            className="self-start mt-16"
-                            disabled={list.length >= listMaxLength}
-                            action={addToList}>
-                            {buttonLabel}
-                        </Button>
-                    )}
+
+                <AddButton
+                    {...{
+                        list,
+                        listMaxLength,
+                        options,
+                        setList,
+                        value,
+                    }}
+                />
             </div>
         </label>
+    );
+};
+
+const DeleteButton = ({ item, list, onChange, setList, value }) => {
+    // ///////////////////
+    // METHODS
+    // ///////////////////
+
+    function deleteAction() {
+        // Reset list if only one thing is selected
+        if (value.length === 1 && list.length === 1) {
+            // Update current list
+            setList([
+                {
+                    selectValue: '',
+                    textValue: '',
+                    id: nanoid(),
+                },
+            ]);
+
+            // Update form
+            onChange([]);
+        }
+
+        // Remove empty list item
+        else if (value.length > 0 && list.length === value.length + 1) {
+            // Update current list
+            setList(list.filter(l => l.selectValue));
+        }
+
+        // Delete item by id
+        else if (value.length > 0 && list.length === value.length) {
+            // Get next list by filtering out current id
+            const nextList = [...list.filter(l => l.id !== item.id)];
+
+            // Update current list
+            setList(nextList);
+
+            // Update form
+            onChange(nextList);
+        }
+    }
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
+    return (
+        value?.length > 0 && (
+            <Button
+                variant="tertiary"
+                theme="teal"
+                icon={FiX}
+                className="self-end"
+                iconPosition="center"
+                action={deleteAction}
+            />
+        )
+    );
+};
+
+const AddButton = ({ list, listMaxLength, options, setList, value }) => {
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
+    return (
+        [
+            listMaxLength > 1,
+            options.length > 1,
+            list.length < options.length,
+            list.length === value?.length,
+        ].every(x => x) && (
+            <Button
+                variant="tertiary"
+                theme="teal"
+                className="self-start mt-16"
+                icon={FiPlus}
+                iconPosition="center"
+                action={() =>
+                    setList([
+                        ...list,
+                        { selectValue: '', textValue: '', id: nanoid() },
+                    ])
+                }
+            />
+        )
     );
 };
 
@@ -338,7 +392,6 @@ SelectListComponent.propTypes = {
     listMaxLength: t.number,
     selectPlaceholder: t.string,
     textPlaceholder: t.string,
-    buttonLabel: t.string,
     required: t.bool,
 };
 
@@ -350,7 +403,6 @@ SelectListComponent.defaultProps = {
     textLabel: null,
     listMaxLength: 5,
     required: false,
-    buttonLabel: 'Add',
     setValue() {},
 };
 

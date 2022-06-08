@@ -20,20 +20,48 @@ const SelectComponent = ({
     error,
     placeholder,
     options,
+    asyncOptions,
     controller,
     required,
     setValue,
     ...rest
 }) => {
-    // Hook: Metadata
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
     const { label: metadataLabel } = useLabels();
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const loadedAsyncOptions = asyncOptions();
+
+    // ///////////////////
+    // METHODS
+    // ///////////////////
+
+    function getOptions() {
+        if (asyncOptions && Array.isArray(loadedAsyncOptions)) {
+            return loadedAsyncOptions;
+        } else return options;
+    }
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
 
     // Defaultvalue
     useEffect(() => {
-        if (defaultValue && options) {
+        if (defaultValue && (options || loadedAsyncOptions)) {
             setValue(name, defaultValue);
         }
-    }, [defaultValue]);
+    }, [defaultValue, loadedAsyncOptions]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <label className="flex flex-col flex-grow">
@@ -72,7 +100,7 @@ const SelectComponent = ({
                                 {placeholder ||
                                     metadataLabel('FormCaptureSelectEmpty')}
                             </option>
-                            {options
+                            {getOptions()
                                 .sort((a, b) => a.label.localeCompare(b.label))
                                 .map((option, index) => (
                                     <option
@@ -107,6 +135,7 @@ SelectComponent.propTypes = {
 
 SelectComponent.defaultProps = {
     options: [],
+    asyncOptions: () => null,
     required: false,
     setValue() {},
 };
