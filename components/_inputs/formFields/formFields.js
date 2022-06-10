@@ -16,6 +16,7 @@ import {
     DatePicker,
     DateRange,
     Image,
+    Reflection,
 } from 'components/_inputs';
 
 const FormFields = ({ fields, form }) => {
@@ -23,165 +24,33 @@ const FormFields = ({ fields, form }) => {
         const { control, setValue } = form;
         return fields.map((field, index) => {
             // Extract all possible values
-            const {
-                type,
-                name,
-                label,
-                placeholder,
-                defaultValue,
-                maxLength,
-                disabled,
-                required,
-                options,
-                asyncOptions,
-                subLabel,
-                buttonLabel,
-                listMaxLength,
-                textPlaceholder,
-                selectPlaceholder,
-                showText,
-            } = field;
+            const { type, name } = field;
+
+            const sharedProps = {
+                ...field,
+                setValue,
+                controller: control,
+            };
 
             switch (type) {
                 case 'Text':
-                    return (
-                        <Text
-                            key={name + index}
-                            {...{
-                                name,
-                                label,
-                                placeholder,
-                                defaultValue,
-                                disabled,
-                                required,
-                                maxLength,
-                                controller: control,
-                                setValue,
-                            }}
-                        />
-                    );
+                    return <Text key={name + index} {...sharedProps} />;
                 case 'LongText':
-                    return (
-                        <LongText
-                            key={name + index}
-                            {...{
-                                name,
-                                label,
-                                placeholder,
-                                defaultValue,
-                                disabled,
-                                required,
-                                maxLength,
-                                subLabel,
-                                setValue,
-                                controller: control,
-                            }}
-                        />
-                    );
+                    return <LongText key={name + index} {...sharedProps} />;
                 case 'Select':
-                    return (
-                        <Select
-                            key={name + index}
-                            {...{
-                                name,
-                                label,
-                                placeholder,
-                                defaultValue,
-                                disabled,
-                                required,
-                                options,
-                                asyncOptions,
-                                subLabel,
-                                controller: control,
-                                setValue,
-                            }}
-                        />
-                    );
+                    return <Select key={name + index} {...sharedProps} />;
                 case 'SelectList':
-                    return (
-                        <SelectList
-                            key={name + index}
-                            {...{
-                                name,
-                                label,
-                                showText,
-                                placeholder,
-                                defaultValue,
-                                disabled,
-                                required,
-                                buttonLabel,
-                                listMaxLength,
-                                options,
-                                textPlaceholder,
-                                selectPlaceholder,
-                                subLabel,
-                                controller: control,
-                                setValue,
-                            }}
-                        />
-                    );
+                    return <SelectList key={name + index} {...sharedProps} />;
                 case 'TextList':
-                    return (
-                        <TextList
-                            key={name + index}
-                            {...{
-                                name,
-                                label,
-                                placeholder,
-                                defaultValue,
-                                required,
-                                buttonLabel,
-                                listMaxLength,
-                                maxLength,
-                                subLabel,
-                                controller: control,
-                                setValue,
-                            }}
-                        />
-                    );
+                    return <TextList key={name + index} {...sharedProps} />;
                 case 'DateRange':
-                    return (
-                        <DateRange
-                            key={name + index}
-                            {...{
-                                name,
-                                label,
-                                subLabel,
-                                defaultValue,
-                                disabled,
-                                required,
-                                controller: control,
-                            }}
-                        />
-                    );
+                    return <DateRange key={name + index} {...sharedProps} />;
                 case 'DatePicker':
-                    return (
-                        <DatePicker
-                            key={name + index}
-                            {...{
-                                name,
-                                label,
-                                defaultValue,
-                                disabled,
-                                subLabel,
-                                required,
-                                controller: control,
-                            }}
-                        />
-                    );
+                    return <DatePicker key={name + index} {...sharedProps} />;
                 case 'Image':
-                    return (
-                        <Image
-                            key={name + index}
-                            {...{
-                                name,
-                                defaultValue,
-                                label,
-                                subLabel,
-                                controller: control,
-                            }}
-                        />
-                    );
+                    return <Image key={name + index} {...sharedProps} />;
+                case 'Reflection':
+                    return <Reflection key={name + index} {...sharedProps} />;
                 default:
                     break;
             }

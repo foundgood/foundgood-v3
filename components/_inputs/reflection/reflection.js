@@ -18,13 +18,14 @@ const ReflectionComponent = ({
     maxLength,
     controller,
     required,
+    setValue,
     ...rest
 }) => {
     // Hook: Metadata
     const { label: metadataLabel } = useLabels();
 
     // Local state for handling char count
-    const [value, setValue] = useState(defaultValue || '');
+    const [length, setLength] = useState(defaultValue?.length || 0);
 
     useEffect(() => {
         if (required) {
@@ -33,7 +34,7 @@ const ReflectionComponent = ({
     }, [required]);
 
     return (
-        <label className="flex flex-col p-16 mt-16 rounded-4 bg-teal-10">
+        <label className="flex flex-col rounded-4">
             {label && <span className="input-label">{label}</span>}
             {subLabel && (
                 <span className="mt-8 input-sublabel">{subLabel}</span>
@@ -54,7 +55,7 @@ const ReflectionComponent = ({
                         maxLength={maxLength}
                         onChange={event => {
                             // Local value state
-                            setValue(event.target.value);
+                            setLength(event.target.value.length);
                             onChange(event);
                         }}
                         placeholder={
@@ -62,7 +63,7 @@ const ReflectionComponent = ({
                             metadataLabel('FormCaptureTextEntryEmpty')
                         }
                         className={cc([
-                            'input-defaults !bg-white w-full',
+                            'input-defaults w-full',
                             '!h-[144px] resize-none',
                             {
                                 'input-defaults-error': error,
@@ -75,7 +76,7 @@ const ReflectionComponent = ({
             />
             {maxLength > 0 && (
                 <div className="mt-6 mb-8 text-right input-utility-text">
-                    {value.length} / {maxLength.toString()}
+                    {length} / {maxLength.toString()}
                 </div>
             )}
         </label>

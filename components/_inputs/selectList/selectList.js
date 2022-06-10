@@ -37,7 +37,6 @@ const SelectListComponent = ({
     // ///////////////////
     // HOOKS
     // ///////////////////
-
     const { label: metadataLabel } = useLabels();
     const {
         field: { onChange, value },
@@ -53,6 +52,8 @@ const SelectListComponent = ({
     // STATE
     // ///////////////////
 
+    const [loadedOptions, setLoadedOptions] = useState([]);
+    const [loadingOptions, setLoadingOptions] = useState(false);
     const [list, setList] = useState([
         { selectValue: '', textValue: '', id: nanoid() },
     ]);
@@ -96,12 +97,46 @@ const SelectListComponent = ({
     }
 
     // ///////////////////
+    // METHODS
+    // ///////////////////
+
+    function getPlaceholder() {
+        if (loadingOptions) {
+            return metadataLabel('FormCaptureSelectLoadingOptions');
+        } else {
+            if (loadedOptions.length > 0) {
+                return (
+                    selectPlaceholder || metadataLabel('FormCaptureSelectEmpty')
+                );
+            } else {
+                return metadataLabel('FormCaptureSelectNoOptions');
+            }
+        }
+    }
+
+    // ///////////////////
     // EFFECTS
     // ///////////////////
 
+    useEffect(() => {
+        // Assume normal options
+        if (Array.isArray(options)) {
+            setLoadedOptions(options);
+        }
+        // Or perhaps async options
+        else {
+            async function getOptions() {
+                setLoadingOptions(true);
+                setLoadedOptions(await options());
+                setLoadingOptions(false);
+            }
+            getOptions();
+        }
+    }, []);
+
     // Set value from beginning
     useEffect(() => {
-        if (defaultValue.selectValue) {
+        if (defaultValue.length > 0) {
             setList(
                 defaultValue.map(item => ({
                     selectValue: item.selectValue,
@@ -118,7 +153,11 @@ const SelectListComponent = ({
                 }))
             );
         }
-    }, [defaultValue]);
+        // Potentially bugged here, as defaultValue probably should be
+        // a part of the deps array, if we want to update on defaultValue as well
+        // Perhaps we should do an async defaultValue like options to support async states
+        // of default values.
+    }, [loadedOptions]);
 
     // Update local state when using setValue
     useEffect(() => {
@@ -181,7 +220,10 @@ const SelectListComponent = ({
                                                     'input-defaults-error': error,
                                                 },
                                             ])}
-                                            disabled={disabled}
+                                            disabled={
+                                                disabled ||
+                                                loadedOptions.length === 0
+                                            }
                                             defaultValue={item.selectValue}
                                             onChange={event => {
                                                 onSelectChange(event, item);
@@ -190,12 +232,9 @@ const SelectListComponent = ({
                                                 default
                                                 value=""
                                                 className="hidden">
-                                                {selectPlaceholder ||
-                                                    metadataLabel(
-                                                        'FormCaptureSelectEmpty'
-                                                    )}
+                                                {getPlaceholder()}
                                             </option>
-                                            {options
+                                            {loadedOptions
                                                 .sort((a, b) =>
                                                     a.label.localeCompare(
                                                         b.label
@@ -273,7 +312,7 @@ const SelectListComponent = ({
                     {...{
                         list,
                         listMaxLength,
-                        options,
+                        options: loadedOptions,
                         setList,
                         value,
                     }}
@@ -352,11 +391,12 @@ const AddButton = ({ list, listMaxLength, options, setList, value }) => {
             options.length > 1,
             list.length < options.length,
             list.length === value?.length,
+            list.length < listMaxLength,
         ].every(x => x) && (
             <Button
                 variant="tertiary"
                 theme="teal"
-                className="self-start mt-16"
+                className="self-start mt-12"
                 icon={FiPlus}
                 iconPosition="center"
                 action={() =>
@@ -380,12 +420,15 @@ SelectListComponent.propTypes = {
             textValue: t.oneOfType([t.string, t.number]),
         })
     ),
-    options: t.arrayOf(
-        t.shape({
-            label: t.string,
-            value: t.oneOfType([t.string, t.number, t.bool]),
-        })
-    ),
+    options: t.oneOfType([
+        t.func,
+        t.arrayOf(
+            t.shape({
+                label: t.string,
+                value: t.oneOfType([t.string, t.number, t.bool]),
+            })
+        ),
+    ]),
     showText: t.bool,
     selectLabel: t.string,
     textLabel: t.string,

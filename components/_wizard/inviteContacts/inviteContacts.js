@@ -43,7 +43,6 @@ const InviteContactsComponent = ({ contacts, organisations, form }) => {
     // ///////////////////
 
     const [list, setList] = useState({});
-    const [assignedAdded, setAssignedAdded] = useState(false);
 
     // ///////////////////
     // DATA
@@ -57,42 +56,6 @@ const InviteContactsComponent = ({ contacts, organisations, form }) => {
         (acc, item) => [...acc, ...item],
         []
     );
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // TODO Commented out until further notice
-    // useEffect(() => {
-    //     // Add assignees as defaults
-    //     if (assigned.length > 0 && !assignedAdded) {
-    //         const assignedContacts = assigned.reduce(
-    //             (acc, contact) => ({
-    //                 ...acc,
-    //                 [contact.Id]: {
-    //                     ...contact,
-    //                     type: 'admin',
-    //                 },
-    //             }),
-    //             {}
-    //         );
-
-    //         // Get next list
-    //         const nextList = {
-    //             ...list,
-    //             ...assignedContacts,
-    //         };
-
-    //         // Update local state
-    //         setList(nextList);
-
-    //         // Update form
-    //         onChange(nextList);
-
-    //         // Never do this again
-    //         setAssignedAdded(true);
-    //     }
-    // }, [assigned]);
 
     // ///////////////////
     // RENDER
@@ -162,16 +125,14 @@ const ListComponent = ({
         <div className="bg-white rounded-8">
             {/* Header */}
             <div className="grid grid-cols-10">
-                <div className="col-span-3 p-8 t-footnote-bold text-teal-60">
+                <div className="col-span-4 p-8 px-12 t-footnote-bold text-teal-60">
+                    {label('InviteContactsColumnOrganisation')} /{' '}
                     {label('InviteContactsColumnContact')}
                 </div>
-                <div className="col-span-3 p-8 t-footnote-bold text-teal-60">
-                    {label('InviteContactsColumnOrganisation')}
-                </div>
-                <div className="col-span-2 p-8 t-footnote-bold text-teal-60">
+                <div className="col-span-4 p-8 px-12 t-footnote-bold text-teal-60">
                     {label('InviteContactsColumnPermission')}
                 </div>
-                <div className="col-span-2 p-8"></div>
+                <div className="col-span-2 p-8 px-12"></div>
             </div>
 
             {/* Map users */}
@@ -180,26 +141,26 @@ const ListComponent = ({
                     <div key={contact.Id} className="grid grid-cols-10">
                         {/* Row (with border) */}
                         <div className="h-2 col-span-10 bg-teal-10"></div>
-                        <div className="flex items-center col-span-3 !pt-[10px] px-8 py-16 text-teal-100 t-caption">
-                            <div className="flex items-center justify-center flex-shrink-0 w-20 h-20 mr-8 text-white rounded-full bg-teal-60">
-                                <FiUser className="w-16 h-16 stroke-current" />
-                            </div>
-                            <span
-                                className="mt-6 truncate"
-                                title={`${contact.FirstName} ${contact.LastName}`}>
-                                {`${contact.FirstName} ${contact.LastName}`}
-                            </span>
-                        </div>
-                        <div className="flex items-center col-span-3 px-8 py-16 text-teal-100 t-caption">
-                            <span className="truncate">
+                        <div className="flex flex-col justify-center col-span-4 p-12 text-teal-100 t-caption">
+                            <div className="truncate t-caption-bold">
                                 {organisations.find(
                                     organisation =>
                                         organisation.Account__c ===
                                         contact.AccountId
                                 )?.Account__r?.Name ?? ''}
-                            </span>
+                            </div>
+                            <div className="flex items-center ">
+                                <div className="flex items-center justify-center flex-shrink-0 w-20 h-20 mr-8 text-white rounded-full bg-teal-60">
+                                    <FiUser className="w-16 h-16 stroke-current" />
+                                </div>
+                                <span
+                                    className="mt-6 truncate"
+                                    title={`${contact.FirstName} ${contact.LastName}`}>
+                                    {`${contact.FirstName} ${contact.LastName}`}
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex items-center col-span-2 px-8 py-16">
+                        <div className="flex items-center col-span-4 p-12">
                             {list[contact.Id] ? (
                                 <div className="px-8 pt-3 pb-1 t-sh7 text-teal-120 bg-teal-20 rounded-4">
                                     <span className="mt-2">
@@ -221,7 +182,7 @@ const ListComponent = ({
                                 />
                             )}
                         </div>
-                        <div className="flex items-center justify-end col-span-2 p-16 pl-8 !pt-[10px] t-caption text-teal-60">
+                        <div className="flex items-center justify-end col-span-2 p-12 pl-8 t-caption text-teal-60">
                             {list[contact.Id] ? (
                                 <>
                                     <FiCheckCircle className="w-16 h-16 mr-8 stroke-current" />

@@ -248,7 +248,13 @@ function initiativeGetters(getter, constants) {
                 return Object.values(getter().initiative._tags).filter(
                     item =>
                         item.Tag__r?.Account__c === funderId &&
-                        item.Tag_Type__c === constants.TAGS[type]
+                        item.Tag_Type__c === type
+                );
+            },
+            // Returns array
+            getFromRelationKeyId(relationKey, id) {
+                return Object.values(getter().initiative._tags).filter(
+                    item => item[relationKey] === id
                 );
             },
         },

@@ -16,7 +16,7 @@ const useElseware = () => {
     // METHODS
     // ///////////////////
 
-    // Method for consuming GET with elseware API
+    // Method for consuming GET with elseware API via useSwr (synchronous)
     // Path is the elseware path - e.g. initiative-activity/initiative-activity
     // Params is optional object that will be converted to URL Params - e.g. id
     // Returns normal swr object ({ data, error, isValidating, mutate })
@@ -29,6 +29,14 @@ const useElseware = () => {
                 onSuccess: updateUserTimeout,
             }
         );
+    }
+
+    // Method for consuming GET with elseware API (asynchronous)
+    // Path is the elseware path - e.g. initiative-activity/initiative-activity
+    // Params is optional object that will be converted to URL Params - e.g. id
+    // Returns data from server
+    async function ewGetAsync(path, params) {
+        return elseware.get({ path, params });
     }
 
     // Method for creating any object with elseware API
@@ -124,6 +132,7 @@ const useElseware = () => {
 
     return {
         ewGet,
+        ewGetAsync,
         ewCreate,
         ewDelete,
         ewUpdate,

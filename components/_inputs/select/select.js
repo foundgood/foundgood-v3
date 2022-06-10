@@ -20,9 +20,9 @@ const SelectComponent = ({
     error,
     placeholder,
     options,
-    asyncOptions,
     controller,
     required,
+    disabled,
     setValue,
     ...rest
 }) => {
@@ -33,31 +33,54 @@ const SelectComponent = ({
     const { label: metadataLabel } = useLabels();
 
     // ///////////////////
-    // DATA
+    // STATE
     // ///////////////////
 
-    const loadedAsyncOptions = asyncOptions();
+    const [loadingOptions, setLoadingOptions] = useState(false);
+    const [loadedOptions, setLoadedOptions] = useState([]);
 
     // ///////////////////
     // METHODS
     // ///////////////////
 
-    function getOptions() {
-        if (asyncOptions && Array.isArray(loadedAsyncOptions)) {
-            return loadedAsyncOptions;
-        } else return options;
+    function getPlaceholder() {
+        if (loadingOptions) {
+            return metadataLabel('FormCaptureSelectLoadingOptions');
+        } else {
+            if (loadedOptions.length > 0) {
+                return placeholder || metadataLabel('FormCaptureSelectEmpty');
+            } else {
+                return metadataLabel('FormCaptureSelectNoOptions');
+            }
+        }
     }
 
     // ///////////////////
     // EFFECTS
     // ///////////////////
 
+    useEffect(() => {
+        // Assume normal options
+        if (Array.isArray(options)) {
+            setLoadedOptions(options);
+        }
+        // Or perhaps async options
+        else {
+            async function getOptions() {
+                setLoadingOptions(true);
+                setLoadedOptions(await options());
+                setLoadingOptions(false);
+            }
+            getOptions();
+        }
+    }, []);
+
     // Defaultvalue
     useEffect(() => {
-        if (defaultValue && (options || loadedAsyncOptions)) {
+        if (defaultValue && loadedOptions) {
             setValue(name, defaultValue);
         }
-    }, [defaultValue, loadedAsyncOptions]);
+    }, [defaultValue, loadedOptions]);
 
     // ///////////////////
     // RENDER
@@ -95,12 +118,12 @@ const SelectComponent = ({
                                 },
                             ])}
                             onChange={event => onChange(event)}
+                            disabled={disabled || loadedOptions.length === 0}
                             {...rest}>
                             <option default value="" className="hidden">
-                                {placeholder ||
-                                    metadataLabel('FormCaptureSelectEmpty')}
+                                {getPlaceholder()}
                             </option>
-                            {getOptions()
+                            {loadedOptions
                                 .sort((a, b) => a.label.localeCompare(b.label))
                                 .map((option, index) => (
                                     <option

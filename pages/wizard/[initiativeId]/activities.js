@@ -230,15 +230,28 @@ const ActivitiesComponent = ({ pageProps }) => {
                                         reportUpdate: (
                                             <ReportUpdate
                                                 {...{
-                                                    item,
-                                                    itemRelationKey:
-                                                        'Initiative_Activity__c',
-                                                    reflectionType:
-                                                        CONSTANTS.REPORT_DETAILS
-                                                            .ACTIVITY_OVERVIEW,
                                                     title: label(
                                                         'ReportUpdateModalActivityHeading'
                                                     ),
+                                                    tagging: {
+                                                        item,
+                                                        relationKey:
+                                                            'Initiative_Activity__c',
+                                                        type:
+                                                            CONSTANTS.TAGS
+                                                                .ACTIVITY,
+                                                    },
+                                                    reflection: {
+                                                        item,
+                                                        relationKey:
+                                                            'Initiative_Activity__c',
+                                                        type:
+                                                            CONSTANTS
+                                                                .REPORT_DETAILS
+                                                                .ACTIVITY_OVERVIEW,
+                                                    },
+                                                    metrics: {},
+                                                    status: {},
                                                 }}
                                             />
                                         ),

@@ -19,14 +19,14 @@ const FunderTaggingComponent = () => {
     // STORES
     // ///////////////////
 
-    const { utilities } = useInitiativeDataStore();
+    const { utilities, CONSTANTS } = useInitiativeDataStore();
 
     // ///////////////////
     // HOOKS
     // ///////////////////
 
     const { label, object } = useLabels();
-    const { ewCreate, ewGet, ewDelete } = useElseware();
+    const { ewCreate, ewGetAsync, ewDelete } = useElseware();
 
     // ///////////////////
     // STATE
@@ -41,18 +41,6 @@ const FunderTaggingComponent = () => {
     // ///////////////////
     // METHODS
     // ///////////////////
-
-    function tagSelectAsyncOptions(id) {
-        // Get data for form
-        const { data: funderTags } = ewGet('tags/funder-tags', {
-            id,
-        });
-
-        return Object.values(funderTags?.data ?? {}).map(list => ({
-            label: list.Name,
-            value: list.Id,
-        }));
-    }
 
     async function addTaggingCollection(formData) {
         const { Tag__c } = formData;
@@ -78,10 +66,7 @@ const FunderTaggingComponent = () => {
         await ewDelete('initiative-tag/initiative-tag', id);
 
         // Update store
-        utilities.removeInitiativeDataRelations(
-            '_tags',
-            item => item.Id === id
-        );
+        utilities.removeInitiativeData('_tags', id);
     }
 
     // ///////////////////
@@ -103,8 +88,15 @@ const FunderTaggingComponent = () => {
                 label: object.label('Initiative_Tag__c.Tag__c'),
                 // Type options
                 subLabel: object.helpText('Initiative_Tag__c.Tag__c'),
-                asyncOptions() {
-                    return tagSelectAsyncOptions(item.Account__c);
+                async options() {
+                    const funderTags = await ewGetAsync('tag/funder-tags', {
+                        id: item.Account__c,
+                    });
+
+                    return Object.values(funderTags?.data ?? {}).map(list => ({
+                        label: list.Name,
+                        value: list.Id,
+                    }));
                 },
             },
         ];
@@ -133,15 +125,18 @@ const FunderTaggingComponent = () => {
                                             ),
                                             methods: {
                                                 add: {
-                                                    title:
-                                                        'WizardModalHeadingFunderTagging',
+                                                    title: label(
+                                                        'WizardModalHeadingFunderTagging'
+                                                    ),
                                                     action: addTaggingCollection,
                                                 },
                                                 delete: {
-                                                    title:
-                                                        'WizardModalHeadingFunderTaggingDelete',
-                                                    text:
-                                                        'WizardModalTextFunderTaggingDelete',
+                                                    title: label(
+                                                        'WizardModalHeadingFunderTaggingDelete'
+                                                    ),
+                                                    text: label(
+                                                        'WizardModalTextFunderTaggingDelete'
+                                                    ),
                                                     action: deleteTaggingCollection,
                                                 },
                                             },
@@ -150,7 +145,7 @@ const FunderTaggingComponent = () => {
                                                     return x?.Tag__r?.Name;
                                                 },
                                                 items: utilities.tags.getTypeFromFunderId(
-                                                    'COLLECTION',
+                                                    CONSTANTS.TAGS.COLLECTION,
                                                     item.Account__c
                                                 ),
                                                 fields: taggingCollectionFields(

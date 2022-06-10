@@ -12,15 +12,15 @@ import { useLabels } from 'utilities/hooks';
 // Components
 import Button from 'components/button';
 import BaseModal from 'components/_modals/baseModal';
-import { Reflection } from 'components/_inputs';
+import { InputWrapper, FormFields } from 'components/_inputs';
 
 const ReportUpdateModalComponent = ({
     form,
+    fields,
     isOpen,
     isSaving,
     onCancel,
     onSave,
-    reflection,
     title,
 }) => {
     // ///////////////////
@@ -44,17 +44,14 @@ const ReportUpdateModalComponent = ({
             {/* Modal content */}
             <div className="flex flex-col overflow-y-auto scrolling-touch max-h-[90vh] sm:max-h-[80vh] pb-32 p-2 overflow-x-hidden">
                 {title && <h3 className="mb-24 text-teal-100 t-h3">{title}</h3>}
-                <div className="bg-teal-10 rounded-8">
-                    <Reflection
+                <InputWrapper>
+                    <FormFields
                         {...{
-                            controller: form.control,
-                            name: 'reflectionDescription',
-                            maxLength: 750,
-                            label: label('ReportUpdateModalReflectionsLabel'),
-                            defaultValue: reflection?.Description__c,
+                            fields,
+                            form,
                         }}
                     />
-                </div>
+                </InputWrapper>
             </div>
 
             {/* Modal actions */}
@@ -89,6 +86,7 @@ const ReportUpdateModalComponent = ({
 
 ReportUpdateModalComponent.propTypes = {
     form: t.object.isRequired,
+    fields: t.array.isRequired,
     isOpen: t.bool,
     isSaving: t.bool,
     onCancel: t.func.isRequired,
@@ -99,6 +97,7 @@ ReportUpdateModalComponent.propTypes = {
 
 ReportUpdateModalComponent.defaultProps = {
     form: null,
+    fields: [],
     isOpen: false,
     isSaving: false,
     onCancel: null,

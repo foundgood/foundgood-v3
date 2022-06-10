@@ -11,7 +11,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 
 // Icons
-import { FiTrendingUp, FiMessageCircle } from 'react-icons/fi';
+import { FiTrendingUp, FiMessageCircle, FiTag } from 'react-icons/fi';
 
 const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
     // ///////////////////
@@ -41,11 +41,20 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
         items.map(x => x.Id).includes(detail[itemRelationKey])
     );
 
+    // Get tags
+    const tags = items
+        .map(x => utilities.tags.getFromRelationKeyId(itemRelationKey, x.Id))
+        .flat();
+
     // TODO Get Metrics
     const metrics = [];
 
     // Any updates?
-    const hasUpdate = [reflections.length > 0, metrics.length > 0].some(x => x);
+    const hasUpdate = [
+        tags.length > 0,
+        reflections.length > 0,
+        metrics.length > 0,
+    ].some(x => x);
 
     // ///////////////////
     // RENDER
@@ -57,6 +66,13 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
                 {label('WizardReportUpdatesInPageHasUpdates')}
             </p>
             <div className="flex items-center space-x-12 text-blue-300">
+                {/* Tags */}
+                {tags.length > 0 && (
+                    <div className="flex items-center space-x-8">
+                        <FiTag className="w-24 h-24" />
+                        <span className="relative top-2">{tags.length}</span>
+                    </div>
+                )}
                 {/* Metrics */}
                 {metrics.length > 0 && (
                     <div className="flex items-center space-x-8">
