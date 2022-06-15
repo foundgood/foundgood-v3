@@ -12,6 +12,7 @@ import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
+import EmptyState from './../emptyState';
 
 // Icons
 import { FiX, FiChevronDown, FiPlus } from 'react-icons/fi';
@@ -33,10 +34,12 @@ const SelectListComponent = ({
     subLabel,
     textLabel,
     textPlaceholder,
+    missingOptionsLabel,
 }) => {
     // ///////////////////
     // HOOKS
     // ///////////////////
+
     const { label: metadataLabel } = useLabels();
     const {
         field: { onChange, value },
@@ -115,6 +118,18 @@ const SelectListComponent = ({
     }
 
     // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const columnWidth = {
+        'col-span-full': !showText && value?.length === 0,
+        'col-span-11': !showText && value?.length > 0,
+        'col-span-6': showText,
+    };
+
+    const missingOptions = missingOptionsLabel && loadedOptions.length === 0;
+
+    // ///////////////////
     // EFFECTS
     // ///////////////////
 
@@ -183,140 +198,162 @@ const SelectListComponent = ({
                 <span className="mt-8 input-sublabel">{subLabel}</span>
             )}
             <div className={cc(['flex flex-col', { 'mt-16': label }])}>
-                {(selectLabel || textLabel) && (
-                    <div className="flex mb-4 input-utility-text">
-                        <span className="flex-grow mr-6">
-                            {selectLabel || ''}
-                        </span>
-                        <span className="flex-grow ml-6">
-                            {textLabel || ''}
-                        </span>
-                    </div>
-                )}
-                <div className="flex flex-col space-y-12">
-                    {list.map(item => {
-                        return (
-                            <div key={item.id} className="flex w-full">
-                                {/* Select / Input */}
-                                <div className="flex flex-grow">
-                                    {/* Select */}
-                                    <div
-                                        style={{
-                                            width: showText
-                                                ? 'calc(50% - 6px)'
-                                                : '100%',
-                                        }}
-                                        className={cc([
-                                            'relative flex items-center',
-                                            {
-                                                'mr-6': showText,
-                                            },
-                                        ])}>
-                                        <select
-                                            className={cc([
-                                                'input-defaults w-full',
-                                                'appearance-none !pr-40',
-                                                {
-                                                    'input-defaults-error': error,
-                                                },
-                                            ])}
-                                            disabled={
-                                                disabled ||
-                                                loadedOptions.length === 0
-                                            }
-                                            defaultValue={item.selectValue}
-                                            onChange={event => {
-                                                onSelectChange(event, item);
-                                            }}>
-                                            <option
-                                                default
-                                                value=""
-                                                className="hidden">
-                                                {getPlaceholder()}
-                                            </option>
-                                            {loadedOptions
-                                                .sort((a, b) =>
-                                                    a.label.localeCompare(
-                                                        b.label
-                                                    )
-                                                )
-                                                .map((option, index) => (
-                                                    <option
-                                                        key={`${option.value}-${index}`}
-                                                        value={option.value}
-                                                        disabled={list
-                                                            .map(
-                                                                l =>
-                                                                    l.selectValue
-                                                            )
-                                                            .includes(
-                                                                option.value
-                                                            )}
-                                                        className="font-normal text-black">
-                                                        {option.label}
-                                                    </option>
-                                                ))}
-                                        </select>
-                                        <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
-                                    </div>
+                {missingOptions && <EmptyState label={missingOptionsLabel} />}
 
-                                    {/* Input */}
-                                    {showText && (
-                                        <input
-                                            type="text"
-                                            maxLength={
-                                                maxLength ? maxLength : 'none'
-                                            }
-                                            disabled={disabled}
-                                            defaultValue={item.textValue}
-                                            placeholder={
-                                                textPlaceholder ||
-                                                metadataLabel(
-                                                    'FormCaptureTextEntryEmpty'
-                                                )
-                                            }
-                                            onChange={event => {
-                                                onTextChange(event, item);
-                                            }}
-                                            style={{
-                                                width: showText
-                                                    ? 'calc(50% - 6px)'
-                                                    : '100%',
-                                            }}
-                                            className={cc([
-                                                'ml-6',
-                                                'input-defaults',
-                                                {
-                                                    'input-defaults-error': error,
-                                                },
-                                            ])}
-                                        />
-                                    )}
-                                </div>
-
-                                <DeleteButton
-                                    {...{
-                                        item,
-                                        list,
-                                        onChange,
-                                        setList,
-                                        value,
-                                    }}
-                                />
+                {!missingOptions && (
+                    <>
+                        {(selectLabel || textLabel) && (
+                            <div className="grid grid-cols-12 gap-12 mb-4 input-utility-text">
+                                <span className={cc([columnWidth])}>
+                                    {selectLabel || ''}
+                                </span>
+                                <span className={cc([columnWidth])}>
+                                    {textLabel || ''}
+                                </span>
                             </div>
-                        );
-                    })}
-                </div>
+                        )}
+                        <div className="flex flex-col space-y-12">
+                            {list.map(item => {
+                                return (
+                                    <div key={item.id}>
+                                        {/* Select / Input */}
+                                        <div className="grid grid-cols-12 gap-12">
+                                            {/* Select */}
+                                            <div
+                                                className={cc([
+                                                    'relative flex items-center',
+                                                    columnWidth,
+                                                ])}>
+                                                <select
+                                                    className={cc([
+                                                        'input-defaults w-full',
+                                                        'appearance-none !pr-40',
+                                                        {
+                                                            'input-defaults-error': error,
+                                                        },
+                                                    ])}
+                                                    disabled={
+                                                        disabled ||
+                                                        loadedOptions.length ===
+                                                            0
+                                                    }
+                                                    defaultValue={
+                                                        item.selectValue
+                                                    }
+                                                    onChange={event => {
+                                                        onSelectChange(
+                                                            event,
+                                                            item
+                                                        );
+                                                    }}>
+                                                    <option
+                                                        default
+                                                        value=""
+                                                        className="hidden">
+                                                        {getPlaceholder()}
+                                                    </option>
+                                                    {loadedOptions
+                                                        .sort((a, b) =>
+                                                            a.label.localeCompare(
+                                                                b.label
+                                                            )
+                                                        )
+                                                        .map(
+                                                            (option, index) => (
+                                                                <option
+                                                                    key={`${option.value}-${index}`}
+                                                                    value={
+                                                                        option.value
+                                                                    }
+                                                                    disabled={list
+                                                                        .map(
+                                                                            l =>
+                                                                                l.selectValue
+                                                                        )
+                                                                        .includes(
+                                                                            option.value
+                                                                        )}
+                                                                    className="font-normal text-black">
+                                                                    {
+                                                                        option.label
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
+                                                </select>
+                                                <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
+                                            </div>
 
-                <AddButton
-                    {...{
-                        list,
-                        listMaxLength,
-                        options: loadedOptions,
-                        setList,
-                        value,
-                    }}
-                />
+                                            {/* Input */}
+                                            {showText && (
+                                                <input
+                                                    type="text"
+                                                    maxLength={
+                                                        maxLength
+                                                            ? maxLength
+                                                            : 'none'
+                                                    }
+                                                    disabled={disabled}
+                                                    defaultValue={
+                                                        item.textValue
+                                                    }
+                                                    placeholder={
+                                                        textPlaceholder ||
+                                                        metadataLabel(
+                                                            'FormCaptureTextEntryEmpty'
+                                                        )
+                                                    }
+                                                    onChange={event => {
+                                                        onTextChange(
+                                                            event,
+                                                            item
+                                                        );
+                                                    }}
+                                                    className={cc([
+                                                        {
+                                                            'col-span-6':
+                                                                showText &&
+                                                                value?.length ===
+                                                                    0,
+                                                            'col-span-5':
+                                                                showText &&
+                                                                value?.length >
+                                                                    0,
+                                                        },
+                                                        'input-defaults',
+                                                        {
+                                                            'input-defaults-error': error,
+                                                        },
+                                                    ])}
+                                                />
+                                            )}
+
+                                            <DeleteButton
+                                                {...{
+                                                    item,
+                                                    list,
+                                                    onChange,
+                                                    setList,
+                                                    value,
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        <AddButton
+                            {...{
+                                list,
+                                listMaxLength,
+                                options: loadedOptions,
+                                setList,
+                                value,
+                            }}
+                        />
+                    </>
+                )}
             </div>
         </label>
     );
@@ -368,14 +405,16 @@ const DeleteButton = ({ item, list, onChange, setList, value }) => {
 
     return (
         value?.length > 0 && (
-            <Button
-                variant="tertiary"
-                theme="teal"
-                icon={FiX}
-                className="self-end"
-                iconPosition="center"
-                action={deleteAction}
-            />
+            <div className="flex justify-end col-span-1">
+                <Button
+                    variant="tertiary"
+                    theme="teal"
+                    icon={FiX}
+                    className="self-end !px-8"
+                    iconPosition="center"
+                    action={deleteAction}
+                />
+            </div>
         )
     );
 };
@@ -394,7 +433,7 @@ const AddButton = ({ list, listMaxLength, options, setList, value }) => {
             list.length < listMaxLength,
         ].every(x => x) && (
             <Button
-                variant="tertiary"
+                variant="secondary"
                 theme="teal"
                 className="self-start mt-12"
                 icon={FiPlus}
@@ -440,7 +479,7 @@ SelectListComponent.propTypes = {
 
 SelectListComponent.defaultProps = {
     options: [],
-    defaultValue: [{ selectValue: '', textValue: '', id: nanoid() }],
+    defaultValue: [],
     showText: false,
     selectLabel: null,
     textLabel: null,

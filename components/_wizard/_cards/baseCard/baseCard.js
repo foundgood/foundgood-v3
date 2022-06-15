@@ -7,23 +7,15 @@ import t from 'prop-types';
 import AnimateHeight from 'react-animate-height';
 
 // Utilities
-import { useContext, useLabels, useModalState } from 'utilities/hooks';
-import { useInitiativeDataStore } from 'utilities/store';
+import { useContext, useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
-import DeleteModal from 'components/_modals/deleteModal';
 
 // Icons
 import { FiTrash2, FiEdit2, FiChevronDown, FiChevronUp } from 'react-icons/fi';
 
 const BaseCardComponent = ({ title, type, components, methods }) => {
-    // ///////////////////
-    // STORES
-    // ///////////////////
-
-    const { utilities } = useInitiativeDataStore();
-
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -36,31 +28,6 @@ const BaseCardComponent = ({ title, type, components, methods }) => {
     // ///////////////////
 
     const [expandedContent, setExpandedContent] = useState(false);
-    const {
-        modalState,
-        modalOpen,
-        modalClose,
-        modalSaving,
-        modalNotSaving,
-    } = useModalState();
-
-    // ///////////////////
-    // METHODS
-    // ///////////////////
-
-    async function deleteHandler() {
-        // Modal save button state
-        modalSaving();
-
-        // Do the delete
-        await methods?.delete.action();
-
-        // Close modal
-        modalClose();
-
-        // Modal save button state
-        modalNotSaving();
-    }
 
     // ///////////////////
     // RENDER
@@ -92,7 +59,7 @@ const BaseCardComponent = ({ title, type, components, methods }) => {
                                     iconPosition="center"
                                     iconType="stroke"
                                     className="!px-8"
-                                    action={modalOpen}
+                                    action={methods?.delete.action}
                                 />
                             )}
                             {/* Edit */}
@@ -145,6 +112,9 @@ const BaseCardComponent = ({ title, type, components, methods }) => {
                         </AnimateHeight>
                     )}
 
+                    {/* Card related items wrapper */}
+                    {components?.relatedItems}
+
                     {/* Card child items wrapper */}
                     {components?.childCollection}
 
@@ -152,23 +122,6 @@ const BaseCardComponent = ({ title, type, components, methods }) => {
                     {MODE === CONTEXTS.REPORT && components?.reportUpdate}
                 </div>
             </div>
-
-            {/* Delete */}
-            {methods?.delete && (
-                <DeleteModal
-                    {...{
-                        onCancel() {
-                            modalClose();
-                        },
-                        async onDelete() {
-                            await deleteHandler();
-                        },
-                        text: deleteModalText,
-                        title: deleteModalTitle,
-                        ...modalState,
-                    }}
-                />
-            )}
         </>
     );
 };
@@ -178,13 +131,12 @@ BaseCardComponent.propTypes = {
     type: t.string.isRequired,
     components: t.shape({
         cardContent: t.element,
+        relatedItems: t.element,
         childCollection: t.element,
         reportUpdate: t.element,
     }),
     methods: t.shape({
         delete: t.shape({
-            title: t.string.isRequired,
-            text: t.string,
             action: t.func.isRequired,
         }),
         edit: t.shape({
@@ -198,6 +150,7 @@ BaseCardComponent.defaultProps = {
     type: '',
     components: {
         cardContent: null,
+        relatedItems: null,
         childCollection: null,
         reportUpdate: null,
     },

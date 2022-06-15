@@ -9,6 +9,9 @@ import { Controller } from 'react-hook-form';
 // Utilities
 import { useLabels } from 'utilities/hooks';
 
+// Components
+import EmptyState from './../emptyState';
+
 // Icons
 import { FiChevronDown } from 'react-icons/fi';
 
@@ -24,6 +27,7 @@ const SelectComponent = ({
     required,
     disabled,
     setValue,
+    missingOptionsLabel,
     ...rest
 }) => {
     // ///////////////////
@@ -54,6 +58,12 @@ const SelectComponent = ({
             }
         }
     }
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const missingOptions = missingOptionsLabel && loadedOptions.length === 0;
 
     // ///////////////////
     // EFFECTS
@@ -92,52 +102,65 @@ const SelectComponent = ({
             {subLabel && (
                 <span className="mt-8 input-sublabel">{subLabel}</span>
             )}
-            <Controller
-                control={controller}
-                defaultValue={defaultValue}
-                name={name}
-                rules={{ required }}
-                render={({
-                    field: { onChange, onBlur, value, ref },
-                    fieldState: { error },
-                }) => (
-                    <div
-                        className={cc([
-                            'relative flex items-center',
-                            {
-                                'mt-16': label,
-                            },
-                        ])}>
-                        <select
-                            ref={ref}
+            {missingOptions && (
+                <div className="mt-16">
+                    {' '}
+                    <EmptyState text={label} />
+                </div>
+            )}
+
+            {!missingOptions && (
+                <Controller
+                    control={controller}
+                    defaultValue={defaultValue}
+                    name={name}
+                    rules={{ required }}
+                    render={({
+                        field: { onChange, onBlur, value, ref },
+                        fieldState: { error },
+                    }) => (
+                        <div
                             className={cc([
-                                'input-defaults',
-                                'appearance-none flex-grow pr-20 max-w-full',
+                                'relative flex items-center',
                                 {
-                                    'input-defaults-error': error,
+                                    'mt-16': label,
                                 },
-                            ])}
-                            onChange={event => onChange(event)}
-                            disabled={disabled || loadedOptions.length === 0}
-                            {...rest}>
-                            <option default value="" className="hidden">
-                                {getPlaceholder()}
-                            </option>
-                            {loadedOptions
-                                .sort((a, b) => a.label.localeCompare(b.label))
-                                .map((option, index) => (
-                                    <option
-                                        key={`${option.value}-${index}`}
-                                        value={option.value}
-                                        className="font-normal text-black">
-                                        {option.label}
-                                    </option>
-                                ))}
-                        </select>
-                        <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
-                    </div>
-                )}
-            />
+                            ])}>
+                            <select
+                                ref={ref}
+                                className={cc([
+                                    'input-defaults',
+                                    'appearance-none flex-grow pr-20 max-w-full',
+                                    {
+                                        'input-defaults-error': error,
+                                    },
+                                ])}
+                                onChange={event => onChange(event)}
+                                disabled={
+                                    disabled || loadedOptions.length === 0
+                                }
+                                {...rest}>
+                                <option default value="" className="hidden">
+                                    {getPlaceholder()}
+                                </option>
+                                {loadedOptions
+                                    .sort((a, b) =>
+                                        a.label.localeCompare(b.label)
+                                    )
+                                    .map((option, index) => (
+                                        <option
+                                            key={`${option.value}-${index}`}
+                                            value={option.value}
+                                            className="font-normal text-black">
+                                            {option.label}
+                                        </option>
+                                    ))}
+                            </select>
+                            <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
+                        </div>
+                    )}
+                />
+            )}
         </label>
     );
 };
@@ -158,7 +181,6 @@ SelectComponent.propTypes = {
 
 SelectComponent.defaultProps = {
     options: [],
-    asyncOptions: () => null,
     required: false,
     setValue() {},
 };

@@ -39,6 +39,7 @@ const useModalState = () => {
         modalSaving,
         modalNotSaving,
         modalState: {
+            isClosed: !modalIsOpen,
             isOpen: modalIsOpen,
             isSaving: modalIsSaving,
         },

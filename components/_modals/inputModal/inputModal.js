@@ -4,20 +4,23 @@ import React from 'react';
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
+import { useFormState } from 'react-hook-form';
 
 // Utilities
 import { useLabels } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
-import BaseModal from 'components/_modals/baseModal';
+import ModalBase from 'components/_modals/baseModal';
+import { InputWrapper, FormFields } from 'components/_inputs';
 
-const DeleteModalComponent = ({
+const InputModalComponent = ({
+    form,
+    fields,
     isOpen,
     isSaving,
     onCancel,
-    onDelete,
-    text,
+    onSave,
     title,
 }) => {
     // ///////////////////
@@ -27,17 +30,30 @@ const DeleteModalComponent = ({
     const { label } = useLabels();
 
     // ///////////////////
+    // FORMS
+    // ///////////////////
+
+    const { isDirty } = form
+        ? useFormState({ control: form.control })
+        : { isDirty: true };
+
+    // ///////////////////
     // RENDER
     // ///////////////////
 
     return (
-        <BaseModal {...{ isOpen }}>
+        <ModalBase {...{ isOpen }}>
             {/* Modal content */}
             <div className="flex flex-col overflow-y-auto scrolling-touch max-h-[90vh] sm:max-h-[80vh] pb-32 p-2 overflow-x-hidden">
-                {title && <h3 className="mb-24 text-teal-100 t-h3">{title}</h3>}
-                {text && (
-                    <h3 className="mb-32 text-teal-100 t-preamble">{text}</h3>
-                )}
+                {title && <h3 className="mb-32 text-teal-100 t-h3">{title}</h3>}
+                <InputWrapper>
+                    <FormFields
+                        {...{
+                            fields,
+                            form,
+                        }}
+                    />
+                </InputWrapper>
             </div>
 
             {/* Modal actions */}
@@ -59,26 +75,33 @@ const DeleteModalComponent = ({
                     disabled={isSaving}>
                     {label('ButtonCancel')}
                 </Button>
-                <Button theme="coral" action={onDelete} disabled={isSaving}>
-                    {label('ButtonDelete')}
+                <Button
+                    theme="coral"
+                    action={onSave}
+                    disabled={isSaving || !isDirty}>
+                    {label('ButtonSave')}
                 </Button>
             </div>
-        </BaseModal>
+        </ModalBase>
     );
 };
 
-DeleteModalComponent.propTypes = {
+InputModalComponent.propTypes = {
+    form: t.object.isRequired,
     isOpen: t.bool,
     isSaving: t.bool,
     onCancel: t.func.isRequired,
-    onDelete: t.func.isRequired,
-    text: t.string,
+    onSave: t.func.isRequired,
     title: t.string,
 };
 
-DeleteModalComponent.defaultProps = {
+InputModalComponent.defaultProps = {
+    form: null,
     isOpen: false,
     isSaving: false,
+    onCancel: null,
+    onSave: null,
+    title: '',
 };
 
-export default DeleteModalComponent;
+export default InputModalComponent;

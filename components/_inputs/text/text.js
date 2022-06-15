@@ -7,7 +7,7 @@ import { useLabels } from 'utilities/hooks';
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
-import { Controller } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 const TextComponent = ({
     name,
@@ -21,13 +21,37 @@ const TextComponent = ({
     placeholder,
     ...rest
 }) => {
-    // Hook: Metadata
-    const { label: metadataLabel } = useLabels();
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
 
-    // State: Local length
+    const { label: metadataLabel } = useLabels();
+    const {
+        field: { onChange, value, ref },
+        fieldState: { error },
+    } = useController({
+        name,
+        control: controller,
+        defaultValue: defaultValue,
+        rules: { maxLength, required },
+    });
+
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
     const [lengthValue, setLengthValue] = useState(0);
 
-    // Default value
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    useEffect(() => {
+        if (value) {
+            setLengthValue(value.length);
+        }
+    }, []);
+
     useEffect(() => {
         if (defaultValue) {
             setValue(name, defaultValue);
@@ -41,42 +65,31 @@ const TextComponent = ({
             {subLabel && (
                 <span className="mt-8 input-sublabel">{subLabel}</span>
             )}
-            <Controller
-                control={controller}
+
+            <input
+                ref={ref}
+                type="text"
                 defaultValue={defaultValue}
-                name={name}
-                rules={{ maxLength, required }}
-                render={({
-                    field: { onChange, onBlur, value, ref },
-                    fieldState: { error },
-                }) => (
-                    <>
-                        <input
-                            ref={ref}
-                            type="text"
-                            defaultValue={defaultValue}
-                            maxLength={maxLength ? maxLength : 'none'}
-                            placeholder={
-                                placeholder ||
-                                metadataLabel('FormCaptureTextEntryEmpty')
-                            }
-                            onChange={event => {
-                                // Local value state
-                                setValue(event.target.value);
-                                onChange(event);
-                            }}
-                            className={cc([
-                                'input-defaults',
-                                {
-                                    'input-defaults-error': error,
-                                    'mt-16': label,
-                                },
-                            ])}
-                            {...rest}
-                        />
-                    </>
-                )}
+                maxLength={maxLength ? maxLength : 'none'}
+                placeholder={
+                    placeholder || metadataLabel('FormCaptureTextEntryEmpty')
+                }
+                onChange={event => {
+                    // Local value state
+                    setValue(event.target.value);
+                    setLengthValue(event.target.value.length);
+                    onChange(event);
+                }}
+                className={cc([
+                    'input-defaults',
+                    {
+                        'input-defaults-error': error,
+                        'mt-16': label,
+                    },
+                ])}
+                {...rest}
             />
+
             {maxLength > 0 && (
                 <div className="mt-4 -mb-16 text-right input-utility-text">
                     {lengthValue} / {maxLength.toString()}

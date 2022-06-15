@@ -11,8 +11,7 @@ import { useLabels, useModalState } from 'utilities/hooks';
 
 // Components
 import Button from 'components/button';
-import { InputWrapper, FormFields } from 'components/_inputs';
-import WizardModal from 'components/_modals/wizardModal';
+import InputModal from 'components/_modals/inputModal';
 import DeleteModal from 'components/_modals/deleteModal';
 
 // Icons
@@ -24,7 +23,7 @@ import {
     FiEdit2,
 } from 'react-icons/fi';
 
-const ChildCollectionComponent = ({ title, collection, methods }) => {
+const ChildCollectionComponent = ({ title, item, collection, methods }) => {
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -64,18 +63,19 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
     // FORMS
     // ///////////////////
 
-    const mainForm = useForm();
+    const addForm = useForm();
+    const editForm = useForm();
 
     // ///////////////////
     // METHODS
     // ///////////////////
 
-    async function addChild(formData) {
+    async function addChildItem(formData) {
         // Modal save button state
         addModalSaving();
         try {
             // Run add method
-            await methods.add.action(formData);
+            await methods?.add.action(formData, item);
 
             // Close modal
             addModalClose();
@@ -84,7 +84,7 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
             addModalNotSaving();
 
             // Clear content in form
-            mainForm.reset();
+            addForm.reset();
 
             // Expand content
             setExpandedContent(true);
@@ -95,12 +95,12 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
         }
     }
 
-    async function editChild(formData) {
+    async function editChildItem(formData) {
         // Modal save button state
         editModalSaving();
         try {
-            // Run add method
-            await methods.edit.action(formData, id);
+            // Run edit method
+            await methods?.edit.action(formData, updateId, item);
 
             // Close modal
             editModalClose();
@@ -109,7 +109,7 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
             editModalNotSaving();
 
             // Clear content in form
-            mainForm.reset();
+            editForm.reset();
 
             // Reset update id
             setUpdateId(null);
@@ -120,12 +120,12 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
         }
     }
 
-    async function deleteChild() {
+    async function deleteChildItem() {
         // Modal save button state
         deleteModalSaving();
         try {
             // Do the delete
-            await methods?.delete.action(deleteId);
+            await methods?.delete.action(deleteId, item);
 
             // Close modal
             deleteModalClose();
@@ -147,14 +147,14 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
     // ///////////////////
 
     useEffect(() => {
-        if (collection?.items.length === 0) {
+        if (collection?.items(item).length === 0) {
             setExpandedContent(false);
         }
-    }, [collection?.items]);
+    }, [collection?.items(item)]);
 
     useEffect(() => {
         if (updateId) {
-            methods.edit.setValues(mainForm, updateId);
+            methods?.edit.setFieldValues(editForm, updateId);
         }
     }, [updateId, editModalState]);
 
@@ -169,7 +169,7 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
                 <h6 className="flex items-center justify-between t-h6">
                     {/* Title */}
                     <span className="relative top-2">
-                        {title} ({collection?.items.length})
+                        {title} ({collection?.items(item).length})
                     </span>
                     {/* Collection controls */}
                     <div className="flex h-40 space-x-4">
@@ -183,11 +183,18 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
                                 iconPosition="center"
                                 iconType="stroke"
                                 className="!px-8"
-                                action={addModalOpen}
+                                action={() => {
+                                    // Reset update id
+                                    setUpdateId(null);
+                                    // Clear content in form
+                                    addForm.reset();
+                                    // Open
+                                    addModalOpen();
+                                }}
                             />
                         )}
                         {/* Expand */}
-                        {collection?.items.length > 0 && (
+                        {collection?.items(item).length > 0 && (
                             <Button
                                 title={label('ButtonExpandCollapse')}
                                 variant="tertiary"
@@ -213,15 +220,35 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
                     animateOpacity={true}
                     height={expandedContent ? 'auto' : 0}>
                     <div className="flex flex-col mt-16 space-y-12">
-                        {collection?.items.map(item => (
+                        {collection?.items(item).map(childItem => (
                             // Item wrapper
                             <div
-                                key={item.Id}
+                                key={childItem.Id}
                                 className="flex items-center justify-between p-16 bg-white rounded-8">
-                                {/* Title */}
-                                <h5 className="relative t-h5 top-2">
-                                    {collection?.title(item)}
-                                </h5>
+                                <div className="flex flex-col justify-center">
+                                    {/* Pre title */}
+                                    {collection?.preTitle &&
+                                        collection?.preTitle(childItem) && (
+                                            <span className="t-sh6 text-teal-60">
+                                                {collection?.preTitle(
+                                                    childItem
+                                                )}
+                                            </span>
+                                        )}
+                                    {/* Title */}
+                                    <h5 className="t-h5">
+                                        {collection?.title(childItem)}
+                                    </h5>
+                                    {/* Post title */}
+                                    {collection?.postTitle &&
+                                        collection?.postTitle(childItem) && (
+                                            <span className="t-footnote text-teal-60">
+                                                {collection?.postTitle(
+                                                    childItem
+                                                )}
+                                            </span>
+                                        )}
+                                </div>
 
                                 {/* Item controls */}
                                 <div className="flex h-40 space-x-4">
@@ -237,7 +264,7 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
                                             className="!px-8"
                                             action={() => {
                                                 deleteModalOpen();
-                                                setDeleteId(item.Id);
+                                                setDeleteId(childItem.Id);
                                             }}
                                         />
                                     )}
@@ -253,7 +280,7 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
                                             className="!px-8"
                                             action={() => {
                                                 editModalOpen();
-                                                setUpdateId(item.Id);
+                                                setUpdateId(childItem.Id);
                                             }}
                                         />
                                     )}
@@ -266,52 +293,42 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
 
             {/* Add wizard */}
             {methods?.add && (
-                <WizardModal
+                <InputModal
                     {...{
-                        form: mainForm,
+                        form: addForm,
+                        fields: collection?.fields(item, 'add'),
                         onCancel() {
                             addModalClose();
                         },
-                        onSave() {
-                            mainForm.handleSubmit(addChild)();
+                        async onSave() {
+                            await addForm.handleSubmit(
+                                async data => await addChildItem(data)
+                            )();
                         },
-                        title: methods.add.title,
+                        title: methods?.add.title,
                         ...addModalState,
-                    }}>
-                    <InputWrapper>
-                        <FormFields
-                            {...{
-                                fields: collection?.fields,
-                                form: mainForm,
-                            }}
-                        />
-                    </InputWrapper>
-                </WizardModal>
+                    }}
+                />
             )}
 
             {/* Edit wizard */}
             {methods?.edit && (
-                <WizardModal
+                <InputModal
                     {...{
-                        form: mainForm,
+                        form: editForm,
+                        fields: collection?.fields(item, 'edit'),
                         onCancel() {
                             editModalClose();
                         },
-                        onSave() {
-                            mainForm.handleSubmit(editChild)();
+                        async onSave() {
+                            await editForm.handleSubmit(
+                                async data => await editChildItem(data)
+                            )();
                         },
-                        title: methods.edit.title,
+                        title: methods?.edit.title,
                         ...editModalState,
-                    }}>
-                    <InputWrapper>
-                        <FormFields
-                            {...{
-                                fields: collection?.fields,
-                                form: mainForm,
-                            }}
-                        />
-                    </InputWrapper>
-                </WizardModal>
+                    }}
+                />
             )}
 
             {/* Delete wizard */}
@@ -322,10 +339,10 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
                             deleteModalClose();
                         },
                         async onDelete() {
-                            await deleteChild();
+                            await deleteChildItem();
                         },
-                        title: methods.delete.title,
-                        text: methods.delete.text,
+                        title: methods?.delete.title,
+                        text: methods?.delete.text,
                         ...deleteModalState,
                     }}
                 />
@@ -336,10 +353,13 @@ const ChildCollectionComponent = ({ title, collection, methods }) => {
 
 ChildCollectionComponent.propTypes = {
     title: t.string.isRequired,
+    item: t.object.isRequired,
     collection: t.shape({
-        title: t.oneOfType([t.string, t.func]),
-        items: t.array.isRequired,
-        fields: t.array.isRequired,
+        title: t.func.isRequired,
+        preTitle: t.func,
+        postTitle: t.func,
+        items: t.func.isRequired,
+        fields: t.func.isRequired,
     }),
     methods: t.shape({
         add: t.shape({
@@ -349,7 +369,7 @@ ChildCollectionComponent.propTypes = {
         edit: t.shape({
             title: t.string.isRequired,
             action: t.func.isRequired,
-            setValues: t.func.isRequired,
+            setFieldValues: t.func.isRequired,
         }),
         delete: t.shape({
             title: t.string.isRequired,
@@ -368,6 +388,8 @@ ChildCollectionComponent.defaultProps = {
     },
     collection: {
         title: '',
+        preTitle: null,
+        postTitle: null,
         items: [],
         fields: [],
     },

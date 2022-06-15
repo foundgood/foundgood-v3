@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import t from 'prop-types';
@@ -12,22 +12,46 @@ import {
     Select,
     SelectList,
     LongText,
-    TextList,
     DatePicker,
     DateRange,
+    Range,
     Image,
     Reflection,
 } from 'components/_inputs';
 
 const FormFields = ({ fields, form }) => {
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
+
+    const { watch } = form;
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Object to contain form field watchers
+    const watchFields = fields.reduce(
+        (acc, field) => ({
+            ...acc,
+            ...(field.onWatch ? { [field.name]: field.onWatch } : {}),
+        }),
+        {}
+    );
+
+    // ///////////////////
+    // METHODS
+    // ///////////////////
+
     const renderFormFields = fields => {
         const { control, setValue } = form;
         return fields.map((field, index) => {
             // Extract all possible values
-            const { type, name } = field;
+            const { type, name, ...rest } = field;
 
             const sharedProps = {
-                ...field,
+                name,
+                ...rest,
                 setValue,
                 controller: control,
             };
@@ -41,14 +65,14 @@ const FormFields = ({ fields, form }) => {
                     return <Select key={name + index} {...sharedProps} />;
                 case 'SelectList':
                     return <SelectList key={name + index} {...sharedProps} />;
-                case 'TextList':
-                    return <TextList key={name + index} {...sharedProps} />;
                 case 'DateRange':
                     return <DateRange key={name + index} {...sharedProps} />;
                 case 'DatePicker':
                     return <DatePicker key={name + index} {...sharedProps} />;
                 case 'Image':
                     return <Image key={name + index} {...sharedProps} />;
+                case 'Range':
+                    return <Range key={name + index} {...sharedProps} />;
                 case 'Reflection':
                     return <Reflection key={name + index} {...sharedProps} />;
                 default:
@@ -56,6 +80,25 @@ const FormFields = ({ fields, form }) => {
             }
         });
     };
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    useEffect(() => {
+        // Run onWatch from form field if it exists - all values being watched
+        const subscription = watch((value, { name }) => {
+            if (watchFields[name]) {
+                watchFields[name](value[name], form);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [watch]);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
+
     return <>{renderFormFields(fields)}</>;
 };
 

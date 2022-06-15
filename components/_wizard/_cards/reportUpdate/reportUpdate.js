@@ -268,6 +268,7 @@ const ReportUpdateComponent = ({
                   // Type options
                   listMaxLength: 3,
                   async options() {
+                      // Get all tag options
                       const tagOptions = await ewGetAsync(
                           'tag/tag-collection',
                           {
@@ -276,7 +277,25 @@ const ReportUpdateComponent = ({
                           }
                       );
 
-                      return Object.values(tagOptions?.data ?? {}).map(tag => ({
+                      // Get default tags (no category)
+                      const tagOptionsWithoutCategory = Object.values(
+                          tagOptions?.data
+                      ).filter(tag => !tag.Category__c);
+
+                      // Get tags based on initiative category
+                      const tagOptionsWithInitiativeCategory = Object.values(
+                          tagOptions?.data
+                      ).filter(
+                          tag =>
+                              tag.Category__c ===
+                              utilities.initiative.get()?.Category__c
+                      );
+
+                      // Return both sets of tags
+                      return [
+                          ...tagOptionsWithoutCategory,
+                          ...tagOptionsWithInitiativeCategory,
+                      ].map(tag => ({
                           label: tag.Name,
                           value: tag.Id,
                       }));
@@ -318,7 +337,10 @@ const ReportUpdateComponent = ({
                         )}
                         {/* Reflection */}
                         {currentReflection && (
-                            <FiMessageCircle className="w-24 h-24" />
+                            <div className="flex items-center space-x-8">
+                                <FiMessageCircle className="w-24 h-24" />
+                                <span className="relative top-2">1</span>
+                            </div>
                         )}
                     </div>
                     <Button variant="secondary" theme="blue" action={modalOpen}>

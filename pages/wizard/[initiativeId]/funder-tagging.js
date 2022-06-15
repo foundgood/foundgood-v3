@@ -11,8 +11,8 @@ import { useInitiativeDataStore } from 'utilities/store';
 import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import { InputWrapper } from 'components/_inputs';
-import { BaseCard, ChildCollection } from 'components/_cards';
+import { ChildCollection } from 'components/_wizard/_cards';
+import Collection from 'components/_wizard/collection';
 
 const FunderTaggingComponent = () => {
     // ///////////////////
@@ -27,22 +27,13 @@ const FunderTaggingComponent = () => {
 
     const { label, object } = useLabels();
     const { ewCreate, ewGetAsync, ewDelete } = useElseware();
-
-    // ///////////////////
-    // STATE
-    // ///////////////////
-
-    // ///////////////////
-    // SUBMIT
-    // ///////////////////
-
     useWizardSubmit();
 
     // ///////////////////
     // METHODS
     // ///////////////////
 
-    async function addTaggingCollection(formData) {
+    async function addChildItem(formData) {
         const { Tag__c } = formData;
 
         // Data for sf
@@ -61,7 +52,7 @@ const FunderTaggingComponent = () => {
         utilities.updateInitiativeData('_tags', initiativeTagData);
     }
 
-    async function deleteTaggingCollection(id) {
+    async function deleteChildItem(id) {
         // Delete tag collection
         await ewDelete('initiative-tag/initiative-tag', id);
 
@@ -80,23 +71,37 @@ const FunderTaggingComponent = () => {
     // FIELDS
     // ///////////////////
 
-    function taggingCollectionFields(item) {
+    function childItemFields(item) {
         return [
             {
                 type: 'Select',
                 name: 'Tag__c',
                 label: object.label('Initiative_Tag__c.Tag__c'),
-                // Type options
                 subLabel: object.helpText('Initiative_Tag__c.Tag__c'),
                 async options() {
-                    const funderTags = await ewGetAsync('tag/funder-tags', {
-                        id: item.Account__c,
-                    });
+                    // Get from elsware
+                    const { data: funderTags } = await ewGetAsync(
+                        'tag/funder-tags',
+                        {
+                            id: item.Account__c,
+                        }
+                    );
 
-                    return Object.values(funderTags?.data ?? {}).map(list => ({
-                        label: list.Name,
-                        value: list.Id,
-                    }));
+                    // Get already selected to filter out of options
+                    const alreadySelected = utilities.tags
+                        .getTypeFromFunderId(
+                            CONSTANTS.TAGS.COLLECTION,
+                            item.Account__c
+                        )
+                        .map(tag => tag.Tag__c);
+
+                    // Return filtered array of tag options
+                    return Object.values(funderTags ?? {})
+                        .filter(tag => !alreadySelected.includes(tag.Id))
+                        .map(tag => ({
+                            label: tag.Name,
+                            value: tag.Id,
+                        }));
                 },
             },
         ];
@@ -109,26 +114,34 @@ const FunderTaggingComponent = () => {
     return (
         <WithPermission context>
             <TitlePreamble />
-            <InputWrapper>
-                {funders.map(item => (
-                    <BaseCard
-                        key={item.Id}
-                        {...{
-                            title: item?.Account__r?.Name,
-                            type: label('CardFunderType'),
-                            components: {
+            <Collection
+                {...{
+                    collection: {
+                        items: funders,
+                        emptyLabel: label('EmptyStateWizardPageActivities'),
+                    },
+                    card: {
+                        title(item) {
+                            return item?.Account__r?.Name;
+                        },
+                        type() {
+                            return label('CardTypeFunder');
+                        },
+                        components(item) {
+                            return {
                                 childCollection: (
                                     <ChildCollection
                                         {...{
                                             title: label(
-                                                'CardFunderTaggingCollectionsHeading'
+                                                'ChildCollectionHeadingFunderTagging'
                                             ),
+                                            item,
                                             methods: {
                                                 add: {
                                                     title: label(
                                                         'WizardModalHeadingFunderTagging'
                                                     ),
-                                                    action: addTaggingCollection,
+                                                    action: addChildItem,
                                                 },
                                                 delete: {
                                                     title: label(
@@ -137,29 +150,31 @@ const FunderTaggingComponent = () => {
                                                     text: label(
                                                         'WizardModalTextFunderTaggingDelete'
                                                     ),
-                                                    action: deleteTaggingCollection,
+                                                    action: deleteChildItem,
                                                 },
                                             },
                                             collection: {
-                                                title(x) {
-                                                    return x?.Tag__r?.Name;
+                                                title(childItem) {
+                                                    return childItem?.Tag__r
+                                                        ?.Name;
                                                 },
-                                                items: utilities.tags.getTypeFromFunderId(
-                                                    CONSTANTS.TAGS.COLLECTION,
-                                                    item.Account__c
-                                                ),
-                                                fields: taggingCollectionFields(
-                                                    item
-                                                ),
+                                                items(item) {
+                                                    return utilities.tags.getTypeFromFunderId(
+                                                        CONSTANTS.TAGS
+                                                            .COLLECTION,
+                                                        item.Account__c
+                                                    );
+                                                },
+                                                fields: childItemFields,
                                             },
                                         }}
                                     />
                                 ),
-                            },
-                        }}
-                    />
-                ))}
-            </InputWrapper>
+                            };
+                        },
+                    },
+                }}
+            />
         </WithPermission>
     );
 };

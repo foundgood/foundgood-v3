@@ -41,12 +41,23 @@ const constants = {
         ACTIVITY_INTERVENTION: 'Intervention',
         ACTIVITY_DISSEMINATION: 'Dissemination',
         ACTIVITY_JOURNAL: 'Journal publication',
+
+        INTERVENTION: 'Intervention',
+        DISSEMINATION: 'Dissemination',
+        TEAM_EDUCATION: 'Team education',
+        EVALUATION: 'Evaluation',
+        ENGAGEMENT: 'Engagement',
+        PHYSICAL: 'Physical',
     },
     ACTIVITY_GOALS: {},
     ACTIVITY_SUCCESS_METRICS: {
         INDICATOR_CUSTOM: 'Custom',
         INDICATOR_PREDEFINED: 'People',
         INDICATOR_GENDER_OTHER: 'Other',
+
+        CUSTOM: 'Custom',
+        PEOPLE: 'People',
+        FINANCIAL: 'Financial',
     },
     COLLABORATORS: {
         MAIN_COLLABORATOR: 'Main applicant',

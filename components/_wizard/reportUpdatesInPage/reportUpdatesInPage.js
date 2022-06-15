@@ -61,7 +61,7 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
     // ///////////////////
 
     return MODE === CONTEXTS.REPORT && hasUpdate ? (
-        <div className="flex items-center justify-between w-full p-16 rounded-8 bg-blue-20">
+        <div className="flex items-center justify-between w-full p-16 mb-32 rounded-8 bg-blue-20">
             <p className="-mb-2 t-sh4">
                 {label('WizardReportUpdatesInPageHasUpdates')}
             </p>

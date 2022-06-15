@@ -15,27 +15,17 @@ import { useLabels } from 'utilities/hooks';
 const DateRangeComponent = ({
     controller,
     defaultValue,
+    disabled,
     label: inputLabel,
     name,
-    subLabel,
     required,
-    disabled,
+    subLabel,
 }) => {
-    useEffect(() => {
-        if (defaultValue.from !== from) {
-            setFrom(defaultValue.from);
-            setTo(defaultValue.to);
-        }
-    }, [defaultValue]);
+    // ///////////////////
+    // HOOKS
+    // ///////////////////
 
-    // Hook: Metadata
     const { label } = useLabels();
-
-    // Local state for handling dates
-    const [from, setFrom] = useState(defaultValue.from);
-    const [to, setTo] = useState(defaultValue.to);
-
-    // Controller from useForm
     const {
         field: { onChange, value },
         fieldState: { error },
@@ -44,21 +34,42 @@ const DateRangeComponent = ({
         control: controller,
         defaultValue: defaultValue,
         rules: {
-            required,
             validate: {
                 isDateFrom: v => (v.from ? dayjs(v.from).isValid() : true),
                 isDateTo: v => (v.to ? dayjs(v.to).isValid() : true),
+                required: v => (required ? !!v.from && !!v.to : true),
             },
         },
     });
 
-    // Update state when using setValue
+    // ///////////////////
+    // STATE
+    // ///////////////////
+
+    const [from, setFrom] = useState(defaultValue.from);
+    const [to, setTo] = useState(defaultValue.to);
+
+    // ///////////////////
+    // EFFECTS
+    // ///////////////////
+
+    useEffect(() => {
+        if (defaultValue.from !== from) {
+            setFrom(defaultValue.from);
+            setTo(defaultValue.to);
+        }
+    }, [defaultValue]);
+
     useEffect(() => {
         if (value) {
             setFrom(value.from);
             setTo(value.to);
         }
     }, []);
+
+    // ///////////////////
+    // RENDER
+    // ///////////////////
 
     return (
         <>
@@ -98,8 +109,7 @@ const DateRangeComponent = ({
                                 container: cc([
                                     'input-defaults-date ',
                                     {
-                                        'input-defaults-date-error':
-                                            error?.type === 'isDateFrom',
+                                        'input-defaults-date-error': error,
                                     },
                                 ]),
                                 overlay: 'bg-white mt-12 z-above',
@@ -134,8 +144,7 @@ const DateRangeComponent = ({
                                     'input-defaults-date transition-default',
                                     {
                                         'pointer-events-none': !from,
-                                        'input-defaults-date-error':
-                                            error?.type === 'isDateTo',
+                                        'input-defaults-date-error': error,
                                     },
                                 ]),
                                 overlay: cc([
@@ -161,19 +170,26 @@ const DateRangeComponent = ({
 };
 
 DateRangeComponent.propTypes = {
-    name: t.string,
-    label: t.string,
-    subLabel: t.string,
+    controller: t.object.isRequired,
     defaultValue: t.shape({ from: t.string, to: t.string }),
+    disabled: t.bool,
+    label: t.string,
+    name: t.string,
     required: t.bool,
+    subLabel: t.string,
 };
 
 DateRangeComponent.defaultProps = {
+    controller: null,
     defaultValue: {
         from: null,
         to: null,
     },
+    disabled: false,
+    label: '',
+    name: '',
     required: false,
+    subLabel: '',
 };
 
 export default DateRangeComponent;
