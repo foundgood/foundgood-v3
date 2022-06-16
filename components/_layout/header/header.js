@@ -55,7 +55,7 @@ const HeaderComponent = ({ showUserControls }) => {
         <>
             <div
                 className={cc([
-                    'fixed flex items-center justify-between  header-h page-mx z-logo print:hidden',
+                    'fixed flex items-center justify-between header-h page-mx z-logo print:hidden',
                     {
                         'bg-white w-full xl:w-auto xl:bg-transparent': !showUserControls,
                     },

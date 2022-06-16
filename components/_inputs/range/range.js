@@ -1,5 +1,5 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
 import cc from 'classcat';
@@ -88,6 +88,7 @@ const RangeComponent = ({
                                 label('FormCaptureTextEntryEmpty')
                             }
                             className={cc([
+                                'text-right',
                                 'input-defaults appearance-none',
                                 {
                                     'input-defaults-error': error,
@@ -118,6 +119,7 @@ const RangeComponent = ({
                                 label('FormCaptureTextEntryEmpty')
                             }
                             className={cc([
+                                'text-right',
                                 'input-defaults appearance-none',
                                 {
                                     'input-defaults-error': error,

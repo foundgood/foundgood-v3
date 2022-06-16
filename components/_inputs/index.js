@@ -6,6 +6,7 @@ import FormFields from './formFields';
 import Image from './image';
 import InputWrapper from './inputWrapper';
 import LongText from './longText';
+import Metrics from './metrics';
 import Number from './number';
 import Range from './range';
 import Reflection from './reflection';
@@ -25,6 +26,7 @@ export {
     Image,
     InputWrapper,
     LongText,
+    Metrics,
     Number,
     Range,
     Reflection,

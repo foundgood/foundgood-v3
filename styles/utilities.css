@@ -1,5 +1,8 @@
 @layer utilities {
-    /* Transitions */
+    /**********************************
+    ******* TRANSITIONS
+    **********************************/
+
     .transition-default {
         @apply transition-all duration-200 ease-smooth-out;
     }
@@ -15,6 +18,10 @@
     .transition-current-color {
         @apply transition-colors duration-300 ease-smooth-out;
     }
+
+    /**********************************
+    ******* ANIMATIONS
+    **********************************/
 
     /* Animation class for title prelaod */
     .title-preamble-preload-animate {
@@ -35,7 +42,10 @@
         }
     }
 
-    /* Header */
+    /**********************************
+    ******* HEADER
+    **********************************/
+
     .header-mt {
         @apply mt-48 lg:mt-64 sm:mt-56;
     }
@@ -49,7 +59,9 @@
         @apply pt-48 lg:pt-64 sm:pt-56;
     }
 
-    /* Page */
+    /**********************************
+    ******* PAGE
+    **********************************/
     .page-mx {
         @apply mx-16 sm:mx-24 lg:mx-32;
     }
@@ -74,7 +86,11 @@
         @apply pr-16 sm:pr-24 lg:pr-32;
     }
 
-    /* Input elements */
+    /**********************************
+    ******* INPUT ELEMENTS
+    **********************************/
+
+    /* Base */
     .input-label {
         @apply text-teal-100 t-h5;
     }
@@ -106,29 +122,42 @@
         font-weight: 400;
     }
 
-    /* Offset anchors for header height */
-    .offset-anchor:target {
-        content: '';
-        @apply block lg:pt-[128px] lg:mt-[-128px] pt-[176px] mt-[-176px];
+    /* Theming - BLUE */
+    .input-label-blue,
+    .input-sublabel-blue {
+        @apply text-blue-100;
+    }
+    .input-utility-text-blue {
+        @apply text-blue-80;
+    }
+    .input-defaults-blue,
+    .input-defaults-date-blue input {
+        @apply placeholder-blue-60 bg-blue-10 text-blue-100 focus:ring-blue-100 disabled:!text-blue-60;
     }
 
-    /* Used on homepage */
+    /* Theming - TEAL */
+    .input-label-blue,
+    .input-sublabel-teal {
+        @apply text-teal-100;
+    }
+    .input-utility-text-teal {
+        @apply text-teal-80;
+    }
+    .input-defaults-teal,
+    .input-defaults-date-teal input {
+        @apply placeholder-teal-60 bg-teal-10 text-teal-100 focus:ring-teal-100 disabled:!text-teal-60;
+    }
+
+    /* Search (landing) */
     .input-search {
         @apply w-full px-24 pt-16 pb-10 mt-24 text-blue-100 bg-white outline-none t-sh3 placeholder-blue-60 transition-default focus:outline-none focus:ring-blue-100 focus:ring-2 rounded-8;
     }
-    .input-search:before {
-        /* FiSearch ??? */
-    }
 
-    /* Tab navigation - Background */
-    .tab-nav-bg:before {
-        @apply absolute inset-0 bg-amber-10 h-[58px];
-        z-index: -1;
-        content: '';
-    }
-
-    /* Next Image - width: 100%, height: auto */
-    /* https://github.com/vercel/next.js/discussions/18739#discussioncomment-344932 */
+    /**********************************
+    ******* IMAGE CONTAINER (NEXT IMAGE)
+    Next Image - width: 100%, height: auto
+    https://github.com/vercel/next.js/discussions/18739#discussioncomment-344932
+    **********************************/
     .imageContainer {
         @apply w-full;
     }
@@ -142,8 +171,10 @@
         height: unset !important;
     }
 
-    /* PIE CHART - Using color gradient */
-    /* https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/ */
+    /**********************************
+    ******* PIE CHART
+    https://keithclark.co.uk/articles/single-element-pure-css-pie-charts/
+    **********************************/
     .pie {
         @apply relative w-full h-0 pb-[100%] rounded-[50%];
 
@@ -176,5 +207,20 @@
         left: 40px;
         border-radius: 50%;
         background-color: #fff;
+    }
+
+    /**********************************
+    ******* MISC
+    **********************************/
+    .offset-anchor:target {
+        content: '';
+        @apply block lg:pt-[128px] lg:mt-[-128px] pt-[176px] mt-[-176px];
+    }
+
+    /* Tab navigation - Background */
+    .tab-nav-bg:before {
+        @apply absolute inset-0 bg-amber-10 h-[58px];
+        z-index: -1;
+        content: '';
     }
 }

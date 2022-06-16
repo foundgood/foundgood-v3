@@ -1,17 +1,17 @@
 // React
 import React, { useEffect, useState } from 'react';
 
-// Utilities
-import { useLabels } from 'utilities/hooks';
-
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
 import { useController } from 'react-hook-form';
 
+// Utilities
+import { useLabels } from 'utilities/hooks';
+
 const TextComponent = ({
     name,
-    label,
+    label: inputLabel,
     subLabel,
     defaultValue,
     maxLength,
@@ -25,7 +25,7 @@ const TextComponent = ({
     // HOOKS
     // ///////////////////
 
-    const { label: metadataLabel } = useLabels();
+    const { label } = useLabels();
     const {
         field: { onChange, value, ref },
         fieldState: { error },
@@ -61,7 +61,7 @@ const TextComponent = ({
 
     return (
         <label className="flex flex-col">
-            {label && <span className="input-label">{label}</span>}
+            {inputLabel && <span className="input-label">{inputLabel}</span>}
             {subLabel && (
                 <span className="mt-8 input-sublabel">{subLabel}</span>
             )}
@@ -71,9 +71,7 @@ const TextComponent = ({
                 type="text"
                 defaultValue={defaultValue}
                 maxLength={maxLength ? maxLength : 'none'}
-                placeholder={
-                    placeholder || metadataLabel('FormCaptureTextEntryEmpty')
-                }
+                placeholder={placeholder || label('FormCaptureTextEntryEmpty')}
                 onChange={event => {
                     // Local value state
                     setValue(event.target.value);

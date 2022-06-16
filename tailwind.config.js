@@ -184,6 +184,7 @@ module.exports = {
                 'below-aside': '85',
                 aside: '90',
                 logo: '100',
+                help: '110',
                 modal: '200',
             },
             borderRadius: {

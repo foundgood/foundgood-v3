@@ -44,6 +44,7 @@ const ReportUpdateComponent = ({
         ewCreate,
         ewCreateUpdateWrapper,
         ewDelete,
+        ewUpdate,
         ewGetAsync,
     } = useElseware();
     const {
@@ -165,6 +166,31 @@ const ReportUpdateComponent = ({
         }
     }
 
+    async function submitMetrics(formData) {
+        const { metricsList } = formData;
+        // Only do stuff if metricsList is part of formData
+        if (metricsList) {
+            // Look through metricsList and create promises to update metric, also add acquired data to initiative
+            await Promise.all(
+                Object.entries(metricsList).map(async ([id, value]) => {
+                    const { data } = await ewUpdate(
+                        'initiative-activity-success-metric/initiative-activity-success-metric',
+                        id,
+                        {
+                            Current_Status__c: value,
+                        }
+                    );
+
+                    // Add updated data to initiative
+                    utilities.updateInitiativeData(
+                        '_activitySuccessMetrics',
+                        data
+                    );
+                })
+            );
+        }
+    }
+
     async function submit(formData) {
         // Modal save button state
         modalSaving();
@@ -181,7 +207,7 @@ const ReportUpdateComponent = ({
 
             // Success Metrics
             if (metrics) {
-                // TODO
+                await submitMetrics(formData);
             }
 
             // Reflection
@@ -205,6 +231,12 @@ const ReportUpdateComponent = ({
     }
 
     // ///////////////////
+    // DATA
+    // ///////////////////
+
+    const report = utilities.reports.get(REPORT_ID);
+
+    // ///////////////////
     // DATA - TAGGING
     // ///////////////////
 
@@ -223,6 +255,17 @@ const ReportUpdateComponent = ({
         tagging.relationKey,
         tagging.item?.Id
     );
+
+    // ///////////////////
+    // DATA - METRICS
+    // ///////////////////
+
+    // Get current metrics
+    const currentMetrics = utilities.activitySuccessMetrics.getFromActivityId(
+        metrics.item?.Id
+    );
+
+    const currentMetricsWithUpdates = 3; // TODO COMPARE DATE
 
     // ///////////////////
     // DATA - REFLECTION
@@ -251,11 +294,13 @@ const ReportUpdateComponent = ({
     // ///////////////////
 
     const fields = [
+        // Tagging
         ...(tagging
             ? taggingCollections.map(taggingCollection => ({
                   type: 'SelectList',
                   name: `taggingSelect-${taggingCollection.Tag__c}`,
                   label: `${label(`ReportUpdateModal${tagging.type}TagLabel`)}`,
+                  subLabel: taggingCollection.Account_Name__c,
                   defaultValue: currentTags
                       .filter(
                           tag =>
@@ -265,7 +310,6 @@ const ReportUpdateComponent = ({
                       .map(tag => ({
                           selectValue: tag.Tag__r?.Id,
                       })),
-                  // Type options
                   listMaxLength: 3,
                   async options() {
                       // Get all tag options
@@ -300,9 +344,25 @@ const ReportUpdateComponent = ({
                           value: tag.Id,
                       }));
                   },
-                  subLabel: taggingCollection.Account_Name__c,
               }))
             : []),
+
+        // Status
+        ...(status ? [] : []),
+
+        // Metrics
+        ...(metrics
+            ? [
+                  {
+                      type: 'Metrics',
+                      name: 'metricsList',
+                      metrics: currentMetrics,
+                      label: label('ReportUpdateModalMetricsLabel'),
+                  },
+              ]
+            : []),
+
+        // Reflection
         ...(reflection
             ? [
                   {
@@ -310,12 +370,12 @@ const ReportUpdateComponent = ({
                       name: 'reflectionDescription',
                       label: label('ReportUpdateModalReflectionsLabel'),
                       defaultValue: currentReflection?.Description__c,
-                      // Type options
                       maxLength: 750,
                   },
               ]
             : []),
     ];
+
     // ///////////////////
     // RENDER
     // ///////////////////
@@ -361,6 +421,9 @@ const ReportUpdateComponent = ({
                     form: mainForm,
                     fields,
                     onCancel() {
+                        // Reset form
+                        mainForm.reset();
+                        // Close modal
                         modalClose();
                     },
                     async onSave() {
@@ -381,6 +444,9 @@ ReportUpdateComponent.propTypes = {
         item: t.object.isRequired,
         relationKey: t.string.isRequired,
         type: t.string.isRequired,
+    }),
+    metrics: t.shape({
+        item: t.object.isRequired,
     }),
     tagging: t.shape({
         item: t.object.isRequired,

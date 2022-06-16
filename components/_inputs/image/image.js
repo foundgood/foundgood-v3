@@ -19,6 +19,7 @@ const ImageComponent = ({
     subLabel,
     defaultValue,
     controller,
+    setValue,
     ...rest
 }) => {
     // Hook: Metadata

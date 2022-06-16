@@ -224,8 +224,8 @@ const ChildCollectionComponent = ({ title, item, collection, methods }) => {
                             // Item wrapper
                             <div
                                 key={childItem.Id}
-                                className="flex items-center justify-between p-16 bg-white rounded-8">
-                                <div className="flex flex-col justify-center">
+                                className="grid items-center grid-cols-7 gap-16 p-16 bg-white rounded-8">
+                                <div className="flex flex-col justify-center flex-shrink col-span-5">
                                     {/* Pre title */}
                                     {collection?.preTitle &&
                                         collection?.preTitle(childItem) && (
@@ -236,7 +236,7 @@ const ChildCollectionComponent = ({ title, item, collection, methods }) => {
                                             </span>
                                         )}
                                     {/* Title */}
-                                    <h5 className="t-h5">
+                                    <h5 className="truncate t-h5">
                                         {collection?.title(childItem)}
                                     </h5>
                                     {/* Post title */}
@@ -251,7 +251,7 @@ const ChildCollectionComponent = ({ title, item, collection, methods }) => {
                                 </div>
 
                                 {/* Item controls */}
-                                <div className="flex h-40 space-x-4">
+                                <div className="flex justify-end h-40 col-span-2 space-x-4">
                                     {/* Delete */}
                                     {methods?.delete && (
                                         <Button

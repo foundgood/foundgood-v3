@@ -14,6 +14,8 @@ import {
     LongText,
     DatePicker,
     DateRange,
+    Metrics,
+    Number,
     Range,
     Image,
     Reflection,
@@ -69,6 +71,10 @@ const FormFields = ({ fields, form }) => {
                     return <DateRange key={name + index} {...sharedProps} />;
                 case 'DatePicker':
                     return <DatePicker key={name + index} {...sharedProps} />;
+                case 'Metrics':
+                    return <Metrics key={name + index} {...sharedProps} />;
+                case 'Number':
+                    return <Number key={name + index} {...sharedProps} />;
                 case 'Image':
                     return <Image key={name + index} {...sharedProps} />;
                 case 'Range':

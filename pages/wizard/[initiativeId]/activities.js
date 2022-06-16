@@ -14,14 +14,14 @@ import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import ReportUpdatesInPage from 'components/_wizard/reportUpdatesInPage';
 import {
-    ReportUpdate,
     ActivityCardContent,
     ChildCollection,
     RelatedItems,
+    ReportUpdate,
 } from 'components/_wizard/_cards';
 import Collection from 'components/_wizard/collection';
 
-const ActivitiesComponent = ({ pageProps }) => {
+const ActivitiesComponent = () => {
     // ///////////////////
     // STORES
     // ///////////////////
@@ -118,7 +118,7 @@ const ActivitiesComponent = ({ pageProps }) => {
         // Delete
         await ewDelete('initiative-activity/initiative-activity-and-goals', id);
 
-        // Clean out activity
+        // Clean out item
         utilities.removeInitiativeData('_activities', id);
 
         // Clean out existing related data
@@ -248,6 +248,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                 break;
         }
     }
+
     // ///////////////////
     // DATA
     // ///////////////////
@@ -262,7 +263,7 @@ const ActivitiesComponent = ({ pageProps }) => {
     // FIELDS
     // ///////////////////
 
-    function itemFields(context) {
+    function itemFields() {
         return [
             {
                 type: 'Text',
@@ -565,8 +566,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                                                                 'Initiative_Activity_Success_Metric__c.Gender__c',
                                                                 childItem?.Gender__c
                                                             )}${
-                                                                childItem?.Gender_Other__c &&
-                                                                ` (${childItem?.Gender_Other__c})`
+                                                                childItem?.Gender_Other__c
+                                                                    ? ` (${childItem?.Gender_Other__c})`
+                                                                    : ''
                                                             }`;
                                                             return `${gender} ${label(
                                                                 'SentenceBetweenAge'
@@ -603,6 +605,9 @@ const ActivitiesComponent = ({ pageProps }) => {
                                                     'Initiative_Activity__c',
                                                 type: CONSTANTS.TAGS.ACTIVITY,
                                             },
+                                            metrics: {
+                                                item,
+                                            },
                                             reflection: {
                                                 item,
                                                 relationKey:
@@ -611,7 +616,6 @@ const ActivitiesComponent = ({ pageProps }) => {
                                                     CONSTANTS.REPORT_DETAILS
                                                         .ACTIVITY_OVERVIEW,
                                             },
-                                            metrics: {},
                                             status: {},
                                         }}
                                     />
