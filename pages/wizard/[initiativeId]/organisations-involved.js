@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm, useFormState, useWatch } from 'react-hook-form';
 
 // Utilities
-import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
+import { useElseware, useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -38,7 +38,6 @@ const OrganisationsInvolvedComponent = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalIsSaving, setModalIsSaving] = useState(false);
     const [updateId, setUpdateId] = useState(null);
-    const [organisation, setOrganisation] = useState(null);
     const [organisationType, setOrganisationType] = useState(null);
     const [organisationValues, setOrganisationValues] = useState([]);
     const [typeValues, setTypeValues] = useState([]);
@@ -107,8 +106,6 @@ const OrganisationsInvolvedComponent = () => {
             console.warn(error);
         }
     }
-
-    useWizardSubmit();
 
     // ///////////////////
     // METHODS

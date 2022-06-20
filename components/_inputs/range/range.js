@@ -20,7 +20,6 @@ const RangeComponent = ({
     placeholder,
     required,
     subLabel,
-    ...rest
 }) => {
     // ///////////////////
     // HOOKS
@@ -73,9 +72,9 @@ const RangeComponent = ({
                         <input
                             name={name}
                             type="tel"
-                            defaultValue={defaultValue.from}
                             value={value?.from}
                             required={required}
+                            disabled={disabled}
                             onChange={event => {
                                 // Opdate value
                                 onChange({
@@ -94,7 +93,6 @@ const RangeComponent = ({
                                     'input-defaults-error': error,
                                 },
                             ])}
-                            {...rest}
                         />
                     </div>
                     <div className="flex flex-col flex-grow">
@@ -104,7 +102,6 @@ const RangeComponent = ({
                         </span>
                         <input
                             type="tel"
-                            defaultValue={defaultValue.to}
                             value={value?.to}
                             required={required}
                             onChange={event => {

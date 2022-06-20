@@ -253,22 +253,138 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-    activities: {
-        title: 'ReportWizardMenuActivities',
+
+    activitiesDissemination: {
+        baseUrl: 'activities-dissemination',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/activities-dissemination/${reportId}`;
+        },
+        title: 'ReportWizardMenuDisseminationHeading',
+        labels: {
+            form: {
+                title: 'ReportWizardActivitiesDisseminationHeading',
+                preamble: 'ReportWizardActivitiesDisseminationSubheading',
+            },
+            help: {
+                why: 'ReportWizardActivitiesDisseminationHelpWhy',
+                what: 'ReportWizardActivitiesDisseminationHelpWhat',
+                guide: 'ReportWizardActivitiesDisseminationHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesEngagement: {
+        baseUrl: 'activities-engagement',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/activities-engagement/${reportId}`;
+        },
+        title: 'ReportWizardMenuEngagementHeading',
+        labels: {
+            form: {
+                title: 'ReportWizardActivitiesEngagementHeading',
+                preamble: 'ReportWizardActivitiesEngagementSubheading',
+            },
+            help: {
+                why: 'ReportWizardActivitiesEngagementHelpWhy',
+                what: 'ReportWizardActivitiesEngagementHelpWhat',
+                guide: 'ReportWizardActivitiesEngagementHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesPhysical: {
+        baseUrl: 'activities-physical',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/activities-physical/${reportId}`;
+        },
+        title: 'ReportWizardMenuPhysicalHeading',
+        labels: {
+            form: {
+                title: 'ReportWizardActivitiesPhysicalHeading',
+                preamble: 'ReportWizardActivitiesPhysicalSubheading',
+            },
+            help: {
+                why: 'ReportWizardActivitiesPhysicalHelpWhy',
+                what: 'ReportWizardActivitiesPhysicalHelpWhat',
+                guide: 'ReportWizardActivitiesPhysicalHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesTeamEducation: {
+        baseUrl: 'activities-team-education',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/activities-team-education/${reportId}`;
+        },
+        title: 'ReportWizardMenuTeamEducationHeading',
+        labels: {
+            form: {
+                title: 'ReportWizardActivitiesTeamEducationHeading',
+                preamble: 'ReportWizardActivitiesTeamEducationSubheading',
+            },
+            help: {
+                why: 'ReportWizardActivitiesTeamEducationHelpWhy',
+                what: 'ReportWizardActivitiesTeamEducationHelpWhat',
+                guide: 'ReportWizardActivitiesTeamEducationHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesEvaluation: {
+        baseUrl: 'activities-evaluation',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/activities-evaluation/${reportId}`;
+        },
+        title: 'ReportWizardMenuEvaluationHeading',
+        labels: {
+            form: {
+                title: 'ReportWizardActivitiesEvaluationHeading',
+                preamble: 'ReportWizardActivitiesEvaluationSubheading',
+            },
+            help: {
+                why: 'ReportWizardActivitiesEvaluationHelpWhy',
+                what: 'ReportWizardActivitiesEvaluationHelpWhat',
+                guide: 'ReportWizardActivitiesEvaluationHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesGeneral: {
+        baseUrl: 'activities-general',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/activities-general/${reportId}`;
+        },
+        title: 'ReportWizardMenuHeading',
         labels: {
             form: {
                 title: 'ReportWizardActivitiesHeading',
-                preamble: 'ReportWizardActivitiesSubHeading',
+                preamble: 'ReportWizardActivitiesSubheading',
             },
             help: {
                 why: 'ReportWizardActivitiesHelpWhy',
                 what: 'ReportWizardActivitiesHelpWhat',
                 guide: 'ReportWizardActivitiesHelpGuide',
             },
-        },
-        baseUrl: 'activities',
-        url(initiativeId, reportId) {
-            return `/report/${initiativeId}/activities/${reportId}`;
         },
         permissions: {
             add: ['grantee.admin', 'grantee.collaborator', 'super'],
@@ -416,24 +532,6 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-    // postProjectActivities: {
-    //     title: 'ReportWizardMenuPostProjectActivities',
-    //     labels: {
-    //         form: {
-    //             title: 'ReportWizardPostProjectActivitiesHeading',
-    //             preamble: 'ReportWizardPostProjectActivitiesSubHeading',
-    //         },
-    //         help: {
-    //             why: 'ReportWizardPostProjectActivitiesHelpWhy',
-    //             what: 'ReportWizardPostProjectActivitiesHelpWhat',
-    //             guide: 'ReportWizardPostProjectActivitiesHelpGuide',
-    //         },
-    //     },
-    //     baseUrl: 'post-project-activities',
-    //     url(initiativeId, reportId) {
-    //         return `/report/${initiativeId}/post-project-activities/${reportId}`;
-    //     },
-    // },
 };
 
 const reportStructures = {
@@ -449,7 +547,12 @@ const reportStructures = {
                 d.applicants,
                 d.collaborators,
                 d.employeesFunded,
-                d.activities,
+                d.activitiesDissemination,
+                d.activitiesEngagement,
+                d.activitiesPhysical,
+                d.activitiesTeamEducation,
+                d.activitiesEvaluation,
+                d.activitiesGeneral,
                 d.indicators,
                 d.progressSoFar,
                 d.sharingResults,
@@ -492,7 +595,12 @@ const reportStructures = {
                 d.applicants,
                 d.collaborators,
                 d.employeesFunded,
-                d.activities,
+                d.activitiesDissemination,
+                d.activitiesEngagement,
+                d.activitiesPhysical,
+                d.activitiesTeamEducation,
+                d.activitiesEvaluation,
+                d.activitiesGeneral,
                 d.indicators,
                 d.progressSoFar,
                 d.sharingResults,
@@ -519,7 +627,12 @@ const reportStructures = {
                 d.applicants,
                 d.collaborators,
                 d.employeesFunded,
-                d.activities,
+                d.activitiesDissemination,
+                d.activitiesEngagement,
+                d.activitiesPhysical,
+                d.activitiesTeamEducation,
+                d.activitiesEvaluation,
+                d.activitiesGeneral,
                 d.indicators,
                 d.progressSoFar,
                 d.sharingResults,
@@ -546,7 +659,12 @@ const reportStructures = {
                 d.applicants,
                 d.collaborators,
                 d.employeesFunded,
-                d.activities,
+                d.activitiesDissemination,
+                d.activitiesEngagement,
+                d.activitiesPhysical,
+                d.activitiesTeamEducation,
+                d.activitiesEvaluation,
+                d.activitiesGeneral,
                 d.indicators,
                 d.progressSoFar,
                 d.sharingResults,

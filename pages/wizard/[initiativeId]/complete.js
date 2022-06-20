@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 // Utilities
-import { useLabels, useWizardSubmit, useContext } from 'utilities/hooks';
+import { useLabels, useContext } from 'utilities/hooks';
 
 // Components
 import WithAuth from 'components/withAuth';
@@ -25,12 +25,6 @@ const CompleteComponent = ({ pageProps }) => {
     // ///////////////////
 
     const [bodyTexts, setBodyTexts] = useState([]);
-
-    // ///////////////////
-    // SUBMIT
-    // ///////////////////
-
-    useWizardSubmit();
 
     // ///////////////////
     // DATA

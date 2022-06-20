@@ -11,7 +11,12 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 
 // Icons
-import { FiTrendingUp, FiMessageCircle, FiTag } from 'react-icons/fi';
+import {
+    FiActivity,
+    FiTrendingUp,
+    FiMessageCircle,
+    FiTag,
+} from 'react-icons/fi';
 
 const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
     // ///////////////////
@@ -32,13 +37,15 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
     // ///////////////////
 
     // Current report details
-    const currentReportDetails = utilities.reportDetails.getFromReportId(
-        REPORT_ID
-    );
+    const currentReportDetails = utilities.reportDetails
+        .getFromReportId(REPORT_ID)
+        .filter(detail =>
+            items.map(x => x.Id).includes(detail[itemRelationKey])
+        );
 
     // Get reflections
-    const reflections = currentReportDetails.filter(detail =>
-        items.map(x => x.Id).includes(detail[itemRelationKey])
+    const reflections = currentReportDetails.filter(
+        detail => detail?.Description__c
     );
 
     // Get tags
@@ -49,11 +56,27 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
     // TODO Get Metrics
     const metrics = [];
 
+    // Get Status
+    const statusesBulk = currentReportDetails.filter(detail =>
+        items.map(x => x.Id).includes(detail[itemRelationKey])
+    );
+
+    let statuses = 0;
+    for (const status of statusesBulk) {
+        const count = [
+            'Status__c',
+            'Completion_Date__c',
+            'Status_Comments__c',
+        ].reduce((acc, key) => (acc = status[key] ? acc + 1 : acc), 0);
+        statuses = statuses + count;
+    }
+
     // Any updates?
     const hasUpdate = [
         tags.length > 0,
         reflections.length > 0,
         metrics.length > 0,
+        statuses > 0,
     ].some(x => x);
 
     // ///////////////////
@@ -66,13 +89,6 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
                 {label('WizardReportUpdatesInPageHasUpdates')}
             </p>
             <div className="flex items-center space-x-12 text-blue-300">
-                {/* Tags */}
-                {tags.length > 0 && (
-                    <div className="flex items-center space-x-8">
-                        <FiTag className="w-24 h-24" />
-                        <span className="relative top-2">{tags.length}</span>
-                    </div>
-                )}
                 {/* Metrics */}
                 {metrics.length > 0 && (
                     <div className="flex items-center space-x-8">
@@ -80,6 +96,21 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
                         <span className="relative top-2">{metrics.length}</span>
                     </div>
                 )}
+                {/* Status */}
+                {statuses > 0 && (
+                    <div className="flex items-center space-x-8">
+                        <FiActivity className="w-24 h-24" />
+                        <span className="relative top-2">{statuses}</span>
+                    </div>
+                )}
+                {/* Tags */}
+                {tags.length > 0 && (
+                    <div className="flex items-center space-x-8">
+                        <FiTag className="w-24 h-24" />
+                        <span className="relative top-2">{tags.length}</span>
+                    </div>
+                )}
+
                 {/* Reflections */}
                 {reflections.length > 0 && (
                     <div className="flex items-center space-x-8">

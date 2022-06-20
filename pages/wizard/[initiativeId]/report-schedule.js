@@ -6,12 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import {
-    useElseware,
-    useLabels,
-    useWizardSubmit,
-    usePermissions,
-} from 'utilities/hooks';
+import { useElseware, useLabels, usePermissions } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -104,8 +99,6 @@ const ReportScheduleComponent = ({ pageProps }) => {
             console.warn(error);
         }
     }
-
-    useWizardSubmit();
 
     // ///////////////////
     // DATA

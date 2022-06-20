@@ -1,5 +1,5 @@
 // React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Packages
 import cc from 'classcat';
@@ -41,17 +41,13 @@ const Metrics = ({
     } = useController({
         name,
         control: controller,
-        defaultValue: defaultValue,
+        defaultValue,
         rules: {
             validate: {
-                validate: {
-                    isNumber: v =>
-                        Object.values(v).every(x =>
-                            /^(0|[1-9][0-9]*)$/.test(x)
-                        ),
-                    required: v =>
-                        required ? Object.values(v).every(x => !!x) : true,
-                },
+                isNumber: v =>
+                    Object.values(v).every(x => /^(0|[1-9][0-9]*)$/.test(x)),
+                required: v =>
+                    required ? Object.values(v).every(x => !!x) : true,
             },
         },
     });
@@ -179,11 +175,6 @@ const Metrics = ({
                                 <div className="flex justify-end col-span-4">
                                     <input
                                         type="tel"
-                                        defaultValue={
-                                            defaultValue
-                                                ? defaultValue[metric.Id]
-                                                : false
-                                        }
                                         value={value?.[metric.Id] ?? ''}
                                         placeholder={0}
                                         onChange={event => {

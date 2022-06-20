@@ -48,7 +48,6 @@ const OverviewComponent = () => {
     // ///////////////////
 
     async function submit(formData) {
-        console.log(formData.RangeTest);
         try {
             const {
                 Name,

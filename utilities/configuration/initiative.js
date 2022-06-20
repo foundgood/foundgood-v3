@@ -29,24 +29,6 @@ const d = {
         visible: true,
         items: [],
     },
-    complete: {
-        title: 'Complete',
-        visible: false,
-        hideBack: true,
-        hideExit: true,
-        baseUrl: 'complete',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/complete`;
-        },
-    },
-    done: {
-        title: 'Done',
-        visible: false,
-        baseUrl: '',
-        url(initiativeId) {
-            return `/${initiativeId}/overview`;
-        },
-    },
 
     overview: {
         baseUrl: 'overview',
@@ -89,7 +71,6 @@ const d = {
             ],
         },
     },
-
     funders: {
         baseUrl: 'funders',
         url(initiativeId) {
@@ -212,96 +193,6 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-    problemsToBeSolved: {
-        title: 'InitiativeViewProblemsHeading',
-        baseUrl: 'problems-to-be-solved',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/problems-to-be-solved`;
-        },
-        labels: {
-            form: {
-                title: 'InitiativeWizardProblemsHeading',
-                preamble: 'InitiativeWizardProblemsSubheading',
-            },
-            help: {
-                why: 'InitiativeWizardProblemsHelpWhy',
-                what: 'InitiativeWizardProblemsHelpWhat',
-                guide: 'InitiativeWizardProblemsHelpGuide',
-            },
-        },
-    },
-    causesOfTheProblem: {
-        title: 'InitiativeViewCausesHeading',
-        baseUrl: 'causes-of-the-problem',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/causes-of-the-problem`;
-        },
-        labels: {
-            form: {
-                title: 'InitiativeWizardCausesHeading',
-                preamble: 'InitiativeWizardCausesSubheading',
-            },
-            help: {
-                why: 'InitiativeWizardCausesHelpWhy',
-                what: 'InitiativeWizardCausesHelpWhat',
-                guide: 'InitiativeWizardCausesHelpGuide',
-            },
-        },
-    },
-    organisationalFocus: {
-        title: 'InitiativeViewOrgFocusHeading',
-        baseUrl: 'organisational-focus',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/organisational-focus`;
-        },
-        labels: {
-            form: {
-                title: 'InitiativeWizardOrgFocusHeading',
-                preamble: 'InitiativeWizardOrgFocusSubheading',
-            },
-            help: {
-                why: 'InitiativeWizardOrgFocusHelpWhy',
-                what: 'InitiativeWizardOrgFocusHelpWhat',
-                guide: 'InitiativeWizardOrgFocusHelpGuide',
-            },
-        },
-    },
-    ourVision: {
-        title: 'InitiativeViewVisionHeading',
-        baseUrl: 'our-vision',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/our-vision`;
-        },
-        labels: {
-            form: {
-                title: 'InitiativeWizardVisionHeading',
-                preamble: 'InitiativeWizardVisionSubheading',
-            },
-            help: {
-                why: 'InitiativeWizardVisionHelpWhy',
-                what: 'InitiativeWizardVisionHelpWhat',
-                guide: 'InitiativeWizardVisionHelpGuide',
-            },
-        },
-    },
-    reasonsForThisSolve: {
-        title: 'InitiativeViewReasonsHeading',
-        baseUrl: 'reasons-for-this-solve',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/reasons-for-this-solve`;
-        },
-        labels: {
-            form: {
-                title: 'InitiativeWizardReasonsHeading',
-                preamble: 'InitiativeWizardReasonsSubheading',
-            },
-            help: {
-                why: 'InitiativeWizardReasonsHelpWhy',
-                what: 'InitiativeWizardReasonsHelpWhat',
-                guide: 'InitiativeWizardReasonsHelpGuide',
-            },
-        },
-    },
     goals: {
         baseUrl: 'goals',
         url(initiativeId) {
@@ -325,10 +216,125 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-    activities: {
-        baseUrl: 'activities',
+    activitiesDissemination: {
+        baseUrl: 'activities-dissemination',
         url(initiativeId) {
-            return `/initiative/${initiativeId}/activities`;
+            return `/initiative/${initiativeId}/activities-dissemination`;
+        },
+        title: 'InitiativeViewActivitiesDisseminationHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardActivitiesDisseminationHeading',
+                preamble: 'InitiativeWizardActivitiesDisseminationSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardActivitiesDisseminationHelpWhy',
+                what: 'InitiativeWizardActivitiesDisseminationHelpWhat',
+                guide: 'InitiativeWizardActivitiesDisseminationHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesEngagement: {
+        baseUrl: 'activities-engagement',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/activities-engagement`;
+        },
+        title: 'InitiativeViewActivitiesEngagementHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardActivitiesEngagementHeading',
+                preamble: 'InitiativeWizardActivitiesEngagementSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardActivitiesEngagementHelpWhy',
+                what: 'InitiativeWizardActivitiesEngagementHelpWhat',
+                guide: 'InitiativeWizardActivitiesEngagementHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesPhysical: {
+        baseUrl: 'activities-physical',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/activities-physical`;
+        },
+        title: 'InitiativeViewActivitiesPhysicalHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardActivitiesPhysicalHeading',
+                preamble: 'InitiativeWizardActivitiesPhysicalSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardActivitiesPhysicalHelpWhy',
+                what: 'InitiativeWizardActivitiesPhysicalHelpWhat',
+                guide: 'InitiativeWizardActivitiesPhysicalHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesTeamEducation: {
+        baseUrl: 'activities-team-education',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/activities-team-education`;
+        },
+        title: 'InitiativeViewActivitiesTeamEducationHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardActivitiesTeamEducationHeading',
+                preamble: 'InitiativeWizardActivitiesTeamEducationSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardActivitiesTeamEducationHelpWhy',
+                what: 'InitiativeWizardActivitiesTeamEducationHelpWhat',
+                guide: 'InitiativeWizardActivitiesTeamEducationHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesEvaluation: {
+        baseUrl: 'activities-evaluation',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/activities-evaluation`;
+        },
+        title: 'InitiativeViewActivitiesEvaluationHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardActivitiesEvaluationHeading',
+                preamble: 'InitiativeWizardActivitiesEvaluationSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardActivitiesEvaluationHelpWhy',
+                what: 'InitiativeWizardActivitiesEvaluationHelpWhat',
+                guide: 'InitiativeWizardActivitiesEvaluationHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    activitiesGeneral: {
+        baseUrl: 'activities-general',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/activities-general`;
         },
         title: 'InitiativeViewActivitiesHeading',
         labels: {
@@ -392,24 +398,6 @@ const d = {
             add: ['grantee.admin', 'grantee.collaborator', 'super'],
             update: ['grantee.admin', 'grantee.collaborator', 'super'],
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
-        },
-    },
-    targets: {
-        title: 'InitiativeViewTargetsHeading',
-        baseUrl: 'targets',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/targets`;
-        },
-        labels: {
-            form: {
-                title: 'InitiativeWizardTargetsHeading',
-                preamble: 'InitiativeWizardTargetsSubheading',
-            },
-            help: {
-                why: 'InitiativeWizardTargetsHelpWhy',
-                what: 'InitiativeWizardTargetsHelpWhat',
-                guide: 'InitiativeWizardTargetsHelpGuide',
-            },
         },
     },
     progressSoFar: {
@@ -476,6 +464,24 @@ const d = {
             delete: ['super'],
         },
     },
+    complete: {
+        title: 'Complete',
+        visible: false,
+        hideBack: true,
+        hideExit: true,
+        baseUrl: 'complete',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/complete`;
+        },
+    },
+    done: {
+        title: 'Done',
+        visible: false,
+        baseUrl: '',
+        url(initiativeId) {
+            return `/${initiativeId}/overview`;
+        },
+    },
 };
 
 const initiativeStructures = {
@@ -492,7 +498,16 @@ const initiativeStructures = {
         },
         {
             ...d.activitiesParent,
-            items: [d.goals, d.activities, d.indicators],
+            items: [
+                d.goals,
+                d.activitiesDissemination,
+                d.activitiesEngagement,
+                d.activitiesPhysical,
+                d.activitiesTeamEducation,
+                d.activitiesEvaluation,
+                d.activitiesGeneral,
+                d.indicators,
+            ],
         },
         {
             ...d.developments,

@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm, useFormState } from 'react-hook-form';
 
 // Utilities
-import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
+import { useElseware, useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -87,8 +87,6 @@ const GoalsComponent = ({ pageProps }) => {
             console.warn(error);
         }
     }
-
-    useWizardSubmit();
 
     // ///////////////////
     // EFFECTS

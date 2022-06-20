@@ -33,6 +33,9 @@ const useWizardNavigationStore = create((set, get) => ({
 
         // Set next item url
         get().setNextItemUrl(currentItem);
+
+        // Reset submitHandler
+        get().setCurrentSubmitHandler(null);
     },
 
     // Handles submit from wizard pages

@@ -4,7 +4,7 @@ import React from 'react';
 // Packages
 
 // Utilities
-import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
+import { useElseware, useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -27,7 +27,6 @@ const FunderTaggingComponent = () => {
 
     const { label, object } = useLabels();
     const { ewCreate, ewGetAsync, ewDelete } = useElseware();
-    useWizardSubmit();
 
     // ///////////////////
     // METHODS

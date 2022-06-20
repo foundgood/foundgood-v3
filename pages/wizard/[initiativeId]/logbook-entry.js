@@ -6,7 +6,7 @@ import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useElseware, useLabels, useWizardSubmit } from 'utilities/hooks';
+import { useElseware, useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
@@ -145,8 +145,6 @@ const LogbookComponent = ({ pageProps }) => {
             console.warn(error);
         }
     }
-
-    useWizardSubmit();
 
     // ///////////////////
     // DATA

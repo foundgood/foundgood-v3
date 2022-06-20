@@ -19,7 +19,12 @@ import Button from 'components/button';
 import ReportUpdateModal from 'components/_modals/reportUpdateModal';
 
 // Icons
-import { FiTrendingUp, FiMessageCircle, FiTag } from 'react-icons/fi';
+import {
+    FiActivity,
+    FiTrendingUp,
+    FiMessageCircle,
+    FiTag,
+} from 'react-icons/fi';
 
 const ReportUpdateComponent = ({
     title,
@@ -39,11 +44,10 @@ const ReportUpdateComponent = ({
     // ///////////////////
 
     const { REPORT_ID } = useContext();
-    const { label } = useLabels();
+    const { label, object, pickList } = useLabels();
     const {
         ewCreate,
         ewCreateUpdateWrapper,
-        ewDelete,
         ewUpdate,
         ewGetAsync,
     } = useElseware();
@@ -126,43 +130,27 @@ const ReportUpdateComponent = ({
         );
     }
 
-    async function submitReflection(formData) {
-        const { reflectionDescription } = formData;
+    async function submitStatus(formData) {
+        const { Status__c, Completion_Date__c, Status_Comments__c } = formData;
 
-        // Only do stuff reflection if added or already existing
-        if (
-            currentReflection?.Description__c?.length > 0 ||
-            reflectionDescription?.length > 0
-        ) {
-            // Check if it should be deleted (length on current = 0)
-            if (reflectionDescription.length === 0) {
-                // Delete reflection
-                await ewDelete(
-                    'initiative-report-detail/initiative-report-detail',
-                    currentReflection?.Id
-                );
-
-                // Remove from store
-                utilities.removeInitiativeData(
-                    '_reportDetails',
-                    currentReflection?.Id
-                );
-            } else {
-                // Create/Update reflection
-                await ewCreateUpdateWrapper(
-                    'initiative-report-detail/initiative-report-detail',
-                    currentReflection?.Id,
-                    {
-                        Description__c: reflectionDescription,
-                    },
-                    {
-                        [reflection.relationKey]: reflection.item?.Id,
-                        Type__c: reflection.type,
-                        Initiative_Report__c: REPORT_ID,
-                    },
-                    '_reportDetails'
-                );
-            }
+        // Only do stuff if content is there
+        if (Status__c || Completion_Date__c || Status_Comments__c) {
+            // Create/Update reflection
+            await ewCreateUpdateWrapper(
+                'initiative-report-detail/initiative-report-detail',
+                currentStatus?.Id,
+                {
+                    Status__c,
+                    Completion_Date__c,
+                    Status_Comments__c,
+                },
+                {
+                    [status.relationKey]: status.item?.Id,
+                    Type__c: status.type,
+                    Initiative_Report__c: REPORT_ID,
+                },
+                '_reportDetails'
+            );
         }
     }
 
@@ -191,6 +179,31 @@ const ReportUpdateComponent = ({
         }
     }
 
+    async function submitReflection(formData) {
+        const { Description__c } = formData;
+
+        // Only do stuff reflection if added or already existing
+        if (
+            currentReflection?.Description__c?.length > 0 ||
+            Description__c?.length > 0
+        ) {
+            // Create/Update reflection
+            await ewCreateUpdateWrapper(
+                'initiative-report-detail/initiative-report-detail',
+                currentReflection?.Id,
+                {
+                    Description__c,
+                },
+                {
+                    [reflection.relationKey]: reflection.item?.Id,
+                    Type__c: reflection.type,
+                    Initiative_Report__c: REPORT_ID,
+                },
+                '_reportDetails'
+            );
+        }
+    }
+
     async function submit(formData) {
         // Modal save button state
         modalSaving();
@@ -202,7 +215,7 @@ const ReportUpdateComponent = ({
 
             // Status
             if (status) {
-                // TODO
+                await submitStatus(formData);
             }
 
             // Success Metrics
@@ -234,7 +247,8 @@ const ReportUpdateComponent = ({
     // DATA
     // ///////////////////
 
-    const report = utilities.reports.get(REPORT_ID);
+    // Current report details (reflections)
+    const reportDetails = utilities.reportDetails.getFromReportId(REPORT_ID);
 
     // ///////////////////
     // DATA - TAGGING
@@ -257,6 +271,24 @@ const ReportUpdateComponent = ({
     );
 
     // ///////////////////
+    // DATA - STATUS
+    // ///////////////////
+
+    // Get current status based on relationKey if any
+    const currentStatus = status
+        ? reportDetails.find(
+              reportDetail =>
+                  reportDetail[status.relationKey] === status.item.Id
+          )
+        : null;
+
+    const currentStatusCount = [
+        'Status__c',
+        'Completion_Date__c',
+        'Status_Comments__c',
+    ].reduce((acc, key) => (acc = currentStatus?.[key] ? acc + 1 : acc), 0);
+
+    // ///////////////////
     // DATA - METRICS
     // ///////////////////
 
@@ -265,14 +297,9 @@ const ReportUpdateComponent = ({
         metrics.item?.Id
     );
 
-    const currentMetricsWithUpdates = 3; // TODO COMPARE DATE
-
     // ///////////////////
     // DATA - REFLECTION
     // ///////////////////
-
-    // Current report details (reflections)
-    const reportDetails = utilities.reportDetails.getFromReportId(REPORT_ID);
 
     // Get current reflection based on relationKey if any
     const currentReflection = reflection
@@ -287,7 +314,11 @@ const ReportUpdateComponent = ({
     // ///////////////////
 
     // Any updates?
-    const hasUpdate = [currentReflection, currentTags.length > 0].some(x => x);
+    const hasUpdate = [
+        currentReflection?.Description__c,
+        currentTags.length > 0,
+        currentStatusCount > 0,
+    ].some(x => x);
 
     // ///////////////////
     // FIELDS
@@ -348,7 +379,46 @@ const ReportUpdateComponent = ({
             : []),
 
         // Status
-        ...(status ? [] : []),
+        ...(status
+            ? [
+                  {
+                      type: 'Select',
+                      name: 'Status__c',
+                      label: object.label(
+                          'Initiative_Report_Detail__c.Status__c'
+                      ),
+                      subLabel: object.helpText(
+                          'Initiative_Report_Detail__c.Status__c'
+                      ),
+                      defaultValue: currentStatus?.Status__c,
+                      options: pickList(
+                          'Initiative_Report_Detail__c.Status__c'
+                      ),
+                  },
+                  {
+                      type: 'DatePicker',
+                      name: 'Completion_Date__c',
+                      label: object.label(
+                          'Initiative_Report_Detail__c.Completion_Date__c'
+                      ),
+                      subLabel: object.helpText(
+                          'Initiative_Report_Detail__c.Completion_Date__c'
+                      ),
+                      defaultValue: currentStatus?.Completion_Date__c,
+                  },
+                  {
+                      type: 'LongText',
+                      name: 'Status_Comments__c',
+                      label: object.label(
+                          'Initiative_Report_Detail__c.Status_Comments__c'
+                      ),
+                      subLabel: object.helpText(
+                          'Initiative_Report_Detail__c.Status_Comments__c'
+                      ),
+                      defaultValue: currentStatus?.Status_Comments__c,
+                  },
+              ]
+            : []),
 
         // Metrics
         ...(metrics
@@ -358,6 +428,13 @@ const ReportUpdateComponent = ({
                       name: 'metricsList',
                       metrics: currentMetrics,
                       label: label('ReportUpdateModalMetricsLabel'),
+                      defaultValue: currentMetrics.reduce(
+                          (acc, metric) => ({
+                              ...acc,
+                              [metric.Id]: metric.Current_Status__c,
+                          }),
+                          {}
+                      ),
                   },
               ]
             : []),
@@ -367,8 +444,13 @@ const ReportUpdateComponent = ({
             ? [
                   {
                       type: 'Reflection',
-                      name: 'reflectionDescription',
-                      label: label('ReportUpdateModalReflectionsLabel'),
+                      name: 'Description__c',
+                      label: object.label(
+                          'Initiative_Report_Detail__c.Description__c'
+                      ),
+                      subLabel: object.helpText(
+                          'Initiative_Report_Detail__c.Description__c'
+                      ),
                       defaultValue: currentReflection?.Description__c,
                       maxLength: 750,
                   },
@@ -386,6 +468,15 @@ const ReportUpdateComponent = ({
             {hasUpdate ? (
                 <div className="flex justify-between w-full p-8 rounded-8 bg-blue-20">
                     <div className="flex items-center px-8 space-x-12 text-blue-300">
+                        {/* Status */}
+                        {currentStatusCount > 0 && (
+                            <div className="flex items-center space-x-8">
+                                <FiActivity className="w-24 h-24" />
+                                <span className="relative top-2">
+                                    {currentStatusCount}
+                                </span>
+                            </div>
+                        )}
                         {/* Tags */}
                         {currentTags.length > 0 && (
                             <div className="flex items-center space-x-8">
@@ -396,7 +487,7 @@ const ReportUpdateComponent = ({
                             </div>
                         )}
                         {/* Reflection */}
-                        {currentReflection && (
+                        {currentReflection?.Description__c && (
                             <div className="flex items-center space-x-8">
                                 <FiMessageCircle className="w-24 h-24" />
                                 <span className="relative top-2">1</span>
