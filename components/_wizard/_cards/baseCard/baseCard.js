@@ -105,6 +105,7 @@ const BaseCardComponent = ({ title, type, components, methods }) => {
                     {/* Card type content wrapper */}
                     {components?.cardContent && (
                         <AnimateHeight
+                            className="!mt-0"
                             duration={300}
                             animateOpacity={true}
                             height={expandedContent ? 'auto' : 0}>

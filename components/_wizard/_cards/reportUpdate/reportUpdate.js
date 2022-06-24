@@ -204,6 +204,43 @@ const ReportUpdateComponent = ({
         }
     }
 
+    async function submitReflectionAndStatus(formData) {
+        const {
+            Completion_Date__c,
+            Description__c,
+            Status__c,
+            Status_Comments__c,
+        } = formData;
+
+        // Only do stuff reflection/status if added or already existing
+        if (
+            Completion_Date__c ||
+            currentReflection?.Description__c ||
+            Description__c ||
+            Status__c ||
+            Status_Comments__c ||
+            currentReflection?.Status_Comments__c
+        ) {
+            // Create/Update reflection
+            await ewCreateUpdateWrapper(
+                'initiative-report-detail/initiative-report-detail',
+                currentReflection?.Id,
+                {
+                    Description__c,
+                    Status__c,
+                    Completion_Date__c,
+                    Status_Comments__c,
+                },
+                {
+                    [reflection.relationKey]: reflection.item?.Id,
+                    Type__c: reflection.type,
+                    Initiative_Report__c: REPORT_ID,
+                },
+                '_reportDetails'
+            );
+        }
+    }
+
     async function submit(formData) {
         // Modal save button state
         modalSaving();
@@ -214,7 +251,7 @@ const ReportUpdateComponent = ({
             }
 
             // Status
-            if (status) {
+            if (status && !reflection) {
                 await submitStatus(formData);
             }
 
@@ -224,8 +261,13 @@ const ReportUpdateComponent = ({
             }
 
             // Reflection
-            if (reflection) {
+            if (reflection && !status) {
                 await submitReflection(formData);
+            }
+
+            // Reflection and status (they write to the same object)
+            if (reflection && status) {
+                await submitReflectionAndStatus(formData);
             }
 
             // Close modal

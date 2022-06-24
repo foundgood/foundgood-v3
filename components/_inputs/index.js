@@ -16,6 +16,8 @@ import Select from './select';
 import SelectionCards from './selectionCards';
 import SelectList from './selectList';
 import Text from './text';
+import Section from './section';
+import Nested from './nested';
 
 export {
     Attach,
@@ -36,4 +38,6 @@ export {
     SelectionCards,
     SelectList,
     Text,
+    Section,
+    Nested,
 };

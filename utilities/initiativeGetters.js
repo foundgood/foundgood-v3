@@ -19,7 +19,7 @@ function initiativeGetters(getter, constants) {
             getTypeIntervention() {
                 return Object.values(getter().initiative._activities).filter(
                     item =>
-                        constants.ACTIVITIES.ACTIVITY_INTERVENTION ===
+                        constants.ACTIVITIES.INTERVENTION ===
                         item.Activity_Type__c
                 );
             },
@@ -27,9 +27,48 @@ function initiativeGetters(getter, constants) {
             getTypeDissemination() {
                 return Object.values(getter().initiative._activities).filter(
                     item =>
-                        constants.ACTIVITIES.ACTIVITY_DISSEMINATION ===
+                        constants.ACTIVITIES.DISSEMINATION ===
                         item.Activity_Type__c
                 );
+            },
+            // Returns array
+            getTypeEngagement() {
+                return Object.values(getter().initiative._activities).filter(
+                    item =>
+                        constants.ACTIVITIES.ENGAGEMENT ===
+                        item.Activity_Type__c
+                );
+            },
+            // Returns array
+            getTypePhysical() {
+                return Object.values(getter().initiative._activities).filter(
+                    item =>
+                        constants.ACTIVITIES.PHYSICAL === item.Activity_Type__c
+                );
+            },
+            // Returns array
+            getTypeTeamEducation() {
+                return Object.values(getter().initiative._activities).filter(
+                    item =>
+                        constants.ACTIVITIES.TEAM_EDUCATION ===
+                        item.Activity_Type__c
+                );
+            },
+            // Returns array
+            getTypeEvaluation() {
+                return Object.values(getter().initiative._activities).filter(
+                    item =>
+                        constants.ACTIVITIES.EVALUATION ===
+                        item.Activity_Type__c
+                );
+            },
+        },
+        activityEmployees: {
+            // Returns array
+            getFromActivityId(activityId) {
+                return Object.values(
+                    getter().initiative._activityEmployees
+                ).filter(item => item.Initiative_Activity__c === activityId);
             },
         },
         activityGoals: {
@@ -38,6 +77,18 @@ function initiativeGetters(getter, constants) {
                 return Object.values(getter().initiative._activityGoals).filter(
                     item => item.Initiative_Activity__c === activityId
                 );
+            },
+        },
+        activityRegulations: {
+            // Returns array
+            getAll() {
+                return Object.values(getter().initiative._activityRegulations);
+            },
+            // Returns array
+            getFromActivityId(activityId) {
+                return Object.values(
+                    getter().initiative._activityRegulations
+                ).filter(item => item.Initiative_Activity__c === activityId);
             },
         },
         activitySuccessMetrics: {

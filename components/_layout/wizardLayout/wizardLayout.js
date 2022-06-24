@@ -140,7 +140,7 @@ const WizardLayoutComponent = ({ children, layoutSettings }) => {
             <div
                 style={{ willChange: 'transform' }}
                 className={cc([
-                    'fixed flex-col h-screen w-[300px] max-w-full xl:w-1/5 flex 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-help border-r border-teal-10 page-px header-pt',
+                    'fixed flex-col h-screen w-[300px] max-w-full xl:w-1/5 flex 3xl:w-[300px] bg-white transition-slow transform bottom-0 z-aside border-r border-teal-10 page-px header-pt',
                     {
                         'pointer-events-auto': leftMenuActive,
                         ' -translate-x-full pointer-events-none': !leftMenuActive,

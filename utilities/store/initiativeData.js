@@ -17,6 +17,8 @@ function _updateAuth() {
 const defaultInitiative = {
     _activities: {},
     _activityGoals: {},
+    _activityEmployees: {},
+    _activityRegulations: {},
     _activitySuccessMetrics: {},
     _collaborators: {},
     _employeesFunded: {},

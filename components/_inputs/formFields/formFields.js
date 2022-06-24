@@ -19,6 +19,8 @@ import {
     Range,
     Image,
     Reflection,
+    Section,
+    Nested,
 } from 'components/_inputs';
 
 const FormFields = ({ fields, form }) => {
@@ -81,6 +83,12 @@ const FormFields = ({ fields, form }) => {
                     return <Range key={name + index} {...sharedProps} />;
                 case 'Reflection':
                     return <Reflection key={name + index} {...sharedProps} />;
+                case 'Section':
+                    return (
+                        <Section key={name + index} {...{ ...sharedProps }} />
+                    );
+                case 'Nested':
+                    return <Nested>{renderFormFields(field.fields)}</Nested>;
                 default:
                     break;
             }

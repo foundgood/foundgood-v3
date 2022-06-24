@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
-import { Controller } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 // Utilities
 import { useLabels } from 'utilities/hooks';
@@ -20,7 +20,6 @@ const SelectComponent = ({
     label,
     subLabel,
     defaultValue,
-    error,
     placeholder,
     options,
     controller,
@@ -35,6 +34,15 @@ const SelectComponent = ({
     // ///////////////////
 
     const { label: metadataLabel } = useLabels();
+    const {
+        field: { onChange, value, ref },
+        fieldState: { error },
+    } = useController({
+        name,
+        control: controller,
+        defaultValue,
+        rules: { required },
+    });
 
     // ///////////////////
     // STATE
@@ -87,10 +95,19 @@ const SelectComponent = ({
 
     // Defaultvalue
     useEffect(() => {
-        if (defaultValue && loadedOptions) {
+        if (defaultValue) {
             setValue(name, defaultValue);
         }
     }, [defaultValue, loadedOptions]);
+
+    // Update value correctly when using setValue
+    useEffect(() => {
+        if (value && value.length > 0) {
+            setTimeout(() => {
+                setValue(name, value);
+            });
+        }
+    }, []);
 
     // ///////////////////
     // RENDER
@@ -104,62 +121,46 @@ const SelectComponent = ({
             )}
             {missingOptions && (
                 <div className="mt-16">
-                    {' '}
-                    <EmptyState text={label} />
+                    <EmptyState label={missingOptionsLabel} />
                 </div>
             )}
 
             {!missingOptions && (
-                <Controller
-                    control={controller}
-                    defaultValue={defaultValue}
-                    name={name}
-                    rules={{ required }}
-                    render={({
-                        field: { onChange, onBlur, value, ref },
-                        fieldState: { error },
-                    }) => (
-                        <div
-                            className={cc([
-                                'relative flex items-center',
-                                {
-                                    'mt-16': label,
-                                },
-                            ])}>
-                            <select
-                                ref={ref}
-                                className={cc([
-                                    'input-defaults',
-                                    'appearance-none flex-grow pr-20 max-w-full',
-                                    {
-                                        'input-defaults-error': error,
-                                    },
-                                ])}
-                                onChange={event => onChange(event)}
-                                disabled={
-                                    disabled || loadedOptions.length === 0
-                                }
-                                {...rest}>
-                                <option default value="" className="hidden">
-                                    {getPlaceholder()}
+                <div
+                    className={cc([
+                        'relative flex items-center',
+                        {
+                            'mt-16': label,
+                        },
+                    ])}>
+                    <select
+                        ref={ref}
+                        className={cc([
+                            'input-defaults',
+                            'appearance-none flex-grow pr-20 max-w-full',
+                            {
+                                'input-defaults-error': error,
+                            },
+                        ])}
+                        onChange={event => onChange(event)}
+                        disabled={disabled || loadedOptions.length === 0}
+                        {...rest}>
+                        <option default value="" className="hidden">
+                            {getPlaceholder()}
+                        </option>
+                        {loadedOptions
+                            .sort((a, b) => a.label.localeCompare(b.label))
+                            .map((option, index) => (
+                                <option
+                                    key={`${option.value}-${index}`}
+                                    value={option.value}
+                                    className="font-normal text-black">
+                                    {option.label}
                                 </option>
-                                {loadedOptions
-                                    .sort((a, b) =>
-                                        a.label.localeCompare(b.label)
-                                    )
-                                    .map((option, index) => (
-                                        <option
-                                            key={`${option.value}-${index}`}
-                                            value={option.value}
-                                            className="font-normal text-black">
-                                            {option.label}
-                                        </option>
-                                    ))}
-                            </select>
-                            <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
-                        </div>
-                    )}
-                />
+                            ))}
+                    </select>
+                    <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
+                </div>
             )}
         </label>
     );

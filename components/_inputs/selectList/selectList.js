@@ -99,10 +99,6 @@ const SelectListComponent = ({
         onChange(nextList);
     }
 
-    // ///////////////////
-    // METHODS
-    // ///////////////////
-
     function getPlaceholder() {
         if (loadingOptions) {
             return metadataLabel('FormCaptureSelectLoadingOptions');

@@ -1,5 +1,5 @@
 // React
-import React, { useState } from 'react';
+import React from 'react';
 
 // Packages
 import _get from 'lodash.get';
@@ -16,12 +16,12 @@ import ReportUpdatesInPage from 'components/_wizard/reportUpdatesInPage';
 import Collection from 'components/_wizard/collection';
 
 // Components shared for activities
-import ActivityDissemination from 'components/_wizard/_cards/_cardContents/activityDissemination';
+import ActivityEvaluation from 'components/_wizard/_cards/_cardContents/activityEvaluation';
 import ActivitySuccessMetrics from 'components/_wizard/_cards/_childCollections/activitySuccessMetrics';
 import ActivityGoals from 'components/_wizard/_cards/_relatedItems/activityGoals';
 import Activity from 'components/_wizard/_cards/_reportUpdates/activity';
 
-const ActivitiesDisseminationComponent = () => {
+const ActivitiesEvaluationComponent = () => {
     // ///////////////////
     // STORES
     // ///////////////////
@@ -36,12 +36,6 @@ const ActivitiesDisseminationComponent = () => {
     const { ewUpdate, ewCreate, ewDelete } = useElseware();
 
     // ///////////////////
-    // STATE
-    // ///////////////////
-
-    const [disseminationType, setDisseminationType] = useState(null);
-
-    // ///////////////////
     // METHODS
     // ///////////////////
 
@@ -50,31 +44,19 @@ const ActivitiesDisseminationComponent = () => {
             Things_To_Do__c,
             Things_To_Do_Description__c,
             Location,
+            Whos_Evaluating__c,
             Goals,
-            Dissemination_Method__c,
-            Publication_Type__c,
-            Publication_Year__c,
-            Publication_Title__c,
-            Publication_Publisher__c,
-            Publication_Author__c,
-            Publication_DOI__c,
         } = formData;
 
         // Data for sf
         return {
-            Activity_Type__c: CONSTANTS.ACTIVITIES.DISSEMINATION,
+            Activity_Type__c: CONSTANTS.ACTIVITIES.EVALUATION,
             Things_To_Do__c,
             Things_To_Do_Description__c,
             Initiative_Location__c: Location[0]?.selectValue,
             Additional_Location_Information__c: Location[0]?.textValue,
+            Whos_Evaluating__c,
             activityGoals: Goals.map(item => item.selectValue),
-            Dissemination_Method__c,
-            Publication_Type__c,
-            Publication_Year__c,
-            Publication_Title__c,
-            Publication_Publisher__c,
-            Publication_Author__c,
-            Publication_DOI__c,
         };
     }
 
@@ -150,13 +132,7 @@ const ActivitiesDisseminationComponent = () => {
             Things_To_Do_Description__c,
             Initiative_Location__c,
             Additional_Location_Information__c,
-            Dissemination_Method__c,
-            Publication_Type__c,
-            Publication_Year__c,
-            Publication_Title__c,
-            Publication_Publisher__c,
-            Publication_Author__c,
-            Publication_DOI__c,
+            Whos_Evaluating__c,
         } = utilities.activities.get(id);
 
         form.setValue(
@@ -170,7 +146,7 @@ const ActivitiesDisseminationComponent = () => {
                 textValue: Additional_Location_Information__c,
             },
         ]);
-        form.setValue('Dissemination_Method__c', Dissemination_Method__c);
+        form.setValue('Whos_Evaluating__c', Whos_Evaluating__c);
 
         // Goals
         form.setValue(
@@ -179,28 +155,6 @@ const ActivitiesDisseminationComponent = () => {
                 selectValue: activityGoal.Initiative_Goal__c,
             }))
         );
-
-        // Journal type
-        form.setValue('Publication_Type__c', Publication_Type__c);
-        form.setValue('Publication_Year__c', Publication_Year__c);
-        form.setValue('Publication_Title__c', Publication_Title__c);
-        form.setValue('Publication_Publisher__c', Publication_Publisher__c);
-        form.setValue('Publication_Author__c', Publication_Author__c);
-        form.setValue('Publication_DOI__c', Publication_DOI__c);
-    }
-
-    function getYears() {
-        const years = [];
-        const currentYear = new Date().getFullYear();
-        let startYear = currentYear - 10; // 10 years back
-        while (startYear <= currentYear) {
-            const year = startYear++;
-            years.push({
-                label: `${year}`,
-                value: `${year}-01-01`,
-            });
-        }
-        return years;
     }
 
     // ///////////////////
@@ -211,7 +165,7 @@ const ActivitiesDisseminationComponent = () => {
     const customGoals = utilities.goals.getTypeCustom();
 
     // Get activities
-    const activities = utilities.activities.getTypeDissemination();
+    const activities = utilities.activities.getTypeEvaluation();
 
     // ///////////////////
     // FIELDS
@@ -223,10 +177,10 @@ const ActivitiesDisseminationComponent = () => {
                 type: 'Text',
                 name: 'Things_To_Do__c',
                 label: object.label(
-                    'Initiative_Activity__c.Things_To_Do__c__Dissemination'
+                    'Initiative_Activity__c.Things_To_Do__c__Evaluation'
                 ),
                 subLabel: object.helpText(
-                    'Initiative_Activity__c.Things_To_Do__c__Dissemination'
+                    'Initiative_Activity__c.Things_To_Do__c__Evaluation'
                 ),
                 required: true,
                 maxLength: 200,
@@ -235,10 +189,10 @@ const ActivitiesDisseminationComponent = () => {
                 type: 'LongText',
                 name: 'Things_To_Do_Description__c',
                 label: object.label(
-                    'Initiative_Activity__c.Things_To_Do_Description__c__Dissemination'
+                    'Initiative_Activity__c.Things_To_Do_Description__c__Evaluation'
                 ),
                 subLabel: object.helpText(
-                    'Initiative_Activity__c.Things_To_Do_Description__c__Dissemination'
+                    'Initiative_Activity__c.Things_To_Do_Description__c__Evaluation'
                 ),
                 maxLength: 400,
             },
@@ -246,10 +200,10 @@ const ActivitiesDisseminationComponent = () => {
                 type: 'SelectList',
                 name: 'Location',
                 label: object.label(
-                    'Initiative_Activity__c.Initiative_Location__c__Dissemination'
+                    'Initiative_Activity__c.Initiative_Location__c__Evaluation'
                 ),
                 subLabel: object.helpText(
-                    'Initiative_Activity__c.Initiative_Location__c__Dissemination'
+                    'Initiative_Activity__c.Initiative_Location__c__Evaluation'
                 ),
                 showText: true,
                 listMaxLength: 1,
@@ -264,97 +218,16 @@ const ActivitiesDisseminationComponent = () => {
             },
             {
                 type: 'Select',
-                name: 'Dissemination_Method__c',
+                name: 'Whos_Evaluating__c',
                 label: object.label(
-                    'Initiative_Activity__c.Dissemination_Method__c'
+                    'Initiative_Activity__c.Whos_Evaluating__c'
                 ),
                 subLabel: object.helpText(
-                    'Initiative_Activity__c.Dissemination_Method__c'
+                    'Initiative_Activity__c.Whos_Evaluating__c'
                 ),
                 required: true,
-                options: pickList(
-                    'Initiative_Activity__c.Dissemination_Method__c'
-                ),
-                onWatch(event) {
-                    // Update type
-                    setDisseminationType(event);
-                },
+                options: pickList('Initiative_Activity__c.Whos_Evaluating__c'),
             },
-            ...(disseminationType === CONSTANTS.ACTIVITIES.ACTIVITY_JOURNAL
-                ? [
-                      {
-                          type: 'Nested',
-                          fields: [
-                              {
-                                  type: 'Text',
-                                  name: 'Publication_Type__c',
-                                  label: object.label(
-                                      'Initiative_Activity__c.Publication_Type__c'
-                                  ),
-                                  subLabel: object.helpText(
-                                      'Initiative_Activity__c.Publication_Type__c'
-                                  ),
-                                  maxLength: 30,
-                              },
-
-                              {
-                                  type: 'Select',
-                                  name: 'Publication_Year__c',
-                                  label: object.label(
-                                      'Initiative_Activity__c.Publication_Year__c'
-                                  ),
-                                  subLabel: object.helpText(
-                                      'Initiative_Activity__c.Publication_Year__c'
-                                  ),
-                                  options: getYears(),
-                              },
-                              {
-                                  type: 'Text',
-                                  name: 'Publication_Title__c',
-                                  label: object.label(
-                                      'Initiative_Activity__c.Publication_Title__c'
-                                  ),
-                                  subLabel: object.helpText(
-                                      'Initiative_Activity__c.Publication_Title__c'
-                                  ),
-                                  maxLength: 200,
-                              },
-                              {
-                                  type: 'Text',
-                                  name: 'Publication_Publisher__c',
-                                  label: object.label(
-                                      'Initiative_Activity__c.Publication_Publisher__c'
-                                  ),
-                                  subLabel: object.helpText(
-                                      'Initiative_Activity__c.Publication_Publisher__c'
-                                  ),
-                                  maxLength: 200,
-                              },
-                              {
-                                  type: 'Text',
-                                  name: 'Publication_Author__c',
-                                  label: object.label(
-                                      'Initiative_Activity__c.Publication_Author__c'
-                                  ),
-                                  subLabel: object.helpText(
-                                      'Initiative_Activity__c.Publication_Author__c'
-                                  ),
-                              },
-                              {
-                                  type: 'Text',
-                                  name: 'Publication_DOI__c',
-                                  label: object.label(
-                                      'Initiative_Activity__c.Publication_DOI__c'
-                                  ),
-                                  subLabel: object.helpText(
-                                      'Initiative_Activity__c.Publication_DOI__c'
-                                  ),
-                                  maxLength: 30,
-                              },
-                          ],
-                      },
-                  ]
-                : []),
             {
                 type: 'Section',
             },
@@ -362,12 +235,11 @@ const ActivitiesDisseminationComponent = () => {
                 type: 'SelectList',
                 name: 'Goals',
                 label: object.label('Initiative_Goal__c.Goal__c'),
-                // Type options
+                subLabel: object.helpText('Initiative_Goal__c.Goal__c'),
                 options: customGoals.map(goal => ({
                     value: goal.Id,
                     label: goal.Goal__c,
                 })),
-                subLabel: object.helpText('Initiative_Goal__c.Goal__c'),
                 missingOptionsLabel: label('EmptyStateInputGoals'),
             },
         ];
@@ -391,31 +263,31 @@ const ActivitiesDisseminationComponent = () => {
                     collection: {
                         items: activities,
                         fields: itemFields,
-                        addLabel: label('ButtonAddActivityDissemination'),
+                        addLabel: label('ButtonAddActivityEvaluation'),
                         emptyLabel: label(
-                            'EmptyStateWizardPageActivitiesDissemination'
+                            'EmptyStateWizardPageActivitiesEvaluation'
                         ),
                     },
                     methods: {
                         add: {
                             title: label(
-                                'WizardModalHeadingActivitiesDissemination'
+                                'WizardModalHeadingActivitiesEvaluation'
                             ),
                             action: addItem,
                         },
                         edit: {
                             title: label(
-                                'WizardModalHeadingActivitiesDissemination'
+                                'WizardModalHeadingActivitiesEvaluation'
                             ),
                             action: editItem,
                             setFieldValues: setItemFieldValues,
                         },
                         delete: {
                             title: label(
-                                'WizardModalHeadingActivitiesDisseminationDelete'
+                                'WizardModalHeadingActivitiesEvaluationDelete'
                             ),
                             text: label(
-                                'WizardModalTextActivitiesDisseminationDelete'
+                                'WizardModalTextActivitiesEvaluationDelete'
                             ),
                             action: deleteItem,
                         },
@@ -425,12 +297,12 @@ const ActivitiesDisseminationComponent = () => {
                             return item?.Things_To_Do__c;
                         },
                         type() {
-                            return label('CardTypeActivityDissemination');
+                            return label('CardTypeActivityEvaluation');
                         },
                         components(item) {
                             return {
                                 cardContent: (
-                                    <ActivityDissemination {...{ item }} />
+                                    <ActivityEvaluation {...{ item }} />
                                 ),
                                 relatedItems: <ActivityGoals {...{ item }} />,
                                 childCollection: (
@@ -446,10 +318,10 @@ const ActivitiesDisseminationComponent = () => {
     );
 };
 
-ActivitiesDisseminationComponent.propTypes = {};
+ActivitiesEvaluationComponent.propTypes = {};
 
-ActivitiesDisseminationComponent.defaultProps = {};
+ActivitiesEvaluationComponent.defaultProps = {};
 
-ActivitiesDisseminationComponent.layout = 'wizard';
+ActivitiesEvaluationComponent.layout = 'wizard';
 
-export default WithAuth(ActivitiesDisseminationComponent);
+export default WithAuth(ActivitiesEvaluationComponent);

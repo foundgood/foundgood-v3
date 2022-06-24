@@ -150,7 +150,7 @@ const CollectionComponent = ({ collection, card, methods }) => {
         if (updateId) {
             methods.edit.setFieldValues(mainForm, updateId);
         }
-    }, [updateId, editModalState]);
+    }, [updateId]);
 
     // ///////////////////
     // RENDER
@@ -198,8 +198,12 @@ const CollectionComponent = ({ collection, card, methods }) => {
                                         edit: methods?.edit
                                             ? {
                                                   action: () => {
-                                                      setUpdateId(item.Id);
+                                                      setUpdateId(null);
+                                                      mainForm.reset();
                                                       editModalOpen();
+                                                      setTimeout(() => {
+                                                          setUpdateId(item.Id);
+                                                      }, 0);
                                                   },
                                               }
                                             : null,

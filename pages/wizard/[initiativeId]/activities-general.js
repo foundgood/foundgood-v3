@@ -1,5 +1,5 @@
 // React
-import React, from 'react';
+import React from 'react';
 
 // Packages
 import _get from 'lodash.get';
@@ -54,14 +54,13 @@ const ActivitiesGeneralComponent = () => {
             Things_To_Do_Description__c,
             Initiative_Location__c: Location[0]?.selectValue,
             Additional_Location_Information__c: Location[0]?.textValue,
-            KPI_Category__c: utilities.initiative.get().Category__c,
             activityGoals: Goals.map(item => item.selectValue),
         };
     }
 
     async function addItem(formData) {
         const { data: itemData } = await ewCreate(
-            'initiative-activity/initiative-activity-and-goals',
+            'initiative-activity/initiative-activity-and-children',
             {
                 ...getItemData(formData),
                 Initiative__c: utilities.initiative.get().Id,
@@ -83,7 +82,7 @@ const ActivitiesGeneralComponent = () => {
 
     async function editItem(formData, id) {
         const { data: itemData } = await ewUpdate(
-            'initiative-activity/initiative-activity-and-goals',
+            'initiative-activity/initiative-activity-and-children',
             id,
             getItemData(formData)
         );
@@ -109,7 +108,10 @@ const ActivitiesGeneralComponent = () => {
 
     async function deleteItem(id) {
         // Delete
-        await ewDelete('initiative-activity/initiative-activity-and-goals', id);
+        await ewDelete(
+            'initiative-activity/initiative-activity-and-children',
+            id
+        );
 
         // Clean out item
         utilities.removeInitiativeData('_activities', id);
@@ -142,6 +144,7 @@ const ActivitiesGeneralComponent = () => {
             },
         ]);
 
+        // Goal
         form.setValue(
             'Goals',
             utilities.activityGoals.getFromActivityId(Id).map(activityGoal => ({
@@ -170,11 +173,10 @@ const ActivitiesGeneralComponent = () => {
                 type: 'Text',
                 name: 'Things_To_Do__c',
                 label: object.label('Initiative_Activity__c.Things_To_Do__c'),
-                required: true,
-                // Type options
                 subLabel: object.helpText(
                     'Initiative_Activity__c.Things_To_Do__c'
                 ),
+                required: true,
                 maxLength: 200,
             },
             {
@@ -183,7 +185,6 @@ const ActivitiesGeneralComponent = () => {
                 label: object.label(
                     'Initiative_Activity__c.Things_To_Do_Description__c'
                 ),
-                // Type options
                 subLabel: object.helpText(
                     'Initiative_Activity__c.Things_To_Do_Description__c'
                 ),
@@ -195,27 +196,28 @@ const ActivitiesGeneralComponent = () => {
                 label: object.label(
                     'Initiative_Activity__c.Initiative_Location__c'
                 ),
-                // Type options
+                subLabel: object.helpText(
+                    'Initiative_Activity__c.Initiative_Location__c'
+                ),
                 showText: true,
                 listMaxLength: 1,
                 options: dataSet('Countries'),
                 selectPlaceholder: label('FormCaptureSelectEmpty'),
-                subLabel: object.helpText(
-                    'Initiative_Activity__c.Initiative_Location__c'
-                ),
                 selectLabel: label('FormCaptureCountry'),
                 textLabel: label('FormCaptureRegion'),
+            },
+            {
+                type: 'Section',
             },
             {
                 type: 'SelectList',
                 name: 'Goals',
                 label: object.label('Initiative_Goal__c.Goal__c'),
-                // Type options
+                subLabel: object.helpText('Initiative_Goal__c.Goal__c'),
                 options: customGoals.map(goal => ({
                     value: goal.Id,
                     label: goal.Goal__c,
                 })),
-                subLabel: object.helpText('Initiative_Goal__c.Goal__c'),
                 missingOptionsLabel: label('EmptyStateInputGoals'),
             },
         ];

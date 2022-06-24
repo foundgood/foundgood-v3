@@ -47,7 +47,12 @@ const NameAndCategoryComponent = () => {
 
     async function submit(formData) {
         try {
-            const { Name, Category__c, GrantDate } = formData;
+            const {
+                Name,
+                Category__c,
+                Configuration_Type__c,
+                GrantDate,
+            } = formData;
 
             const { data: initiativeData } = await ewUpdate(
                 'initiative/initiative',
@@ -55,6 +60,7 @@ const NameAndCategoryComponent = () => {
                 {
                     Name,
                     Category__c,
+                    Configuration_Type__c,
                     Grant_Start_Date__c: GrantDate.from,
                     Grant_End_Date__c: GrantDate.to,
                 }
@@ -85,21 +91,25 @@ const NameAndCategoryComponent = () => {
                     ? ''
                     : utilities.initiative.get().Name,
             required: true,
-            // Type options
             maxLength: 80,
+        },
+        {
+            type: 'Select',
+            name: 'Configuration_Type__c',
+            label: object.label('Initiative__c.Configuration_Type__c'),
+            subLabel: object.helpText('Initiative__c.Configuration_Type__c'),
+            defaultValue: utilities.initiative.get().Configuration_Type__c,
+            required: true,
+            options: pickList('Initiative__c.Configuration_Type__c'),
         },
         {
             type: 'Select',
             name: 'Category__c',
             label: object.label('Initiative__c.Category__c'),
-            defaultValue: utilities.initiative.get().Category__c
-                ? utilities.initiative.get().Category__c
-                : '',
-            disabled: utilities.isNovoLeadFunder(),
-            required: true,
-            // Type options
-            options: pickList('Initiative__c.Category__c'),
             subLabel: object.helpText('Initiative__c.Category__c'),
+            defaultValue: utilities.initiative.get().Category__c,
+            required: true,
+            options: pickList('Initiative__c.Category__c'),
         },
         {
             type: 'DateRange',

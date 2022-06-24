@@ -78,7 +78,7 @@ const RangeComponent = ({
                             onChange={event => {
                                 // Opdate value
                                 onChange({
-                                    from: event.target.value,
+                                    from: parseInt(event.target.value, 10),
                                     to: value.to,
                                 });
                             }}
@@ -108,7 +108,7 @@ const RangeComponent = ({
                                 // Opdate value
                                 onChange({
                                     from: value.from,
-                                    to: event.target.value,
+                                    to: parseInt(event.target.value, 10),
                                 });
                             }}
                             placeholder={
@@ -122,7 +122,6 @@ const RangeComponent = ({
                                     'input-defaults-error': error,
                                 },
                             ])}
-                            {...rest}
                         />
                     </div>
                 </div>

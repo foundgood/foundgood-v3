@@ -153,10 +153,10 @@ const ChildCollectionComponent = ({ title, item, collection, methods }) => {
     }, [collection?.items(item)]);
 
     useEffect(() => {
-        if (updateId) {
+        if (updateId && !editModalState.isSaving) {
             methods?.edit.setFieldValues(editForm, updateId);
         }
-    }, [updateId, editModalState]);
+    }, [updateId]);
 
     // ///////////////////
     // RENDER
@@ -279,8 +279,12 @@ const ChildCollectionComponent = ({ title, item, collection, methods }) => {
                                             iconType="stroke"
                                             className="!px-8"
                                             action={() => {
+                                                setUpdateId(null);
+                                                addForm.reset();
                                                 editModalOpen();
-                                                setUpdateId(childItem.Id);
+                                                setTimeout(() => {
+                                                    setUpdateId(childItem.Id);
+                                                }, 0);
                                             }}
                                         />
                                     )}
