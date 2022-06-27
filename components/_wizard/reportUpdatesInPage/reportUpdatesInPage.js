@@ -56,6 +56,18 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
     // TODO Get Metrics
     const metrics = [];
 
+    // Get metrics tags
+    const metricTags = items
+        .map(x => utilities.activitySuccessMetrics.getFromActivityId(x.Id))
+        .flat()
+        .map(metric =>
+            utilities.tags.getFromRelationKeyId(
+                'Initiative_Activity_Success_Metric__c',
+                metric.Id
+            )
+        )
+        .flat();
+
     // Get Status
     const statusesBulk = currentReportDetails.filter(detail =>
         items.map(x => x.Id).includes(detail[itemRelationKey])
@@ -76,6 +88,7 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
         tags.length > 0,
         reflections.length > 0,
         metrics.length > 0,
+        metricTags.length > 0,
         statuses > 0,
     ].some(x => x);
 
@@ -104,10 +117,12 @@ const ReportUpdatesInPageComponent = ({ items, itemRelationKey }) => {
                     </div>
                 )}
                 {/* Tags */}
-                {tags.length > 0 && (
+                {(tags.length > 0 || metricTags.length > 0) && (
                     <div className="flex items-center space-x-8">
                         <FiTag className="w-24 h-24" />
-                        <span className="relative top-2">{tags.length}</span>
+                        <span className="relative top-2">
+                            {tags.length + metricTags.length}
+                        </span>
                     </div>
                 )}
 

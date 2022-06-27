@@ -71,7 +71,7 @@ const ReportUpdateComponent = ({
 
     async function submitTagging(formData) {
         // Collect tagging data based on selects
-        let tagsData = [];
+        let tags = [];
         for (const taggingCollection of taggingCollections) {
             // Get selectLists from formData from dynamic naming
             const taggingSelect =
@@ -79,53 +79,31 @@ const ReportUpdateComponent = ({
 
             // Add tags to tagsData from each of the selectLists
             for (const tag of taggingSelect) {
-                tagsData.push({
-                    [tagging.relationKey]: tagging.item.Id,
+                tags.push({
+                    [tagging.relationKey]: tagging.item?.Id,
                     Tag__c: tag.selectValue,
                 });
             }
         }
 
-        // Based on current tags, extract new tags and tags to be deleted in two different arrays
-        // Tags to be added = if they do not exist in currentTags
-        const tagsToBeAdded =
-            currentTags.length > 0
-                ? tagsData.filter(
-                      tag =>
-                          !currentTags.map(x => x.Tag__c).includes(tag.Tag__c)
-                  )
-                : tagsData;
-
-        // Tags that remains = if they exist in currentTags (helper)
-        const tagsToRemain = tagsData.filter(tag =>
-            currentTags.map(x => x.Tag__c).includes(tag.Tag__c)
-        );
-
-        // Tags to be deleted = if a currentTag is not part of tagsToRemain
-        const tagsToBeDeleted = currentTags
-            .filter(
-                tag => !tagsToRemain.map(x => x.Tag__c).includes(tag.Tag__c)
-            )
-            // Format to fit elseware
-            .map(tag => tag.Id);
-
-        // Delete from store
-        tagsToBeDeleted.forEach(tagId =>
-            utilities.removeInitiativeData('_tags', tagId)
-        );
-
-        // Create/delete initiative tags (POST)
-        const initiativeTagsData = await ewCreate(
+        // Bulk update (create/delete) initiative tags (POST)
+        const { addedTags, removedTags } = await ewCreate(
             'initiative-tag/initiative-tags-bulk',
             {
                 Initiative__c: utilities.initiative.get().Id,
-                tags: tagsToBeAdded,
-                removeTags: tagsToBeDeleted,
+                tags,
+                relationKey: tagging.relationKey,
+                parentId: tagging.item?.Id,
             }
         );
 
+        // Delete from store
+        removedTags.forEach(tagId =>
+            utilities.removeInitiativeData('_tags', tagId)
+        );
+
         // Update tags in initiative with new tags
-        Object.values(initiativeTagsData).forEach(tagData =>
+        Object.values(addedTags).forEach(tagData =>
             utilities.updateInitiativeData('_tags', tagData)
         );
     }
@@ -175,6 +153,49 @@ const ReportUpdateComponent = ({
                         data
                     );
                 })
+            );
+        }
+    }
+
+    async function submitMetricsTagging(formData) {
+        // Collect tagging data based on selects for each of the metrics
+        let tags = [];
+        for (const metric of currentMetrics) {
+            for (const taggingCollection of taggingCollections) {
+                // Get selectLists from formData from dynamic naming
+                const taggingSelect =
+                    formData[
+                        `metricTaggingSelect-${taggingCollection.Tag__c}-${metric.Id}`
+                    ];
+
+                // Add tags to tagsData from each of the selectLists
+                for (const tag of taggingSelect) {
+                    tags.push({
+                        Initiative_Activity_Success_Metric__c: metric.Id,
+                        Tag__c: tag.selectValue,
+                    });
+                }
+            }
+
+            // Bulk update (create/delete) initiative tags (POST)
+            const { addedTags, removedTags } = await ewCreate(
+                'initiative-tag/initiative-tags-bulk',
+                {
+                    Initiative__c: utilities.initiative.get().Id,
+                    tags,
+                    relationKey: 'Initiative_Activity_Success_Metric__c',
+                    parentId: metric.Id,
+                }
+            );
+
+            // Delete from store
+            removedTags.forEach(tagId =>
+                utilities.removeInitiativeData('_tags', tagId)
+            );
+
+            // Update tags in initiative with new tags
+            Object.values(addedTags).forEach(tagData =>
+                utilities.updateInitiativeData('_tags', tagData)
             );
         }
     }
@@ -258,6 +279,7 @@ const ReportUpdateComponent = ({
             // Success Metrics
             if (metrics) {
                 await submitMetrics(formData);
+                await submitMetricsTagging(formData);
             }
 
             // Reflection
@@ -339,6 +361,15 @@ const ReportUpdateComponent = ({
         metrics.item?.Id
     );
 
+    const currentMetricsTags = currentMetrics
+        .map(metric =>
+            utilities.tags.getFromRelationKeyId(
+                'Initiative_Activity_Success_Metric__c',
+                metric.Id
+            )
+        )
+        .flat();
+
     // ///////////////////
     // DATA - REFLECTION
     // ///////////////////
@@ -359,6 +390,7 @@ const ReportUpdateComponent = ({
     const hasUpdate = [
         currentReflection?.Description__c,
         currentTags.length > 0,
+        currentMetricsTags.length > 0,
         currentStatusCount > 0,
     ].some(x => x);
 
@@ -386,23 +418,27 @@ const ReportUpdateComponent = ({
                   listMaxLength: 3,
                   async options() {
                       // Get all tag options
-                      const tagOptions = await ewGetAsync(
-                          'tag/tag-collection',
-                          {
-                              id: taggingCollection.Tag__r?.Id,
-                              type: tagging.type,
-                          }
+                      const tagsData = await Promise.all(
+                          tagging.types.map(tagType =>
+                              ewGetAsync('tag/tag-collection', {
+                                  id: taggingCollection.Tag__r?.Id,
+                                  type: tagType,
+                              })
+                          )
                       );
 
+                      // Map to array
+                      const allTags = tagsData
+                          .map(tags => Object.values(tags?.data))
+                          .flat();
+
                       // Get default tags (no category)
-                      const tagOptionsWithoutCategory = Object.values(
-                          tagOptions?.data
-                      ).filter(tag => !tag.Category__c);
+                      const tagOptionsWithoutCategory = allTags.filter(
+                          tag => !tag.Category__c
+                      );
 
                       // Get tags based on initiative category
-                      const tagOptionsWithInitiativeCategory = Object.values(
-                          tagOptions?.data
-                      ).filter(
+                      const tagOptionsWithInitiativeCategory = allTags.filter(
                           tag =>
                               tag.Category__c ===
                               utilities.initiative.get()?.Category__c
@@ -463,7 +499,7 @@ const ReportUpdateComponent = ({
             : []),
 
         // Metrics
-        ...(metrics
+        ...(metrics && currentMetrics?.length > 0
             ? [
                   {
                       type: 'Metrics',
@@ -477,6 +513,7 @@ const ReportUpdateComponent = ({
                           }),
                           {}
                       ),
+                      taggingCollections,
                   },
               ]
             : []),
@@ -520,11 +557,13 @@ const ReportUpdateComponent = ({
                             </div>
                         )}
                         {/* Tags */}
-                        {currentTags.length > 0 && (
+                        {(currentTags.length > 0 ||
+                            currentMetricsTags.length > 0) && (
                             <div className="flex items-center space-x-8">
                                 <FiTag className="w-24 h-24" />
                                 <span className="relative top-2">
-                                    {currentTags.length}
+                                    {currentTags.length +
+                                        currentMetricsTags.length}
                                 </span>
                             </div>
                         )}
@@ -584,7 +623,7 @@ ReportUpdateComponent.propTypes = {
     tagging: t.shape({
         item: t.object.isRequired,
         relationKey: t.string.isRequired,
-        type: t.string.isRequired,
+        types: t.arrayOf(t.string),
     }),
 };
 

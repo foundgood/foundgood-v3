@@ -24,7 +24,7 @@ const SectionComponent = ({ name, theme = 'teal' }) => {
     return (
         <div
             className={cc([
-                'border-t-[3px]',
+                'border-t-[3px] !-mb-16',
                 {
                     '!-mb-10': !name,
                     'border-teal-10': isTeal,

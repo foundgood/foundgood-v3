@@ -436,7 +436,18 @@ const ActivitiesDisseminationComponent = () => {
                                 childCollection: (
                                     <ActivitySuccessMetrics {...{ item }} />
                                 ),
-                                reportUpdate: <Activity {...{ item }} />,
+                                reportUpdate: (
+                                    <Activity
+                                        {...{
+                                            item,
+                                            tagTypes: [
+                                                CONSTANTS.TAGS.ACTIVITY,
+                                                CONSTANTS.TAGS
+                                                    .DISSEMINATION_ACTIVITY,
+                                            ],
+                                        }}
+                                    />
+                                ),
                             };
                         },
                     },

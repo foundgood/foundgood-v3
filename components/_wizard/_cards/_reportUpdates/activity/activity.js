@@ -10,7 +10,7 @@ import { useInitiativeDataStore } from 'utilities/store';
 // Components
 import { ReportUpdate } from 'components/_wizard/_cards';
 
-const ActivityComponent = ({ item }) => {
+const ActivityComponent = ({ item, tagTypes = [] }) => {
     // ///////////////////
     // STORES
     // ///////////////////
@@ -34,7 +34,7 @@ const ActivityComponent = ({ item }) => {
                 tagging: {
                     item,
                     relationKey: 'Initiative_Activity__c',
-                    type: CONSTANTS.TAGS.ACTIVITY,
+                    types: tagTypes,
                 },
                 status: {
                     item,

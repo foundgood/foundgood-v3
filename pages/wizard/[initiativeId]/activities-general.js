@@ -274,7 +274,17 @@ const ActivitiesGeneralComponent = () => {
                                 childCollection: (
                                     <ActivitySuccessMetrics {...{ item }} />
                                 ),
-                                reportUpdate: <Activity {...{ item }} />,
+                                reportUpdate: (
+                                    <Activity
+                                        {...{
+                                            item,
+                                            tagTypes: [
+                                                CONSTANTS.TAGS.ACTIVITY,
+                                                CONSTANTS.TAGS.GENERAL_ACTIVITY,
+                                            ],
+                                        }}
+                                    />
+                                ),
                             };
                         },
                     },

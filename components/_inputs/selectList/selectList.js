@@ -21,6 +21,7 @@ const SelectListComponent = ({
     controller,
     defaultValue,
     disabled,
+    nested,
     label,
     listMaxLength,
     maxLength,
@@ -34,6 +35,7 @@ const SelectListComponent = ({
     subLabel,
     textLabel,
     textPlaceholder,
+    theme,
     missingOptionsLabel,
 }) => {
     // ///////////////////
@@ -184,14 +186,46 @@ const SelectListComponent = ({
     }, []);
 
     // ///////////////////
+    // THEMING
+    // ///////////////////
+
+    const isBlue = theme === 'blue';
+    const isTeal = theme === 'teal';
+
+    const isNested = nested;
+
+    // ///////////////////
     // RENDER
     // ///////////////////
 
     return (
         <label className="flex flex-col" htmlFor={name}>
-            {label && <span className="input-label">{label}</span>}
+            {label && (
+                <span
+                    className={cc([
+                        {
+                            't-h6': isNested,
+                            't-h5': !isNested,
+                            'text-blue-100': isBlue,
+                            'text-teal-100': isTeal,
+                        },
+                    ])}>
+                    {label}
+                </span>
+            )}
             {subLabel && (
-                <span className="mt-8 input-sublabel">{subLabel}</span>
+                <span
+                    className={cc([
+                        'mt-8',
+                        {
+                            't-sh6': isNested,
+                            't-small': !isNested,
+                            'text-blue-60': isBlue,
+                            'text-teal-60': isTeal,
+                        },
+                    ])}>
+                    {subLabel}
+                </span>
             )}
             <div className={cc(['flex flex-col', { 'mt-16': label }])}>
                 {missingOptions && <EmptyState label={missingOptionsLabel} />}
@@ -455,6 +489,7 @@ SelectListComponent.propTypes = {
             textValue: t.oneOfType([t.string, t.number]),
         })
     ),
+    nested: t.bool,
     options: t.oneOfType([
         t.func,
         t.arrayOf(
@@ -471,17 +506,20 @@ SelectListComponent.propTypes = {
     selectPlaceholder: t.string,
     textPlaceholder: t.string,
     required: t.bool,
+    theme: t.oneOf(['teal', 'blue']),
 };
 
 SelectListComponent.defaultProps = {
     options: [],
     defaultValue: [],
+    nested: false,
     showText: false,
     selectLabel: null,
     textLabel: null,
     listMaxLength: 5,
     required: false,
     setValue() {},
+    theme: 'teal',
 };
 
 export default SelectListComponent;
