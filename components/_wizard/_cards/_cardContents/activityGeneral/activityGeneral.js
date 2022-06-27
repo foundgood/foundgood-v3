@@ -57,8 +57,7 @@ const ActivityGeneralComponent = ({ item }) => {
 };
 
 ActivityGeneralComponent.propTypes = {
-    description: t.string,
-    location: t.string,
+    item: t.object,
 };
 
 ActivityGeneralComponent.defaultProps = {};

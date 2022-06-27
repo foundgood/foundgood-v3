@@ -296,7 +296,6 @@ const ActivitiesDisseminationComponent = () => {
                                   ),
                                   maxLength: 30,
                               },
-
                               {
                                   type: 'Select',
                                   name: 'Publication_Year__c',

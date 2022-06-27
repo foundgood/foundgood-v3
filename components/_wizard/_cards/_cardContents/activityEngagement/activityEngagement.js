@@ -72,8 +72,7 @@ const ActivityEngagementComponent = ({ item }) => {
 };
 
 ActivityEngagementComponent.propTypes = {
-    description: t.string,
-    location: t.string,
+    item: t.object,
 };
 
 ActivityEngagementComponent.defaultProps = {};

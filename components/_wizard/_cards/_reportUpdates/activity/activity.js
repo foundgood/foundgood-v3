@@ -30,7 +30,7 @@ const ActivityComponent = ({ item, tagTypes = [] }) => {
     return (
         <ReportUpdate
             {...{
-                title: label('ReportUpdateModalActivityHeading'),
+                title: label('ReportUpdateModalActivitiesHeading'),
                 tagging: {
                     item,
                     relationKey: 'Initiative_Activity__c',

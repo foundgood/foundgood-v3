@@ -329,10 +329,12 @@ const ReportUpdateComponent = ({
     );
 
     // Get current tags if any
-    const currentTags = utilities.tags.getFromRelationKeyId(
-        tagging.relationKey,
-        tagging.item?.Id
-    );
+    const currentTags = tagging
+        ? utilities.tags.getFromRelationKeyId(
+              tagging?.relationKey,
+              tagging?.item?.Id
+          )
+        : [];
 
     // ///////////////////
     // DATA - STATUS
@@ -357,9 +359,9 @@ const ReportUpdateComponent = ({
     // ///////////////////
 
     // Get current metrics
-    const currentMetrics = utilities.activitySuccessMetrics.getFromActivityId(
-        metrics.item?.Id
-    );
+    const currentMetrics = metrics
+        ? utilities.activitySuccessMetrics.getFromActivityId(metrics?.item?.Id)
+        : [];
 
     const currentMetricsTags = currentMetrics
         .map(metric =>

@@ -102,8 +102,7 @@ const ActivityTeamEducationComponent = ({ item }) => {
 };
 
 ActivityTeamEducationComponent.propTypes = {
-    description: t.string,
-    location: t.string,
+    item: t.object,
 };
 
 ActivityTeamEducationComponent.defaultProps = {};

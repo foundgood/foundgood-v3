@@ -70,8 +70,7 @@ const ActivityEvaluationComponent = ({ item }) => {
 };
 
 ActivityEvaluationComponent.propTypes = {
-    description: t.string,
-    location: t.string,
+    item: t.object,
 };
 
 ActivityEvaluationComponent.defaultProps = {};

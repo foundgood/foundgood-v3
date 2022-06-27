@@ -6,10 +6,17 @@ import t from 'prop-types';
 
 // Utilities
 import { useLabels } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 
 const ActivityPhysicalComponent = ({ item }) => {
+    // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { utilities } = useInitiativeDataStore();
+
     // ///////////////////
     // HOOKS
     // ///////////////////
@@ -28,7 +35,9 @@ const ActivityPhysicalComponent = ({ item }) => {
 
     const otherLocation = item?.Additional_Location_Information__c;
 
-    const regulations = []; // TODO  utilities.activityRegulations.getFromActivityId(Id)
+    const regulations = utilities.activityRegulations.getFromActivityId(
+        item?.id
+    );
 
     // ///////////////////
     // RENDER
@@ -119,8 +128,7 @@ const ActivityPhysicalComponent = ({ item }) => {
 };
 
 ActivityPhysicalComponent.propTypes = {
-    description: t.string,
-    location: t.string,
+    item: t.object,
 };
 
 ActivityPhysicalComponent.defaultProps = {};

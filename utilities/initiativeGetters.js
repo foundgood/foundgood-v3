@@ -210,6 +210,10 @@ function initiativeGetters(getter, constants) {
             get(id) {
                 return getter().initiative._goals[id] || {};
             },
+            // Returns array
+            getAll() {
+                return Object.values(getter().initiative._goals);
+            },
             // Returns object
             getTypePredefined() {
                 return (
@@ -286,6 +290,69 @@ function initiativeGetters(getter, constants) {
             getFromFunderId(funderId) {
                 return Object.values(getter().initiative._reports).filter(
                     item => item.Funder_Report__c === funderId
+                );
+            },
+        },
+        results: {
+            // Returns object
+            get(id) {
+                return getter().initiative._results[id] || {};
+            },
+            // Returns array
+            getAll() {
+                return Object.values(getter().initiative._results);
+            },
+            // Returns array
+            getTypeCustomOutput() {
+                return Object.values(getter().initiative._results).filter(
+                    item => constants.RESULTS.CUSTOM_OUTPUT === item.Type__c
+                );
+            },
+            // Returns array
+            getTypeCustomOutcome() {
+                return Object.values(getter().initiative._results).filter(
+                    item => constants.RESULTS.CUSTOM_OUTCOME === item.Type__c
+                );
+            },
+            // Returns array
+            getTypeResearch() {
+                return Object.values(getter().initiative._results).filter(
+                    item => constants.RESULTS.RESEARCH === item.Type__c
+                );
+            },
+            // Returns array
+            getTypeKnowledge() {
+                return Object.values(getter().initiative._results).filter(
+                    item => constants.RESULTS.KNOWLEDGE === item.Type__c
+                );
+            },
+            // Returns array
+            getTypeInfluenceOnPolicy() {
+                return Object.values(getter().initiative._results).filter(
+                    item =>
+                        constants.RESULTS.INFLUENCE_ON_POLICY === item.Type__c
+                );
+            },
+            // Returns array
+            getTypeInnovation() {
+                return Object.values(getter().initiative._results).filter(
+                    item => constants.RESULTS.INNOVATION === item.Type__c
+                );
+            },
+        },
+        resultActivities: {
+            // Returns array
+            getFromResultId(resultId) {
+                return Object.values(
+                    getter().initiative._resultActivities
+                ).filter(item => item.Initiative_Result__c === resultId);
+            },
+        },
+        resultGoals: {
+            // Returns array
+            getFromResultId(resultId) {
+                return Object.values(getter().initiative._resultGoals).filter(
+                    item => item.Initiative_Result__c === resultId
                 );
             },
         },

@@ -354,21 +354,136 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-    indicators: {
-        baseUrl: 'indicators',
+    resultsKnowledge: {
+        baseUrl: 'results-knowledge',
         url(initiativeId) {
-            return `/initiative/${initiativeId}/indicators`;
+            return `/initiative/${initiativeId}/results-knowledge`;
         },
-        title: 'InitiativeViewIndicatorsHeading',
+        title: 'InitiativeViewResultsKnowledgeHeading',
         labels: {
             form: {
-                title: 'InitiativeWizardIndicatorsHeading',
-                preamble: 'InitiativeWizardIndicatorsSubheading',
+                title: 'InitiativeWizardResultsKnowledgeHeading',
+                preamble: 'InitiativeWizardResultsKnowledgeSubheading',
             },
             help: {
-                why: 'InitiativeWizardIndicatorsHelpWhy',
-                what: 'InitiativeWizardIndicatorsHelpWhat',
-                guide: 'InitiativeWizardIndicatorsHelpGuide',
+                why: 'InitiativeWizardResultsKnowledgeHelpWhy',
+                what: 'InitiativeWizardResultsKnowledgeHelpWhat',
+                guide: 'InitiativeWizardResultsKnowledgeHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    resultsResearch: {
+        baseUrl: 'results-research',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/results-research`;
+        },
+        title: 'InitiativeViewResultsResearchHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardResultsResearchHeading',
+                preamble: 'InitiativeWizardResultsResearchSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardResultsResearchHelpWhy',
+                what: 'InitiativeWizardResultsResearchHelpWhat',
+                guide: 'InitiativeWizardResultsResearchHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    resultsInfluence: {
+        baseUrl: 'results-influence',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/results-influence`;
+        },
+        title: 'InitiativeViewResultsInfluenceHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardResultsInfluenceHeading',
+                preamble: 'InitiativeWizardResultsInfluenceSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardResultsInfluenceHelpWhy',
+                what: 'InitiativeWizardResultsInfluenceHelpWhat',
+                guide: 'InitiativeWizardResultsInfluenceHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    resultsInnovation: {
+        baseUrl: 'results-innovation',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/results-innovation`;
+        },
+        title: 'InitiativeViewResultsInnovationHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardResultsInnovationHeading',
+                preamble: 'InitiativeWizardResultsInnovationSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardResultsInnovationHelpWhy',
+                what: 'InitiativeWizardResultsInnovationHelpWhat',
+                guide: 'InitiativeWizardResultsInnovationHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    resultsOutput: {
+        baseUrl: 'results-output',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/results-output`;
+        },
+        title: 'InitiativeViewResultsOutputHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardResultsOutputHeading',
+                preamble: 'InitiativeWizardResultsOutputSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardResultsOutputHelpWhy',
+                what: 'InitiativeWizardResultsOutputHelpWhat',
+                guide: 'InitiativeWizardResultsOutputHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    resultsOutcome: {
+        baseUrl: 'results-outcome',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/results-outcome`;
+        },
+        title: 'InitiativeViewResultsOutcomeHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardResultsOutcomeHeading',
+                preamble: 'InitiativeWizardResultsOutcomeSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardResultsOutcomeHelpWhy',
+                what: 'InitiativeWizardResultsOutcomeHelpWhat',
+                guide: 'InitiativeWizardResultsOutcomeHelpGuide',
             },
         },
         permissions: {
@@ -506,7 +621,12 @@ const initiativeStructures = {
                 d.activitiesTeamEducation,
                 d.activitiesEvaluation,
                 d.activitiesGeneral,
-                d.indicators,
+                d.resultsKnowledge,
+                d.resultsResearch,
+                d.resultsInfluence,
+                d.resultsInnovation,
+                d.resultsOutput,
+                d.resultsOutcome,
             ],
         },
         {
