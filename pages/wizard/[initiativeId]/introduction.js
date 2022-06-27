@@ -69,7 +69,6 @@ const IntroductionComponent = ({ pageProps }) => {
                     'initiative/initiative',
                     {
                         Name: '___',
-                        Configuration_Type__c: 'Reporting',
                     }
                 );
 
