@@ -420,105 +420,105 @@ const ProjectComponent = ({ pageProps }) => {
                     {/* Contacts */}
                     <Contacts />
                     {/* Funding */}
-                    {totalAmount > 0 && (
-                        <SectionWrapper className="bg-white rounded-8">
-                            <div className="flex justify-between">
-                                <h2 className="t-h3">
-                                    {label(
-                                        'InitiativeViewFundersGrantsHeading'
-                                    )}
-                                </h2>
-                                <UpdateButton
-                                    {...{
-                                        rules: getPermissionRules(
-                                            'initiative',
-                                            'funders',
-                                            'update'
-                                        ),
-                                        baseUrl: 'funders',
-                                    }}
-                                />
-                            </div>
-                            {donutData && (
-                                <div className="flex flex-col items-center p-16 md:flex-row">
-                                    <div className="w-full p-32 md:w-1/2">
-                                        {/* Donut chart */}
-                                        <div
-                                            className="pie"
-                                            style={pieChartStyle}>
-                                            <div className="absolute w-full -mt-16 text-center top-1/2">
-                                                <p className="t-sh7 text-blue-60">
-                                                    {label(
-                                                        'InitiativeViewTotalFunded'
-                                                    )}
-                                                </p>
-                                                <p className="t-h6">
-                                                    {currency}{' '}
-                                                    {totalAmount?.toLocaleString(
-                                                        'de-DE'
-                                                    )}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="md:w-1/2">
-                                        {/* Headline */}
-                                        <div className="t-caption-bold">
-                                            {label(
-                                                'InitiativeViewFundingOverview'
-                                            )}
-                                        </div>
-                                        {/* List of funders */}
-                                        {donutData?.map((item, index) => (
+                    <SectionWrapper className="bg-white rounded-8">
+                        <div className="flex justify-between">
+                            <h2 className="t-h3">
+                                {label('InitiativeViewFundersGrantsHeading')}
+                            </h2>
+                            <UpdateButton
+                                {...{
+                                    rules: getPermissionRules(
+                                        'initiative',
+                                        'funders',
+                                        'update'
+                                    ),
+                                    baseUrl: 'funders',
+                                }}
+                            />
+                        </div>
+                        {totalAmount > 0 && (
+                            <>
+                                {donutData && (
+                                    <div className="flex flex-col items-center p-16 md:flex-row">
+                                        <div className="w-full p-32 md:w-1/2">
+                                            {/* Donut chart */}
                                             <div
-                                                key={`d-${index}`}
-                                                className="flex mt-8 t-caption">
-                                                <span
-                                                    className={`w-16 h-16 mr-8 rounded-2 ${item.color}`}></span>
-                                                {`${item.name} - ${
-                                                    item.currency
-                                                } ${item.amount?.toLocaleString(
-                                                    'de-DE'
-                                                )}`}
+                                                className="pie"
+                                                style={pieChartStyle}>
+                                                <div className="absolute w-full -mt-16 text-center top-1/2">
+                                                    <p className="t-sh7 text-blue-60">
+                                                        {label(
+                                                            'InitiativeViewTotalFunded'
+                                                        )}
+                                                    </p>
+                                                    <p className="t-h6">
+                                                        {currency}{' '}
+                                                        {totalAmount?.toLocaleString(
+                                                            'de-DE'
+                                                        )}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                            <div className="mt-32 overflow-x-scroll md:overflow-hidden">
-                                {/* BUG: min-width breaks the margins on mobile! min-w-[680px] */}
-                                <div className="mt-32 min-w-[768px]">
-                                    {/* Table header */}
-                                    <div className="flex pb-8">
-                                        <div className="w-full t-footnote-bold">
-                                            {label(
-                                                'InitiativeViewFunderTableColumnHeadersFunder'
-                                            )}
                                         </div>
-                                        <div className="w-full t-footnote-bold">
-                                            {label(
-                                                'InitiativeViewFunderTableColumnHeadersType'
-                                            )}
-                                        </div>
-                                        <div className="w-full t-footnote-bold">
-                                            {label(
-                                                'InitiativeViewFunderTableColumnHeadersAmount'
-                                            )}
-                                        </div>
-                                        <div className="w-full t-footnote-bold">
-                                            {label(
-                                                'InitiativeViewFunderTableColumnHeadersApplicationId'
-                                            )}
-                                        </div>
-                                        <div className="w-full t-footnote-bold">
-                                            {label(
-                                                'InitiativeViewFunderTableColumnHeadersGrantPeriod'
-                                            )}
+                                        <div className="md:w-1/2">
+                                            {/* Headline */}
+                                            <div className="t-caption-bold">
+                                                {label(
+                                                    'InitiativeViewFundingOverview'
+                                                )}
+                                            </div>
+                                            {/* List of funders */}
+                                            {donutData?.map((item, index) => (
+                                                <div
+                                                    key={`d-${index}`}
+                                                    className="flex mt-8 t-caption">
+                                                    <span
+                                                        className={`w-16 h-16 mr-8 rounded-2 ${item.color}`}></span>
+                                                    {`${item.name} - ${
+                                                        item.currency
+                                                    } ${item.amount?.toLocaleString(
+                                                        'de-DE'
+                                                    )}`}
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
-                                    {/* Table Rows */}
-                                    {Object.values(initiativeData._funders).map(
-                                        (item, index) => (
+                                )}
+                                <div className="mt-32 overflow-x-scroll md:overflow-hidden">
+                                    {/* BUG: min-width breaks the margins on mobile! min-w-[680px] */}
+                                    <div className="mt-32 min-w-[768px]">
+                                        {/* Table header */}
+                                        <div className="flex pb-8">
+                                            <div className="w-full t-footnote-bold">
+                                                {label(
+                                                    'InitiativeViewFunderTableColumnHeadersFunder'
+                                                )}
+                                            </div>
+                                            <div className="w-full t-footnote-bold">
+                                                {label(
+                                                    'InitiativeViewFunderTableColumnHeadersType'
+                                                )}
+                                            </div>
+                                            <div className="w-full t-footnote-bold">
+                                                {label(
+                                                    'InitiativeViewFunderTableColumnHeadersAmount'
+                                                )}
+                                            </div>
+                                            <div className="w-full t-footnote-bold">
+                                                {label(
+                                                    'InitiativeViewFunderTableColumnHeadersApplicationId'
+                                                )}
+                                            </div>
+                                            <div className="w-full t-footnote-bold">
+                                                {label(
+                                                    'InitiativeViewFunderTableColumnHeadersGrantPeriod'
+                                                )}
+                                            </div>
+                                        </div>
+                                        {/* Table Rows */}
+                                        {Object.values(
+                                            initiativeData._funders
+                                        ).map((item, index) => (
                                             <div
                                                 key={`f-${index}`}
                                                 className="flex pt-16 pb-16 border-t-2 border-amber-10">
@@ -549,16 +549,17 @@ const ProjectComponent = ({ pageProps }) => {
                                                     ).format('DD.MM.YYYY')}
                                                 </div>
                                             </div>
-                                        )
-                                    )}
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Empty state - No funders */}
-                            {Object.values(initiativeData._funders).length <
-                                1 && <SectionEmpty type="initiative" />}
-                        </SectionWrapper>
-                    )}
+                                {/* Empty state - No funders */}
+                                {Object.values(initiativeData._funders).length <
+                                    1 && <SectionEmpty type="initiative" />}
+                            </>
+                        )}
+                    </SectionWrapper>
+
                     {/* Goals */}
                     <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">
