@@ -57,6 +57,7 @@ const SelectListComponent = ({
     // STATE
     // ///////////////////
 
+    const [asyncOptionsFetched, setAsyncOptionsFetched] = useState(false);
     const [loadedOptions, setLoadedOptions] = useState([]);
     const [loadingOptions, setLoadingOptions] = useState(false);
     const [list, setList] = useState([
@@ -132,18 +133,22 @@ const SelectListComponent = ({
     // ///////////////////
 
     useEffect(() => {
-        // Assume normal options
-        if (Array.isArray(options)) {
-            setLoadedOptions(options);
-        }
-        // Or perhaps async options
-        else {
-            async function getOptions() {
-                setLoadingOptions(true);
-                setLoadedOptions(await options());
-                setLoadingOptions(false);
+        if (!asyncOptionsFetched) {
+            // Assume normal options
+            if (Array.isArray(options)) {
+                setLoadedOptions(options);
+                setAsyncOptionsFetched(true);
             }
-            getOptions();
+            // Or perhaps async options
+            else {
+                async function getOptions() {
+                    setLoadingOptions(true);
+                    setLoadedOptions(await options());
+                    setLoadingOptions(false);
+                    setAsyncOptionsFetched(true);
+                }
+                getOptions();
+            }
         }
     }, [options]);
 
@@ -183,7 +188,7 @@ const SelectListComponent = ({
                 }))
             );
         }
-    }, []);
+    }, [loadedOptions]);
 
     // ///////////////////
     // THEMING
@@ -480,6 +485,7 @@ const AddButton = ({ list, listMaxLength, options, setList, value }) => {
 };
 
 SelectListComponent.propTypes = {
+    controller: t.object.isRequired,
     name: t.string,
     label: t.string,
     subLabel: t.string,
@@ -510,6 +516,7 @@ SelectListComponent.propTypes = {
 };
 
 SelectListComponent.defaultProps = {
+    controller: null,
     options: [],
     defaultValue: [],
     nested: false,

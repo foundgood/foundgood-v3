@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
@@ -22,7 +22,7 @@ import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
 import Button from 'components/button';
 import WizardModal from 'components/_modals/wizardModal';
-import { InputWrapper, Select, LongText } from 'components/_inputs';
+import { InputWrapper, FormFields } from 'components/_inputs';
 import CollaboratorCard from 'components/_wizard/collaboratorCard';
 import NoReflections from 'components/_wizard/noReflections';
 
@@ -39,7 +39,7 @@ const ApplicantsComponent = ({ pageProps }) => {
 
     const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label, object, pickList } = useLabels();
-    const { ewGet, ewCreateUpdateWrapper } = useElseware();
+    const { ewGetAsync, ewCreateUpdateWrapper } = useElseware();
     const {
         submitMultipleNoReflections,
         submitMultipleReflections,
@@ -68,7 +68,6 @@ const ApplicantsComponent = ({ pageProps }) => {
 
     const mainForm = useForm();
     const reflectionForm = useForm();
-    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
     // SUBMIT
@@ -133,11 +132,6 @@ const ApplicantsComponent = ({ pageProps }) => {
     // DATA
     // ///////////////////
 
-    // Get data for form
-    const { data: accountGrantees } = ewGet('account/account', {
-        type: 'grantee',
-    });
-
     // Current report details
     const currentReportDetails = utilities.reportDetails.getFromReportId(
         REPORT_ID
@@ -176,6 +170,63 @@ const ApplicantsComponent = ({ pageProps }) => {
         });
         mainForm.setValue('Description__c', Description__c);
     }, [updateId, modalIsOpen]);
+
+    // ///////////////////
+    // FIELDS
+    // ///////////////////
+
+    const fields = [
+        {
+            type: 'Select',
+            name: 'Account__c',
+            label: object.label('Initiative_Collaborator__c.Account__c'),
+            subLabel: object.helpText('Initiative_Collaborator__c.Account__c'),
+            required: true,
+            async options() {
+                // Get data for form
+                const { data: accountGrantees } = await ewGetAsync(
+                    'account/account',
+                    {
+                        type: 'grantee',
+                    }
+                );
+
+                return Object.values(accountGrantees).map(item => ({
+                    label: item.Name,
+                    value: item.Id,
+                }));
+            },
+        },
+        ...(utilities.collaborators.get(updateId)?.Type__c !==
+        CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR
+            ? [
+                  {
+                      type: 'Select',
+                      name: 'Type__c',
+                      label: object.label('Initiative_Collaborator__c.Type__c'),
+                      subLabel: object.helpText(
+                          'Initiative_Collaborator__c.Type__c'
+                      ),
+                      required: true,
+                      options: valuePermissions(
+                          {
+                              'Main applicant': ['super'],
+                              'Additional collaborator': ['fake-one-to-hide'],
+                          },
+                          pickList('Initiative_Collaborator__c.Type__c')
+                      ),
+                  },
+              ]
+            : []),
+        {
+            type: 'LongText',
+            name: 'Description__c',
+            label: object.label('Initiative_Collaborator__c.Description__c'),
+            subLabel: object.helpText(
+                'Initiative_Collaborator__c.Description__c'
+            ),
+        },
+    ];
 
     // ///////////////////
     // RENDER
@@ -244,63 +295,11 @@ const ApplicantsComponent = ({ pageProps }) => {
                 isSaving={modalIsSaving}
                 onSave={mainForm.handleSubmit(submit)}>
                 <InputWrapper>
-                    <Select
-                        name="Account__c"
-                        label={object.label(
-                            'Initiative_Collaborator__c.Account__c'
-                        )}
-                        subLabel={object.helpText(
-                            'Initiative_Collaborator__c.Account__c'
-                        )}
-                        placeholder={label('FormCaptureSelectEmpty')}
-                        options={
-                            accountGrantees
-                                ? Object.values(accountGrantees?.data).map(
-                                      item => ({
-                                          label: item.Name,
-                                          value: item.Id,
-                                      })
-                                  )
-                                : []
-                        }
-                        required
-                        controller={mainForm.control}
-                    />
-                    {/* Hide if main applicant */}
-                    {utilities.collaborators.get(updateId)?.Type__c !==
-                        CONSTANTS.COLLABORATORS.MAIN_COLLABORATOR && (
-                        <Select
-                            name="Type__c"
-                            label={object.label(
-                                'Initiative_Collaborator__c.Type__c'
-                            )}
-                            subLabel={object.helpText(
-                                'Initiative_Collaborator__c.Type__c'
-                            )}
-                            placeholder={label('FormCaptureSelectEmpty')}
-                            options={valuePermissions(
-                                {
-                                    'Main applicant': ['super'],
-                                    'Additional collaborator': [
-                                        'fake-one-to-hide',
-                                    ],
-                                },
-                                pickList('Initiative_Collaborator__c.Type__c')
-                            )}
-                            required
-                            controller={mainForm.control}
-                        />
-                    )}
-                    <LongText
-                        name="Description__c"
-                        label={object.label(
-                            'Initiative_Collaborator__c.Description__c'
-                        )}
-                        subLabel={object.helpText(
-                            'Initiative_Collaborator__c.Description__c'
-                        )}
-                        placeholder={label('FormCaptureTextEntryEmpty')}
-                        controller={mainForm.control}
+                    <FormFields
+                        {...{
+                            fields,
+                            form: mainForm,
+                        }}
                     />
                 </InputWrapper>
             </WizardModal>

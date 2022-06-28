@@ -16,18 +16,17 @@ import EmptyState from './../emptyState';
 import { FiChevronDown } from 'react-icons/fi';
 
 const SelectComponent = ({
-    name,
-    label,
-    subLabel,
-    defaultValue,
-    placeholder,
-    options,
     controller,
-    required,
+    defaultValue,
     disabled,
-    setValue,
+    label,
     missingOptionsLabel,
-    ...rest
+    name,
+    options,
+    placeholder,
+    required,
+    setValue,
+    subLabel,
 }) => {
     // ///////////////////
     // HOOKS
@@ -48,6 +47,7 @@ const SelectComponent = ({
     // STATE
     // ///////////////////
 
+    const [asyncOptionsFetched, setAsyncOptionsFetched] = useState(false);
     const [loadingOptions, setLoadingOptions] = useState(false);
     const [loadedOptions, setLoadedOptions] = useState([]);
 
@@ -78,18 +78,22 @@ const SelectComponent = ({
     // ///////////////////
 
     useEffect(() => {
-        // Assume normal options
-        if (Array.isArray(options)) {
-            setLoadedOptions(options);
-        }
-        // Or perhaps async options
-        else {
-            async function getOptions() {
-                setLoadingOptions(true);
-                setLoadedOptions(await options());
-                setLoadingOptions(false);
+        if (!asyncOptionsFetched) {
+            // Assume normal options
+            if (Array.isArray(options)) {
+                setLoadedOptions(options);
+                setAsyncOptionsFetched(true);
             }
-            getOptions();
+            // Or perhaps async options
+            else {
+                async function getOptions() {
+                    setLoadingOptions(true);
+                    setLoadedOptions(await options());
+                    setLoadingOptions(false);
+                    setAsyncOptionsFetched(true);
+                }
+                getOptions();
+            }
         }
     }, [options]);
 
@@ -103,11 +107,9 @@ const SelectComponent = ({
     // Update value correctly when using setValue
     useEffect(() => {
         if (value && value.length > 0) {
-            setTimeout(() => {
-                setValue(name, value);
-            });
+            setValue(name, value);
         }
-    }, []);
+    }, [loadedOptions]);
 
     // ///////////////////
     // RENDER
@@ -134,7 +136,7 @@ const SelectComponent = ({
                         },
                     ])}>
                     <select
-                        ref={ref}
+                        ref={loadedOptions.length > 0 ? ref : null}
                         className={cc([
                             'input-defaults',
                             'appearance-none flex-grow pr-20 max-w-full',
@@ -143,8 +145,7 @@ const SelectComponent = ({
                             },
                         ])}
                         onChange={event => onChange(event)}
-                        disabled={disabled || loadedOptions.length === 0}
-                        {...rest}>
+                        disabled={disabled || loadedOptions.length === 0}>
                         <option default value="" className="hidden">
                             {getPlaceholder()}
                         </option>
@@ -159,6 +160,7 @@ const SelectComponent = ({
                                 </option>
                             ))}
                     </select>
+
                     <FiChevronDown className="absolute right-0 mr-10 pointer-events-none stroke-current" />
                 </div>
             )}
@@ -167,6 +169,7 @@ const SelectComponent = ({
 };
 
 SelectComponent.propTypes = {
+    controller: t.object.isRequired,
     name: t.string,
     label: t.string,
     defaultValue: t.string,
@@ -181,9 +184,11 @@ SelectComponent.propTypes = {
 };
 
 SelectComponent.defaultProps = {
-    options: [],
-    required: false,
-    setValue() {},
+    controller: null,
+    defaultValue: '',
+    disabled: false,
+    label: null,
+    missingOptionsLabel: null,
 };
 
 export default SelectComponent;
