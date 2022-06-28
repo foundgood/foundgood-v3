@@ -78,20 +78,19 @@ const SelectComponent = ({
     // ///////////////////
 
     useEffect(() => {
-        if (!asyncOptionsFetched) {
-            // Assume normal options
-            if (Array.isArray(options)) {
-                setLoadedOptions(options);
+        // Assume normal options
+        if (Array.isArray(options)) {
+            setLoadedOptions(options);
+        }
+        // Or perhaps async options
+        else {
+            async function getOptions() {
+                setLoadingOptions(true);
+                setLoadedOptions(await options());
+                setLoadingOptions(false);
                 setAsyncOptionsFetched(true);
             }
-            // Or perhaps async options
-            else {
-                async function getOptions() {
-                    setLoadingOptions(true);
-                    setLoadedOptions(await options());
-                    setLoadingOptions(false);
-                    setAsyncOptionsFetched(true);
-                }
+            if (!asyncOptionsFetched) {
                 getOptions();
             }
         }
