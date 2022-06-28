@@ -188,6 +188,7 @@ SelectComponent.defaultProps = {
     disabled: false,
     label: null,
     missingOptionsLabel: null,
+    setValue: () => {},
 };
 
 export default SelectComponent;

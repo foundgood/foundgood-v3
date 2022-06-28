@@ -59,7 +59,10 @@ const InviteContactsComponent = ({ contacts, organisations, form }) => {
             </h5>
             <ListComponent
                 {...{
-                    contactList: contacts,
+                    contactList: Object.values(contacts).reduce(
+                        (acc, item) => [...acc, ...item],
+                        []
+                    ),
                     organisations,
                     list,
                     setList,
