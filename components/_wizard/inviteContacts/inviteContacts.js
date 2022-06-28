@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 // Packages
 import cc from 'classcat';
 import t from 'prop-types';
-import Image from 'next/image';
 import { useController, useFormState } from 'react-hook-form';
 
 // Utilities
@@ -23,7 +22,6 @@ const InviteContactsComponent = ({ contacts, organisations, form }) => {
     // ///////////////////
 
     const { label } = useLabels();
-    const { getUserAccountId } = useUser();
 
     // ///////////////////
     // FORMS
@@ -45,19 +43,6 @@ const InviteContactsComponent = ({ contacts, organisations, form }) => {
     const [list, setList] = useState({});
 
     // ///////////////////
-    // DATA
-    // ///////////////////
-
-    const assigned = (contacts && contacts[getUserAccountId()]) || [];
-
-    const contactsClone = { ...contacts };
-    delete contactsClone[getUserAccountId()];
-    const additional = Object.values(contactsClone).reduce(
-        (acc, item) => [...acc, ...item],
-        []
-    );
-
-    // ///////////////////
     // RENDER
     // ///////////////////
 
@@ -69,28 +54,12 @@ const InviteContactsComponent = ({ contacts, organisations, form }) => {
                     'border-error': errors.contacts,
                 },
             ])}>
-            {/* Assigned */}
             <h5 className="mb-16 t-h5">
-                {label('InviteContactsHeadingAssigned')}
-            </h5>
-            <ListComponent
-                {...{
-                    contactList: assigned,
-                    organisations,
-                    list,
-                    setList,
-                    form,
-                    onChange,
-                }}
-            />
-
-            {/* Additional */}
-            <h5 className="mt-48 mb-16 t-h5">
                 {label('InviteContactsHeadingAdditional')}
             </h5>
             <ListComponent
                 {...{
-                    contactList: additional,
+                    contactList: contacts,
                     organisations,
                     list,
                     setList,

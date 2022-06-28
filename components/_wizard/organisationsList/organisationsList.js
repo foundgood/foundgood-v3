@@ -12,12 +12,12 @@ import { useLabels, useUser } from 'utilities/hooks';
 import Button from 'components/button';
 
 // Icons
-import { FiImage } from 'react-icons/fi';
+import { FiImage, FiTrash2, FiEdit2 } from 'react-icons/fi';
 
 const OrganisationsListComponent = ({
     collaborators = [],
     funders = [],
-    action,
+    methods,
 }) => {
     // ///////////////////
     // HOOKS
@@ -39,13 +39,13 @@ const OrganisationsListComponent = ({
                 {...{
                     organisations: collaborators,
                     organisationType: 'Initiative_Collaborator__c',
-                    action,
+                    methods,
                     noOrganisationsLabel: 'OrganisationsListNoCollaborators',
                 }}
             />
 
             {/* Funders List */}
-            <h5 className="mt-48 mb-16 t-h5">
+            <h5 className="mt-32 mb-16 t-h5">
                 {label('OrganisationsListHeadingFunders')}
             </h5>
 
@@ -53,7 +53,7 @@ const OrganisationsListComponent = ({
                 {...{
                     organisations: funders,
                     organisationType: 'Initiative_Funder__c',
-                    action,
+                    methods,
                     noOrganisationsLabel: 'OrganisationsListNoFunders',
                 }}
             />
@@ -64,7 +64,7 @@ const OrganisationsListComponent = ({
 const List = ({
     organisations = [],
     organisationType,
-    action,
+    methods,
     noOrganisationsLabel,
 }) => {
     // ///////////////////
@@ -97,15 +97,38 @@ const List = ({
                             </div>
                         )}
                         {getUserAccountId() !== organisation?.Account__c && (
-                            <Button
-                                theme="teal"
-                                className="!ml-auto"
-                                variant={'secondary'}
-                                action={() =>
-                                    action(organisation, organisationType)
-                                }>
-                                {label('ButtonEdit')}
-                            </Button>
+                            <div className="flex h-40 !ml-auto space-x-4">
+                                <Button
+                                    title={label('ButtonDelete')}
+                                    variant="tertiary"
+                                    theme="teal"
+                                    icon={FiTrash2}
+                                    iconPosition="center"
+                                    iconType="stroke"
+                                    className="!px-8"
+                                    action={() =>
+                                        methods?.delete(
+                                            organisation,
+                                            organisationType
+                                        )
+                                    }
+                                />
+                                <Button
+                                    title={label('ButtonEdit')}
+                                    variant="tertiary"
+                                    theme="teal"
+                                    icon={FiEdit2}
+                                    iconPosition="center"
+                                    iconType="stroke"
+                                    className="!px-8"
+                                    action={() =>
+                                        methods?.edit(
+                                            organisation,
+                                            organisationType
+                                        )
+                                    }
+                                />
+                            </div>
                         )}
                     </div>
                 ))
@@ -118,8 +141,22 @@ const List = ({
     );
 };
 
-OrganisationsListComponent.propTypes = {};
+OrganisationsListComponent.propTypes = {
+    collaborators: t.array.isRequired,
+    funders: t.array.isRequired,
+    methods: t.shape({
+        edit: t.func.isRequired,
+        delete: t.func.isRequired,
+    }),
+};
 
-OrganisationsListComponent.defaultProps = {};
+OrganisationsListComponent.defaultProps = {
+    collaborators: [],
+    funders: [],
+    methods: {
+        edit: null,
+        delete: null,
+    },
+};
 
 export default OrganisationsListComponent;

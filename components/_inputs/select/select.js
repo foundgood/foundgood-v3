@@ -91,7 +91,7 @@ const SelectComponent = ({
             }
             getOptions();
         }
-    }, []);
+    }, [options]);
 
     // Defaultvalue
     useEffect(() => {

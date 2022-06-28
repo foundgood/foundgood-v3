@@ -145,7 +145,7 @@ const SelectListComponent = ({
             }
             getOptions();
         }
-    }, []);
+    }, [options]);
 
     // Set value from beginning
     useEffect(() => {

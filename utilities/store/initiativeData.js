@@ -109,11 +109,11 @@ const constants = {
         REPORT_PUBLISHED: 'Published',
     },
     RESULTS: {
-        CUSTOM_OUTPUT: 'Custom output',
-        CUSTOM_OUTCOME: 'Custom outcome',
+        CUSTOM_OUTPUT: 'Custom Output',
+        CUSTOM_OUTCOME: 'Custom Outcome',
         RESEARCH: 'Research',
         KNOWLEDGE: 'Knowledge',
-        INFLUENCE_ON_POLICY: 'Influency on policy',
+        INFLUENCE_ON_POLICY: 'Influence On Policy',
         INNOVATION: 'Innovation',
     },
     TAGS: {
@@ -156,9 +156,7 @@ const constants = {
 const useInitiativeDataStore = create((set, get) => ({
     CONSTANTS: { ...constants },
 
-    initiative: {
-        ...defaultInitiative,
-    },
+    initiative: { ...defaultInitiative },
 
     utilities: {
         ...initiativeGetters(get, constants),
@@ -242,12 +240,7 @@ const useInitiativeDataStore = create((set, get) => ({
 
     reset() {
         set(() => ({
-            CONSTANTS: {
-                ...constants,
-            },
-            initiative: {
-                ...defaultInitiative,
-            },
+            initiative: defaultInitiative,
         }));
     },
 }));
