@@ -22,6 +22,7 @@ const InputModalComponent = ({
     onCancel,
     onSave,
     title,
+    children,
 }) => {
     // ///////////////////
     // HOOKS
@@ -47,13 +48,16 @@ const InputModalComponent = ({
             <div className="flex flex-col overflow-y-auto scrolling-touch max-h-[90vh] sm:max-h-[80vh] pb-32 p-2 overflow-x-hidden">
                 {title && <h3 className="mb-32 text-teal-100 t-h3">{title}</h3>}
                 <InputWrapper>
-                    <FormFields
-                        {...{
-                            fields,
-                            form,
-                        }}
-                    />
+                    {fields.length > 0 && (
+                        <FormFields
+                            {...{
+                                fields,
+                                form,
+                            }}
+                        />
+                    )}
                 </InputWrapper>
+                {children}
             </div>
 
             {/* Modal actions */}

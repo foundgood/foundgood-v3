@@ -149,7 +149,7 @@ const SelectComponent = ({
                             {getPlaceholder()}
                         </option>
                         {loadedOptions
-                            .sort((a, b) => a.label.localeCompare(b.label))
+                            .sort((a, b) => a?.label?.localeCompare(b?.label))
                             .map((option, index) => (
                                 <option
                                     key={`${option.value}-${index}`}

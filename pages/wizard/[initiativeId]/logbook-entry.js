@@ -6,16 +6,16 @@ import { useForm, useFormState, useWatch } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
-import { useElseware, useLabels } from 'utilities/hooks';
+import { useElseware, useLabels, useModalState } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import WizardModal from 'components/_modals/wizardModal';
+import InputModal from 'components/_modals/wizardModal';
 import PreLoader from 'components/preloader';
-import { InputWrapper, Select, LongText, Attach } from 'components/_inputs';
+import { Select, LongText, Attach, InputWrapper } from 'components/_inputs';
 import LogbookCard from 'components/_wizard/logbookCard';
 
 const LogbookComponent = ({ pageProps }) => {
@@ -31,13 +31,18 @@ const LogbookComponent = ({ pageProps }) => {
 
     const { label, object } = useLabels();
     const { ewCreateUpdateWrapper } = useElseware();
+    const {
+        modalState,
+        modalOpen,
+        modalClose,
+        modalSaving,
+        modalNotSaving,
+    } = useModalState();
 
     // ///////////////////
     // STATE
     // ///////////////////
 
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
     const [updateId, setUpdateId] = useState(null);
     const [updateType, setUpdateType] = useState('text');
     const [attachLoading, setAttachLoading] = useState(false);
@@ -60,16 +65,15 @@ const LogbookComponent = ({ pageProps }) => {
         control: mainForm.control,
         name: 'AttachDocument',
     });
-    const { isDirty } = useFormState({ control: mainForm.control });
 
     // ///////////////////
-    // SUBMIT
+    // METHODS
     // ///////////////////
 
     // Method: Adds founder to sf and updates founder list in view
-    async function submit(formData) {
+    async function addEditItem(formData) {
         // Modal save button state
-        setModalIsSaving(true);
+        modalSaving();
         try {
             const {
                 Description__c,
@@ -132,16 +136,16 @@ const LogbookComponent = ({ pageProps }) => {
             }
 
             // Close modal
-            setModalIsOpen(false);
+            modalClose();
 
             // Modal save button state
-            setModalIsSaving(false);
+            modalNotSaving();
 
             // Clear content in form
             mainForm.reset();
         } catch (error) {
             // Modal save button state
-            setModalIsSaving(false);
+            modalNotSaving();
             console.warn(error);
         }
     }
@@ -184,7 +188,7 @@ const LogbookComponent = ({ pageProps }) => {
 
         mainForm.setValue('Description__c', Description__c);
         mainForm.setValue('Initiative_Activity__c', Initiative_Activity__c);
-    }, [updateId, modalIsOpen]);
+    }, [updateId]);
 
     // ///////////////////
     // RENDER
@@ -193,26 +197,35 @@ const LogbookComponent = ({ pageProps }) => {
     return (
         <WithPermission context>
             <TitlePreamble />
-            <InputWrapper>
-                <LogbookCard
-                    headline={label('MenuLogbook')}
-                    actionCreate={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}
-                    actionUpdate={item => {
-                        setModalIsOpen(true);
-                        setUpdateId(item.Id);
-                    }}
-                    items={logbookEntries}
-                />
-            </InputWrapper>
-            <WizardModal
-                isOpen={modalIsOpen}
-                title={label('ButtonAddLogEntry')}
-                onCancel={() => setModalIsOpen(false)}
-                isSaving={!isDirty || modalIsSaving || attachLoading}
-                onSave={mainForm.handleSubmit(submit)}>
+            <LogbookCard
+                headline={label('MenuLogbook')}
+                actionCreate={() => {
+                    setUpdateId(null);
+                    mainForm.reset();
+                    modalOpen();
+                }}
+                actionUpdate={item => {
+                    setUpdateId(null);
+                    mainForm.reset();
+                    modalOpen();
+                    setUpdateId(item.Id);
+                }}
+                items={logbookEntries}
+            />
+            <InputModal
+                {...{
+                    form: mainForm,
+                    onCancel() {
+                        modalClose();
+                    },
+                    async onSave() {
+                        await mainForm.handleSubmit(
+                            async data => await addEditItem(data)
+                        )();
+                    },
+                    title: label('ButtonAddLogEntry'),
+                    ...modalState,
+                }}>
                 <InputWrapper>
                     <LongText
                         name="Description__c"
@@ -222,7 +235,6 @@ const LogbookComponent = ({ pageProps }) => {
                         subLabel={object.helpText(
                             'Initiative_Update__c.Description__c'
                         )}
-                        placeholder={label('FormCaptureTextEntryEmpty')}
                         required
                         controller={mainForm.control}
                     />
@@ -248,7 +260,11 @@ const LogbookComponent = ({ pageProps }) => {
                             />
                             <Attach
                                 name="AttachDocument"
-                                label={label('AttachDocument')}
+                                label={
+                                    updateType === 'document' && !attachLoading
+                                        ? label('OverwriteDocument')
+                                        : label('AttachDocument')
+                                }
                                 type="document"
                                 accept=".pdf"
                                 controller={mainForm.control}
@@ -300,7 +316,6 @@ const LogbookComponent = ({ pageProps }) => {
                         subLabel={object.helpText(
                             'Initiative_Update__c.Initiative_Activity__c'
                         )}
-                        placeholder={label('FormCaptureSelectEmpty')}
                         options={activities.map(activity => ({
                             value: activity.Id,
                             label: activity.Things_To_Do__c,
@@ -308,7 +323,7 @@ const LogbookComponent = ({ pageProps }) => {
                         controller={mainForm.control}
                     />
                 </InputWrapper>
-            </WizardModal>
+            </InputModal>
         </WithPermission>
     );
 };

@@ -288,8 +288,8 @@ const SelectListComponent = ({
                                                     </option>
                                                     {loadedOptions
                                                         .sort((a, b) =>
-                                                            a.label.localeCompare(
-                                                                b.label
+                                                            a?.label?.localeCompare(
+                                                                b?.label
                                                             )
                                                         )
                                                         .map(
