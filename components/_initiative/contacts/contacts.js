@@ -71,9 +71,9 @@ const ContactsComponent = () => {
                     </thead>
                     <tbody>
                         {teamMembers.length > 0 ? (
-                            teamMembers.map(member => (
+                            teamMembers.map((member, index) => (
                                 <tr
-                                    key={member.Id}
+                                    key={member.Id + index}
                                     className="border-t-2 border-amber-10">
                                     <td className="px-8 pb-12 pt-18 t-caption">
                                         {member.User__r?.Name}

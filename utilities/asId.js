@@ -1,5 +1,9 @@
 const asId = string => {
-    return string?.toLowerCase().replace(/ /g, '-');
+    if (typeof asId === 'string') {
+        return string?.toLowerCase().replace(/ /g, '-');
+    } else {
+        return string;
+    }
 };
 
 export default asId;

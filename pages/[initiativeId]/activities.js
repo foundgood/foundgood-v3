@@ -136,7 +136,7 @@ const ActivitiesComponent = ({ pageProps }) => {
                                     baseUrl: 'activities',
                                     rules: getPermissionRules(
                                         'initiative',
-                                        'activities',
+                                        'activitiesGeneral',
                                         'update'
                                     ),
                                 }}

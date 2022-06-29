@@ -725,7 +725,7 @@ const ProjectComponent = ({ pageProps }) => {
                                 {...{
                                     rules: getPermissionRules(
                                         'initiative',
-                                        'employees-funded',
+                                        'employeesFunded',
                                         'update'
                                     ),
                                     baseUrl: 'employees-funded',

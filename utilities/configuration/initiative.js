@@ -605,6 +605,44 @@ const d = {
 };
 
 const initiativeStructures = {
+    Default: [
+        {
+            ...d.context,
+            items: [
+                d.overview,
+                d.funders,
+                d.applicants,
+                d.collaborators,
+                d.employeesFunded,
+            ],
+        },
+        {
+            ...d.activitiesParent,
+            items: [
+                d.goals,
+                d.activitiesDissemination,
+                d.activitiesEngagement,
+                d.activitiesPhysical,
+                d.activitiesTeamEducation,
+                d.activitiesEvaluation,
+                d.activitiesGeneral,
+                d.resultsKnowledge,
+                d.resultsResearch,
+                d.resultsInfluence,
+                d.resultsInnovation,
+                d.resultsOutput,
+                d.resultsOutcome,
+            ],
+        },
+        {
+            ...d.developments,
+            items: [d.sharingResults],
+        },
+        { ...d.logbook, items: [d.logbookEntry] },
+        { ...d.reports, items: [d.reportSchedule] },
+        d.complete,
+        d.done,
+    ],
     Reporting: [
         {
             ...d.context,

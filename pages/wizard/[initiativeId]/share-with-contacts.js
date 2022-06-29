@@ -55,7 +55,18 @@ const ShareWithContactsComponent = () => {
                     };
 
                     // Create team members
-                    await ewCreate('initiative-team-member/add-members', data);
+                    const { data: teamMembersData } = await ewCreate(
+                        'initiative-team-member/add-members',
+                        data
+                    );
+
+                    console.log(teamMembersData);
+
+                    // Update initiative
+                    utilities.updateInitiativeData(
+                        '_teamMembers',
+                        teamMembersData
+                    );
                 } catch (error) {
                     setError(true);
                     console.warn(error);
