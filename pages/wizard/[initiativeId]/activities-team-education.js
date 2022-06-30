@@ -261,10 +261,10 @@ const ActivitiesTeamEducationComponent = () => {
                 type: 'SelectList',
                 name: 'Employees',
                 label: object.label(
-                    'Initiative_Activity_Regulation__c.Employee__c'
+                    'Initiative_Activity__c.Employee__c__TeamEducation'
                 ),
                 subLabel: object.helpText(
-                    'Initiative_Activity_Regulation__c.Employee__c'
+                    'Initiative_Activity__c.Employee__c__TeamEducation'
                 ),
                 options: employees.map(employee => ({
                     value: employee.Id,
