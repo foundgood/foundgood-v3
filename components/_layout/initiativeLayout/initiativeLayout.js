@@ -59,7 +59,7 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                             <Button
                                 theme="blue"
                                 variant="secondary"
-                                action={`/config/${INITIATIVE_ID}/name-and-category`}>
+                                action={`/create/${INITIATIVE_ID}/name-and-category`}>
                                 {label('ButtonRunConfig')}
                             </Button>
                         </Permission>
