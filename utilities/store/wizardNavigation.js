@@ -58,6 +58,7 @@ const useWizardNavigationStore = create((set, get) => ({
         const initativeStructureType =
             initativeStructureDictionary[initiativeType];
 
+        // Report Type dictionary
         const reportTypeDictionary = {
             Status: 'Status',
             Annual: 'Annual',
@@ -69,8 +70,7 @@ const useWizardNavigationStore = create((set, get) => ({
         switch (context) {
             case CONTEXTS.CREATE:
                 set(state => {
-                    state.items =
-                        createStructures?.[initativeStructureType] ?? [];
+                    state.items = createStructures?.Default ?? [];
                 });
                 break;
             case CONTEXTS.INITIATIVE:
