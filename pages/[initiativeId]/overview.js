@@ -33,7 +33,7 @@ const ProjectComponent = ({ pageProps }) => {
     const { initiative, CONSTANTS } = useInitiativeDataStore();
 
     // Hook: Metadata
-    const { label, object, pickList, getValueLabel } = useLabels();
+    const { label, object, pickList, dataSet, getValueLabel } = useLabels();
 
     // Hook: Get breakpoint
     const bp = useResponsive();
@@ -365,15 +365,26 @@ const ProjectComponent = ({ pageProps }) => {
                                             )}
                                         </h4>
                                         {/* Location */}
-                                        {initiativeData.Translated_Where_Is_Problem__c && (
+                                        {initiativeData.Where_Is_Problem__c && (
                                             <h3 className="t-h5">
-                                                {initiativeData.Translated_Where_Is_Problem__c?.split(
+                                                {initiativeData.Where_Is_Problem__c?.split(
                                                     ';'
-                                                ).join(', ')}
+                                                )
+                                                    .map(
+                                                        location =>
+                                                            dataSet(
+                                                                'Countries'
+                                                            ).find(
+                                                                c =>
+                                                                    c.value ===
+                                                                    location
+                                                            )?.label
+                                                    )
+                                                    .join(', ')}
                                             </h3>
                                         )}
                                         {/* Empty state - No Location */}
-                                        {!initiativeData.Translated_Where_Is_Problem__c && (
+                                        {!initiativeData.Where_Is_Problem__c && (
                                             <div>
                                                 {label('ReportEmptyLocation')}
                                             </div>
