@@ -29,6 +29,7 @@ const CollaboratorCardComponent = ({
 
     // Effect: Run reflectAction on reflectSelected change in order to propagate event up
     useEffect(() => {
+        console.log(reflectSelected);
         reflectAction(reflectSelected);
     }, [reflectSelected]);
     return controller ? (

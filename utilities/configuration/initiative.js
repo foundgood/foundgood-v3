@@ -30,7 +30,7 @@ const d = {
         visible: true,
         items: [],
     },
-
+    // Child items
     overview: {
         baseUrl: 'overview',
         url(initiativeId) {
@@ -671,7 +671,7 @@ const initiativeStructures = {
             ],
         },
         {
-            ...d.resultsParent,
+            ...d.results,
             items: [
                 d.resultsResearch,
                 d.resultsInfluence,
@@ -712,7 +712,7 @@ const initiativeStructures = {
             ],
         },
         {
-            ...d.resultsParent,
+            ...d.results,
             items: [
                 d.resultsResearch,
                 d.resultsInfluence,

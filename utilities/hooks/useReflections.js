@@ -143,7 +143,10 @@ const useReflections = ({ dataSet, parentKey = null, reflectionKey, type }) => {
         const description = reflection?.Description__c;
 
         return {
-            selected: description !== CONSTANTS.CUSTOM.NO_REFLECTIONS ?? false,
+            selected:
+                description &&
+                description?.length &&
+                (description !== CONSTANTS.CUSTOM.NO_REFLECTIONS ?? false),
             value:
                 description === CONSTANTS.CUSTOM.NO_REFLECTIONS
                     ? ''
