@@ -155,7 +155,7 @@ const LogbookComponent = ({ pageProps }) => {
     // ///////////////////
 
     // Get activities
-    const activities = utilities.activities.getTypeIntervention();
+    const activities = utilities.activities.getAll();
 
     // Logbook entries
     const logbookEntries = utilities.updates
