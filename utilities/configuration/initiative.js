@@ -1,11 +1,12 @@
 const d = {
+    // Parent items
     context: {
         title: 'MenuContext',
         visible: true,
         items: [],
     },
-    background: {
-        title: 'MenuInitiativeDetails',
+    inputs: {
+        title: 'MenuInputs',
         visible: true,
         items: [],
     },
@@ -14,8 +15,8 @@ const d = {
         visible: true,
         items: [],
     },
-    developments: {
-        title: 'MenuDevelopments',
+    results: {
+        title: 'MenuResults',
         visible: true,
         items: [],
     },
@@ -608,8 +609,12 @@ const initiativeStructures = {
     Default: [
         {
             ...d.context,
+            items: [d.overview],
+        },
+        {
+            ...d.inputs,
             items: [
-                d.overview,
+                d.goals,
                 d.funders,
                 d.applicants,
                 d.collaborators,
@@ -619,62 +624,103 @@ const initiativeStructures = {
         {
             ...d.activitiesParent,
             items: [
-                d.goals,
                 d.activitiesDissemination,
                 d.activitiesEngagement,
-                d.activitiesPhysical,
-                d.activitiesTeamEducation,
                 d.activitiesEvaluation,
+                d.activitiesTeamEducation,
                 d.activitiesGeneral,
-                d.resultsKnowledge,
-                d.resultsResearch,
+            ],
+        },
+        {
+            ...d.results,
+            items: [
                 d.resultsInfluence,
                 d.resultsInnovation,
                 d.resultsOutput,
                 d.resultsOutcome,
             ],
-        },
-        {
-            ...d.developments,
-            items: [d.sharingResults],
         },
         { ...d.logbook, items: [d.logbookEntry] },
         { ...d.reports, items: [d.reportSchedule] },
         d.complete,
         d.done,
     ],
-    Reporting: [
+    'Research infrastructure': [
         {
             ...d.context,
+            items: [d.overview],
+        },
+        {
+            ...d.inputs,
             items: [
-                d.overview,
-                d.funders,
+                d.goals,
                 d.applicants,
                 d.collaborators,
+                d.funders,
+                d.employeesFunded,
+                // d.regulations
+            ],
+        },
+        {
+            ...d.activitiesParent,
+            items: [
+                d.activitiesPhysical,
+                d.activitiesEngagement,
+                d.activitiesTeamEducation,
+                d.activitiesGeneral,
+            ],
+        },
+        {
+            ...d.resultsParent,
+            items: [
+                d.resultsResearch,
+                d.resultsInfluence,
+                d.resultsKnowledge,
+                d.resultsInnovation,
+                d.resultsOutput,
+                d.resultsOutcome,
+            ],
+        },
+        { ...d.logbook, items: [d.logbookEntry] },
+        { ...d.reports, items: [d.reportSchedule] },
+        d.complete,
+        d.done,
+    ],
+    Innovation: [
+        {
+            ...d.context,
+            items: [d.overview],
+        },
+        {
+            ...d.inputs,
+            items: [
+                d.goals,
+                d.applicants,
+                d.collaborators,
+                d.funders,
                 d.employeesFunded,
             ],
         },
         {
             ...d.activitiesParent,
             items: [
-                d.goals,
                 d.activitiesDissemination,
                 d.activitiesEngagement,
-                d.activitiesPhysical,
-                d.activitiesTeamEducation,
                 d.activitiesEvaluation,
+                d.activitiesTeamEducation,
                 d.activitiesGeneral,
-                d.resultsKnowledge,
+            ],
+        },
+        {
+            ...d.resultsParent,
+            items: [
                 d.resultsResearch,
                 d.resultsInfluence,
+                d.resultsKnowledge,
                 d.resultsInnovation,
                 d.resultsOutput,
                 d.resultsOutcome,
             ],
-        },
-        {
-            ...d.developments,
-            items: [d.sharingResults],
         },
         { ...d.logbook, items: [d.logbookEntry] },
         { ...d.reports, items: [d.reportSchedule] },

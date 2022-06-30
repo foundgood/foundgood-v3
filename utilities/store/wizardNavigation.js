@@ -48,6 +48,18 @@ const useWizardNavigationStore = create((set, get) => ({
     buildWizardItems(context, type = 'default') {
         // Type is Type__c from initiative or report
         if (context) {
+            // Dictionary for remapping legacy types
+            const initativeStructureDictionary = {
+                Default: 'Default',
+                Reporting: 'Default',
+                Innovation: 'Innovation',
+                'Research infrastructure': 'Research infrastructure',
+            };
+
+            // Get real type from dictionary
+            const initativeStructureType = initativeStructureDictionary[type];
+
+            // Get context
             const wizards = {
                 [CONTEXTS.CREATE]: createStructures,
                 [CONTEXTS.INITIATIVE]: initiativeStructures,
@@ -55,7 +67,7 @@ const useWizardNavigationStore = create((set, get) => ({
             };
 
             set(state => {
-                state.items = wizards[context]?.[type] ?? [];
+                state.items = wizards[context]?.[initativeStructureType] ?? [];
             });
         }
     },

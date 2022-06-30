@@ -60,8 +60,6 @@ const ShareWithContactsComponent = () => {
                         data
                     );
 
-                    console.log(teamMembersData);
-
                     // Update initiative
                     utilities.updateInitiativeData(
                         '_teamMembers',
