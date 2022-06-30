@@ -105,8 +105,9 @@ const BottomNavigationComponent = () => {
                 </Button>
                 <p
                     className={cc([
-                        'hidden t-footnote text-coral-60 md:flex transition-default opacity-0',
+                        'hidden t-footnote text-coral-60 md:flex transition-default',
                         {
+                            'opacity-0': !loading,
                             'opacity-100': loading,
                         },
                     ])}>

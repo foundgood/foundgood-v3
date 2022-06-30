@@ -45,7 +45,7 @@ const useWizardNavigationStore = create((set, get) => ({
     },
 
     // Rebuilds wizard items
-    buildWizardItems(context, type = 'default') {
+    buildWizardItems(context, initiativeType = 'Default', reportType = null) {
         // Type is Type__c from initiative or report
         if (context) {
             // Dictionary for remapping legacy types
@@ -57,7 +57,8 @@ const useWizardNavigationStore = create((set, get) => ({
             };
 
             // Get real type from dictionary
-            const initativeStructureType = initativeStructureDictionary[type];
+            const initativeStructureType =
+                initativeStructureDictionary[initiativeType];
 
             // Get context
             const wizards = {

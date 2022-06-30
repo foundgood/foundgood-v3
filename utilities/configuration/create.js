@@ -134,7 +134,7 @@ const d = {
 };
 
 const createStructures = {
-    default: [
+    Default: [
         d.introduction,
         {
             ...d.context,

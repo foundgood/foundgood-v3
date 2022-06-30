@@ -97,25 +97,12 @@ const WizardLayoutComponent = ({ children, layoutSettings }) => {
 
     // Update wizard navigation items
     useEffect(() => {
-        let type;
-        switch (MODE) {
-            case CONTEXTS.REPORT:
-                type = utilities.reports.get(REPORT_ID).Report_Type__c;
-                break;
-
-            case CONTEXTS.INITIATIVE:
-                // Fallback to default type "Reporting"
-                type =
-                    utilities.initiative.get().Configuration_Type__c ||
-                    'Reporting';
-                break;
-            case CONTEXTS.CREATE:
-                // Default type
-                type = 'default';
-                break;
-        }
-
-        buildWizardItems(MODE, type);
+        let initiativeType =
+            utilities.initiative.get().Configuration_Type__c || 'Default';
+        let reportType = REPORT_ID
+            ? utilities.reports.get(REPORT_ID).Report_Type__c
+            : null;
+        buildWizardItems(MODE, initiativeType, reportType);
     }, [
         MODE,
         utilities.initiative.get().Configuration_Type__c,

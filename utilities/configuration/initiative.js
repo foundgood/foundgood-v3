@@ -606,7 +606,7 @@ const d = {
 };
 
 const initiativeStructures = {
-    Default: [
+    DefaultStructure: [
         {
             ...d.context,
             items: [d.overview],
