@@ -153,25 +153,26 @@ const ActivitySuccessMetricsComponent = ({ item }) => {
                               // Update type
                               setChildItemType(event);
 
-                              // Remove validation from form elements based on type (event)
-                              switch (event) {
-                                  case CONSTANTS.ACTIVITY_SUCCESS_METRICS
-                                      .CUSTOM:
-                                      form.unregister('Gender');
-                                      form.unregister('Age');
-                                      form.unregister('Currency');
-                                      break;
-                                  case CONSTANTS.ACTIVITY_SUCCESS_METRICS
-                                      .FINANCIAL:
-                                      form.unregister('Gender');
-                                      form.unregister('Age');
-                                      break;
-                                  case CONSTANTS.ACTIVITY_SUCCESS_METRICS
-                                      .PEOPLE:
-                                      form.unregister('Gender');
-                                      form.unregister('Age');
-                                      break;
-                              }
+                              //   // Remove validation from form elements based on type (event)
+                              // TODO THIS RESULTS IN AN ENDLESS LOOP - FOR NOW REQUIRED IS TURNED OFF
+                              //   switch (event) {
+                              //       case CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                              //           .CUSTOM:
+                              //           form.unregister('Gender');
+                              //           form.unregister('Age');
+                              //           form.unregister('Currency');
+                              //           break;
+                              //       case CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                              //           .FINANCIAL:
+                              //           form.unregister('Gender');
+                              //           form.unregister('Age');
+                              //           break;
+                              //       case CONSTANTS.ACTIVITY_SUCCESS_METRICS
+                              //           .PEOPLE:
+                              //           form.unregister('Gender');
+                              //           form.unregister('Age');
+                              //           break;
+                              //   }
                           },
                       },
                   ]
@@ -196,9 +197,9 @@ const ActivitySuccessMetricsComponent = ({ item }) => {
                           subLabel: object.helpText(
                               'Initiative_Activity_Success_Metric__c.Gender__c'
                           ),
-                          required:
-                              childItemType ===
-                              CONSTANTS.ACTIVITY_SUCCESS_METRICS.PEOPLE,
+                          //   required:
+                          //       childItemType ===
+                          //       CONSTANTS.ACTIVITY_SUCCESS_METRICS.PEOPLE,
                           textPlaceholder: object.label(
                               'Initiative_Activity_Success_Metric__c.Gender_Other__c'
                           ),
@@ -217,9 +218,9 @@ const ActivitySuccessMetricsComponent = ({ item }) => {
                           subLabel: object.helpText(
                               'Initiative_Activity_Success_Metric__c.Age'
                           ),
-                          required:
-                              childItemType ===
-                              CONSTANTS.ACTIVITY_SUCCESS_METRICS.PEOPLE,
+                          //   required:
+                          //       childItemType ===
+                          //       CONSTANTS.ACTIVITY_SUCCESS_METRICS.PEOPLE,
                           maxValue: 200,
                           minValue: 0,
                       },
@@ -236,9 +237,9 @@ const ActivitySuccessMetricsComponent = ({ item }) => {
                           subLabel: object.helpText(
                               'Initiative_Activity_Success_Metric__c.CurrencyIsoCode'
                           ),
-                          required:
-                              childItemType ===
-                              CONSTANTS.ACTIVITY_SUCCESS_METRICS.FINANCIAL,
+                          //   required:
+                          //       childItemType ===
+                          //       CONSTANTS.ACTIVITY_SUCCESS_METRICS.FINANCIAL,
                           // Type options
                           options: dataSet('Currencies'),
                       },
