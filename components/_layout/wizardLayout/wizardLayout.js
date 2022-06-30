@@ -99,10 +99,16 @@ const WizardLayoutComponent = ({ children, layoutSettings }) => {
     useEffect(() => {
         let initiativeType =
             utilities.initiative.get().Configuration_Type__c || 'Default';
-        let reportType = REPORT_ID
-            ? utilities.reports.get(REPORT_ID).Report_Type__c
-            : null;
-        buildWizardItems(MODE, initiativeType, reportType);
+
+        if (REPORT_ID) {
+            buildWizardItems(
+                MODE,
+                initiativeType,
+                utilities.reports.get(REPORT_ID).Report_Type__c
+            );
+        } else {
+            buildWizardItems(MODE, initiativeType);
+        }
     }, [
         MODE,
         utilities.initiative.get().Configuration_Type__c,

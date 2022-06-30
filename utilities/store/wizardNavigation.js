@@ -46,30 +46,47 @@ const useWizardNavigationStore = create((set, get) => ({
 
     // Rebuilds wizard items
     buildWizardItems(context, initiativeType = 'Default', reportType = null) {
-        // Type is Type__c from initiative or report
-        if (context) {
-            // Dictionary for remapping legacy types
-            const initativeStructureDictionary = {
-                Default: 'Default',
-                Reporting: 'Default',
-                Innovation: 'Innovation',
-                'Research infrastructure': 'Research infrastructure',
-            };
+        // Dictionary for remapping legacy initiative types
+        const initativeStructureDictionary = {
+            Default: 'Default',
+            Reporting: 'Default',
+            Innovation: 'Innovation',
+            'Research infrastructure': 'Research infrastructure',
+        };
 
-            // Get real type from dictionary
-            const initativeStructureType =
-                initativeStructureDictionary[initiativeType];
+        // Get real type from dictionary
+        const initativeStructureType =
+            initativeStructureDictionary[initiativeType];
 
-            // Get context
-            const wizards = {
-                [CONTEXTS.CREATE]: createStructures,
-                [CONTEXTS.INITIATIVE]: initiativeStructures,
-                [CONTEXTS.REPORT]: reportStructures,
-            };
+        const reportTypeDictionary = {
+            Status: 'Status',
+            Annual: 'Annual',
+            Final: 'Final',
+            Standard: 'Annual',
+            Extended: 'Final',
+        };
 
-            set(state => {
-                state.items = wizards[context]?.[initativeStructureType] ?? [];
-            });
+        switch (context) {
+            case CONTEXTS.CREATE:
+                set(state => {
+                    state.items =
+                        createStructures?.[initativeStructureType] ?? [];
+                });
+                break;
+            case CONTEXTS.INITIATIVE:
+                set(state => {
+                    state.items =
+                        initiativeStructures?.[initativeStructureType] ?? [];
+                });
+                break;
+            case CONTEXTS.REPORT:
+                set(state => {
+                    state.items =
+                        reportStructures?.[initativeStructureType]?.[
+                            reportTypeDictionary[reportType]
+                        ] ?? [];
+                });
+                break;
         }
     },
 

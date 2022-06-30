@@ -1,4 +1,31 @@
 const d = {
+    // Parent items
+    context: {
+        title: 'MenuContext',
+        visible: true,
+        items: [],
+    },
+    inputs: {
+        title: 'MenuInputs',
+        visible: true,
+        items: [],
+    },
+    activitiesParent: {
+        title: 'MenuActivities',
+        visible: true,
+        items: [],
+    },
+    results: {
+        title: 'MenuResults',
+        visible: true,
+        items: [],
+    },
+    learnings: {
+        title: 'MenuLearnings',
+        visible: true,
+        items: [],
+    },
+    // Child items
     introduction: {
         title: 'Introduction',
         baseUrl: 'introduction',
@@ -8,44 +35,6 @@ const d = {
         visible: false,
         hideBack: true,
     },
-    summary: {
-        title: 'ReportWizardMenuHeading1',
-        visible: true,
-        items: [],
-    },
-    keyChanges: {
-        title: 'ReportWizardMenuHeading2',
-        visible: true,
-        items: [],
-    },
-    keyResults: {
-        title: 'ReportWizardMenuHeading3',
-        visible: true,
-        items: [],
-    },
-    reflections: {
-        title: 'ReportWizardMenuHeading4',
-        visible: true,
-        items: [],
-    },
-    complete: {
-        title: 'Complete',
-        visible: false,
-        hideBack: true,
-        hideExit: true,
-        baseUrl: 'complete',
-        url(initiativeId, reportId) {
-            return `/report/${initiativeId}/complete/${reportId}`;
-        },
-    },
-    done: {
-        title: 'Done',
-        visible: false,
-        url(initiativeId, reportId) {
-            return `/${initiativeId}/reports/${reportId}`;
-        },
-    },
-
     reportDetails: {
         title: 'ReportWizardMenuReportDetails',
         labels: {
@@ -62,6 +51,29 @@ const d = {
         baseUrl: 'report-details',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/report-details/${reportId}`;
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
+    reportSummary: {
+        title: 'ReportWizardMenuSummary',
+        labels: {
+            form: {
+                title: 'ReportWizardReportSummaryHeading',
+                preamble: 'ReportWizardReportSummarySubHeading',
+            },
+            help: {
+                why: 'ReportWizardReportSummaryHelpWhy',
+                what: 'ReportWizardReportSummaryHelpWhat',
+                guide: 'ReportWizardReportSummaryHelpGuide',
+            },
+        },
+        baseUrl: 'report-summary',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/report-summary/${reportId}`;
         },
         permissions: {
             add: ['grantee.admin', 'grantee.collaborator', 'super'],
@@ -108,29 +120,6 @@ const d = {
         baseUrl: 'overview',
         url(initiativeId, reportId) {
             return `/report/${initiativeId}/overview/${reportId}`;
-        },
-        permissions: {
-            add: ['grantee.admin', 'grantee.collaborator', 'super'],
-            update: ['grantee.admin', 'grantee.collaborator', 'super'],
-            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
-        },
-    },
-    reportSummary: {
-        title: 'ReportWizardMenuSummary',
-        labels: {
-            form: {
-                title: 'ReportWizardReportSummaryHeading',
-                preamble: 'ReportWizardReportSummarySubHeading',
-            },
-            help: {
-                why: 'ReportWizardReportSummaryHelpWhy',
-                what: 'ReportWizardReportSummaryHelpWhat',
-                guide: 'ReportWizardReportSummaryHelpGuide',
-            },
-        },
-        baseUrl: 'report-summary',
-        url(initiativeId, reportId) {
-            return `/report/${initiativeId}/report-summary/${reportId}`;
         },
         permissions: {
             add: ['grantee.admin', 'grantee.collaborator', 'super'],
@@ -253,7 +242,6 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-
     activitiesDissemination: {
         baseUrl: 'activities-dissemination',
         url(initiativeId, reportId) {
@@ -392,7 +380,6 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-
     resultsKnowledge: {
         baseUrl: 'results-knowledge',
         url(initiativeId, reportId) {
@@ -531,78 +518,6 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-
-    progressSoFar: {
-        title: 'ReportWizardMenuProgress',
-        labels: {
-            form: {
-                title: 'ReportWizardProgressHeading',
-                preamble: 'ReportWizardProgressSubHeading',
-            },
-            help: {
-                why: 'ReportWizardProgressHelpWhy',
-                what: 'ReportWizardProgressHelpWhat',
-                guide: 'ReportWizardProgressHelpGuide',
-            },
-        },
-        baseUrl: 'progress-so-far',
-        url(initiativeId, reportId) {
-            return `/report/${initiativeId}/progress-so-far/${reportId}`;
-        },
-        permissions: {
-            add: ['grantee.admin', 'grantee.collaborator', 'super'],
-            update: ['grantee.admin', 'grantee.collaborator', 'super'],
-            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
-        },
-    },
-    sharingResults: {
-        title: 'ReportWizardMenuSharing',
-        labels: {
-            form: {
-                title: 'ReportWizardSharingHeading',
-                preamble: 'ReportWizardSharingSubHeading',
-            },
-            help: {
-                why: 'ReportWizardSharingHelpWhy',
-                what: 'ReportWizardSharingHelpWhat',
-                guide: 'ReportWizardSharingHelpGuide',
-            },
-        },
-        baseUrl: 'sharing-results',
-        url(initiativeId, reportId) {
-            return `/report/${initiativeId}/sharing-results/${reportId}`;
-        },
-        permissions: {
-            add: ['grantee.admin', 'grantee.collaborator', 'super'],
-            update: ['grantee.admin', 'grantee.collaborator', 'super'],
-            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
-        },
-    },
-    outcomes: {},
-    logbookEntry: {},
-    influenceOnPolicy: {
-        title: 'ReportWizardMenuInfluence',
-        labels: {
-            form: {
-                title: 'ReportWizardInfluenceHeading',
-                preamble: 'ReportWizardInfluenceSubHeading',
-            },
-            help: {
-                why: 'ReportWizardInfluenceHelpWhy',
-                what: 'ReportWizardInfluenceHelpWhat',
-                guide: 'ReportWizardInfluenceHelpGuide',
-            },
-        },
-        baseUrl: 'influence-on-policy',
-        url(initiativeId, reportId) {
-            return `/report/${initiativeId}/influence-on-policy/${reportId}`;
-        },
-        permissions: {
-            add: ['grantee.admin', 'grantee.collaborator', 'super'],
-            update: ['grantee.admin', 'grantee.collaborator', 'super'],
-            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
-        },
-    },
     evaluations: {
         title: 'ReportWizardMenuEvaluations',
         labels: {
@@ -649,173 +564,336 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
+    complete: {
+        title: 'Complete',
+        visible: false,
+        hideBack: true,
+        hideExit: true,
+        baseUrl: 'complete',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/complete/${reportId}`;
+        },
+    },
+    done: {
+        title: 'Done',
+        visible: false,
+        url(initiativeId, reportId) {
+            return `/${initiativeId}/reports/${reportId}`;
+        },
+    },
 };
 
 const reportStructures = {
-    Final: [
-        d.introduction,
-        {
-            ...d.summary,
-            items: [d.reportDetails, d.funders, d.overview],
-        },
-        {
-            ...d.keyChanges,
-            items: [
-                d.applicants,
-                d.collaborators,
-                d.employeesFunded,
-                d.activitiesDissemination,
-                d.activitiesEngagement,
-                d.activitiesPhysical,
-                d.activitiesTeamEducation,
-                d.activitiesEvaluation,
-                d.activitiesGeneral,
-                d.resultsKnowledge,
-                d.resultsResearch,
-                d.resultsInfluence,
-                d.resultsInnovation,
-                d.resultsOutput,
-                d.resultsOutcome,
-                d.progressSoFar,
-                d.sharingResults,
-            ],
-        },
-        {
-            ...d.keyResults,
-            items: [d.influenceOnPolicy, d.evaluations],
-        },
-        {
-            ...d.reflections,
-            items: [d.endOfGrantReflections, d.reportSummary],
-        },
-        d.complete,
-        d.done,
-    ],
-    Status: [
-        d.introduction,
-        {
-            ...d.summary,
-            items: [d.reportDetails, d.funders, d.overview],
-        },
-        {
-            ...d.keyChanges,
-            items: [d.applicants, d.collaborators],
-        },
-        { ...d.reflections, items: [d.reportSummary] },
-        d.complete,
-        d.done,
-    ],
-    Annual: [
-        d.introduction,
-        {
-            ...d.summary,
-            items: [d.reportDetails, d.funders, d.overview],
-        },
-        {
-            ...d.keyChanges,
-            items: [
-                d.applicants,
-                d.collaborators,
-                d.employeesFunded,
-                d.activitiesDissemination,
-                d.activitiesEngagement,
-                d.activitiesPhysical,
-                d.activitiesTeamEducation,
-                d.activitiesEvaluation,
-                d.activitiesGeneral,
-                d.resultsKnowledge,
-                d.resultsResearch,
-                d.resultsInfluence,
-                d.resultsInnovation,
-                d.resultsOutput,
-                d.resultsOutcome,
-                d.progressSoFar,
-                d.sharingResults,
-            ],
-        },
-        {
-            ...d.keyResults,
-            items: [d.influenceOnPolicy, d.evaluations],
-        },
+    Default: {
+        Status: [
+            d.introduction,
+            {
+                ...d.context,
+                showChildrenOnly: true,
+                items: [
+                    d.overview,
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.reportSummary,
+                ],
+            },
+            d.complete,
+            d.done,
+        ],
+        Annual: [
+            d.introduction,
+            {
+                ...d.context,
+                items: [d.overview],
+            },
+            {
+                ...d.inputs,
+                items: [
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.employeesFunded,
+                ],
+            },
+            {
+                ...d.activitiesParent,
+                items: [
+                    d.activitiesTeamEducation,
+                    d.activitiesDissemination,
+                    d.activitiesEngagement,
+                    d.activitiesEvaluation,
+                    d.activitiesGeneral,
+                ],
+            },
+            {
+                ...d.results,
+                items: [d.resultsInfluence, d.resultsOutput, d.resultsOutcome],
+            },
 
-        { ...d.reflections, items: [d.reportSummary] },
-        d.complete,
-        d.done,
-    ],
-    Standard: [
-        d.introduction,
-        {
-            ...d.summary,
-            items: [d.reportDetails, d.funders, d.overview],
-        },
-        {
-            ...d.keyChanges,
-            items: [
-                d.applicants,
-                d.collaborators,
-                d.employeesFunded,
-                d.activitiesDissemination,
-                d.activitiesEngagement,
-                d.activitiesPhysical,
-                d.activitiesTeamEducation,
-                d.activitiesEvaluation,
-                d.activitiesGeneral,
-                d.resultsKnowledge,
-                d.resultsResearch,
-                d.resultsInfluence,
-                d.resultsInnovation,
-                d.resultsOutput,
-                d.resultsOutcome,
-                d.progressSoFar,
-                d.sharingResults,
-            ],
-        },
-        {
-            ...d.keyResults,
-            items: [d.influenceOnPolicy, d.evaluations],
-        },
+            {
+                ...d.learnings,
+                items: [d.reportSummary],
+            },
+            d.complete,
+            d.done,
+        ],
+        Final: [
+            d.introduction,
+            {
+                ...d.context,
+                items: [d.overview],
+            },
+            {
+                ...d.inputs,
+                items: [
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.employeesFunded,
+                ],
+            },
+            {
+                ...d.activitiesParent,
+                items: [
+                    d.activitiesTeamEducation,
+                    d.activitiesDissemination,
+                    d.activitiesEngagement,
+                    d.activitiesEvaluation,
+                    d.activitiesGeneral,
+                ],
+            },
+            {
+                ...d.results,
+                items: [d.resultsInfluence, d.resultsOutput, d.resultsOutcome],
+            },
 
-        { ...d.reflections, items: [d.reportSummary] },
-        d.complete,
-        d.done,
-    ],
-    Extended: [
-        d.introduction,
-        {
-            ...d.summary,
-            items: [d.reportDetails, d.funders, d.overview],
-        },
-        {
-            ...d.keyChanges,
-            items: [
-                d.applicants,
-                d.collaborators,
-                d.employeesFunded,
-                d.activitiesDissemination,
-                d.activitiesEngagement,
-                d.activitiesPhysical,
-                d.activitiesTeamEducation,
-                d.activitiesEvaluation,
-                d.activitiesGeneral,
-                d.resultsKnowledge,
-                d.resultsResearch,
-                d.resultsInfluence,
-                d.resultsInnovation,
-                d.resultsOutput,
-                d.resultsOutcome,
-                d.progressSoFar,
-                d.sharingResults,
-            ],
-        },
-        {
-            ...d.keyResults,
-            items: [d.influenceOnPolicy, d.evaluations],
-        },
+            {
+                ...d.learnings,
+                items: [d.reportSummary, d.endOfGrantReflections],
+            },
+            d.complete,
+            d.done,
+        ],
+    },
+    'Research infrastructure': {
+        Status: [
+            d.introduction,
+            {
+                ...d.context,
+                showChildrenOnly: true,
+                items: [
+                    d.overview,
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.reportSummary,
+                ],
+            },
+            d.complete,
+            d.done,
+        ],
+        Annual: [
+            d.introduction,
+            {
+                ...d.context,
+                items: [d.overview],
+            },
+            {
+                ...d.inputs,
+                items: [
+                    d.goals,
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.employeesFunded,
+                    // d.regulations // TODO
+                ],
+            },
+            {
+                ...d.activitiesParent,
+                items: [
+                    d.activitiesPhysical,
+                    d.activitiesEngagement,
+                    d.activitiesTeamEducation,
+                    d.activitiesGeneral,
+                ],
+            },
+            {
+                ...d.results,
+                items: [
+                    d.resultsResearch,
+                    d.resultsInfluence,
+                    d.resultsKnowledge,
+                    d.resultsInnovation,
+                    d.resultsOutput,
+                    d.resultsOutcome,
+                ],
+            },
 
-        { ...d.reflections, items: [d.reportSummary] },
-        d.complete,
-        d.done,
-    ],
+            {
+                ...d.learnings,
+                items: [d.reportSummary],
+            },
+            d.complete,
+            d.done,
+        ],
+        Final: [
+            d.introduction,
+            {
+                ...d.context,
+                items: [d.overview],
+            },
+            {
+                ...d.inputs,
+                items: [
+                    d.goals,
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.employeesFunded,
+                    // d.regulations // TODO
+                ],
+            },
+            {
+                ...d.activitiesParent,
+                items: [
+                    d.activitiesPhysical,
+                    d.activitiesEngagement,
+                    d.activitiesTeamEducation,
+                    d.activitiesGeneral,
+                ],
+            },
+            {
+                ...d.results,
+                items: [
+                    d.resultsResearch,
+                    d.resultsInfluence,
+                    d.resultsKnowledge,
+                    d.resultsInnovation,
+                    d.resultsOutput,
+                    d.resultsOutcome,
+                ],
+            },
+
+            {
+                ...d.learnings,
+                items: [d.reportSummary, d.endOfGrantReflections],
+            },
+            d.complete,
+            d.done,
+        ],
+    },
+    Innovation: {
+        Status: [
+            d.introduction,
+            {
+                ...d.context,
+                showChildrenOnly: true,
+                items: [
+                    d.overview,
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.reportSummary,
+                ],
+            },
+            d.complete,
+            d.done,
+        ],
+        Annual: [
+            d.introduction,
+            {
+                ...d.context,
+                items: [d.overview],
+            },
+            {
+                ...d.inputs,
+                items: [
+                    d.goals,
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.employeesFunded,
+                    // d.regulations // TODO
+                ],
+            },
+            {
+                ...d.activitiesParent,
+                items: [
+                    d.activitiesTeamEducation,
+                    d.activitiesDissemination,
+                    d.activitiesEngagement,
+                    d.activitiesEvaluation,
+                    d.activitiesGeneral,
+                ],
+            },
+            {
+                ...d.results,
+                items: [
+                    d.resultsResearch,
+                    d.resultsInfluence,
+                    d.resultsKnowledge,
+                    d.resultsInnovation,
+                    d.resultsOutput,
+                    d.resultsOutcome,
+                ],
+            },
+
+            {
+                ...d.learnings,
+                items: [d.reportSummary],
+            },
+            d.complete,
+            d.done,
+        ],
+        Final: [
+            d.introduction,
+            {
+                ...d.context,
+                items: [d.overview],
+            },
+            {
+                ...d.inputs,
+                items: [
+                    d.goals,
+                    d.applicants,
+                    d.collaborators,
+                    d.funders,
+                    d.employeesFunded,
+                    // d.regulations // TODO
+                ],
+            },
+            {
+                ...d.activitiesParent,
+                items: [
+                    d.activitiesTeamEducation,
+                    d.activitiesDissemination,
+                    d.activitiesEngagement,
+                    d.activitiesEvaluation,
+                    d.activitiesGeneral,
+                ],
+            },
+            {
+                ...d.results,
+                items: [
+                    d.resultsResearch,
+                    d.resultsInfluence,
+                    d.resultsKnowledge,
+                    d.resultsInnovation,
+                    d.resultsOutput,
+                    d.resultsOutcome,
+                ],
+            },
+
+            {
+                ...d.learnings,
+                items: [d.reportSummary, d.endOfGrantReflections],
+            },
+            d.complete,
+            d.done,
+        ],
+    },
 };
 export { d };
 export default reportStructures;

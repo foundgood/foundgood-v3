@@ -498,47 +498,6 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
-    sharingResults: {
-        baseUrl: 'sharing-results',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/sharing-results`;
-        },
-        title: 'InitiativeViewSharingResultsHeading',
-        labels: {
-            form: {
-                title: 'InitiativeWizardSharingHeading',
-                preamble: 'InitiativeWizardSharingSubheading',
-            },
-            help: {
-                why: 'InitiativeWizardSharingHelpWhy',
-                what: 'InitiativeWizardSharingHelpWhat',
-                guide: 'InitiativeWizardSharingHelpGuide',
-            },
-        },
-        permissions: {
-            add: ['grantee.admin', 'grantee.collaborator', 'super'],
-            update: ['grantee.admin', 'grantee.collaborator', 'super'],
-            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
-        },
-    },
-    progressSoFar: {
-        title: 'InitiativeViewProgressHeading',
-        baseUrl: 'progress-so-far',
-        url(initiativeId) {
-            return `/initiative/${initiativeId}/progress-so-far`;
-        },
-        labels: {
-            form: {
-                title: 'InitiativeWizardProgressHeading',
-                preamble: 'InitiativeWizardProgressSubheading',
-            },
-            help: {
-                why: 'InitiativeWizardProgressHelpWhy',
-                what: 'InitiativeWizardProgressHelpWhat',
-                guide: 'InitiativeWizardProgressHelpGuide',
-            },
-        },
-    },
     logbookEntry: {
         title: 'InitiativeViewLogEntryHeading',
         baseUrl: 'logbook-entry',
