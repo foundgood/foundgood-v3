@@ -327,18 +327,22 @@ const ProjectComponent = ({ pageProps }) => {
                                             {initiativeData.Category__c}
                                         </h3>
 
-                                        <h4 className="mt-16 t-sh6 text-blue-60">
-                                            {object.label(
-                                                'Initiative_Goal__c.Funder_Objective__c'
-                                            )}
-                                        </h4>
-                                        <h3 className="t-h5">
-                                            {getValueLabel(
-                                                'Initiative_Goal__c.Funder_Objective__c',
-                                                funderObjective.Funder_Objective__c,
-                                                true
-                                            )}
-                                        </h3>
+                                        {funderObjective.Funder_Objective__c && (
+                                            <>
+                                                <h4 className="mt-16 t-sh6 text-blue-60">
+                                                    {object.label(
+                                                        'Initiative_Goal__c.Funder_Objective__c'
+                                                    )}
+                                                </h4>
+                                                <h3 className="t-h5">
+                                                    {getValueLabel(
+                                                        'Initiative_Goal__c.Funder_Objective__c',
+                                                        funderObjective.Funder_Objective__c,
+                                                        true
+                                                    )}
+                                                </h3>
+                                            </>
+                                        )}
 
                                         <h4 className="mt-16 t-sh6 text-blue-60">
                                             {label(
