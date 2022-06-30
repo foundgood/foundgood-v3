@@ -416,9 +416,9 @@ const ProjectComponent = ({ pageProps }) => {
                         </div>
                     </SectionWrapper>
                     {/* Organisations Involved */}
-                    <OrganisationsInvolved />
+                    {/* <OrganisationsInvolved /> */}
                     {/* Contacts */}
-                    <Contacts />
+                    {/* <Contacts /> */}
                     {/* Funding */}
                     <SectionWrapper className="bg-white rounded-8">
                         <div className="flex justify-between">

@@ -51,21 +51,34 @@ const InitiativeLayoutComponent = ({ children, pageProps }) => {
                     <p className="font-medium text-blue-100 t-sh5 md:flex line-clamp-3">
                         {utilities.initiative.get().Name}
                     </p>
-                    <Permission
-                        {...{
-                            rules: [
-                                'grantee.admin',
-                                'grantee.collaborator',
-                                'super',
-                            ],
-                        }}>
-                        <Button
-                            theme="blue"
-                            variant="secondary"
-                            action={`/initiative/${INITIATIVE_ID}/overview`}>
-                            {label('ButtonRunWizard')}
-                        </Button>
-                    </Permission>
+                    <div className="flex space-x-8">
+                        <Permission
+                            {...{
+                                rules: ['super'],
+                            }}>
+                            <Button
+                                theme="blue"
+                                variant="secondary"
+                                action={`/config/${INITIATIVE_ID}/name-and-category`}>
+                                {label('ButtonRunConfig')}
+                            </Button>
+                        </Permission>
+                        <Permission
+                            {...{
+                                rules: [
+                                    'grantee.admin',
+                                    'grantee.collaborator',
+                                    'super',
+                                ],
+                            }}>
+                            <Button
+                                theme="blue"
+                                variant="secondary"
+                                action={`/initiative/${INITIATIVE_ID}/overview`}>
+                                {label('ButtonRunWizard')}
+                            </Button>
+                        </Permission>
+                    </div>
                 </div>
 
                 {/* Initiative navigation */}
