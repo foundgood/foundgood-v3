@@ -61,9 +61,11 @@ const ShareWithContactsComponent = () => {
                     );
 
                     // Update initiative
-                    utilities.updateInitiativeData(
-                        '_teamMembers',
-                        teamMembersData
+                    teamMembersData.forEach(teamMember =>
+                        utilities.updateInitiativeData(
+                            '_teamMembers',
+                            teamMember
+                        )
                     );
                 } catch (error) {
                     setError(true);
