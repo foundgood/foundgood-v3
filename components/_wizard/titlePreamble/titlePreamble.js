@@ -12,6 +12,9 @@ import {
 import t from 'prop-types';
 import cc from 'classcat';
 
+// Components
+import Preloader from 'components/preloader';
+
 const TitlePreambleComponent = ({
     title = null,
     preamble = null,
@@ -37,18 +40,28 @@ const TitlePreambleComponent = ({
                         'opacity-100 text-teal-100': !preload,
                     },
                 ])}>
-                <h2 className="t-h2">
-                    {title
-                        ? title
-                        : label(currentItem?.item?.labels?.form?.title)}
-                </h2>
-                {(preamble || currentItem?.item?.labels?.form?.preamble) && (
-                    <p className="mt-16 t-preamble">
-                        {preamble
-                            ? preamble
-                            : label(currentItem?.item?.labels?.form?.preamble)}
-                    </p>
-                )}
+                <>
+                    {preload ? (
+                        <Preloader />
+                    ) : (
+                        <h2 className="t-h2">
+                            {title
+                                ? title
+                                : label(currentItem?.item?.labels?.form?.title)}
+                        </h2>
+                    )}
+
+                    {(preamble ||
+                        currentItem?.item?.labels?.form?.preamble) && (
+                        <p className="mt-16 t-preamble">
+                            {preamble
+                                ? preamble
+                                : label(
+                                      currentItem?.item?.labels?.form?.preamble
+                                  )}
+                        </p>
+                    )}
+                </>
             </div>
         </>
     );

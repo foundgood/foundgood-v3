@@ -27,7 +27,7 @@ const useLabels = () => {
         );
     }
 
-    function label(path, hideError) {
+    function label(path, hideError = !process.env.NODE_ENV === 'development') {
         let label;
         // 1. Funder based
         if (funderId) {
@@ -46,7 +46,7 @@ const useLabels = () => {
         return label;
     }
 
-    function text(path, hideError) {
+    function text(path, hideError = !process.env.NODE_ENV === 'development') {
         let text;
         // 1. Funder based
         if (funderId) {

@@ -44,14 +44,16 @@ const FounderCardComponent = ({
                 duration={300}
                 animateOpacity={true}
                 height={reflectSelected ? 'auto' : 0}>
-                <Reflection
-                    controller={controller}
-                    name={`${name}-reflection`}
-                    label={inputLabel}
-                    defaultValue={defaultValue.value}
-                    required={reflectSelected}
-                    maxLength={750}
-                />
+                <div className="mt-16">
+                    <Reflection
+                        controller={controller}
+                        name={`${name}-reflection`}
+                        label={inputLabel}
+                        defaultValue={defaultValue.value}
+                        required={reflectSelected}
+                        maxLength={750}
+                    />
+                </div>
             </AnimateHeight>
         </div>
     ) : (

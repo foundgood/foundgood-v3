@@ -100,13 +100,22 @@ const useElseware = () => {
         }
     }
 
+    // Method for deleting items in a list
+    // It also updates the objects in the initiative data store as a side effect
+    // Returns nothing
+    async function ewDeleteItemsWrapper(items, path, initiativePath) {
+        for (const item of items) {
+            // Delete
+            await ewDelete(path, item?.Id);
+
+            // Update store
+            if (initiativePath)
+                utilities.removeInitiativeData(initiativePath, item?.Id);
+        }
+    }
+
     // Wrapper method for creating or updating any object with elseware API
     // It also updates the object in the initiative data store as a side effect
-    // Path is the elseware path - e.g. initiative-activity/initiative-activity
-    // Id is the id of the object - e.g. a0p1x0000008CbtAAE - treated as a condition in expression
-    // Data is the data as json object
-    // ParentId is the optional parent object and id for a given child
-    // Initiative
     // Returns data from creation/update
     async function ewCreateUpdateWrapper(
         path,
@@ -135,6 +144,7 @@ const useElseware = () => {
         ewGetAsync,
         ewCreate,
         ewDelete,
+        ewDeleteItemsWrapper,
         ewUpdate,
         ewCreateUpdateWrapper,
     };

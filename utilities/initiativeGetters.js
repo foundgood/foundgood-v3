@@ -70,6 +70,14 @@ function initiativeGetters(getter, constants) {
                     getter().initiative._activityEmployees
                 ).filter(item => item.Initiative_Activity__c === activityId);
             },
+            // Returns array
+            getFromEmployeeId(employeeId) {
+                return Object.values(
+                    getter().initiative._activityEmployees
+                ).filter(
+                    item => item.Initiative_Employee_Funded__c === employeeId
+                );
+            },
         },
         activityGoals: {
             // Returns array

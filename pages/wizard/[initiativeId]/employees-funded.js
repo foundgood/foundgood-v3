@@ -28,7 +28,12 @@ const EmployeesFundedComponent = () => {
     // ///////////////////
 
     const { label, object, pickList } = useLabels();
-    const { ewUpdate, ewCreate, ewDelete } = useElseware();
+    const {
+        ewUpdate,
+        ewCreate,
+        ewDelete,
+        ewDeleteItemsWrapper,
+    } = useElseware();
 
     // ///////////////////
     // METHODS
@@ -86,6 +91,13 @@ const EmployeesFundedComponent = () => {
     }
 
     async function deleteItem(id) {
+        // Delete relations
+        await ewDeleteItemsWrapper(
+            utilities.activityEmployees.getFromEmployeeId(id),
+            'initiative-activity-employee/initiative-activity-employee',
+            '_activityEmployees'
+        );
+
         // Delete
         await ewDelete(
             'initiative-employee-funded/initiative-employee-funded',
