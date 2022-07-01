@@ -88,15 +88,19 @@ function initiativeGetters(getter, constants) {
             },
         },
         activityRegulations: {
+            // Returns object
+            get(id) {
+                return getter().initiative._regulations[id] || {};
+            },
             // Returns array
             getAll() {
-                return Object.values(getter().initiative._activityRegulations);
+                return Object.values(getter().initiative._regulations);
             },
             // Returns array
             getFromActivityId(activityId) {
-                return Object.values(
-                    getter().initiative._activityRegulations
-                ).filter(item => item.Initiative_Activity__c === activityId);
+                return Object.values(getter().initiative._regulations).filter(
+                    item => item.Initiative_Activity__c === activityId
+                );
             },
         },
         activitySuccessMetrics: {

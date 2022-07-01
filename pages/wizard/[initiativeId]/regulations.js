@@ -27,7 +27,7 @@ const RegulationsComponent = () => {
     // HOOKS
     // ///////////////////
 
-    const { label, object, pickList } = useLabels();
+    const { label, object, pickList, getValueLabel } = useLabels();
     const {
         ewUpdate,
         ewCreate,
@@ -159,10 +159,16 @@ const RegulationsComponent = () => {
             {
                 type: 'DateRange',
                 name: 'DateRange',
+                fromLabel: object.label(
+                    'Initiative_Activity_Regulation__c.Date_Applied__c__from'
+                ),
+                toLabel: object.label(
+                    'Initiative_Activity_Regulation__c.Date_Received__c__to'
+                ),
                 label: `${object.label(
-                    'Initiative_Activity_Regulation__c.Grant_Start_Date__c'
+                    'Initiative_Activity_Regulation__c.Date_Applied__c'
                 )} / ${object.label(
-                    'Initiative_Activity_Regulation__c.Grant_End_Date__c'
+                    'Initiative_Activity_Regulation__c.Date_Received__c'
                 )}`,
             },
             {
@@ -175,6 +181,7 @@ const RegulationsComponent = () => {
                     'Initiative_Activity_Regulation__c.Issuing_Body__c'
                 ),
                 maxLength: 200,
+                required: true,
             },
             {
                 type: 'Select',
@@ -188,6 +195,7 @@ const RegulationsComponent = () => {
                 options: pickList(
                     'Initiative_Activity_Regulation__c.Importance__c'
                 ),
+                required: true,
             },
         ];
     }
@@ -241,10 +249,13 @@ const RegulationsComponent = () => {
                     },
                     card: {
                         title(item) {
-                            return item?.Full_Id__c__c;
+                            return item?.Id__c;
                         },
                         type(item) {
-                            return item?.Job_Title__c;
+                            return getValueLabel(
+                                'Initiative_Activity_Regulation__c.Type__c',
+                                item?.Type__c
+                            );
                         },
                         components(item) {
                             return {

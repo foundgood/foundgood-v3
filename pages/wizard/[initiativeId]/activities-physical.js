@@ -61,7 +61,7 @@ const ActivitiesPhysicalComponent = () => {
             Financial_Value__c: Value[0]?.textValue,
             CurrencyIsoCode: Value[0]?.selectValue,
             activityGoals: Goals.map(item => item.selectValue),
-            activityRegulations: Regulations.map(item => item.selectValue),
+            regulations: Regulations.map(item => item.selectValue),
         };
     }
 
@@ -75,7 +75,7 @@ const ActivitiesPhysicalComponent = () => {
         );
 
         // Destructure response
-        const { _activityGoals, _activityRegulations, ...rest } = itemData;
+        const { _activityGoals, _regulations, ...rest } = itemData;
 
         // Update main data
         utilities.updateInitiativeData('_activities', rest);
@@ -85,10 +85,7 @@ const ActivitiesPhysicalComponent = () => {
             '_activityGoals',
             _activityGoals
         );
-        utilities.updateInitiativeDataRelations(
-            '_activityRegulations',
-            _activityRegulations
-        );
+        utilities.updateInitiativeDataRelations('_regulations', _regulations);
     }
 
     async function editItem(formData, id) {
@@ -99,7 +96,7 @@ const ActivitiesPhysicalComponent = () => {
         );
 
         // Destructure response
-        const { _activityGoals, _activityRegulations, ...rest } = itemData;
+        const { _activityGoals, _regulations, ...rest } = itemData;
 
         // Clean out existing related data
         utilities.removeInitiativeDataRelations(
@@ -107,7 +104,7 @@ const ActivitiesPhysicalComponent = () => {
             item => item.Initiative_Activity__c === id
         );
         utilities.removeInitiativeDataRelations(
-            '_activityRegulations',
+            '_regulations',
             item => item.Initiative_Activity__c === id
         );
 
@@ -119,10 +116,7 @@ const ActivitiesPhysicalComponent = () => {
             '_activityGoals',
             _activityGoals
         );
-        utilities.updateInitiativeDataRelations(
-            '_activityRegulations',
-            _activityRegulations
-        );
+        utilities.updateInitiativeDataRelations('_regulations', _regulations);
     }
 
     async function deleteItem(id) {
@@ -138,10 +132,6 @@ const ActivitiesPhysicalComponent = () => {
         // Clean out existing related data
         utilities.removeInitiativeDataRelations(
             '_activityGoals',
-            item => item.Initiative_Activity__c === id
-        );
-        utilities.removeInitiativeDataRelations(
-            '_activityRegulations',
             item => item.Initiative_Activity__c === id
         );
     }
@@ -294,13 +284,11 @@ const ActivitiesPhysicalComponent = () => {
             {
                 type: 'SelectList',
                 name: 'Regulations',
-                label: object.label('Initiative_Activity_Regulation__c.Name'),
-                subLabel: object.helpText(
-                    'Initiative_Activity_Regulation__c.Name'
-                ),
+                label: object.label('Initiative_Activity__c.Regulations'),
+                subLabel: object.helpText('Initiative_Activity__c.Regulations'),
                 options: regulations.map(regulation => ({
                     value: regulation.Id,
-                    label: regulation.Name,
+                    label: regulation.Id__c,
                 })),
                 missingOptionsLabel: label('EmptyStateInputRegulations'),
             },

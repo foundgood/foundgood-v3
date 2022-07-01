@@ -18,7 +18,7 @@ const defaultInitiative = {
     _activities: {},
     _activityEmployees: {},
     _activityGoals: {},
-    _activityRegulations: {},
+    _regulations: {},
     _activitySuccessMetrics: {},
     _collaborators: {},
     _employeesFunded: {},

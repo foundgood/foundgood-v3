@@ -20,6 +20,8 @@ const DateRangeComponent = ({
     name,
     required,
     subLabel,
+    fromLabel,
+    toLabel,
 }) => {
     // ///////////////////
     // HOOKS
@@ -87,7 +89,7 @@ const DateRangeComponent = ({
                     ])}>
                     <div className="flex flex-col flex-grow">
                         <span className="mb-4 input-utility-text">
-                            {label('FormCaptureDateRangeFrom')}
+                            {fromLabel || label('FormCaptureDateRangeFrom')}
                         </span>
                         <DayPickerInput
                             inputProps={{ disabled }}
@@ -118,7 +120,7 @@ const DateRangeComponent = ({
                     </div>
                     <div className="flex flex-col flex-grow">
                         <span className="mb-4 input-utility-text">
-                            {label('FormCaptureDateRangeTo')}
+                            {toLabel || label('FormCaptureDateRangeTo')}
                         </span>
                         <DayPickerInput
                             inputProps={{ disabled: disabled || !from }}
@@ -174,6 +176,8 @@ DateRangeComponent.propTypes = {
     defaultValue: t.shape({ from: t.string, to: t.string }),
     disabled: t.bool,
     label: t.string,
+    fromLabel: t.string,
+    toLabel: t.string,
     name: t.string,
     required: t.bool,
     subLabel: t.string,
@@ -187,6 +191,8 @@ DateRangeComponent.defaultProps = {
     },
     disabled: false,
     label: '',
+    fromLabel: '',
+    toLabel: '',
     name: '',
     required: false,
     subLabel: '',

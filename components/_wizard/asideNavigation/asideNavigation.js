@@ -46,31 +46,33 @@ const AsideNavigationComponent = () => {
 
     return (
         <>
-            <header>
-                {MODE === CONTEXTS.REPORT ? (
-                    <>
-                        <p className="mt-8 t-footnote">{initiative.Name}</p>
-                        <h2 className="mt-16 t-h5">
-                            {
-                                initiative._reports[REPORT_ID]?.Funder_Report__r
-                                    .Account__r?.Name
-                            }
+            {utilities.initiative.get().Id && (
+                <header>
+                    {MODE === CONTEXTS.REPORT ? (
+                        <>
+                            <p className="mt-8 t-footnote">{initiative.Name}</p>
+                            <h2 className="mt-16 t-h5">
+                                {
+                                    initiative._reports[REPORT_ID]
+                                        ?.Funder_Report__r.Account__r?.Name
+                                }
+                            </h2>
+                            <h3 className="mt-16 t-sh6">
+                                {`${
+                                    initiative._reports[REPORT_ID]
+                                        ?.Report_Type__c
+                                } ${label('TitleReport')} ${dayjs(
+                                    initiative._reports[REPORT_ID]?.Due_Date__c
+                                ).format('YYYY')}`}
+                            </h3>
+                        </>
+                    ) : (
+                        <h2 className="mt-8 t-h5">
+                            {label(contextBasedLabels[MODE])}
                         </h2>
-                        <h3 className="mt-16 t-sh6">
-                            {`${
-                                initiative._reports[REPORT_ID]?.Report_Type__c
-                            } ${label('TitleReport')} ${dayjs(
-                                initiative._reports[REPORT_ID]?.Due_Date__c
-                            ).format('YYYY')}`}
-                        </h3>
-                    </>
-                ) : (
-                    <h2 className="mt-8 t-h5">
-                        {label(contextBasedLabels[MODE])}
-                    </h2>
-                )}
-            </header>
-
+                    )}
+                </header>
+            )}
             <ul className="mt-48">
                 {items?.map((item, index) => {
                     if (item.visible) {
