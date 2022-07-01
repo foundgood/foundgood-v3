@@ -44,8 +44,6 @@ const DateRangeComponent = ({
         },
     });
 
-    console.log(error);
-
     // ///////////////////
     // STATE
     // ///////////////////
