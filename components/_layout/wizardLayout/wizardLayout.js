@@ -225,7 +225,9 @@ const WizardLayoutComponent = ({ children, layoutSettings }) => {
                     'absolute flex justify-center transition-slow left-0 right-0 mb-24 top-48 xl:top-0 sm:top-56',
                     {
                         'xl:left-[20%] 3xl:left-[300px]':
-                            leftMenuActive && layoutSettings.aside,
+                            leftMenuActive &&
+                            layoutSettings.aside &&
+                            utilities.initiative.get().Id,
                         'xl:right-[25%] 3xl:right-[400px]':
                             rightMenuActive && layoutSettings.help,
                     },
@@ -242,7 +244,9 @@ const WizardLayoutComponent = ({ children, layoutSettings }) => {
                         'fixed bottom-0 left-0 right-0 h-48 lg:h-64 flex justify-center transition-slow z-below-aside',
                         {
                             'xl:left-[20%] 3xl:left-[300px]':
-                                leftMenuActive && layoutSettings.aside,
+                                leftMenuActive &&
+                                layoutSettings.aside &&
+                                utilities.initiative.get().Id,
                             'xl:right-[25%] 3xl:right-[400px]':
                                 rightMenuActive && layoutSettings.help,
                         },
