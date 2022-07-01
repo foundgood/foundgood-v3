@@ -6,6 +6,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
+import { getPermissionRules } from 'utilities';
 import {
     useContext,
     useElseware,
@@ -297,7 +298,14 @@ const FundersComponent = ({ pageProps }) => {
                                 _get(funder, 'Application_Id__c') || ''
                             }`}
                             action={enableAction(
-                                ['super', { account: funder.Account__c }],
+                                [
+                                    getPermissionRules(
+                                        'initiative',
+                                        'funders',
+                                        'update'
+                                    ),
+                                    { account: funder.Account__c },
+                                ],
                                 () => {
                                     setUpdateId(funder.Id);
                                     setModalIsOpen(true);

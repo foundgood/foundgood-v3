@@ -404,8 +404,6 @@ const ReportUpdateComponent = ({
         // Tagging
         ...(tagging
             ? taggingCollections.map((taggingCollection, index) => {
-                  console.log(taggingCollection);
-                  console.log(`ReportUpdateModal${tagging.type}TagLabel`);
                   return {
                       type: 'SelectList',
                       name: `taggingSelect-${taggingCollection.Tag__c}`,

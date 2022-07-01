@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import _get from 'lodash.get';
 
 // Utilities
+import { getPermissionRules } from 'utilities';
 import {
     useContext,
     useElseware,
@@ -268,7 +269,14 @@ const ApplicantsComponent = ({ pageProps }) => {
                             label={_get(collaborator, 'Type__c') || ''}
                             body={_get(collaborator, 'Description__c') || ''}
                             action={enableAction(
-                                ['super', { account: collaborator.Account__c }],
+                                [
+                                    getPermissionRules(
+                                        'initiative',
+                                        'applicants',
+                                        'update'
+                                    ),
+                                    { account: collaborator.Account__c },
+                                ],
                                 () => {
                                     setUpdateId(collaborator.Id);
                                     setModalIsOpen(true);
