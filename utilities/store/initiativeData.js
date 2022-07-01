@@ -100,6 +100,7 @@ const constants = {
         UPDATE_OVERVIEW: 'Update Overview',
         RESULTS: 'Results',
         GOAL: 'Goal',
+        REGULATION: 'Regulation',
 
         LOGBOOK_UPDATE: 'Update', // Update overview?
     },

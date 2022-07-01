@@ -6,15 +6,22 @@ import t from 'prop-types';
 
 // Utilities
 import { useLabels } from 'utilities/hooks';
+import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 
 const EmployeesFundedComponent = ({ item }) => {
     // ///////////////////
+    // STORES
+    // ///////////////////
+
+    const { CONSTANTS } = useInitiativeDataStore();
+
+    // ///////////////////
     // HOOKS
     // ///////////////////
 
-    const { getValueLabel, object } = useLabels();
+    const { dataSet, getValueLabel, object } = useLabels();
 
     // ///////////////////
     // DATA

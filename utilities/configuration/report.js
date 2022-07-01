@@ -219,6 +219,29 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
+    regulations: {
+        title: 'ReportWizardMenuRegulations',
+        labels: {
+            form: {
+                title: 'ReportWizardRegulationsHeading',
+                preamble: 'ReportWizardRegulationsSubHeading',
+            },
+            help: {
+                why: 'ReportWizardRegulationsHelpWhy',
+                what: 'ReportWizardRegulationsHelpWhat',
+                guide: 'ReportWizardRegulationsHelpGuide',
+            },
+        },
+        baseUrl: 'regulations',
+        url(initiativeId, reportId) {
+            return `/report/${initiativeId}/regulations/${reportId}`;
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
     goals: {
         title: 'ReportWizardMenuGoals',
         labels: {
@@ -707,7 +730,7 @@ const reportStructures = {
                     d.collaborators,
                     d.funders,
                     d.employeesFunded,
-                    // d.regulations // TODO
+                    d.regulations,
                 ],
             },
             {
@@ -752,7 +775,7 @@ const reportStructures = {
                     d.collaborators,
                     d.funders,
                     d.employeesFunded,
-                    // d.regulations // TODO
+                    d.regulations,
                 ],
             },
             {
@@ -815,7 +838,7 @@ const reportStructures = {
                     d.collaborators,
                     d.funders,
                     d.employeesFunded,
-                    // d.regulations // TODO
+                    d.regulations,
                 ],
             },
             {
@@ -861,7 +884,7 @@ const reportStructures = {
                     d.collaborators,
                     d.funders,
                     d.employeesFunded,
-                    // d.regulations // TODO
+                    d.regulations,
                 ],
             },
             {

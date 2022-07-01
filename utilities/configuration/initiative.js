@@ -199,6 +199,29 @@ const d = {
             delete: ['grantee.admin', 'grantee.collaborator', 'super'],
         },
     },
+    regulations: {
+        baseUrl: 'regulations',
+        url(initiativeId) {
+            return `/initiative/${initiativeId}/regulations`;
+        },
+        title: 'InitiativeViewRegulationsFundedHeading',
+        labels: {
+            form: {
+                title: 'InitiativeWizardRegulationsHeading',
+                preamble: 'InitiativeWizardRegulationsSubheading',
+            },
+            help: {
+                why: 'InitiativeWizardRegulationsHelpWhy',
+                what: 'InitiativeWizardRegulationsHelpWhat',
+                guide: 'InitiativeWizardRegulationsHelpGuide',
+            },
+        },
+        permissions: {
+            add: ['grantee.admin', 'grantee.collaborator', 'super'],
+            update: ['grantee.admin', 'grantee.collaborator', 'super'],
+            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+        },
+    },
     goals: {
         baseUrl: 'goals',
         url(initiativeId) {
@@ -617,7 +640,7 @@ const initiativeStructures = {
                 d.collaborators,
                 d.funders,
                 d.employeesFunded,
-                // d.regulations
+                d.regulations,
             ],
         },
         {
