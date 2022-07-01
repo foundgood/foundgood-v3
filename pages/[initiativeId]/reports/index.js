@@ -29,7 +29,11 @@ const ReportsComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
-    const { getUserAccountId, getUserAccountType } = useUser();
+    const {
+        getUserAccountId,
+        getUserAccountType,
+        getUserInitiativeTeamRole,
+    } = useUser();
     const { label } = useLabels();
 
     // ///////////////////
@@ -124,16 +128,19 @@ const ReportsComponent = ({ pageProps }) => {
                                     <h2 className="t-h3">
                                         {item.Account__r.Name}
                                     </h2>
-                                    <UpdateButton
-                                        {...{
-                                            baseUrl: 'report-schedule',
-                                            rules: getPermissionRules(
-                                                'initiative',
-                                                'reportSchedule',
-                                                'update'
-                                            ),
-                                        }}
-                                    />
+                                    {item?.Account__c ===
+                                        getUserAccountId() && (
+                                        <UpdateButton
+                                            {...{
+                                                baseUrl: 'report-schedule',
+                                                rules: getPermissionRules(
+                                                    'initiative',
+                                                    'reportSchedule',
+                                                    'update'
+                                                ),
+                                            }}
+                                        />
+                                    )}
                                 </div>
 
                                 <div className="flex flex-wrap">
