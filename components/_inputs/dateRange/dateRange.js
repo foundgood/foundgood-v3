@@ -44,6 +44,8 @@ const DateRangeComponent = ({
         },
     });
 
+    console.log(error);
+
     // ///////////////////
     // STATE
     // ///////////////////
@@ -101,10 +103,10 @@ const DateRangeComponent = ({
                             onDayChange={event => {
                                 setFrom(event);
                                 onChange({
+                                    ...value,
                                     from: event
                                         ? dayjs(event).format('YYYY-MM-DD')
                                         : 'no-date',
-                                    to: dayjs(to).format('YYYY-MM-DD'),
                                 });
                             }}
                             classNames={{
@@ -135,7 +137,7 @@ const DateRangeComponent = ({
                             onDayChange={event => {
                                 setTo(event);
                                 onChange({
-                                    from: dayjs(from).format('YYYY-MM-DD'),
+                                    ...value,
                                     to: event
                                         ? dayjs(event).format('YYYY-MM-DD')
                                         : 'no-date',
