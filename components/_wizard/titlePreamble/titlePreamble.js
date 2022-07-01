@@ -44,22 +44,26 @@ const TitlePreambleComponent = ({
                     {preload ? (
                         <Preloader />
                     ) : (
-                        <h2 className="t-h2">
-                            {title
-                                ? title
-                                : label(currentItem?.item?.labels?.form?.title)}
-                        </h2>
-                    )}
-
-                    {(preamble ||
-                        currentItem?.item?.labels?.form?.preamble) && (
-                        <p className="mt-16 t-preamble">
-                            {preamble
-                                ? preamble
-                                : label(
-                                      currentItem?.item?.labels?.form?.preamble
-                                  )}
-                        </p>
+                        <>
+                            <h2 className="t-h2">
+                                {title
+                                    ? title
+                                    : label(
+                                          currentItem?.item?.labels?.form?.title
+                                      )}
+                            </h2>
+                            {(preamble ||
+                                currentItem?.item?.labels?.form?.preamble) && (
+                                <p className="mt-16 t-preamble">
+                                    {preamble
+                                        ? preamble
+                                        : label(
+                                              currentItem?.item?.labels?.form
+                                                  ?.preamble
+                                          )}
+                                </p>
+                            )}
+                        </>
                     )}
                 </>
             </div>
