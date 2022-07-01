@@ -36,9 +36,13 @@ const RangeComponent = ({
         rules: {
             validate: {
                 isNumberFrom: v =>
-                    /^(0|[1-9][0-9]*)$/.test(v.from) && v.from < v.to,
+                    v.length > 0
+                        ? /^(0|[1-9][0-9]*)$/.test(v.from) && v.from < v.to
+                        : true,
                 isNumberTo: v =>
-                    /^(0|[1-9][0-9]*)$/.test(v.to) && v.to > v.from,
+                    v.length > 0
+                        ? /^(0|[1-9][0-9]*)$/.test(v.to) && v.to > v.from
+                        : true,
                 rangeMin: v => (minValue ? v.from >= minValue : true),
                 rangeMax: v => (maxValue ? v.to <= maxValue : true),
                 required: v => (required ? !!v.from && !!v.to : true),
@@ -49,6 +53,7 @@ const RangeComponent = ({
     // ///////////////////
     // RENDER
     // ///////////////////
+    console.log(error);
 
     return (
         <>
