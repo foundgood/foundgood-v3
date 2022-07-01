@@ -38,6 +38,7 @@ const GoalsComponent = () => {
 
         // Data for sf
         return {
+            Type__c: CONSTANTS.GOALS.GOAL_CUSTOM,
             Goal__c,
         };
     }
