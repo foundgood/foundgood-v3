@@ -1,8 +1,7 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
-import { useForm, useFormState } from 'react-hook-form';
 
 // Utilities
 import { useElseware, useLabels } from 'utilities/hooks';
@@ -12,12 +11,11 @@ import { useInitiativeDataStore } from 'utilities/store';
 import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Button from 'components/button';
-import WizardModal from 'components/_modals/wizardModal';
-import { InputWrapper, LongText } from 'components/_inputs';
-import GoalCard from 'components/_wizard/goalCard';
+import ReportUpdatesInPage from 'components/_wizard/reportUpdatesInPage';
+import Collection from 'components/_wizard/collection';
+import { ReportUpdate } from 'components/_wizard/_cards';
 
-const GoalsComponent = ({ pageProps }) => {
+const GoalsComponent = () => {
     // ///////////////////
     // STORES
     // ///////////////////
@@ -29,74 +27,82 @@ const GoalsComponent = ({ pageProps }) => {
     // ///////////////////
 
     const { label, object } = useLabels();
-    const { ewCreateUpdateWrapper } = useElseware();
+    const { ewUpdate, ewCreate, ewDelete } = useElseware();
 
     // ///////////////////
-    // STATE
+    // METHODS
     // ///////////////////
 
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-    const [updateId, setUpdateId] = useState(null);
+    function getItemData(formData) {
+        const { Goal__c } = formData;
 
-    // ///////////////////
-    // FORMS
-    // ///////////////////
+        // Data for sf
+        return {
+            Goal__c,
+        };
+    }
 
-    const mainForm = useForm();
-    const { isDirty } = useFormState({ control: mainForm.control });
+    async function addItem(formData) {
+        const { data: itemData } = await ewCreate(
+            'initiative-goal/initiative-goal',
+            {
+                ...getItemData(formData),
+                Initiative__c: utilities.initiative.get().Id,
+            }
+        );
 
-    // ///////////////////
-    // SUBMIT
-    // ///////////////////
+        // Update main data
+        utilities.updateInitiativeData('_goals', itemData);
+    }
 
-    async function submit(formData) {
-        // Modal save button state
-        setModalIsSaving(true);
-        try {
-            const { Goal__c } = formData;
+    async function editItem(formData, id) {
+        const { data: itemData } = await ewUpdate(
+            'initiative-goal/initiative-goal',
+            id,
+            getItemData(formData)
+        );
 
-            // Data for sf
-            // Get type of submission based on goalType
-            const data = {
-                Type__c: CONSTANTS.GOALS.GOAL_CUSTOM,
-                Goal__c,
-                KPI_Category__c: utilities.initiative.get().Category__c,
-            };
+        // Update main data
+        utilities.updateInitiativeData('_goals', itemData);
+    }
 
-            // Update / Save
-            await ewCreateUpdateWrapper(
-                'initiative-goal/initiative-goal',
-                updateId,
-                data,
-                { Initiative__c: utilities.initiative.get().Id },
-                '_goals'
-            );
+    async function deleteItem(id) {
+        // Delete
+        await ewDelete('initiative-goal/initiative-goal', id);
 
-            // Close modal
-            setModalIsOpen(false);
+        // Clean out item
+        utilities.removeInitiativeData('_goals', id);
+    }
 
-            // Modal save button state
-            setModalIsSaving(false);
+    function setItemFieldValues(form, id) {
+        const { Goal__c } = utilities.goals.get(id);
 
-            // Clear content in form
-            mainForm.reset();
-        } catch (error) {
-            // Modal save button state
-            setModalIsSaving(false);
-            console.warn(error);
-        }
+        form.setValue('Goal__c', Goal__c);
     }
 
     // ///////////////////
-    // EFFECTS
+    // DATA
     // ///////////////////
 
-    // Effect: Set value based on modal elements based on updateId
-    useEffect(() => {
-        const { Goal__c } = utilities.goals.get(updateId);
-        mainForm.setValue('Goal__c', Goal__c);
-    }, [updateId, modalIsOpen]);
+    // Get goals
+    const goals = utilities.goals.getTypeCustom();
+
+    // ///////////////////
+    // FIELDS
+    // ///////////////////
+
+    function itemFields() {
+        return [
+            {
+                type: 'LongText',
+                name: 'Goal__c',
+                label: object.label('Initiative_Goal__c.Goal__c'),
+                subLabel: object.helpText('Initiative_Goal__c.Goal__c'),
+                required: true,
+                maxLength: 200,
+            },
+        ];
+    }
 
     // ///////////////////
     // RENDER
@@ -105,44 +111,67 @@ const GoalsComponent = ({ pageProps }) => {
     return (
         <WithPermission context>
             <TitlePreamble />
-            <InputWrapper>
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddGoal')}
-                </Button>
-                {utilities.goals.getTypeCustom().map(goal => (
-                    <GoalCard
-                        key={goal.Id}
-                        headline={goal?.Goal__c ?? ''}
-                        action={() => {
-                            setUpdateId(goal.Id);
-                            setModalIsOpen(true);
-                        }}
-                    />
-                ))}
-            </InputWrapper>
-            <WizardModal
-                isOpen={modalIsOpen}
-                title={label('WizardModalHeadingGoals')}
-                onCancel={() => setModalIsOpen(false)}
-                isSaving={modalIsSaving}
-                onSave={mainForm.handleSubmit(submit)}>
-                <InputWrapper>
-                    <LongText
-                        name="Goal__c"
-                        label={object.label('Initiative_Goal__c.Goal__c')}
-                        subLabel={object.helpText('Initiative_Goal__c.Goal__c')}
-                        placeholder={label('FormCaptureTextEntryEmpty')}
-                        maxLength={200}
-                        controller={mainForm.control}
-                    />
-                </InputWrapper>
-            </WizardModal>
+            <ReportUpdatesInPage
+                {...{
+                    items: goals,
+                    itemRelationKey: 'Initiative_Goal__c',
+                }}
+            />
+            <Collection
+                {...{
+                    collection: {
+                        items: goals,
+                        fields: itemFields,
+                        addLabel: label('ButtonAddGoal'),
+                        emptyLabel: label('EmptyStateWizardPageGoals'),
+                    },
+                    methods: {
+                        add: {
+                            title: label('WizardModalHeadingGoals'),
+                            action: addItem,
+                        },
+                        edit: {
+                            title: label('WizardModalHeadingGoals'),
+                            action: editItem,
+                            setFieldValues: setItemFieldValues,
+                        },
+                        delete: {
+                            title: label('WizardModalHeadingGoalsDelete'),
+                            text: label('WizardModalTextGoalsDelete'),
+                            action: deleteItem,
+                        },
+                    },
+                    card: {
+                        title(item) {
+                            return item?.Goal__c;
+                        },
+                        type() {
+                            return label('CardTypeGoal');
+                        },
+                        components(item) {
+                            return {
+                                reportUpdate: (
+                                    <ReportUpdate
+                                        {...{
+                                            title: label(
+                                                'ReportUpdateModalGoalsHeading'
+                                            ),
+                                            reflection: {
+                                                item,
+                                                relationKey:
+                                                    'Initiative_Goal__c',
+                                                type:
+                                                    CONSTANTS.REPORT_DETAILS
+                                                        .GOALS,
+                                            },
+                                        }}
+                                    />
+                                ),
+                            };
+                        },
+                    },
+                }}
+            />
         </WithPermission>
     );
 };

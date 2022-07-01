@@ -99,6 +99,7 @@ const constants = {
         INFLUENCE_ON_POLICY: 'Influence On Policy',
         UPDATE_OVERVIEW: 'Update Overview',
         RESULTS: 'Results',
+        GOAL: 'Goal',
 
         LOGBOOK_UPDATE: 'Update', // Update overview?
     },
@@ -143,13 +144,6 @@ const constants = {
     },
     CUSTOM: {
         NO_REFLECTIONS: '__NO__REFLECTIONS__',
-        INDICATOR_KPI_AGED: [
-            { value: 'Children (ages 0-2)', min: 0, max: 2 },
-            { value: 'Children (ages 3-5)', min: 3, max: 4 },
-            { value: 'Children (ages 6-15)', min: 6, max: 15 },
-            { value: 'Young people (ages 16-24)', min: 16, max: 24 },
-            { value: 'Adults (ages 24 and over)', min: 24, max: 150 },
-        ],
     },
 };
 

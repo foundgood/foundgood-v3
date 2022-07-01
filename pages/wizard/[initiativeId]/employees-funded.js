@@ -1,38 +1,22 @@
 // React
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 // Packages
-import { useForm, useWatch, useFormState } from 'react-hook-form';
-import _get from 'lodash.get';
 
 // Utilities
-import {
-    useContext,
-    useElseware,
-    useLabels,
-    useReflections,
-    useWizardSubmit,
-} from 'utilities/hooks';
+import { useElseware, useLabels } from 'utilities/hooks';
 import { useInitiativeDataStore } from 'utilities/store';
 
 // Components
 import WithAuth from 'components/withAuth';
 import WithPermission from 'components/withPermission';
 import TitlePreamble from 'components/_wizard/titlePreamble';
-import Button from 'components/button';
-import WizardModal from 'components/_modals/wizardModal';
-import {
-    InputWrapper,
-    Select,
-    SelectList,
-    Text,
-    Number,
-    Reflection,
-} from 'components/_inputs';
-import ProjectMemberCard from 'components/_wizard/projectMemberCard';
-import NoReflections from 'components/_wizard/noReflections';
+import ReportUpdatesInPage from 'components/_wizard/reportUpdatesInPage';
+import Collection from 'components/_wizard/collection';
+import { ReportUpdate } from 'components/_wizard/_cards';
+import EmployeesFunded from 'components/_wizard/_cards/_cardContents/employeesFunded';
 
-const EmployeesFundedComponent = ({ pageProps }) => {
+const EmployeesFundedComponent = () => {
     // ///////////////////
     // STORES
     // ///////////////////
@@ -43,137 +27,212 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     // HOOKS
     // ///////////////////
 
-    const { MODE, CONTEXTS, REPORT_ID } = useContext();
     const { label, object, pickList } = useLabels();
-    const { ewCreateUpdateWrapper } = useElseware();
-    const {
-        submitNoReflection,
-        submitReflection,
-        getReflectionDefaultValue,
-    } = useReflections({
-        dataSet() {
-            return utilities.collaborators.getTypeAdditional;
-        },
-        reflectionKey: 'Employees_Funded_Overview',
-        type: CONSTANTS.REPORT_DETAILS.EMPLOYEES_FUNDED_OVERVIEW,
-    });
+    const { ewUpdate, ewCreate, ewDelete } = useElseware();
 
     // ///////////////////
-    // STATE
+    // METHODS
     // ///////////////////
 
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalIsSaving, setModalIsSaving] = useState(false);
-    const [reflecting, setReflecting] = useState(false);
-    const [updateId, setUpdateId] = useState(null);
-
-    // ///////////////////
-    // FORMS
-    // ///////////////////
-
-    const mainForm = useForm();
-    const reflectionForm = useForm();
-    const reflectSelected = useWatch({
-        control: reflectionForm.control,
-        name: 'Employees_Funded_Overview',
-    });
-    const { isDirty } = useFormState({ control: mainForm.control });
-
-    // ///////////////////
-    // SUBMIT
-    // ///////////////////
-
-    async function submit(formData) {
-        // Modal save button state
-        setModalIsSaving(true);
-        try {
-            const {
-                Gender,
-                Job_Title__c,
-                Role_Type__c,
-                Percent_Involvement__c,
-            } = formData;
-
-            // Data for sf
-            const data = {
-                Job_Title__c,
-                Role_Type__c,
-                Gender__c: Gender[0]?.selectValue,
-                Gender_Other__c: Gender[0]?.textValue,
-                Percent_Involvement__c,
-            };
-
-            // Update / Save
-            await ewCreateUpdateWrapper(
-                'initiative-employee-funded/initiative-employee-funded',
-                updateId,
-                data,
-                { Initiative__c: utilities.initiative.get().Id },
-                '_employeesFunded'
-            );
-
-            // Close modal
-            setModalIsOpen(false);
-
-            // Modal save button state
-            setModalIsSaving(false);
-
-            // Clear content in form
-            mainForm.reset();
-        } catch (error) {
-            // Modal save button state
-            setModalIsSaving(false);
-            console.warn(error);
-        }
-    }
-
-    useWizardSubmit({
-        [CONTEXTS.REPORT]: [mainForm, submitReflection],
-    });
-
-    // ///////////////////
-    // DATA
-    // ///////////////////
-
-    // Current report detail
-    const currentReflection = utilities.reportDetails.getTypeEmployeesFundedFromReportId(
-        REPORT_ID
-    );
-
-    // Get emloyeesFunded
-    const employeesFunded = utilities.employeesFunded.getAll();
-
-    // ///////////////////
-    // EFFECTS
-    // ///////////////////
-
-    // Effect: Run reflectAction on reflectSelected change in order to propagate event up
-    useEffect(() => {
-        setReflecting(
-            reflectSelected && reflectSelected.length > 0 ? true : false
-        );
-    }, [reflectSelected]);
-
-    // Effect: Set value based on modal elements based on updateId
-    useEffect(() => {
+    function getItemData(formData) {
         const {
+            Full_Name__c,
             Job_Title__c,
             Role_Type__c,
+            DateRange,
+            Education__c,
+            Education_Details__c,
+            Gender,
+            Percent_Involvement__c,
+        } = formData;
+
+        // Data for sf
+        return {
+            Full_Name__c,
+            Job_Title__c,
+            Role_Type__c,
+            Start_Date__c: DateRange.from,
+            End_Date__c: DateRange.to,
+            Education__c,
+            Education_Details__c,
+            Gender__c: Gender[0]?.selectValue,
+            Gender_Other__c: Gender[0]?.textValue,
+            Percent_Involvement__c,
+        };
+    }
+
+    async function addItem(formData) {
+        const { data: itemData } = await ewCreate(
+            'initiative-employee-funded/initiative-employee-funded',
+            {
+                ...getItemData(formData),
+                Initiative__c: utilities.initiative.get().Id,
+            }
+        );
+
+        // Update main data
+        utilities.updateInitiativeData('_employeesFunded', itemData);
+    }
+
+    async function editItem(formData, id) {
+        const { data: itemData } = await ewUpdate(
+            'initiative-employee-funded/initiative-employee-funded',
+            id,
+            getItemData(formData)
+        );
+
+        // Update main data
+        utilities.updateInitiativeData('_employeesFunded', itemData);
+    }
+
+    async function deleteItem(id) {
+        // Delete
+        await ewDelete(
+            'initiative-employee-funded/initiative-employee-funded',
+            id
+        );
+
+        // Clean out item
+        utilities.removeInitiativeData('_employeesFunded', id);
+    }
+
+    function setItemFieldValues(form, id) {
+        const {
+            Full_Name__c,
+            Job_Title__c,
+            Role_Type__c,
+            Start_Date__c,
+            End_Date__c,
+            Education__c,
+            Education_Details__c,
             Gender__c,
             Gender_Other__c,
             Percent_Involvement__c,
-        } = utilities.employeesFunded.get(updateId);
+        } = utilities.employeesFunded.get(id);
 
-        mainForm.setValue('Job_Title__c', Job_Title__c);
-        mainForm.setValue('Role_Type__c', Role_Type__c);
-        mainForm.setValue('Gender', [
+        form.setValue('Full_Name__c', Full_Name__c);
+        form.setValue('Job_Title__c', Job_Title__c);
+        form.setValue('Role_Type__c', Role_Type__c);
+        form.setValue('DateRange', { from: Start_Date__c, to: End_Date__c });
+        form.setValue('Education__c', Education__c);
+        form.setValue('Education_Details__c', Education_Details__c);
+        form.setValue('Gender', [
             {
                 selectValue: Gender__c,
                 textValue: Gender_Other__c,
             },
         ]);
-        mainForm.setValue('Percent_Involvement__c', Percent_Involvement__c);
-    }, [updateId, modalIsOpen]);
+        form.setValue('Percent_Involvement__c', Percent_Involvement__c);
+    }
+
+    // ///////////////////
+    // DATA
+    // ///////////////////
+
+    // Get emloyeesFunded
+    const employeesFunded = utilities.employeesFunded.getAll();
+
+    // ///////////////////
+    // FIELDS
+    // ///////////////////
+
+    function itemFields() {
+        return [
+            {
+                type: 'Text',
+                name: 'Full_Name__c',
+                label: object.label(
+                    'Initiative_Employee_Funded__c.Full_Name__c'
+                ),
+                subLabel: object.helpText(
+                    'Initiative_Employee_Funded__c.Full_Name__c'
+                ),
+                required: true,
+                maxLength: 80,
+            },
+            {
+                type: 'Text',
+                name: 'Job_Title__c',
+                label: object.label(
+                    'Initiative_Employee_Funded__c.Job_Title__c'
+                ),
+                subLabel: object.helpText(
+                    'Initiative_Employee_Funded__c.Job_Title__c'
+                ),
+                required: true,
+                maxLength: 80,
+            },
+            {
+                type: 'Select',
+                name: 'Role_Type__c',
+                label: object.label(
+                    'Initiative_Employee_Funded__c.Role_Type__c'
+                ),
+                subLabel: object.helpText(
+                    'Initiative_Employee_Funded__c.Role_Type__c'
+                ),
+                options: pickList('Initiative_Employee_Funded__c.Role_Type__c'),
+                required: true,
+            },
+            {
+                type: 'DateRange',
+                name: 'DateRange',
+                label: `${object.label(
+                    'Initiative_Employee_Funded__c.Grant_Start_Date__c'
+                )} / ${object.label(
+                    'Initiative_Employee_Funded__c.Grant_End_Date__c'
+                )}`,
+            },
+            {
+                type: 'Select',
+                name: 'Education__c',
+                label: object.label(
+                    'Initiative_Employee_Funded__c.Education__c'
+                ),
+                subLabel: object.helpText(
+                    'Initiative_Employee_Funded__c.Education__c'
+                ),
+                options: pickList('Initiative_Employee_Funded__c.Education__c'),
+            },
+            {
+                type: 'Text',
+                name: 'Education_Details__c',
+                label: object.label(
+                    'Initiative_Employee_Funded__c.Education_Details__c'
+                ),
+                subLabel: object.helpText(
+                    'Initiative_Employee_Funded__c.Education_Details__c'
+                ),
+                maxLength: 80,
+            },
+            {
+                type: 'SelectList',
+                name: 'Gender',
+                label: object.label('Initiative_Employee_Funded__c.Gender__c'),
+                subLabel: object.helpText(
+                    'Initiative_Employee_Funded__c.Gender__c'
+                ),
+                showText: true,
+                listMaxLength: 1,
+                options: pickList('Initiative_Employee_Funded__c.Gender__c'),
+                textPlaceholder: object.label(
+                    'Initiative_Activity_Success_Metric__c.Gender_Other__c'
+                ),
+            },
+            {
+                type: 'Number',
+                name: 'Percent_Involvement__c',
+                label: object.label(
+                    'Initiative_Employee_Funded__c.Percent_Involvement__c'
+                ),
+                subLabel: object.helpText(
+                    'Initiative_Employee_Funded__c.Percent_Involvement__c'
+                ),
+                minValue: 0,
+                maxValue: 100,
+            },
+        ];
+    }
 
     // ///////////////////
     // RENDER
@@ -182,124 +241,72 @@ const EmployeesFundedComponent = ({ pageProps }) => {
     return (
         <WithPermission context>
             <TitlePreamble />
-            <InputWrapper>
-                <Button
-                    theme="teal"
-                    className="self-start"
-                    action={() => {
-                        setUpdateId(null);
-                        setModalIsOpen(true);
-                    }}>
-                    {label('ButtonAddEmployee')}
-                </Button>
-                {MODE === CONTEXTS.REPORT && employeesFunded.length > 0 && (
-                    <NoReflections
-                        onClick={submitNoReflection}
-                        reflectionItems={[currentReflection?.Description__c]}
-                        reflecting={reflecting}
-                    />
-                )}
-                {MODE === CONTEXTS.REPORT && (
-                    <Reflection
-                        name="Employees_Funded_Overview"
-                        defaultValue={
-                            getReflectionDefaultValue(currentReflection).value
-                        }
-                        label={label(
-                            'ReportWizardEmployeesReflectionSubHeading'
-                        )}
-                        placeholder={label('FormCaptureTextEntryEmpty')}
-                        maxLength={750}
-                        controller={reflectionForm.control}
-                    />
-                )}
-                {employeesFunded.map(employee => (
-                    <ProjectMemberCard
-                        key={employee.Id}
-                        headline={_get(employee, 'Job_Title__c') || ''}
-                        label={_get(employee, 'Role_Type__c') || ''}
-                        body={`${_get(employee, 'Gender__c') || ''} ${
-                            employee.Gender__c &&
-                            employee.Percent_Involvement__c
-                                ? '•'
-                                : ''
-                        } ${_get(employee, 'Percent_Involvement__c') || ''} %`}
-                        action={() => {
-                            setUpdateId(employee.Id);
-                            setModalIsOpen(true);
-                        }}
-                    />
-                ))}
-            </InputWrapper>
-            <WizardModal
-                isOpen={modalIsOpen}
-                title={label('WizardModalHeadingEmployees')}
-                onCancel={() => setModalIsOpen(false)}
-                isSaving={modalIsSaving}
-                onSave={mainForm.handleSubmit(submit)}>
-                <InputWrapper>
-                    <Text
-                        name="Job_Title__c"
-                        label={object.label(
-                            'Initiative_Employee_Funded__c.Job_Title__c'
-                        )}
-                        subLabel={object.helpText(
-                            'Initiative_Employee_Funded__c.Job_Title__c'
-                        )}
-                        placeholder={label('FormCaptureTextEntryEmpty')}
-                        maxLength={80}
-                        required
-                        controller={mainForm.control}
-                    />
-                    <Select
-                        name="Role_Type__c"
-                        label={object.label(
-                            'Initiative_Employee_Funded__c.Role_Type__c'
-                        )}
-                        subLabel={object.helpText(
-                            'Initiative_Employee_Funded__c.Role_Type__c'
-                        )}
-                        placeholder={label('FormCaptureSelectEmpty')}
-                        options={pickList(
-                            'Initiative_Employee_Funded__c.Role_Type__c'
-                        )}
-                        required
-                        controller={mainForm.control}
-                    />
-                    <SelectList
-                        name="Gender"
-                        label={object.label(
-                            'Initiative_Employee_Funded__c.Gender__c'
-                        )}
-                        subLabel={object.helpText(
-                            'Initiative_Employee_Funded__c.Gender__c'
-                        )}
-                        selectPlaceholder={label('FormCaptureSelectEmpty')}
-                        textPlaceholder={object.label(
-                            'Initiative_Employee_Funded__c.Gender_Other__c'
-                        )}
-                        options={pickList(
-                            'Initiative_Employee_Funded__c.Gender__c'
-                        )}
-                        showText
-                        listMaxLength={1}
-                        controller={mainForm.control}
-                    />
-                    <Number
-                        name="Percent_Involvement__c"
-                        label={object.label(
-                            'Initiative_Employee_Funded__c.Percent_Involvement__c'
-                        )}
-                        subLabel={object.helpText(
-                            'Initiative_Employee_Funded__c.Percent_Involvement__c'
-                        )}
-                        placeholder={label('FormCaptureNumberEmpty')}
-                        minValue={0}
-                        maxValue={100}
-                        controller={mainForm.control}
-                    />
-                </InputWrapper>
-            </WizardModal>
+            <ReportUpdatesInPage
+                {...{
+                    items: employeesFunded,
+                    itemRelationKey: 'Initiative_Employee_Funded__c',
+                }}
+            />
+            <Collection
+                {...{
+                    collection: {
+                        items: employeesFunded,
+                        fields: itemFields,
+                        addLabel: label('ButtonAddEmployee'),
+                        emptyLabel: label(
+                            'EmptyStateWizardPageEmployeesFunded'
+                        ),
+                    },
+                    methods: {
+                        add: {
+                            title: label('WizardModalHeadingEmployeesFunded'),
+                            action: addItem,
+                        },
+                        edit: {
+                            title: label('WizardModalHeadingEmployeesFunded'),
+                            action: editItem,
+                            setFieldValues: setItemFieldValues,
+                        },
+                        delete: {
+                            title: label(
+                                'WizardModalHeadingEmployeesFundedDelete'
+                            ),
+                            text: label('WizardModalTextEmployeesFundedDelete'),
+                            action: deleteItem,
+                        },
+                    },
+                    card: {
+                        title(item) {
+                            return item?.Full_Name__c;
+                        },
+                        type(item) {
+                            return item?.Job_Title__c;
+                        },
+                        components(item) {
+                            return {
+                                cardContent: <EmployeesFunded {...{ item }} />,
+                                reportUpdate: (
+                                    <ReportUpdate
+                                        {...{
+                                            title: label(
+                                                'ReportUpdateModalEmployeesFundedHeading'
+                                            ),
+                                            reflection: {
+                                                item,
+                                                relationKey:
+                                                    'Initiative_Employee_Funded__c',
+                                                type:
+                                                    CONSTANTS.REPORT_DETAILS
+                                                        .EMPLOYEES_FUNDED_OVERVIEW,
+                                            },
+                                        }}
+                                    />
+                                ),
+                            };
+                        },
+                    },
+                }}
+            />
         </WithPermission>
     );
 };
