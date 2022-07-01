@@ -69,7 +69,7 @@ const RegulationsComponent = () => {
         );
 
         // Update main data
-        utilities.updateInitiativeData('_activityRegulations', itemData);
+        utilities.updateInitiativeData('_regulations', itemData);
     }
 
     async function editItem(formData, id) {
@@ -80,7 +80,7 @@ const RegulationsComponent = () => {
         );
 
         // Update main data
-        utilities.updateInitiativeData('_activityRegulations', itemData);
+        utilities.updateInitiativeData('_regulations', itemData);
     }
 
     async function deleteItem(id) {
@@ -98,7 +98,7 @@ const RegulationsComponent = () => {
         );
 
         // Clean out item
-        utilities.removeInitiativeData('_activityRegulations', id);
+        utilities.removeInitiativeData('_regulations', id);
     }
 
     function setItemFieldValues(form, id) {
@@ -109,7 +109,7 @@ const RegulationsComponent = () => {
             Date_Received__c,
             Issuing_Body__c,
             Importance__c,
-        } = utilities.activityRegulations.get(id);
+        } = utilities.regulations.get(id);
 
         form.setValue('Type__c', Type__c);
         form.setValue('Id__c', Id__c);
@@ -126,7 +126,7 @@ const RegulationsComponent = () => {
     // ///////////////////
 
     // Get regulations
-    const regulations = utilities.activityRegulations.getAll();
+    const regulations = utilities.regulations.getAll();
 
     // ///////////////////
     // FIELDS

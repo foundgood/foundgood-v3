@@ -194,7 +194,7 @@ const ActivitiesPhysicalComponent = () => {
     const customGoals = utilities.goals.getTypeCustom();
 
     // Regulations
-    const regulations = utilities.activityRegulations.getAll();
+    const regulations = utilities.regulations.getAll();
 
     // Get activities
     const activities = utilities.activities.getTypePhysical();

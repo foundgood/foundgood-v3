@@ -35,9 +35,7 @@ const ActivityPhysicalComponent = ({ item }) => {
 
     const otherLocation = item?.Additional_Location_Information__c;
 
-    const regulations = utilities.activityRegulations.getFromActivityId(
-        item?.id
-    );
+    const regulations = utilities.regulations.getFromActivityId(item?.id);
 
     // ///////////////////
     // RENDER

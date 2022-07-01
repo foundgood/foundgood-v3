@@ -87,7 +87,7 @@ function initiativeGetters(getter, constants) {
                 );
             },
         },
-        activityRegulations: {
+        regulations: {
             // Returns object
             get(id) {
                 return getter().initiative._regulations[id] || {};
