@@ -72,7 +72,7 @@ const EmployeesFundedComponent = ({ item }) => {
                     <h5 className="mt-16 t-caption-bold text-teal-60">
                         {object.label('Initiative_Employee__c.Education__c')}
                     </h5>
-                    <p>{Education__c}</p>
+                    <p>{item?.Education__c}</p>
                 </div>
             )}
 
@@ -84,7 +84,7 @@ const EmployeesFundedComponent = ({ item }) => {
                             'Initiative_Employee__c.Education_Details__c'
                         )}
                     </h5>
-                    <p>{Education_Details__c}</p>
+                    <p>{item?.Education_Details__c}</p>
                 </div>
             )}
 

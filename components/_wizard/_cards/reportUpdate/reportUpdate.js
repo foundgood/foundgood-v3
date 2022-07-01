@@ -403,59 +403,66 @@ const ReportUpdateComponent = ({
     const fields = [
         // Tagging
         ...(tagging
-            ? taggingCollections.map(taggingCollection => ({
-                  type: 'SelectList',
-                  name: `taggingSelect-${taggingCollection.Tag__c}`,
-                  label: `${label(`ReportUpdateModal${tagging.type}TagLabel`)}`,
-                  subLabel: taggingCollection.Account_Name__c,
-                  defaultValue: currentTags
-                      .filter(
-                          tag =>
-                              tag.Tag__r?.Collection__c ===
-                              taggingCollection.Tag__c
-                      )
-                      .map(tag => ({
-                          selectValue: tag.Tag__r?.Id,
-                      })),
-                  listMaxLength: 3,
-                  async options() {
-                      // Get all tag options
-                      const tagsData = await Promise.all(
-                          tagging.types.map(tagType =>
-                              ewGetAsync('tag/tag-collection', {
-                                  id: taggingCollection.Tag__r?.Id,
-                                  type: tagType,
-                              })
+            ? taggingCollections.map((taggingCollection, index) => {
+                  console.log(taggingCollection);
+                  console.log(`ReportUpdateModal${tagging.type}TagLabel`);
+                  return {
+                      type: 'SelectList',
+                      name: `taggingSelect-${taggingCollection.Tag__c}`,
+                      label:
+                          index === 0
+                              ? label('ReportUpdateModalTagLabel')
+                              : null,
+                      subLabel: taggingCollection.Account_Name__c,
+                      defaultValue: currentTags
+                          .filter(
+                              tag =>
+                                  tag.Tag__r?.Collection__c ===
+                                  taggingCollection.Tag__c
                           )
-                      );
+                          .map(tag => ({
+                              selectValue: tag.Tag__r?.Id,
+                          })),
+                      listMaxLength: 3,
+                      async options() {
+                          // Get all tag options
+                          const tagsData = await Promise.all(
+                              tagging.types.map(tagType =>
+                                  ewGetAsync('tag/tag-collection', {
+                                      id: taggingCollection.Tag__r?.Id,
+                                      type: tagType,
+                                  })
+                              )
+                          );
 
-                      // Map to array
-                      const allTags = tagsData
-                          .map(tags => Object.values(tags?.data))
-                          .flat();
+                          // Map to array
+                          const allTags = tagsData
+                              .map(tags => Object.values(tags?.data))
+                              .flat();
 
-                      // Get default tags (no category)
-                      const tagOptionsWithoutCategory = allTags.filter(
-                          tag => !tag.Category__c
-                      );
+                          // Get default tags (no category)
+                          const tagOptionsWithoutCategory = allTags.filter(
+                              tag => !tag.Category__c
+                          );
 
-                      // Get tags based on initiative category
-                      const tagOptionsWithInitiativeCategory = allTags.filter(
-                          tag =>
-                              tag.Category__c ===
-                              utilities.initiative.get()?.Category__c
-                      );
+                          // Get tags based on initiative category
+                          const tagOptionsWithInitiativeCategory = allTags.filter(
+                              tag =>
+                                  tag.Category__c ===
+                                  utilities.initiative.get()?.Category__c
+                          );
 
-                      // Return both sets of tags
-                      return [
-                          ...tagOptionsWithoutCategory,
-                          ...tagOptionsWithInitiativeCategory,
-                      ].map(tag => ({
-                          label: tag.Name,
-                          value: tag.Id,
-                      }));
-                  },
-              }))
+                          // Return both sets of tags
+                          return [
+                              ...tagOptionsWithoutCategory,
+                              ...tagOptionsWithInitiativeCategory,
+                          ].map(tag => ({
+                              label: tag.Name,
+                              value: tag.Id,
+                          }));
+                      },
+                  };
+              })
             : []),
 
         // Status

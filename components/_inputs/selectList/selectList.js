@@ -231,7 +231,11 @@ const SelectListComponent = ({
                     {subLabel}
                 </span>
             )}
-            <div className={cc(['flex flex-col', { 'mt-16': label }])}>
+            <div
+                className={cc([
+                    'flex flex-col',
+                    { 'mt-16': label || subLabel },
+                ])}>
                 {missingOptions && <EmptyState label={missingOptionsLabel} />}
 
                 {!missingOptions && (

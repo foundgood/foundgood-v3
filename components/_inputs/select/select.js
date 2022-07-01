@@ -131,7 +131,7 @@ const SelectComponent = ({
                     className={cc([
                         'relative flex items-center',
                         {
-                            'mt-16': label,
+                            'mt-16': label || subLabel,
                         },
                     ])}>
                     <select
