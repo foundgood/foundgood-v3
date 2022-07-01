@@ -190,9 +190,9 @@ const EmployeesFundedComponent = () => {
                 type: 'DateRange',
                 name: 'DateRange',
                 label: `${object.label(
-                    'Initiative_Employee_Funded__c.Grant_Start_Date__c'
+                    'Initiative_Employee_Funded__c.Start_Date__c'
                 )} / ${object.label(
-                    'Initiative_Employee_Funded__c.Grant_End_Date__c'
+                    'Initiative_Employee_Funded__c.End_Date__c'
                 )}`,
             },
             {

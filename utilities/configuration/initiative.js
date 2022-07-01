@@ -94,9 +94,27 @@ const d = {
             },
         },
         permissions: {
-            add: ['grantee.admin', 'grantee.collaborator', 'super'],
-            update: ['grantee.admin', 'grantee.collaborator', 'super'],
-            delete: ['grantee.admin', 'grantee.collaborator', 'super'],
+            add: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
+            update: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
+            delete: [
+                'funder.admin',
+                'funder.collaborator',
+                'grantee.admin',
+                'grantee.collaborator',
+                'super',
+            ],
         },
     },
     collaborators: {
